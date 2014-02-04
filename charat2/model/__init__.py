@@ -76,7 +76,7 @@ class User(Base):
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
 
-	# Global character data. This is copied whenever a UserChat is created.
+    # Global character data. This is copied whenever a UserChat is created.
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"")
@@ -141,9 +141,9 @@ class GroupChat(Chat):
     id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
 
     __mapper_args__ = {
-		"polymorphic_identity": "group",
+        "polymorphic_identity": "group",
         "inherit_condition": id==Chat.id,
-	}
+    }
 
     topic = Column(UnicodeText, nullable=False, default=u"")
 
@@ -236,9 +236,9 @@ class Message(Base):
 # This is a partial index, a feature only supported by Postgres, so I don't
 # know what will happen if you try to run this on anything else.
 Index(
-	"group_chats_publicity_listed",
-	GroupChat.publicity,
-	postgresql_where=GroupChat.publicity==u"listed",
+    "group_chats_publicity_listed",
+    GroupChat.publicity,
+    postgresql_where=GroupChat.publicity==u"listed",
 )
 
 # Index to make log rendering easier.

@@ -9,7 +9,7 @@ with open(os.path.join(here, 'README.md')) as f:
 CHANGES = ""
 
 setup(
-	name="charat2",
+    name="charat2",
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
