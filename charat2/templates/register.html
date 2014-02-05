@@ -1,0 +1,21 @@
+<h1>Register</h1>
+{% if register_error: %}
+<p class="error">{{register_error}}</p>
+{% endif %}
+<form action="{{url_for("register")}}" method="post">
+  <p><label>Username: <input type="text" name="username"></label></p>
+  <p><label>Password: <input type="password" name="password"></label></p>
+  <p><label>Password again: <input type="password" name="password_again"></label></p>
+  <p><button type="submit">Register</button></p>
+</form>
+
+<h1>Log in</h1>
+{% if log_in_error: %}
+<p class="error">{{log_in_error}}</p>
+{% endif %}
+<form action="{{url_for("log_in")}}" method="post">
+  <p><label>Username: <input type="text" name="username"></label></p>
+  <p><label>Password: <input type="password" name="password"></label></p>
+  <p><button type="submit">Log in</button></p>
+</form>
+
