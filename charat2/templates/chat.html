@@ -1,0 +1,26 @@
+<h1>{{chat.url}}</h1>
+<ul>
+  <li>Chat type: {{chat.type}}</li>
+{% if chat.type=="group": %}
+  <li>Topic: {{chat.topic}}</li>
+  <li>Autosilence: {{chat.autosilence}}</li>
+  <li>NSFW: {{chat.nsfw}}</li>
+  <li>Publicity: {{chat.publicity}}</li>
+  <li>Creator: {{"you" if chat.creator.id==g.user.id else "not you"}}</li>
+{% endif %}
+</ul>
+<h2>You</h2>
+<ul>
+  <li>Group: {{user_chat.group}}{% if chat.creator==g.user: %} (overridden by chat creator status){% endif %}{% if g.user.group=="admin": %} (overridden by site admin status){% endif %}</li>
+  <li>Name: {{user_chat.name}}</li>
+  <li>Acronym: {{user_chat.acronym}}</li>
+  <li>Color: {{user_chat.color}}</li>
+  <li>Prefix: {{user_chat.quirk_prefix}}</li>
+  <li>Suffix: {{user_chat.quirk_suffix}}</li>
+  <li>Replacements: {{user_chat.replacements}}</li>
+  <li>Confirm disconnect: {{user_chat.confirm_disconnect}}</li>
+  <li>Show system messages: {{user_chat.show_system_messages}}</li>
+  <li>Show topic: {{user_chat.show_topic}}</li>
+  <li>Show BBCode: {{user_chat.show_bbcode}}</li>
+  <li>Desktop notifications: {{user_chat.desktop_notifications}}</li>
+</ul>

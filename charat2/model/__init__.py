@@ -1,6 +1,13 @@
+import datetime
+
 from sqlalchemy import create_engine
 from sqlalchemy.schema import Index
-from sqlalchemy.orm import relation, scoped_session, sessionmaker
+from sqlalchemy.orm import (
+    relation,
+    scoped_session,
+    sessionmaker,
+    with_polymorphic,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     Column,
@@ -13,8 +20,6 @@ from sqlalchemy import (
     Unicode,
     UnicodeText,
 )
-
-import datetime
 
 engine = create_engine(
     # XXX GET THIS FROM CONFIG OR ENVIRON OR SOMETHING
@@ -157,11 +162,14 @@ class GroupChat(Chat):
     ), nullable=False, default=u"unlisted")
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    parent_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
+    parent_id = Column(Integer, ForeignKey("chats.id"))
 
 
 class PMChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "pm" }
+
+
+AnyChat = with_polymorphic(Chat, [OneOnOneChat, GroupChat, PMChat])
 
 
 class UserChat(Base):

@@ -1,5 +1,9 @@
+import sys
+
 from charat2 import app
 
-app.debug=True
+if "--debug" in sys.argv:
+    app.debug=True
+
 app.run()
 
