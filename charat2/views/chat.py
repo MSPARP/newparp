@@ -23,8 +23,7 @@ def chat(url):
             UserChat.chat_id==chat.id,
         )).one()
     except NoResultFound:
-        # XXX COPY CHARACTER INFO FROM USER
-        user_chat = UserChat(user_id=g.user.id, chat_id=chat.id)
+        user_chat = UserChat.from_user(g.user, chat_id=chat.id)
         g.db.add(user_chat)
         g.db.flush()
     return render_template("chat.html", chat=chat, user_chat=user_chat)

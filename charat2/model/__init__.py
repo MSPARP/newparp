@@ -210,6 +210,26 @@ class UserChat(Base):
     show_bbcode = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
 
+    @classmethod
+    def from_user(cls, user, **kwargs):
+        # Create a UserChat using a User to determine the default values.
+        return cls(
+            user_id=user.id,
+            name=user.name,
+            acronym=user.acronym,
+            color=user.color,
+            quirk_prefix=user.quirk_prefix,
+            quirk_suffix=user.quirk_suffix,
+            case=user.case,
+            replacements=user.replacements,
+            confirm_disconnect=user.confirm_disconnect,
+            show_system_messages=user.show_system_messages,
+            show_topic=user.show_topic,
+            show_bbcode=user.show_bbcode,
+            desktop_notifications=user.desktop_notifications,
+            **kwargs
+        )
+
 
 class Message(Base):
 
