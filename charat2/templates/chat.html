@@ -24,3 +24,8 @@
   <li>Show BBCode: {{user_chat.show_bbcode}}</li>
   <li>Desktop notifications: {{user_chat.desktop_notifications}}</li>
 </ul>
+
+<p>{{user_chat.to_dict()|tojson|safe}}</p>
+
+<p>{{chat.to_dict()|tojson|safe}}</p>
+

@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from sqlalchemy import create_engine
 from sqlalchemy.schema import Index
@@ -134,6 +135,12 @@ class Chat(Base):
     # messages.
     last_message = Column(DateTime(), nullable=False, default=now)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+        }
+
 
 class OneOnOneChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "1-on-1" }
@@ -163,6 +170,17 @@ class GroupChat(Chat):
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     parent_id = Column(Integer, ForeignKey("chats.id"))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "url": self.url,
+            "type": self.type,
+            "topic": self.topic,
+            "autosilence": self.autosilence,
+            "nsfw": self.nsfw,
+            "publicity": self.publicity,
+        }
 
 
 class PMChat(Chat):
@@ -229,6 +247,33 @@ class UserChat(Base):
             desktop_notifications=user.desktop_notifications,
             **kwargs
         )
+
+    def to_dict(self):
+        return {
+            "character": {
+                "name": self.name,
+                "acronym": self.acronym,
+                "color": self.color,
+                "quirk_prefix": self.quirk_prefix,
+                "quirk_suffix": self.quirk_suffix,
+                "case": self.case,
+                "replacements": json.loads(self.replacements),
+            },
+            "meta": {
+                # Group is overridden by chat creator and user status.
+                # Needs joinedload whenever we're getting these.
+                "group": (
+                    "admin" if self.user.group=="admin"
+                    else "creator" if self.chat.creator==self.user
+                    else self.group
+                ),
+                "confirm_disconnect": self.confirm_disconnect,
+                "show_system_messages": self.show_system_messages,
+                "show_topic": self.show_topic,
+                "show_bbcode": self.show_bbcode,
+                "desktop_notifications": self.desktop_notifications,
+            },
+        }
 
 
 class Message(Base):
