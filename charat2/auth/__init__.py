@@ -1,4 +1,5 @@
-from flask import g, request
+from flask import abort, g, request
+from functools import wraps
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
@@ -22,4 +23,12 @@ def set_cookie(response):
         # XXX SET DOMAIN
         response.set_cookie("session", g.session_id, max_age=365*24*60*60)
     return response
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
 

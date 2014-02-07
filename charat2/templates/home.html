@@ -2,3 +2,10 @@
 <form action="{{url_for("log_out")}}" method="post">
   <p><button type="submit">Log out</button></p>
 </form>
+<h2>Create a chat</h2>
+{% if create_chat_error: %}
+<p class="error">{{create_chat_error}}</p>
+{% endif %}
+<form action="{{url_for("create_chat")}}" method="post">
+  <p><input type="text" name="url" maxlength="50"><button type="submit">Create</button></p>
+</form>

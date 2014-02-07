@@ -1,15 +1,33 @@
-from flask import abort, g, redirect, render_template, url_for
+from flask import abort, g, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.model import AnyChat, UserChat
+from charat2.auth import login_required
+from charat2.model import AnyChat, Chat, GroupChat, UserChat
 from charat2.model.validators import url_validator
 
+@login_required
+def create_chat():
+    # Silently truncate to 50 because we've got a maxlength on the <input>.
+    url = request.form["url"][:50]
+    if url_validator.match(url) is None:
+        return render_template(
+            "home.html",
+            create_chat_error="That URL isn't valid. Chat URLs can only "
+            "contain letters, numbers, hyphens and underscores."
+        )
+    # Don't allow pm because subchats of it (pm/*) will crash into private
+    # chat URLs.
+    if url=="pm" or g.db.query(Chat.id).filter(Chat.url==url).count()!=0:
+        return render_template(
+            "home.html",
+            create_chat_error="The URL \"%s\" has already been taken." % url
+        )
+    g.db.add(GroupChat(url=url, creator_id=g.user.id))
+    return redirect(url_for("chat", url=url))
+
+@login_required
 def chat(url):
-    # Redirect to the homepage if they're not logged in. We'll sort out guest
-    # users later.
-    if g.user is None:
-        return redirect(url_for("home"))
     # PM chats aren't implemented yet so just 404 them for now.
     if url=="pm" or url.startswith("pm/"):
         abort(404)

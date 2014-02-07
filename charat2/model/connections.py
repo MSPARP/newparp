@@ -14,7 +14,6 @@ def db_commit(response):
     return response
 
 def db_disconnect(response):
-    print dir(response)
     g.db.close()
     del g.db
     return response
