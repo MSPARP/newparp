@@ -24,7 +24,7 @@ from sqlalchemy import (
 
 engine = create_engine(
     # XXX GET THIS FROM CONFIG OR ENVIRON OR SOMETHING
-    'sqlite:////tmp/test.db',
+    os.environ['POSTGRES_URL'],
     convert_unicode=True,
     pool_recycle=3600,
 )

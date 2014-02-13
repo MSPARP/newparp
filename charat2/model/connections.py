@@ -20,7 +20,7 @@ def db_disconnect(response):
 
 # Pre- and post-request handlers for the Redis connection.
 
-redis_pool = ConnectionPool(connection_class=UnixDomainSocketConnection, path='/tmp/redis.sock')
+redis_pool = ConnectionPool(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']), db=int(os.environ['REDIS_DB'])
 
 def redis_connect():
     g.redis = StrictRedis(connection_pool=redis_pool)
