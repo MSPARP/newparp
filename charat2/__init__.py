@@ -1,6 +1,6 @@
 from flask import Flask
 
-from charat2.auth import get_request_user, set_cookie
+from charat2.helpers.auth import get_request_user, set_cookie
 from charat2.model.connections import (
     db_connect,
     db_commit,

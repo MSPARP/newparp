@@ -2,7 +2,7 @@ from flask import abort, g, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.auth import login_required
+from charat2.helpers.auth import login_required
 from charat2.model import AnyChat, Chat, GroupChat, UserChat
 from charat2.model.validators import url_validator
 

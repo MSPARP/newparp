@@ -1,6 +1,7 @@
-from flask import g, jsonify, make_response, request
+from flask import abort, g, jsonify, make_response, request
 
-from charat2.auth import user_chat_required
+from charat2.helpers.auth import user_chat_required
+from charat2.helpers.chat import send_message
 from charat2.model import Message
 
 @user_chat_required
@@ -34,7 +35,28 @@ def messages():
 
 @user_chat_required
 def send():
-    raise NotImplementedError
+    if "text" not in request.form:
+        abort(400)
+    text = request.form["text"].strip()
+    if text == "":
+        abort(400)
+    message_type = "ic"
+    # Automatic OOC detection
+    if (
+        text.startswith("((") or text.endswith("))")
+        or text.startswith("[[") or text.endswith("]]")
+        or text.startswith("{{") or text.endswith("}}")
+    ):
+        message_type="ooc"
+    send_message(g.db, g.redis, Message(
+        chat_id=g.chat.id,
+        user_id=g.user.id,
+        type=message_type,
+        color=g.user_chat.color,
+        acronym=g.user_chat.acronym,
+        text=text,
+    ))
+    return "", 204
 
 @user_chat_required
 def set_state():
