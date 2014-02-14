@@ -1,5 +1,6 @@
 from flask import g, request
-from redis import ConnectionPool, StrictRedis, UnixDomainSocketConnection
+from redis import ConnectionPool, StrictRedis
+import os
 
 from charat2.model import sm
 
@@ -20,7 +21,7 @@ def db_disconnect(response):
 
 # Pre- and post-request handlers for the Redis connection.
 
-redis_pool = ConnectionPool(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']), db=int(os.environ['REDIS_DB'])
+redis_pool = ConnectionPool(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']), db=int(os.environ['REDIS_DB']))
 
 def redis_connect():
     g.redis = StrictRedis(connection_pool=redis_pool)
