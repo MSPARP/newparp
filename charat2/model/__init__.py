@@ -40,10 +40,6 @@ base_session = scoped_session(sm)
 Base = declarative_base()
 Base.query = base_session.query_property()
 
-def init_db():
-    engine.echo = True
-    Base.metadata.create_all(bind=engine)
-
 def now():
     return datetime.datetime.now()
 
