@@ -1,5 +1,6 @@
 from flask import abort, g, request
 from functools import wraps
+from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
@@ -48,7 +49,7 @@ def user_chat_required(f):
             ).join(
                 AnyChat, UserChat.chat_id==AnyChat.id,
             ).filter(and_(
-                UserChat.user_id==user_id,
+                UserChat.user_id==g.user.id,
                 UserChat.chat_id==request.form["chat_id"],
             )).one()
         except NoResultFound:

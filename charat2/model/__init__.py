@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import time
 
 from sqlalchemy import create_engine
 from sqlalchemy.schema import Index
@@ -299,6 +300,16 @@ class Message(Base):
     acronym = Column(Unicode(50), nullable=False, default=u"")
 
     text = Column(UnicodeText, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "posted": time.mktime(self.posted.timetuple()),
+            "type": self.type,
+            "color": self.color,
+            "acronym": self.acronym,
+            "text": self.text,
+        }
 
 
 # Index to make generating the public chat list easier.
