@@ -87,7 +87,7 @@ def set_flag():
     raise NotImplementedError
 
 @user_chat_required
-def set_topic():
+def set_info():
     raise NotImplementedError
 
 @user_chat_required

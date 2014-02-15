@@ -96,7 +96,7 @@ class User(Base):
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
-    show_topic = Column(Boolean, nullable=False, default=True)
+    show_description = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
 
@@ -154,7 +154,8 @@ class GroupChat(Chat):
         "inherit_condition": id==Chat.id,
     }
 
-    topic = Column(UnicodeText, nullable=False, default=u"")
+    title = Column(Unicode(50), nullable=False, default=u"")
+    description = Column(UnicodeText, nullable=False, default=u"")
 
     autosilence = Column(Boolean, nullable=False, default=False)
     nsfw = Column(Boolean, nullable=False, default=False)
@@ -173,7 +174,8 @@ class GroupChat(Chat):
             "id": self.id,
             "url": self.url,
             "type": self.type,
-            "topic": self.topic,
+            "title": self.title,
+            "description": self.description,
             "autosilence": self.autosilence,
             "nsfw": self.nsfw,
             "publicity": self.publicity,
@@ -221,7 +223,7 @@ class UserChat(Base):
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
-    show_topic = Column(Boolean, nullable=False, default=True)
+    show_description = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
 
@@ -239,7 +241,7 @@ class UserChat(Base):
             replacements=user.replacements,
             confirm_disconnect=user.confirm_disconnect,
             show_system_messages=user.show_system_messages,
-            show_topic=user.show_topic,
+            show_description=user.show_description,
             show_bbcode=user.show_bbcode,
             desktop_notifications=user.desktop_notifications,
             **kwargs
@@ -266,7 +268,7 @@ class UserChat(Base):
                 ),
                 "confirm_disconnect": self.confirm_disconnect,
                 "show_system_messages": self.show_system_messages,
-                "show_topic": self.show_topic,
+                "show_description": self.show_description,
                 "show_bbcode": self.show_bbcode,
                 "desktop_notifications": self.desktop_notifications,
             },
@@ -296,8 +298,8 @@ class Message(Base):
         u"timeout",
         u"group_change",
         u"user_action",
-        u"topic",
-        u"meta_change",
+        u"chat_info",
+        u"chat_meta",
         name=u"messages_type",
     ), nullable=False, default=u"ic")
 
