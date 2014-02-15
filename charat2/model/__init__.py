@@ -290,7 +290,14 @@ class Message(Base):
     type = Column(Enum(
         u"ic",
         u"ooc",
-        u"system",
+        u"me",
+        u"join",
+        u"disconnect",
+        u"timeout",
+        u"group_change",
+        u"user_action",
+        u"topic",
+        u"meta_change",
         name=u"messages_type",
     ), nullable=False, default=u"ic")
 
