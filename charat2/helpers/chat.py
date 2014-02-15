@@ -6,5 +6,4 @@ def send_message(db, redis, message):
     redis.publish("channel.%s" % message.chat_id, json.dumps({
         "messages": [message.to_dict()],
     }))
-    db.commit()
 
