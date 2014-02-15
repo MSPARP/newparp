@@ -136,7 +136,7 @@ def save():
     ):
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
-            type="user_change",
+            type="user_info",
             text="%s [%s] is now %s [%s]." % (
                 old_name, old_acronym,
                 g.user_chat.name, g.user_chat.acronym,
