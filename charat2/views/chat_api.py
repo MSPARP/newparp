@@ -3,7 +3,7 @@ import json
 from flask import abort, g, jsonify, make_response, request
 
 from charat2.helpers.auth import user_chat_required
-from charat2.helpers.chat import mark_alive, send_message
+from charat2.helpers.chat import mark_alive, send_message, disconnect
 from charat2.model import case_options, Message
 from charat2.model.validators import color_validator
 
@@ -165,5 +165,14 @@ def ping():
 
 @user_chat_required
 def quit():
-    raise NotImplementedError
+    # Only send the message if we were already online.
+    if disconnect(g.db, g.redis, g.chat.id, g.user.id):
+        send_message(g.db, g.redis, Message(
+            chat_id=g.chat.id,
+            type="disconnect",
+            text="%s [%s] disconnected." % (
+                g.user_chat.name, g.user_chat.acronym,
+            ),
+        ))
+    return "", 204
 
