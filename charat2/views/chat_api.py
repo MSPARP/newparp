@@ -161,7 +161,7 @@ def save():
 @user_chat_required
 @mark_alive
 def ping():
-    raise NotImplementedError
+    return "", 204
 
 @user_chat_required
 def quit():
