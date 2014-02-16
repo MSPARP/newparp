@@ -27,16 +27,16 @@ def messages():
             "messages": [_.to_dict() for _ in messages],
         })
 
-    # Get rid of the database connection here so we're not hanging onto it
-    # while waiting for the redis message.
-    g.db.commit()
-    g.db.close()
-
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
     pubsub.subscribe("channel.%s" % g.chat.id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
     pubsub.subscribe("channel.%s.%s" % (g.chat.id, g.user.id))
+
+    # Get rid of the database connection here so we're not hanging onto it
+    # while waiting for the redis message.
+    g.db.commit()
+    g.db.close()
 
     for msg in pubsub.listen():
         if msg["type"]=="message":
