@@ -166,7 +166,7 @@ def ping():
 @user_chat_required
 def quit():
     # Only send the message if we were already online.
-    if disconnect(g.db, g.redis, g.chat.id, g.user.id):
+    if disconnect(g.redis, g.chat.id, g.user.id):
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             type="disconnect",

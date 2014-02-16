@@ -34,10 +34,10 @@ def send_message(db, redis, message):
         "messages": [message.to_dict()],
     }))
 
-def disconnect(db, redis, chat_id, user_id):
-	g.redis.zrem("chats_alive", "%s/%s" % (chat_id, user_id))
+def disconnect(redis, chat_id, user_id):
+	redis.zrem("chats_alive", "%s/%s" % (chat_id, user_id))
     # Return True if they were in the userlist when we tried to remove them, so
     # we can avoid sending disconnection messages if someone gratuitously sends
     # quit requests.
-	return (g.redis.srem("chat:%s:online" % chat_id, user_id) == 1)
+	return (redis.srem("chat:%s:online" % chat_id, user_id) == 1)
 
