@@ -3,11 +3,12 @@ import json
 from flask import abort, g, jsonify, make_response, request
 
 from charat2.helpers.auth import user_chat_required
-from charat2.helpers.chat import send_message
+from charat2.helpers.chat import mark_alive, send_message
 from charat2.model import case_options, Message
 from charat2.model.validators import color_validator
 
 @user_chat_required
+@mark_alive
 def messages():
 
     # Look for messages in the database first, and only subscribe if there
@@ -26,6 +27,11 @@ def messages():
             "messages": [_.to_dict() for _ in messages],
         })
 
+    # Get rid of the database connection here so we're not hanging onto it
+    # while waiting for the redis message.
+    g.db.commit()
+    g.db.close()
+
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
     pubsub.subscribe("channel.%s" % g.chat.id)
@@ -41,6 +47,7 @@ def messages():
             return resp
 
 @user_chat_required
+@mark_alive
 def send():
 
     if "text" not in request.form:
@@ -71,26 +78,32 @@ def send():
     return "", 204
 
 @user_chat_required
+@mark_alive
 def set_state():
     raise NotImplementedError
 
 @user_chat_required
+@mark_alive
 def set_group():
     raise NotImplementedError
 
 @user_chat_required
+@mark_alive
 def user_action():
     raise NotImplementedError
 
 @user_chat_required
+@mark_alive
 def set_flag():
     raise NotImplementedError
 
 @user_chat_required
+@mark_alive
 def set_info():
     raise NotImplementedError
 
 @user_chat_required
+@mark_alive
 def save():
 
     # Remember old values so we can check if they've changed later.
@@ -146,6 +159,7 @@ def save():
     return "", 204
 
 @user_chat_required
+@mark_alive
 def ping():
     raise NotImplementedError
 
