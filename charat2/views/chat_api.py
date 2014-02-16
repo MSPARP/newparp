@@ -3,7 +3,12 @@ import json
 from flask import abort, g, jsonify, make_response, request
 
 from charat2.helpers.auth import user_chat_required
-from charat2.helpers.chat import mark_alive, send_message, disconnect
+from charat2.helpers.chat import (
+    mark_alive,
+    send_message,
+    disconnect,
+    get_userlist,
+)
 from charat2.model import case_options, Message
 from charat2.model.validators import color_validator
 
@@ -25,13 +30,14 @@ def messages():
         messages.reverse()
         return jsonify({
             "messages": [_.to_dict() for _ in messages],
+            "users": get_userlist(g.db, g.redis, g.chat),
         })
 
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
-    pubsub.subscribe("channel.%s" % g.chat.id)
+    pubsub.subscribe("channel:%s" % g.chat.id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
-    pubsub.subscribe("channel.%s.%s" % (g.chat.id, g.user.id))
+    pubsub.subscribe("channel:%s:%s" % (g.chat.id, g.user.id))
 
     # Get rid of the database connection here so we're not hanging onto it
     # while waiting for the redis message.

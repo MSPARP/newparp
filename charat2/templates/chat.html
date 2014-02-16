@@ -26,7 +26,7 @@
   <li>Desktop notifications: {{user_chat.desktop_notifications}}</li>
 </ul>
 
-<p>{{user_chat.to_dict()|tojson|safe}}</p>
+<p>{{user_chat.to_dict(include_options=True)|tojson|safe}}</p>
 
 <p>{{chat.to_dict()|tojson|safe}}</p>
 

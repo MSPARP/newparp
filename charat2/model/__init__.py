@@ -247,16 +247,12 @@ class UserChat(Base):
             **kwargs
         )
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_user=True, include_options=False):
+        ucd = {
             "character": {
                 "name": self.name,
                 "acronym": self.acronym,
                 "color": self.color,
-                "quirk_prefix": self.quirk_prefix,
-                "quirk_suffix": self.quirk_suffix,
-                "case": self.case,
-                "replacements": json.loads(self.replacements),
             },
             "meta": {
                 # Group is overridden by chat creator and user status.
@@ -266,13 +262,22 @@ class UserChat(Base):
                     else "creator" if self.chat.creator==self.user
                     else self.group
                 ),
-                "confirm_disconnect": self.confirm_disconnect,
-                "show_system_messages": self.show_system_messages,
-                "show_description": self.show_description,
-                "show_bbcode": self.show_bbcode,
-                "desktop_notifications": self.desktop_notifications,
             },
         }
+        if include_options:
+            ucd["character"]["quirk_prefix"] = self.quirk_prefix
+            ucd["character"]["quirk_suffix"] = self.quirk_suffix
+            ucd["character"]["case"] = self.case
+            ucd["character"]["replacements"] = json.loads(self.replacements)
+            ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
+            ucd["meta"]["show_system_messages"] = self.show_system_messages
+            ucd["meta"]["show_description"] = self.show_description
+            ucd["meta"]["show_bbcode"] = self.show_bbcode
+            ucd["meta"]["desktop_notifications"] = self.desktop_notifications
+        if include_user:
+            ucd["meta"]["user_id"] = self.user.id
+            ucd["meta"]["username"] = self.user.username
+        return ucd
 
 
 class Message(Base):
@@ -345,6 +350,6 @@ GroupChat.parent = relation(
 UserChat.user = relation(User, backref='chats')
 UserChat.chat = relation(Chat, backref='users')
 
-Message.chat = relation(User)
-Message.user = relation(Chat)
+Message.chat = relation(Chat)
+Message.user = relation(User)
 
