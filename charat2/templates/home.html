@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<p>Logged in as <strong>{{g.user.username}}</strong>.</p>
+<p>Logged in as <strong>{{g.user.username.upper()}}</strong>.</p>
 <form action="{{url_for("log_out")}}" method="post">
   <p><button type="submit">Log out</button></p>
 </form>
