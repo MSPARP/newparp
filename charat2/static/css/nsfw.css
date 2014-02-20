@@ -1,0 +1,16 @@
+/* CHAT */
+body {
+    background-color: #FFC9FA;
+}
+
+#topbar, .options .menu {
+    background-color: #B81EAE;
+}
+
+#conversation, #settings, #userList, #preview, .pager, #archiveConversation, input, button, .settingshap a, select, a.buttonlinka {
+    border: 1px solid #D077CC;
+}
+
+#conversation.search {
+    background-image: url("/static/img/nsfw-throbber-big.gif");
+}
