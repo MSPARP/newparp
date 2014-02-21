@@ -1,21 +1,125 @@
-<h1>Register</h1>
-{% if register_error: %}
-<p class="error">{{register_error}}</p>
-{% endif %}
-<form action="{{url_for("register")}}" method="post">
-  <p><label>Username: <input type="text" name="username"></label></p>
-  <p><label>Password: <input type="password" name="password"></label></p>
-  <p><label>Password again: <input type="password" name="password_again"></label></p>
-  <p><button type="submit">Register</button></p>
-</form>
+{% extends "base.html" %}
 
-<h1>Log in</h1>
-{% if log_in_error: %}
-<p class="error">{{log_in_error}}</p>
-{% endif %}
-<form action="{{url_for("log_in")}}" method="post">
-  <p><label>Username: <input type="text" name="username"></label></p>
-  <p><label>Password: <input type="password" name="password"></label></p>
-  <p><button type="submit">Log in</button></p>
-</form>
+{% block header %}
+<link rel="stylesheet" media="screen" type="text/css" href="/static/css/home.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/static/css/front.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/static/colorpicker/css/colorpicker.css" />
+<script type="text/javascript" src="/static/colorpicker/js/colorpicker.js"></script>
+<script src="/static/js/characters.js"></script>
+<script src="/static/js/home.js"></script>
+{% endblock %}
 
+{% block content %}
+
+<div id="topbar">
+	<center>
+	    <a id="toptitle" href="/">Charat</a>
+        <div id="topmenu">
+            <div class="topborder"></div>
+            <a id="goLogin" href="#">Login</a>
+            <div class="topborder"></div>
+            <a id="goPresets" href="#">Presets</a>
+            <div class="topborder"></div>
+            <a id="goGroups" href="/groups">Groups</a>
+            <div class="topborder"></div>
+            <a id="goHelp" href="/help">Help</a>
+        </div>
+    </center>
+</div>
+
+<div class="body">
+    <form id="frontform" method="post" action="" >
+    <!-- Put in some noscript things -->
+
+    <div class="section" id="character-config">
+        <div class="titli">CHARACTER SETTINGS</div>
+        <div id="char_left" class="left">
+            <div class="card char_search">
+                <div class="titi">CHARACTER SEARCH</div>
+                <input id="char_search" type="text" />
+                <button class="char_search_button">Search Presets</button>
+                <span>Start typing the name of a character or fandom you'd like to roleplay as and results will appear. Select the character to roleplay as them.</span>
+            </div>
+            <div class="card character">
+                <div class="titi">CHARACTER DETAILS</div>
+                <div class="left">
+                    <label>Name:</label><br />
+                    <label>Alias:</label><br />
+                    <label>Color:</label>
+                </div>
+                <div class="right">
+                    <input id="usingname" type="text" name="name" value="anonymous" maxlength="50" /><br />
+                    <input id="ailin" type="text" name="acronym" value="??" maxlength="15" /><br />
+                    <input id="coln" type="text" name="color" value="#000000" maxlength="6" />
+                </div>
+            </div>
+            
+            <div class="card pester-line" id="color-preview" style="color:#000000;">
+                <span id="acronym">??: </span><span id="quote"></span>
+            </div>
+            {% if error=="color" %}<span class="error">You entered an invalid hex code. Try using the color picker.</span><br />{% endif %}
+            <span id="inzone"><button class="save_character">Save Settings</button></span>
+        </div>
+        <div id="char_center" class="center">
+            <div class="card">
+                <div class="titi">REGISTER</div>
+                {% if register_error: %}
+                <p class="error">{{register_error}}</p>
+                {% endif %}
+                <form action="{{url_for("register")}}" method="post">
+                    <p><label>Username: <input type="text" name="username"></label></p>
+                    <p><label>Password: <input type="password" name="password"></label></p>
+                    <p><label>Password again: <input type="password" name="password_again"></label></p>
+                    <p><button type="submit">Register</button></p>
+                </form>
+            </div>
+            <div class="card">
+                <div class="titi">LOG IN</div>
+                {% if log_in_error: %}
+                <p class="error">{{log_in_error}}</p>
+                {% endif %}
+                <form action="{{url_for("log_in")}}" method="post">
+                    <p><label>Username: <input type="text" name="username"></label></p>
+                    <p><label>Password: <input type="password" name="password"></label></p>
+                    <p><button type="submit">Log in</button></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-config" class="section">
+        <div class="titli">CHAT SETTINGS</div>
+        <div class="card right">
+            <div class="titi">CHAT STYLE</div>
+            <div class="select-bind"><div class="arrow">▼</div>
+                <select name="para">
+                    <!-- PARAGRAPH PICKY OPTIONS -->
+                    <option value="">No preference</option>
+                    <option value="0">Script</option>
+                    <option value="1">Paragraph</option>
+                </select>
+            </div>
+        </div>
+        <div class="card right">
+            <div class="titi">CHAT CONTENT</div>
+            <div class="select-bind"><div class="arrow">▼</div>
+                <select id="nsfwsfw" name="nsfw">
+                    <!-- NSFW PICKY OPTIONS -->
+                    <option id="sfwsel" value="0">Safe for work</option>
+                    <option id="nsfwsel" value="1">Not safe for work</option>
+                    <option id="nopref" value="2">No preference</option>
+                </select>
+            </div>
+        </div>
+        <div class="card right">
+            <div class="titi">TAGS</div>
+            <textarea class="tags" name="tags" size="5" maxlength="500" placeholder="Seperate tags with commas: your tags, -exclude this tag"></textarea><div class="clear"></div>
+            <div class="stats">
+                <!-- STATS -->
+            </div>
+        </div>
+        <span id="inzthree"><button class="save_character">Save Settings</button><input type="submit" name="search" value="Start Chatting"></span>
+    </div>
+</div>
+</form>
+{% endblock %}

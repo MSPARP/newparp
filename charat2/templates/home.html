@@ -2,9 +2,10 @@
 
 {% block header %}
 <link rel="stylesheet" media="screen" type="text/css" href="/static/css/home.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="/static/css/front.css" />
 <link rel="stylesheet" media="screen" type="text/css" href="/static/colorpicker/css/colorpicker.css" />
 <script type="text/javascript" src="/static/colorpicker/js/colorpicker.js"></script>
-<script src="/static/js/characters.js?8"></script>
+<script src="/static/js/characters.js"></script>
 <script src="/static/js/home.js"></script>
 {% endblock %}
 
@@ -15,7 +16,7 @@
 	    <a id="toptitle" href="/">Charat</a>
         <div id="topmenu">
             <div class="topborder"></div>
-            <a id="goUser" href="/user/{{g.user.username}}">Hello User!</a>
+            <a id="goUser" href="/user/{{g.user.username}}">Hello {{g.user.username}}!</a>
             <div class="topborder"></div>
             <a id="goPresets" href="#">Presets</a>
             <div class="topborder"></div>
@@ -24,7 +25,7 @@
             <a id="goHelp" href="/help">Help</a>
             <div class="topborder"></div>
             <form id="logout" action="{{url_for("log_out")}}" method="post">
-                <a onclick="document.getElementById('logout').submit();">logout</a>
+                <a onclick="document.getElementById('logout').submit();">Logout</a>
             </form>
         </div>
     </center>
@@ -32,9 +33,7 @@
 
 <div class="body">
     <form id="frontform" method="post" action="" >
-    <noscript>
-        <h1>You completely need javascript for this site. Turn it on or upgrade to a real browser.</h1>
-    </noscript>
+    <!-- Put in some noscript things -->
 
     <div class="section" id="character-config">
         <div class="titli">CHARACTER SETTINGS</div>
@@ -89,7 +88,7 @@
                 <div class="titi">REPLACEMENTS</div>
                 <div class="replacementContainer">
                     <ul id="replacementList">
-                        /* REPLACEMENTS */
+                        <!-- REPLACEMENTS -->
                         <li><input type="text" name="quirk_from" size="4" value=""> to <input type="text" name="quirk_to" size="4" value=""> <a href="#" class="deleteReplacement">x</a></li>
                     </ul>
                     <a href="#" id="addReplacement">+Add another replacement</a>
