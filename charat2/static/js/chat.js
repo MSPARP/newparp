@@ -625,7 +625,7 @@ $(document).ready(function() {
 
         function disconnect() {
             if (confirm('Are you sure you want to disconnect?')) {
-                $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
+                $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
                 clearChat();
             }
         }
@@ -1168,7 +1168,7 @@ $(document).ready(function() {
 
         $(window).unload(function() {
             if (chatState=='chat') {
-                $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
+                $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
             } else if (chatState=='search') {
                 $.ajax(SEARCH_QUIT_URL, {'type': 'POST', 'async': false});
             }
@@ -1234,7 +1234,7 @@ $(document).ready(function() {
 
     $('#saveLink').click(function() {
         if (confirm('Are you sure you want to save the log and disconnect?')) {
-            $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
+            $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
             clearChat();
             $('#save input').removeAttr('disabled');
             $('#saveLinking').click();
