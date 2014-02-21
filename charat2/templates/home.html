@@ -9,25 +9,13 @@
 {% endblock %}
 
 {% block content %}
-<p>Logged in as <strong>{{g.user.username}}</strong>.</p>
-<form action="{{url_for("log_out")}}" method="post">
-  <p><button type="submit">Log out</button></p>
-</form>
-<h2>Create a chat</h2>
-{% if create_chat_error: %}
-<p class="error">{{create_chat_error}}</p>
-{% endif %}
-<form action="{{url_for("create_chat")}}" method="post">
-  <p><input type="text" name="url" maxlength="50"><button type="submit">Create</button></p>
-</form>
-
 
 <div id="topbar">
 	<center>
 	    <a id="toptitle" href="/">Charat</a>
         <div id="topmenu">
             <div class="topborder"></div>
-            <a id="goUser" href="/user/{{g.user.username}}">Hello {{g.user.username}}!</a>
+            <a id="goUser" href="/user/{{g.user.username}}">Hello User!</a>
             <div class="topborder"></div>
             <a id="goPresets" href="#">Presets</a>
             <div class="topborder"></div>
@@ -35,9 +23,9 @@
             <div class="topborder"></div>
             <a id="goHelp" href="/help">Help</a>
             <div class="topborder"></div>
-            <a id="goTumblr" href="http://charatrp.tumblr.com/">Tumblr</a>
-            <div class="topborder"></div>
-            <a id="goSupport" href="http://charatrp.tumblr.com/support">Donate</a>
+            <form id="logout" action="{{url_for("log_out")}}" method="post">
+                <a onclick="document.getElementById('logout').submit();">logout</a>
+            </form>
         </div>
     </center>
 </div>
