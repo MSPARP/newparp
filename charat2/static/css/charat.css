@@ -235,6 +235,15 @@ label.quirk {
 #topbar #toptitle, #topbar #topmenu, #topbar #topmenu a {
     color: #CCFFCC;
     width: 300px;
+    cursor: pointer;
+}
+
+body.mobile #topbar #toptitle {
+    width: 110px;
+}
+
+body.mobile #topmenu .topborder:first-child {
+    display: none;
 }
 
 #topbar #toptitle {
