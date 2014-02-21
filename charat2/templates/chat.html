@@ -14,10 +14,6 @@
     var chat_meta = {{(chat.to_dict()|tojson|safe)|tojson|safe}};
 </script>
 
-{% if chat_meta['nsfw'] == '1' or (searching == 1 and picky_options.get('nsfw2') == '1') %}
-<link rel="stylesheet" href="/static/css/nsfw.css">
-{% endif %}
-
 <script src="/static/js/chat.js"></script>
 {% endblock %}
 {% block content %}
