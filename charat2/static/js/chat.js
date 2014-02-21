@@ -451,24 +451,15 @@ $(document).ready(function() {
               $('#exclaim').html(parseInt($('#exclaim').html())+1);
             }
 
-            if (msg.counter==-1) {
-                msgClass = 'system';
-                shownotif = 1;
-                if (sysnot == 1) {
-                    shownotif = 0;
-                }
-            } else if (msg.counter==-2) {
-                msgClass = 'system_important';
-                shownotif = 1;
-            } else {
-                msgClass = 'user'+msg.counter;
+            if (msg.user_id) {
+                msgClass = 'user'+msg.user_id;
                 shownotif = 1;
             }
 
             if (bbset == 1) {
-                message = bbEncode(htmlEncode(linkify(msg.line)));
+                message = bbEncode(htmlEncode(linkify(msg.text)));
             } else {
-                message = bbEncode(htmlEncode(linkify(bbRemove(msg.line))));
+                message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
             var mp = $('<p>').addClass(msgClass).attr('title',msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
@@ -488,7 +479,7 @@ $(document).ready(function() {
             }
 
             if (shownotif == 1 && isActive == false) {
-                if (deskset == 1) { show(chat['url'],htmlEncode(bbRemove(msg.line))); }
+                if (deskset == 1) { show(chat['url'],htmlEncode(bbRemove(msg.text))); }
             }
             shownotif = 0;
         }
@@ -545,7 +536,7 @@ $(document).ready(function() {
             if (typeof data.exit!=='undefined') {
                 if (data.exit=='kick') {
                     clearChat();
-                    addLine({ counter: -1, color: '000000', line: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
+                    addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
                 } else if (data.exit=='ban') {
                     latestNum = -1;
                     chat = 'theoubliette'
@@ -564,11 +555,11 @@ $(document).ready(function() {
             if (typeof data.counter!=="undefined") {
                 user.meta.counter = data.counter;
             }
-            if (typeof data.online!=="undefined") {
+            if (typeof data.users!=="undefined") {
                 // Reload user lists.
                 actionListUser = null;
                 $("#online > li, #idle > li").appendTo(holdingList);
-                generateUserlist(data.online, $('#online')[0]);
+                generateUserlist(data.users, $('#online')[0]);
             }
             if (typeof data.meta!=='undefined') {
                 // Reload chat metadata.
