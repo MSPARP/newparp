@@ -10,8 +10,8 @@
 <script src="/static/js/quirks.js"></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
-    var chat = {{chat.id|tojson|safe}};
-    var chat_meta = {{chat.to_dict()|tojson|safe}};
+    //var chat = {{chat.id|tojson|safe}};
+    var chat = {{chat.to_dict()|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
 
@@ -44,7 +44,7 @@
     <div id="convo">
         <p class="eMessages">[url=/chat/{{chat.url}}/log]View earlier messages[/url]</p>
 {% for message in messages %}
-        <p class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+        <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
 {% endfor %}
     </div>
 </div>

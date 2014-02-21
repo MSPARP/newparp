@@ -91,10 +91,7 @@ $(document).ready(function() {
     var SEARCH_URL = "/search";
     var SEARCH_QUIT_URL = "/stop_search";
     var POST_URL = "/chat_ajax/post";
-    var PING_URL = "/chat_ajax/ping";
-    var MESSAGES_URL = "/chat_ajax/messages";
     var SAVE_URL = "/chat_ajax/save";
-    var QUIT_URL = "/chat_ajax/quit";
 
     var CHAT_FLAGS = ['autosilence','public','nsfw'];
 
@@ -122,7 +119,7 @@ $(document).ready(function() {
     var blockUser = null;
 
     var ORIGINAL_TITLE = document.title;
-    var CHAT_NAME = chat;
+    var CHAT_NAME = chat['title'] || chat['url'];
     var conversation = $('#conversation');
     
     var isActive;
@@ -159,62 +156,62 @@ $(document).ready(function() {
     if (Modernizr.localstorage) {
         $(".stoptions").show()
         //set original variable
-        if (!localStorage.getItem(chat+"disnot")) {
+        if (!localStorage.getItem(chat['url']+"disnot")) {
             if (!localStorage.disnot) {
                 localStorage.disnot = 1;
             }
-            localStorage.setItem(chat+"disnot",localStorage.disnot);
+            localStorage.setItem(chat['url']+"disnot",localStorage.disnot);
         }
 
-        if (localStorage.getItem(chat+"sysnot") == 'undefined' || localStorage.getItem(chat+"sysnot") === null) {
+        if (localStorage.getItem(chat['url']+"sysnot") == 'undefined' || localStorage.getItem(chat['url']+"sysnot") === null) {
             if (!localStorage.sysnot) {
                 localStorage.sysnot = 0;
             }
-            localStorage.setItem(chat+"sysnot",localStorage.sysnot);
+            localStorage.setItem(chat['url']+"sysnot",localStorage.sysnot);
         }
 
-        if (localStorage.getItem(chat+"topichide") == 'undefined' || localStorage.getItem(chat+"topichide") === null) {
-            localStorage.setItem(chat+"topichide",0);
+        if (localStorage.getItem(chat['url']+"topichide") == 'undefined' || localStorage.getItem(chat['url']+"topichide") === null) {
+            localStorage.setItem(chat['url']+"topichide",0);
         }
         
-        if (localStorage.getItem(chat+"oocset") == 'undefined' || localStorage.getItem(chat+"oocset") === null) {
-            localStorage.setItem(chat+"oocset",0);
+        if (localStorage.getItem(chat['url']+"oocset") == 'undefined' || localStorage.getItem(chat['url']+"oocset") === null) {
+            localStorage.setItem(chat['url']+"oocset",0);
         }
 
-        if (localStorage.getItem(chat+"sidebarset") == 'undefined' || localStorage.getItem(chat+"sidebarset") === null) {
+        if (localStorage.getItem(chat['url']+"sidebarset") == 'undefined' || localStorage.getItem(chat['url']+"sidebarset") === null) {
             if (cmobile()) {
-                localStorage.setItem(chat+"sidebarset","null");
+                localStorage.setItem(chat['url']+"sidebarset","null");
             } else {
-                localStorage.setItem(chat+"sidebarset","userList");
+                localStorage.setItem(chat['url']+"sidebarset","userList");
             }
         }
         
-        if (localStorage.getItem(chat+"bbset") == 'undefined' || localStorage.getItem(chat+"bbset") === null) {
+        if (localStorage.getItem(chat['url']+"bbset") == 'undefined' || localStorage.getItem(chat['url']+"bbset") === null) {
             if (!localStorage.bbset) {
                 localStorage.bbset = 1;
             }
-            localStorage.setItem(chat+"bbset",localStorage.bbset);
+            localStorage.setItem(chat['url']+"bbset",localStorage.bbset);
         }
 
-        if (localStorage.getItem(chat+"deskset") == 'undefined' || localStorage.getItem(chat+"deskset") === null) {
+        if (localStorage.getItem(chat['url']+"deskset") == 'undefined' || localStorage.getItem(chat['url']+"deskset") === null) {
             if (!localStorage.deskset) {
                 localStorage.deskset = 1;
             }
-            localStorage.setItem(chat+"deskset",localStorage.deskset);
+            localStorage.setItem(chat['url']+"deskset",localStorage.deskset);
         }
 
-        disnot = localStorage.getItem(chat+"disnot");
-        sysnot = localStorage.getItem(chat+"sysnot");
-        topichide = localStorage.getItem(chat+"topichide");
-        oocset = localStorage.getItem(chat+"oocset");
-        if (localStorage.getItem(chat+"sidebarset") == "null")
+        disnot = localStorage.getItem(chat['url']+"disnot");
+        sysnot = localStorage.getItem(chat['url']+"sysnot");
+        topichide = localStorage.getItem(chat['url']+"topichide");
+        oocset = localStorage.getItem(chat['url']+"oocset");
+        if (localStorage.getItem(chat['url']+"sidebarset") == "null")
         {
             sidebarset = null;
         } else {
-            sidebarset = localStorage.getItem(chat+"sidebarset");
+            sidebarset = localStorage.getItem(chat['url']+"sidebarset");
         }
-        bbset = localStorage.getItem(chat+"bbset");
-        deskset = localStorage.getItem(chat+"deskset");
+        bbset = localStorage.getItem(chat['url']+"bbset");
+        deskset = localStorage.getItem(chat['url']+"deskset");
     } else {
         $('.system').show();
     }
@@ -259,10 +256,10 @@ $(document).ready(function() {
     $('.disnot').click(function() {
         if (Modernizr.localstorage) {
             if (this.checked) {
-                localStorage.setItem(chat+"disnot",1);
+                localStorage.setItem(chat['url']+"disnot",1);
                 localStorage.disnot = 1;
             } else {
-                localStorage.setItem(chat+"disnot",0);
+                localStorage.setItem(chat['url']+"disnot",0);
                 localStorage.disnot = 0;
             }
         }
@@ -276,14 +273,14 @@ $(document).ready(function() {
     $('.sysnot').click(function() {
         if (this.checked) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"sysnot",1);
+                localStorage.setItem(chat['url']+"sysnot",1);
                 localStorage.sysnot = 1;
             }
             sysnot = 1;
             $('.system').hide();
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"sysnot",0);
+                localStorage.setItem(chat['url']+"sysnot",0);
                 localStorage.sysnot = 0;
             }
             sysnot = 0;
@@ -295,13 +292,13 @@ $(document).ready(function() {
     $('.oocset').click(function() {
         if (this.checked) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"oocset",1);
+                localStorage.setItem(chat['url']+"oocset",1);
             }
             oocset = 1;
             glow('#ooclet');
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"oocset",0);
+                localStorage.setItem(chat['url']+"oocset",0);
             }
             oocset = 0;
             unGlow('#ooclet');
@@ -312,14 +309,14 @@ $(document).ready(function() {
     $('#ooclet').click(function() {
         if (oocset == 0) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"oocset",1);
+                localStorage.setItem(chat['url']+"oocset",1);
             }
             oocset = 1;
             $('.oocset').attr('checked','checked');
             glow('#ooclet');
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"oocset",0);
+                localStorage.setItem(chat['url']+"oocset",0);
             }
             oocset = 0;
             $('.oocset').removeAttr('checked');
@@ -331,14 +328,14 @@ $(document).ready(function() {
     $('#topbar .right span').click(function() {
         if ($(this).attr('class') == currentSidebar) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"sidebarset","null");
+                localStorage.setItem(chat['url']+"sidebarset","null");
             }
             sidebarset = null;
             unGlow('.'+$(this).attr('class'));
             setSidebar(null);
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"sidebarset",$(this).attr('class'));
+                localStorage.setItem(chat['url']+"sidebarset",$(this).attr('class'));
             }
             sidebarset = $(this).attr('class');
             unGlow('#topbar .right span');
@@ -350,13 +347,13 @@ $(document).ready(function() {
     $('.bbset').click(function() {
         if (this.checked) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"bbset",1);
+                localStorage.setItem(chat['url']+"bbset",1);
                 localStorage.bbset = 1;
             }
             bbset = 1;
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"bbset",0);
+                localStorage.setItem(chat['url']+"bbset",0);
                 localStorage.bbset = 0;
             }
             bbset = 0;
@@ -366,13 +363,13 @@ $(document).ready(function() {
     $('.deskset').click(function() {
         if (this.checked) {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"deskset",1);
+                localStorage.setItem(chat['url']+"deskset",1);
                 localStorage.deskset = 1;
             }
             deskset = 1;
         } else {
             if (Modernizr.localstorage) {
-                localStorage.setItem(chat+"deskset",0);
+                localStorage.setItem(chat['url']+"deskset",0);
                 localStorage.deskset = 0;
             }
             deskset = 0;
@@ -428,7 +425,7 @@ $(document).ready(function() {
         function runSearch() {
             $.post(SEARCH_URL, {}, function(data) {
                 chat = data['target'];
-                chaturl = '/chat/'+chat;
+                chaturl = '/chat/'+chat['url'];
                 if (typeof window.history.replaceState!="undefined") {
                     window.history.replaceState('', '', chaturl);
                     startChat();
@@ -491,7 +488,7 @@ $(document).ready(function() {
             }
 
             if (shownotif == 1 && isActive == false) {
-                if (deskset == 1) { show(chat,htmlEncode(bbRemove(msg.line))); }
+                if (deskset == 1) { show(chat['url'],htmlEncode(bbRemove(msg.line))); }
             }
             shownotif = 0;
         }
@@ -499,15 +496,15 @@ $(document).ready(function() {
         function startChat() {
             chatState = 'chat';
             userState = 'online';
-            document.title = chat+' - '+ORIGINAL_TITLE;
-            if (chat_meta.type=='unsaved' || chat_meta.type=='saved') {
-                document.title = ORIGINAL_TITLE+' - '+chat;
+            document.title = (chat['title'] || chat['url'])+' - '+ORIGINAL_TITLE;
+            if (chat.type=='unsaved' || chat.type=='saved') {
+                document.title = ORIGINAL_TITLE+' - '+chat['url'];
             }
             msgcont = 0;
             conversation.removeClass('search');
             $('input, select, button').removeAttr('disabled');
             $('#preview').css('color', '#'+user.character.color);
-            $('#logLink').attr('href', '/chat/'+chat+'/log');
+            $('#logLink').attr('href', '/chat/'+chat['url']+'/log');
             if (!sidebarset) {
                 setSidebar(null);
                 unGlow('#topbar .right span');
@@ -523,15 +520,15 @@ $(document).ready(function() {
         }
 
         function getMeta() {
-            var messageData = {'chat': chat, 'after': '-2'};
-            $.post(MESSAGES_URL, messageData, function(data) {
+            var messageData = {'chat_id': chat['id'], 'after': '0'};
+            $.post('/chat_api/messages', messageData, function(data) {
                 messageParse(data,0);
             }, "json");
         }
 
         function getMessages() {
-            var messageData = {'chat': chat, 'after': latestNum};
-            $.post(MESSAGES_URL, messageData, function(data) {
+            var messageData = {'chat_id': chat['id'], 'after': latestNum};
+            $.post('/chat_api/messages', messageData, function(data) {
                 messageParse(data,1);
             }, "json").complete(function() {
                 if (chatState=='chat') {
@@ -575,7 +572,7 @@ $(document).ready(function() {
             }
             if (typeof data.meta!=='undefined') {
                 // Reload chat metadata.
-                var chat_meta = data.meta;
+                var chat = data.meta;
 
 					for (i=0; i<CHAT_FLAGS.length; i++) {
 						if (typeof data.meta[CHAT_FLAGS[i]]!=='undefined') {
@@ -615,7 +612,7 @@ $(document).ready(function() {
                     if (msgcont == 1) {
                         msss = "Message";
                     }
-                    document.title = msgcont+" New "+msss+" - "+chat;
+                    document.title = msgcont+" New "+msss+" - "+chat['url'];
                 }
             }
             if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
@@ -630,14 +627,14 @@ $(document).ready(function() {
         }
 
         function pingServer() {
-            $.post(PING_URL, {'chat': chat});
+            $.post('/chat_api/ping', {'chat_id': chat['id']});
             pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
             updateChatPreview();
         }
 
         function disconnect() {
             if (confirm('Are you sure you want to disconnect?')) {
-                $.ajax(QUIT_URL, {'type': 'POST', data: {'chat': chat}});
+                $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
                 clearChat();
             }
         }
@@ -647,13 +644,13 @@ $(document).ready(function() {
             if (pingInterval) {
                 window.clearTimeout(pingInterval);
             }
-            $('input[name="chat"]').val(chat);
+            $('input[name="chat"]').val(chat['url']);
             $('input, select, button').attr('disabled', 'disabled');
             $('#userList > ul').empty();
             setSidebar(null);
-            document.title = chat+' - '+ORIGINAL_TITLE;
-            if (chat_meta.type=='unsaved' || chat_meta.type=='saved') {
-                document.title = ORIGINAL_TITLE+' - '+chat;
+            document.title = (chat['title'] || chat['url'])+' - '+ORIGINAL_TITLE;
+            if (chat.type=='unsaved' || chat.type=='saved') {
+                document.title = ORIGINAL_TITLE+' - '+chat['url'];
             }
             msgcont = 0;
         }
@@ -685,7 +682,7 @@ $(document).ready(function() {
             //findit
             if ($(document.body).hasClass('mobile')) {
                 if (Modernizr.localstorage) {
-                    localStorage.setItem(chat+"sidebarset","null");
+                    localStorage.setItem(chat['url']+"sidebarset","null");
                 }
                 if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
                     setSidebar(null);
@@ -693,7 +690,7 @@ $(document).ready(function() {
                 unGlow('#topbar .right span');
             } else {
                 if (Modernizr.localstorage) {
-                    localStorage.setItem(chat+"sidebarset","userList");
+                    localStorage.setItem(chat['url']+"sidebarset","userList");
                 }
                 unGlow('#topbar .right span');
                 glow('#topbar .right .userList');
@@ -799,14 +796,14 @@ $(document).ready(function() {
             var counter = $(this).parent().parent().data().meta.counter;
             var group = $(this).data().group;
             if (counter!=user.meta.counter || confirm('You are about to unmod yourself. Are you sure you want to do this?')) {
-                $.post(POST_URL,{'chat': chat, 'set_group': group, 'counter': counter});
+                $.post(POST_URL,{'chat_id': chat['id'], 'set_group': group, 'counter': counter});
             }
         }
 
         function userAction() {
             var counter = $(this).parent().parent().data().meta.counter;
             var action = $(this).data().action;
-            var actionData = {'chat': chat, 'user_action': action, 'counter': counter};
+            var actionData = {'chat_id': chat['id'], 'user_action': action, 'counter': counter};
             if (action=='ip_ban') {
                 var reason = prompt('Please enter a reason for this ban (spamming, not following rules, etc.):');
                 if (reason==null) {
@@ -870,7 +867,7 @@ $(document).ready(function() {
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     if (Modernizr.localstorage) {
-                        localStorage.setItem(chat+"oocset",1);
+                        localStorage.setItem(chat['url']+"oocset",1);
                     }
                     oocset = 1;
                     glow('#ooclet');
@@ -879,7 +876,7 @@ $(document).ready(function() {
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
                     if (Modernizr.localstorage) {
-                        localStorage.setItem(chat+"oocset",0);
+                        localStorage.setItem(chat['url']+"oocset",0);
                     }
                     oocset = 0;
                     unGlow('#ooclet');
@@ -900,7 +897,7 @@ $(document).ready(function() {
                         window.clearTimeout(pingInterval);
                     }
                     var lineSend = $('#preview').text();
-                    $.post(POST_URL,{'chat': chat, 'line': lineSend}); // todo: check for for error
+                    $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
                     updateChatPreview();
@@ -1023,16 +1020,16 @@ $(document).ready(function() {
                     if (navigator.userAgent.indexOf('Chrome')!=-1) {
                         // You can't change document.title here in Chrome. #googlehatesyou
                         window.setTimeout(function() {
-                            document.title = chat+' - '+ORIGINAL_TITLE;
-                            if (chat_meta.type=='unsaved' || chat_meta.type=='saved') {
-                                document.title = ORIGINAL_TITLE+' - '+chat;
+                            document.title = (chat['title'] || chat['url'])+' - '+ORIGINAL_TITLE;
+                            if (chat.type=='unsaved' || chat.type=='saved') {
+                                document.title = ORIGINAL_TITLE+' - '+chat['url'];
                             }
                             msgcont = 0;
                         }, 200);
                     } else {
-                        document.title = chat+' - '+ORIGINAL_TITLE;
-                        if (chat_meta.type=='unsaved' || chat_meta.type=='saved') {
-                            document.title = ORIGINAL_TITLE+' - '+chat;
+                        document.title = chat['url']+' - '+ORIGINAL_TITLE;
+                        if (chat.type=='unsaved' || chat.type=='saved') {
+                            document.title = ORIGINAL_TITLE+' - '+chat['url'];
                         }
                         msgcont = 0;
                     }
@@ -1045,7 +1042,7 @@ $(document).ready(function() {
         $('#statusButton').click(function() {
             newState = $('#statusInput').val();
             $('#statusInput').val('');
-            $.post(POST_URL, {'chat': chat, 'state': newState}, function(data) {
+            $.post(POST_URL, {'chat_id': chat['id'], 'state': newState}, function(data) {
                 userState = newState;
             });
         });
@@ -1070,7 +1067,7 @@ $(document).ready(function() {
                 alert("You entered an invalid hex code. Try using the color picker.");
             } else {
                 var formData = $(this).serializeArray();
-                formData.push({ name: 'chat', value: chat })
+                formData.push({ name: 'chat_id', value: chat['id'] })
                 $.post(SAVE_URL, formData, function(data) {
                     $('#preview').css('color', '#'+$('input[name="color"]').val());
                     var formInputs = $('#settings').find('input, select');
@@ -1094,7 +1091,7 @@ $(document).ready(function() {
         });
 
         $('#metaOptions input').click(function() {
-            var data = {'chat': chat, 'meta_change': ''}
+            var data = {'chat_id': chat['id'], 'meta_change': ''}
             // Convert to integer then string.
             data[this.id] = +this.checked+'';
             $.post(POST_URL, data);
@@ -1104,7 +1101,7 @@ $(document).ready(function() {
             if ($.inArray(user.meta.group, MOD_GROUPS)!=-1) {
                 var new_topic = prompt('Please enter a new topic for the chat:');
                 if (new_topic!=null) {
-                    $.post(POST_URL,{'chat': chat, 'topic': new_topic.substr(0, 1400)});
+                    $.post(POST_URL,{'chat_id': chat['id'], 'topic': new_topic.substr(0, 1400)});
                 }
             }
         });
@@ -1112,7 +1109,7 @@ $(document).ready(function() {
         $('.inPass').click(function() {
             var admin_pass = prompt('Enter your Admin Password:');
             if (admin_pass!=null) {
-                $.post(POST_URL,{'chat': chat, 'modPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
+                $.post(POST_URL,{'chat_id': chat['id'], 'modPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
             }
         });
 
@@ -1120,7 +1117,7 @@ $(document).ready(function() {
             if (user.meta.group == 'globalmod') {
                 var admin_pass = prompt('Enter the new Admin Password:');
                 if (admin_pass!=null) {
-                    $.post(POST_URL,{'chat': chat, 'editPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
+                    $.post(POST_URL,{'chat_id': chat['id'], 'editPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
                 }
             } else if (user.meta.group == 'mod') {
                 var admin_old_pass = prompt('Enter the old Admin Password:');
@@ -1129,7 +1126,7 @@ $(document).ready(function() {
                     if (admin_old_pass!=null){} else {
                         admin_old_pass == '';
                     }
-                    $.post(POST_URL,{'chat': chat, 'oldPass': admin_old_pass.substr(0, 150), 'editPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
+                    $.post(POST_URL,{'chat_id': chat['id'], 'oldPass': admin_old_pass.substr(0, 150), 'editPass': admin_pass.substr(0, 150), 'counter': user.meta.counter});
                 }
             }
         });
@@ -1137,13 +1134,13 @@ $(document).ready(function() {
         $('.hidedesc').click(function() {
             if (topicHidden) {
                 if (Modernizr.localstorage) {
-                    localStorage.setItem(chat+"topichide",0);
+                    localStorage.setItem(chat['url']+"topichide",0);
                 }
                 topichide = 0;
                 $('#topic').show();
             } else {
                 if (Modernizr.localstorage) {
-                    localStorage.setItem(chat+"topichide",1);
+                    localStorage.setItem(chat['url']+"topichide",1);
                 }
                 topichide = 1;
                 $('#topic').hide();
@@ -1172,15 +1169,15 @@ $(document).ready(function() {
                     }
                     return 'Are you sure you want to leave? Your chat is still running.';
                 }
-            localStorage.setItem(chat+"disnot",1);
+            localStorage.setItem(chat['url']+"disnot",1);
             } else {
-                localStorage.setItem(chat+"disnot",0);
+                localStorage.setItem(chat['url']+"disnot",0);
             }
         }
 
         $(window).unload(function() {
             if (chatState=='chat') {
-                $.ajax(QUIT_URL, {'type': 'POST', data: {'chat': chat}, 'async': false});
+                $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
             } else if (chatState=='search') {
                 $.ajax(SEARCH_QUIT_URL, {'type': 'POST', 'async': false});
             }
@@ -1246,7 +1243,7 @@ $(document).ready(function() {
 
     $('#saveLink').click(function() {
         if (confirm('Are you sure you want to save the log and disconnect?')) {
-            $.ajax(QUIT_URL, {'type': 'POST', data: {'chat': chat}});
+            $.ajax('/chat_ajax/quit', {'type': 'POST', data: {'chat_id': chat['id']}});
             clearChat();
             $('#save input').removeAttr('disabled');
             $('#saveLinking').click();
