@@ -47,6 +47,14 @@ function heightAdjust() {
 $(document).ready(function() {
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
+
+    screenCheck();
+    heightAdjust();
+    $(window).resize(function() {
+        screenCheck();
+        heightAdjust();
+    });
+
     if(navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false) {
         $('meta[name=viewport]').attr('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />');
     }
@@ -71,10 +79,5 @@ $(document).ready(function() {
 });
 
 $(window).load(function() {
-    screenCheck();
-    heightAdjust();
-    $(window).resize(function() {
-        screenCheck();
-        heightAdjust();
-    });
+
 });
