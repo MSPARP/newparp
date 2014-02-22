@@ -82,7 +82,7 @@ class User(Base):
     # Global character data. This is copied whenever a UserChat is created.
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -209,7 +209,7 @@ class UserChat(Base):
     ), nullable=False, default=u"user")
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
