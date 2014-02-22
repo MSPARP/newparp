@@ -39,12 +39,11 @@ function heightAdjust() {
         leftHeight = $('#char_left').height();
         centerHeight = $('#char_center').height()-$('#typing-quirks .replacementContainer').height();
         $('#typing-quirks .replacementContainer').height(leftHeight-centerHeight);
-    } else {
-        $('#typing-quirks .replacementContainer').height(178);
     }
 }
 
 $(document).ready(function() {
+    /*
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
 
@@ -54,6 +53,7 @@ $(document).ready(function() {
         screenCheck();
         heightAdjust();
     });
+    */
 
     if(navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false) {
         $('meta[name=viewport]').attr('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />');
