@@ -81,7 +81,8 @@ noscript, .error {
 }
 
 label {
-    margin-top: 1px;
+    font-family: "Source Sans Pro B", Sans-Serif;
+    margin-top: -1px;
     margin-bottom: 6px;
 }
 
