@@ -342,7 +342,7 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var mp = $('<p>').addClass(msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
+            var mp = $('<p>').addClass(msg.type).css('color', '#'+msg.color).html(message).appendTo('#convo');
 
             if (highlightUser==msg.counter) {
                 mp.addClass('highlight');
