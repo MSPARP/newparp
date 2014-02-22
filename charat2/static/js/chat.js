@@ -443,7 +443,7 @@ $(document).ready(function() {
                 // Reload user lists.
                 actionListUser = null;
                 $("#online > li, #idle > li").appendTo(holdingList);
-                generateUserlist(data.users, $('#online')[0]);
+                //generateUserlist(data.users, $('#online')[0]);
             }
             if (typeof data.meta!=='undefined') {
                 // Reload chat metadata.
@@ -569,7 +569,7 @@ $(document).ready(function() {
 
         // User list
         var holdingList = $("<ul />");
-
+        /*
         function generateUserlist(users, listElement) {
             for (var i=0; i<users.length; i++) {
                 var currentUser = users[i];
@@ -614,6 +614,7 @@ $(document).ready(function() {
                 listItem.removeData().data(currentUser).appendTo(listElement);
             }
         }
+        */
 
         function showActionList() {
             $('#actionList').remove();
