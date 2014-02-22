@@ -337,10 +337,12 @@ $(document).ready(function() {
               $('#exclaim').html(parseInt($('#exclaim').html())+1);
             }
 
+            /*
             if (msg.user_id) {
                 msgClass = 'user'+msg.user_id;
                 shownotif = 1;
             }
+            */
 
             if (bbset == 1) {
                 message = bbEncode(htmlEncode(linkify(msg.text)));
@@ -348,8 +350,8 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var mp = $('<p>').attr('title',msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
-            /*.addClass(msgClass)*/
+            var mp = $('<p>').css('color', '#'+msg.color).html(message).appendTo('#convo');
+            /*.addClass(msgClass).attr('title',msgClass)*/
             if (highlightUser==msg.counter) {
                 mp.addClass('highlight');
             }
