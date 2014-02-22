@@ -342,6 +342,7 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
+            msgClass = msg.type;
             var alias = "";
             if (msg.acronym) {
                 alias = msg.acronym+": "
@@ -358,12 +359,9 @@ $(document).ready(function() {
             }
             */
 
-            /*
             if (sysnot == 1 && msgClass == 'system') {
                 $('.system').hide();
             }
-
-            */
 
             if (flip == 1) {
                 conversation.scrollTop(conversation[0].scrollHeight);
@@ -457,15 +455,15 @@ $(document).ready(function() {
                 // Reload chat metadata.
                 var chat = data.meta;
 
-					for (i=0; i<CHAT_FLAGS.length; i++) {
-						if (typeof data.meta[CHAT_FLAGS[i]]!=='undefined') {
-							$('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
-							$('#'+CHAT_FLAGS[i]+'Result').show();
-						} else {
-							$('#'+CHAT_FLAGS[i]).removeAttr('checked');
-							$('#'+CHAT_FLAGS[i]+'Result').hide();
-						}
-					}
+                for (i=0; i<CHAT_FLAGS.length; i++) {
+                    if (typeof data.meta[CHAT_FLAGS[i]]!=='undefined') {
+                        $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
+                        $('#'+CHAT_FLAGS[i]+'Result').show();
+                    } else {
+                        $('#'+CHAT_FLAGS[i]).removeAttr('checked');
+                        $('#'+CHAT_FLAGS[i]+'Result').hide();
+                    }
+                }
 
                 if (typeof data.meta.topic!=='undefined') {
                     $('#topic').html(bbEncode(linkify(data.meta.topic)));
