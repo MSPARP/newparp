@@ -151,7 +151,7 @@ $(document).ready(function() {
         var sidebarset = "userList";
     }
     var bbset = 1;
-    var deskset = 1;
+    var deskset = 0;
 
     //check variable
     if (disnot == 0) {

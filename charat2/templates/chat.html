@@ -44,7 +44,7 @@
     <div id="convo">
         <p class="eMessages">[url=/chat/{{chat.url}}/log]View earlier messages[/url]</p>
         {% for message in messages %}
-        <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}" color="{{message.color}}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+        <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}" color="#{{message.color}}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
         {% endfor %}
     </div>
 </div>
