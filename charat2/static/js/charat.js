@@ -35,7 +35,7 @@ function screenCheck() {
 }
 
 function heightAdjust() {
-    if (!$('body.mobile').exists() && !$('body.nobile').exists()) {
+    if (!$('body.mobile').exists() && !$('body.nobile').exists() && $('#typing-quirks .replacementContainer').exists()) {
         if ($('#character-config').height() < $('#chat-config').height()) {
             difference = $('#chat-config').height()-$('#character-config').height();
             split = difference/6;
