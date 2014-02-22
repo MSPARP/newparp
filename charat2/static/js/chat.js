@@ -28,48 +28,48 @@ function cmobile() {
 }
 
 var deviceDetection = function () {
-var osVersion,
-device,
-deviceType,
-userAgent,
-isSmartphoneOrTablet; 
-
-device = (navigator.userAgent).match(/Android|iPhone|iPad|iPod/i); 
-
-if ( /Android/i.test(device) ) {
-    if ( !/mobile/i.test(navigator.userAgent) ) { 
+    var osVersion,
+    device,
+    deviceType,
+    userAgent,
+    isSmartphoneOrTablet;
+    
+    device = (navigator.userAgent).match(/Android|iPhone|iPad|iPod/i); 
+    
+    if ( /Android/i.test(device) ) {
+        if ( !/mobile/i.test(navigator.userAgent) ) { 
+            deviceType = 'tablet'; 
+        } else {
+            deviceType = 'phone';
+        } 
+    
+        osVersion = (navigator.userAgent).match(/Android\s+([\d\.]+)/i);
+        osVersion = osVersion[0];
+        osVersion = osVersion.replace('Android ', ''); 
+    
+    } else if ( /iPhone/i.test(device) ) {
+        deviceType = 'phone'; 
+        osVersion = (navigator.userAgent).match(/OS\s+([\d\_]+)/i);
+        osVersion = osVersion[0]; 
+        osVersion = osVersion.replace(/_/g, '.'); 
+        osVersion = osVersion.replace('OS ', '');
+    
+    } else if ( /iPad/i.test(device) ) { 
         deviceType = 'tablet'; 
-    } else {
-        deviceType = 'phone';
+        osVersion = (navigator.userAgent).match(/OS\s+([\d\_]+)/i); 
+        osVersion = osVersion[0];
+        osVersion = osVersion.replace(/_/g, '.');
+        osVersion = osVersion.replace('OS ', '');
     } 
-
-    osVersion = (navigator.userAgent).match(/Android\s+([\d\.]+)/i);
-    osVersion = osVersion[0];
-    osVersion = osVersion.replace('Android ', ''); 
-
-} else if ( /iPhone/i.test(device) ) {
-    deviceType = 'phone'; 
-    osVersion = (navigator.userAgent).match(/OS\s+([\d\_]+)/i);
-    osVersion = osVersion[0]; 
-    osVersion = osVersion.replace(/_/g, '.'); 
-    osVersion = osVersion.replace('OS ', '');
-
-} else if ( /iPad/i.test(device) ) { 
-    deviceType = 'tablet'; 
-    osVersion = (navigator.userAgent).match(/OS\s+([\d\_]+)/i); 
-    osVersion = osVersion[0];
-    osVersion = osVersion.replace(/_/g, '.');
-    osVersion = osVersion.replace('OS ', '');
-} 
-isSmartphoneOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent); 
-userAgent = navigator.userAgent; 
-
-return { 'isSmartphoneOrTablet': isSmartphoneOrTablet, 
-         'device': device, 
-         'osVersion': osVersion,
-         'userAgent': userAgent,
-         'deviceType': deviceType 
-        };
+    isSmartphoneOrTablet = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent); 
+    userAgent = navigator.userAgent; 
+    
+    return { 'isSmartphoneOrTablet': isSmartphoneOrTablet, 
+             'device': device, 
+             'osVersion': osVersion,
+             'userAgent': userAgent,
+             'deviceType': deviceType 
+            };
 }();
 
 function glow(selector) {
@@ -127,7 +127,7 @@ $(document).ready(function() {
       isActive = true;
     };
     window.onblur = function () {
-      isActive = false; 
+      isActive = false;
     };
 
     function isCheckedById(id) {
@@ -141,7 +141,6 @@ $(document).ready(function() {
         }
     }
 
-    //localStorage
     var disnot = 1;
     var sysnot = 0;
     var topichide = 0;
@@ -153,68 +152,6 @@ $(document).ready(function() {
     }
     var bbset = 1;
     var deskset = 1;
-    if (Modernizr.localstorage) {
-        $(".stoptions").show()
-        //set original variable
-        if (!localStorage.getItem(chat['url']+"disnot")) {
-            if (!localStorage.disnot) {
-                localStorage.disnot = 1;
-            }
-            localStorage.setItem(chat['url']+"disnot",localStorage.disnot);
-        }
-
-        if (localStorage.getItem(chat['url']+"sysnot") == 'undefined' || localStorage.getItem(chat['url']+"sysnot") === null) {
-            if (!localStorage.sysnot) {
-                localStorage.sysnot = 0;
-            }
-            localStorage.setItem(chat['url']+"sysnot",localStorage.sysnot);
-        }
-
-        if (localStorage.getItem(chat['url']+"topichide") == 'undefined' || localStorage.getItem(chat['url']+"topichide") === null) {
-            localStorage.setItem(chat['url']+"topichide",0);
-        }
-        
-        if (localStorage.getItem(chat['url']+"oocset") == 'undefined' || localStorage.getItem(chat['url']+"oocset") === null) {
-            localStorage.setItem(chat['url']+"oocset",0);
-        }
-
-        if (localStorage.getItem(chat['url']+"sidebarset") == 'undefined' || localStorage.getItem(chat['url']+"sidebarset") === null) {
-            if (cmobile()) {
-                localStorage.setItem(chat['url']+"sidebarset","null");
-            } else {
-                localStorage.setItem(chat['url']+"sidebarset","userList");
-            }
-        }
-        
-        if (localStorage.getItem(chat['url']+"bbset") == 'undefined' || localStorage.getItem(chat['url']+"bbset") === null) {
-            if (!localStorage.bbset) {
-                localStorage.bbset = 1;
-            }
-            localStorage.setItem(chat['url']+"bbset",localStorage.bbset);
-        }
-
-        if (localStorage.getItem(chat['url']+"deskset") == 'undefined' || localStorage.getItem(chat['url']+"deskset") === null) {
-            if (!localStorage.deskset) {
-                localStorage.deskset = 1;
-            }
-            localStorage.setItem(chat['url']+"deskset",localStorage.deskset);
-        }
-
-        disnot = localStorage.getItem(chat['url']+"disnot");
-        sysnot = localStorage.getItem(chat['url']+"sysnot");
-        topichide = localStorage.getItem(chat['url']+"topichide");
-        oocset = localStorage.getItem(chat['url']+"oocset");
-        if (localStorage.getItem(chat['url']+"sidebarset") == "null")
-        {
-            sidebarset = null;
-        } else {
-            sidebarset = localStorage.getItem(chat['url']+"sidebarset");
-        }
-        bbset = localStorage.getItem(chat['url']+"bbset");
-        deskset = localStorage.getItem(chat['url']+"deskset");
-    } else {
-        $('.system').show();
-    }
 
     //check variable
     if (disnot == 0) {
@@ -254,15 +191,6 @@ $(document).ready(function() {
 
     //toggle
     $('.disnot').click(function() {
-        if (Modernizr.localstorage) {
-            if (this.checked) {
-                localStorage.setItem(chat['url']+"disnot",1);
-                localStorage.disnot = 1;
-            } else {
-                localStorage.setItem(chat['url']+"disnot",0);
-                localStorage.disnot = 0;
-            }
-        }
         if (this.checked) {
             disnot = 1;
         } else {
@@ -272,17 +200,9 @@ $(document).ready(function() {
 
     $('.sysnot').click(function() {
         if (this.checked) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"sysnot",1);
-                localStorage.sysnot = 1;
-            }
             sysnot = 1;
             $('.system').hide();
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"sysnot",0);
-                localStorage.sysnot = 0;
-            }
             sysnot = 0;
             $('.system').show();
             conversation.scrollTop(conversation[0].scrollHeight);
@@ -291,15 +211,9 @@ $(document).ready(function() {
 
     $('.oocset').click(function() {
         if (this.checked) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"oocset",1);
-            }
             oocset = 1;
             glow('#ooclet');
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"oocset",0);
-            }
             oocset = 0;
             unGlow('#ooclet');
         }
@@ -308,16 +222,10 @@ $(document).ready(function() {
 
     $('#ooclet').click(function() {
         if (oocset == 0) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"oocset",1);
-            }
             oocset = 1;
             $('.oocset').attr('checked','checked');
             glow('#ooclet');
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"oocset",0);
-            }
             oocset = 0;
             $('.oocset').removeAttr('checked');
             unGlow('#ooclet');
@@ -327,16 +235,10 @@ $(document).ready(function() {
     
     $('#topbar .right span').click(function() {
         if ($(this).attr('class') == currentSidebar) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"sidebarset","null");
-            }
             sidebarset = null;
             unGlow('.'+$(this).attr('class'));
             setSidebar(null);
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"sidebarset",$(this).attr('class'));
-            }
             sidebarset = $(this).attr('class');
             unGlow('#topbar .right span');
             glow('.'+$(this).attr('class'));
@@ -346,32 +248,16 @@ $(document).ready(function() {
 
     $('.bbset').click(function() {
         if (this.checked) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"bbset",1);
-                localStorage.bbset = 1;
-            }
             bbset = 1;
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"bbset",0);
-                localStorage.bbset = 0;
-            }
             bbset = 0;
         }
     });
 
     $('.deskset').click(function() {
         if (this.checked) {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"deskset",1);
-                localStorage.deskset = 1;
-            }
             deskset = 1;
         } else {
-            if (Modernizr.localstorage) {
-                localStorage.setItem(chat['url']+"deskset",0);
-                localStorage.deskset = 0;
-            }
             deskset = 0;
         }
     });
@@ -504,7 +390,7 @@ $(document).ready(function() {
                 unGlow('#topbar .right span');
                 glow('#topbar .right .'+sidebarset);
             }
-            getMeta();
+            //getMeta();
             getMessages();
             pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
             updateChatPreview();
@@ -672,17 +558,11 @@ $(document).ready(function() {
         function closeSettings() {
             //findit
             if ($(document.body).hasClass('mobile')) {
-                if (Modernizr.localstorage) {
-                    localStorage.setItem(chat['url']+"sidebarset","null");
-                }
                 if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
                     setSidebar(null);
                 }
                 unGlow('#topbar .right span');
             } else {
-                if (Modernizr.localstorage) {
-                    localStorage.setItem(chat['url']+"sidebarset","userList");
-                }
                 unGlow('#topbar .right span');
                 glow('#topbar .right .userList');
                 setSidebar('userList');
@@ -857,18 +737,12 @@ $(document).ready(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
-                    if (Modernizr.localstorage) {
-                        localStorage.setItem(chat['url']+"oocset",1);
-                    }
                     oocset = 1;
                     glow('#ooclet');
                     $('.oocset').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
-                    if (Modernizr.localstorage) {
-                        localStorage.setItem(chat['url']+"oocset",0);
-                    }
                     oocset = 0;
                     unGlow('#ooclet');
                     $('.oocset').removeAttr('checked');
@@ -1124,15 +998,9 @@ $(document).ready(function() {
 
         $('.hidedesc').click(function() {
             if (topicHidden) {
-                if (Modernizr.localstorage) {
-                    localStorage.setItem(chat['url']+"topichide",0);
-                }
                 topichide = 0;
                 $('#topic').show();
             } else {
-                if (Modernizr.localstorage) {
-                    localStorage.setItem(chat['url']+"topichide",1);
-                }
                 topichide = 1;
                 $('#topic').hide();
             }
@@ -1160,9 +1028,6 @@ $(document).ready(function() {
                     }
                     return 'Are you sure you want to leave? Your chat is still running.';
                 }
-            localStorage.setItem(chat['url']+"disnot",1);
-            } else {
-                localStorage.setItem(chat['url']+"disnot",0);
             }
         }
 
