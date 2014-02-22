@@ -415,6 +415,7 @@ $(document).ready(function() {
                     $('#save input').removeAttr('disabled');
                     conversation.scrollTop(conversation[0].scrollHeight);
                 }
+                alert(chatState);
             });
         }
 
