@@ -410,7 +410,6 @@ $(document).ready(function() {
             $.post('/chat_api/messages', messageData, function(data) {
                 messageParse(data,1);
             }, "json").complete(function() {
-                alert("asdfasdjfhajkshdf");
                 if (chatState=='chat') {
                     window.setTimeout(getMessages, 50);
                 } else {
