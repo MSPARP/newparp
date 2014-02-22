@@ -408,6 +408,7 @@ $(document).ready(function() {
             $.post('/chat_api/messages', messageData, function(data) {
                 messageParse(data,1);
             }, "json").complete(function() {
+                alert("asdfasdjfhajkshdf");
                 if (chatState=='chat') {
                     window.setTimeout(getMessages, 50);
                 } else {
@@ -415,7 +416,6 @@ $(document).ready(function() {
                     $('#save input').removeAttr('disabled');
                     conversation.scrollTop(conversation[0].scrollHeight);
                 }
-                alert("asdfasdjfhajkshdf");
             });
         }
 
