@@ -342,12 +342,12 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var acronym = "";
+            var alias = "";
             if (msg.acronym) {
-                acronym = msg.acronym+": "
+                alias = msg.acronym+": "
             }
 
-            var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).css('color', '#'+msg.color).html(+message).appendTo('#convo');
+            var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).css('color', '#'+msg.color).html(alias+message).appendTo('#convo');
 
             /*
             if (highlightUser==msg.counter) {
