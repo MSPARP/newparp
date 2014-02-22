@@ -326,7 +326,6 @@ $(document).ready(function() {
         }
 
         // Chatting
-
         function addLine(msg){
             var von = conversation.scrollTop()+conversation.height()+24;
             var don = conversation[0].scrollHeight;
@@ -337,12 +336,11 @@ $(document).ready(function() {
               $('#exclaim').html(parseInt($('#exclaim').html())+1);
             }
 
-            /*
-            if (msg.user_id) {
+            shownotif = 0;
+            if (msg.id) {
                 msgClass = 'user'+msg.user_id;
                 shownotif = 1;
             }
-            */
 
             if (bbset == 1) {
                 message = bbEncode(htmlEncode(linkify(msg.text)));
@@ -350,19 +348,19 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var mp = $('<p>').css('color', '#'+msg.color).html(message).appendTo('#convo');
-            /*.addClass(msgClass).attr('title',msgClass)*/
+            var mp = $('<p>').addClass(msgClass).attr('title',msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
+
             if (highlightUser==msg.counter) {
                 mp.addClass('highlight');
             }
             if (blockUser==msg.counter) {
                 mp.addClass('blocking');
             }
-            /*
+
             if (sysnot == 1 && msgClass == 'system') {
                 $('.system').hide();
             }
-            */
+
             if (flip == 1) {
                 conversation.scrollTop(conversation[0].scrollHeight);
                 flip = 0;
@@ -487,7 +485,6 @@ $(document).ready(function() {
                 }
             }
             if (messages.length>0 && typeof hidden!=="undefined" && document[hidden]==true && ape == 1) {
-                /*
                 if (msgClass == "system" && sysnot == 1) {}
                 else {
                     msgcont++;
@@ -497,7 +494,6 @@ $(document).ready(function() {
                     }
                     document.title = msgcont+" New "+msss+" - "+chat['url'];
                 }
-                */
             }
             if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
                 $('.inPass').hide();
