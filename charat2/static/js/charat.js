@@ -45,6 +45,13 @@ function heightAdjust() {
 }
 
 $(document).ready(function() {
+    screenCheck();
+    heightAdjust();
+    $(window).resize(function() {
+        screenCheck();
+        heightAdjust();
+    });
+
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
     if(navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false) {
@@ -71,10 +78,5 @@ $(document).ready(function() {
 });
 
 $(window).load(function() {
-    screenCheck();
-    heightAdjust();
-    $(window).resize(function() {
-        screenCheck();
-        heightAdjust();
-    });
+
 });
