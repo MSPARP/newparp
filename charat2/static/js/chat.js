@@ -342,14 +342,16 @@ $(document).ready(function() {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var mp = $('<p>').addClass(msg.type).attr("id",msg.id).css('color', '#'+msg.color).html(message).appendTo('#convo');
+            var mp = $('<p>').addClass(msg.type).attr("id","message"+msg.id).css('color', '#'+msg.color).html(message).appendTo('#convo');
 
+            /*
             if (highlightUser==msg.counter) {
                 mp.addClass('highlight');
             }
             if (blockUser==msg.counter) {
                 mp.addClass('blocking');
             }
+            */
 
             if (sysnot == 1 && msgClass == 'system') {
                 $('.system').hide();
