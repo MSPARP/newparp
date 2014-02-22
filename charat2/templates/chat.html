@@ -43,9 +43,9 @@
 <div id="conversation" class="body">
     <div id="convo">
         <p class="eMessages">[url=/chat/{{chat.url}}/log]View earlier messages[/url]</p>
-{% for message in messages %}
-        <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
-{% endfor %}
+        {% for message in messages %}
+        <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}" color="{{message.color}}">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+        {% endfor %}
     </div>
 </div>
 
@@ -71,7 +71,7 @@
                     <li><label><input type="checkbox" id="public"><button>Public Chat</button></label></li>
                     <li class="opmod"><label><input type="checkbox" id="nsfw"><button>NSFW</button></label></li>
                 </ul>
-           </div> 
+           </div>
         {% endif %}
         <div id="onlineContainer" class="card">
             <h1 class="titi">USERS</h1>
