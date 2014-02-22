@@ -336,19 +336,13 @@ $(document).ready(function() {
               $('#exclaim').html(parseInt($('#exclaim').html())+1);
             }
 
-            shownotif = 0;
-            if (msg.id) {
-                msgClass = 'user'+msg.user_id;
-                shownotif = 1;
-            }
-
             if (bbset == 1) {
                 message = bbEncode(htmlEncode(linkify(msg.text)));
             } else {
                 message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
             }
 
-            var mp = $('<p>').addClass(msgClass).attr('title',msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
+            var mp = $('<p>').addClass(msgClass).css('color', '#'+msg.color).html(message).appendTo('#convo');
 
             if (highlightUser==msg.counter) {
                 mp.addClass('highlight');
@@ -366,8 +360,8 @@ $(document).ready(function() {
                 flip = 0;
             }
 
-            if (shownotif == 1 && isActive == false) {
-                if (deskset == 1) { show(chat['url'],htmlEncode(bbRemove(msg.text))); }
+            if (isActive == false && deskset == 1) {
+                show(chat['url'],htmlEncode(bbRemove(msg.text)));
             }
             shownotif = 0;
         }
