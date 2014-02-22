@@ -36,17 +36,6 @@ function screenCheck() {
 
 function heightAdjust() {
     if (!$('body.mobile').exists() && !$('body.nobile').exists() && $('#typing-quirks .replacementContainer').exists()) {
-        if ($('#character-config').height() < $('#chat-config').height()) {
-            difference = $('#chat-config').height()-$('#character-config').height();
-            split = difference/6;
-            final = split+parseInt($('#character-config .card').css('padding-top').replace(/[^-\d\.]/g, ''));
-            $('#character-config .card').css({'padding-top':final+'px','padding-bottom':final+'px'});
-        } else if ($('#character-config').height() > $('#chat-config').height()) {
-            difference = $('#character-config').height()-$('#chat-config').height();
-            split = difference/6;
-            final = split+parseInt($('#chat-config .card').css('padding-top').replace(/[^-\d\.]/g, ''));
-            $('#chat-config .card').css({'padding-top':final+'px','padding-bottom':final+'px'});
-        }
         leftHeight = $('#char_left').height();
         centerHeight = $('#char_center').height()-$('#typing-quirks .replacementContainer').height();
         $('#typing-quirks .replacementContainer').height(leftHeight-centerHeight);
