@@ -37,7 +37,7 @@ var deviceDetection = function () {
     device = (navigator.userAgent).match(/Android|iPhone|iPad|iPod/i); 
     
     if ( /Android/i.test(device) ) {
-        if ( !/mobile/i.test(navigator.userAgent) ) { 
+        if ( !/mobile/i.test(navigator.userAgent) ) {
             deviceType = 'tablet'; 
         } else {
             deviceType = 'phone';
@@ -353,9 +353,12 @@ $(document).ready(function() {
             }
             */
 
+            /*
             if (sysnot == 1 && msgClass == 'system') {
                 $('.system').hide();
             }
+
+            */
 
             if (flip == 1) {
                 conversation.scrollTop(conversation[0].scrollHeight);
