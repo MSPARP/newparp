@@ -91,7 +91,6 @@ $(document).ready(function() {
     var SEARCH_URL = "/search";
     var SEARCH_QUIT_URL = "/stop_search";
     var POST_URL = "/chat_ajax/post";
-    var SAVE_URL = "/chat_ajax/save";
 
     var CHAT_FLAGS = ['autosilence','public','nsfw'];
 
@@ -935,7 +934,7 @@ $(document).ready(function() {
             } else {
                 var formData = $(this).serializeArray();
                 formData.push({ name: 'chat_id', value: chat['id'] })
-                $.post(SAVE_URL, formData, function(data) {
+                $.post('/chat_api/save', formData, function(data) {
                     $('#preview').css('color', '#'+$('input[name="color"]').val());
                     var formInputs = $('#settings').find('input, select');
                     for (i=0; i<formInputs.length; i++) {
