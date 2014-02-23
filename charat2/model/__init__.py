@@ -319,6 +319,7 @@ class Message(Base):
     def to_dict(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,
