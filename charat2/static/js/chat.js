@@ -129,7 +129,7 @@ function addLine(msg){
         alias = msg.acronym+": ";
     }
 
-    var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+,msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
+    var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
 
     if (flip == 1) {
         conversation.scrollTop(conversation[0].scrollHeight);
