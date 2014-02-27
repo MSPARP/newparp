@@ -62,6 +62,8 @@ noscript, .error {
 }
 
 .card button {
+    position: relative;
+    top: 10px;
     font-size: 20px;
     width: 100%;
 }
