@@ -74,6 +74,18 @@ var show_system_messages = user.meta.show_system_messages;
 
 /* FUNCTIONS */
 
+function topbarSelect(selector) {
+    $(selector).css({
+        'color' : '#C0F0C0',
+    });
+}
+
+function topbarDeselect(selector) {
+    $(selector).css({
+        'color' : ''
+    });
+}
+
 function isIphone(){
     return (
         navigator.platform.indexOf("iPhone") != -1 ||
@@ -104,11 +116,11 @@ function startChat() {
     $('#logLink').attr('href', '/chat/'+chat['url']+'/log');
     if (!current_sidebar) {
         setSidebar(null);
-        unGlow('#topbar .right span');
+        topbarDeselect('#topbar .right span');
     } else {
         setSidebar(current_sidebar);
-        unGlow('#topbar .right span');
-        glow('#topbar .right .'+current_sidebar);
+        topbarDeselect('#topbar .right span');
+        topbarSelect('#topbar .right .'+current_sidebar);
     }
     //getMeta();
     getMessages();
@@ -295,10 +307,10 @@ function closeSettings() {
         if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
             setSidebar(null);
         }
-        unGlow('#topbar .right span');
+        topbarDeselect('#topbar .right span');
     } else {
-        unGlow('#topbar .right span');
-        glow('#topbar .right .userList');
+        topbarDeselect('#topbar .right span');
+        topbarSelect('#topbar .right .userList');
         setSidebar('userList');
     }
 }
@@ -422,13 +434,13 @@ $(document).ready(function() {
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     ooc_on = true;
-                    glow('#ooclet');
+                    topbarSelect('#ooclet');
                     $('.oocset').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
                     ooc_on = false;
-                    unGlow('#ooclet');
+                    topbarDeselect('#ooclet');
                     $('.oocset').removeAttr('checked');
                     $('#textInput').val('');
                     return false;
@@ -571,7 +583,7 @@ $(document).ready(function() {
         });
         
         if ($(document.body).hasClass('mobile')) {
-            unGlow('#topbar .right span');
+            topbarDeselect('#topbar .right span');
             setSidebar(null);
             $('.sidebar .close').click(function() {
                 setSidebar(null);
