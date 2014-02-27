@@ -24,7 +24,7 @@ var GROUP_DESCRIPTIONS = {
 };
 
 var ORIGINAL_TITLE = document.title;
-var CHAT_NAME = chat['title'] || chat['url'];
+var CHAT_NAME = chat['title'] || chat.url;
 var CONVERSATION_CONTAINER = '#conversation';
 var CONVERSATION_ID = '#convo';
 
@@ -105,15 +105,15 @@ function isChecked(id) {
 function startChat() {
     chatState = 'chat';
     userState = 'online';
-    document.title = (chat['title'] || chat['url'])+' - '+ORIGINAL_TITLE;
+    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
     if (chat.type=='unsaved' || chat.type=='saved') {
-        document.title = ORIGINAL_TITLE+' - '+chat['url'];
+        document.title = ORIGINAL_TITLE+' - '+chat.url;
     }
     msgcont = 0;
     $(CONVERSATION_CONTAINER).removeClass('search');
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
-    $('#logLink').attr('href', '/chat/'+chat['url']+'/log');
+    $('#logLink').attr('href', '/chat/'+chat.url+'/log');
     if (!current_sidebar) {
         setSidebar(null);
         topbarDeselect('#topbar .right span');
@@ -159,7 +159,7 @@ function addLine(msg){
     }
 
     if (isActive == false && desktop_notifications == true) {
-        show(chat['url'],htmlEncode(bbRemove(msg.text)));
+        show(chat.url,htmlEncode(bbRemove(msg.text)));
     }
     shownotif = 0;
 }
@@ -201,7 +201,7 @@ function messageParse(data,ape) {
     for (var i=0; i<messages.length; i++) {
         if (ape == 1) {
             addLine(messages[i]);
-            latestNum = Math.max(latestNum, messages[i]['id']);
+            latestNum = messages[i].id;
         }
     }
     if (typeof data.counter!="undefined") {
@@ -242,12 +242,7 @@ function messageParse(data,ape) {
         }
     }
     if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
-        msgcont++;
-        msss = "Messages";
-        if (msgcont == 1) {
-            msss = "Message";
-        }
-        document.title = msgcont+" New "+msss+" - "+chat['url'];
+
     }
     if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
         $('.inPass').hide();
@@ -272,12 +267,12 @@ function clearChat() {
     if (pingInterval) {
         window.clearTimeout(pingInterval);
     }
-    $('input[name="chat"]').val(chat['url']);
+    $('input[name="chat"]').val(chat.url);
     $('input, select, button').attr('disabled', 'disabled');
     setSidebar(null);
-    document.title = (chat['title'] || chat['url'])+' - '+ORIGINAL_TITLE;
+    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
     if (chat.type=='unsaved' || chat.type=='saved') {
-        document.title = ORIGINAL_TITLE+' - '+chat['url'];
+        document.title = ORIGINAL_TITLE+' - '+chat.url;
     }
     msgcont = 0;
 }
