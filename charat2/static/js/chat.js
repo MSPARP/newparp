@@ -54,12 +54,12 @@ if (typeof document.hidden !== "undefined") {
     visibilityChange = "webkitvisibilitychange";
 }
 
-//OOC
-//Preview
+var ooc_on = false; // USER META ADD
+var preview_show = false; // USER META ADD
 var confirm_disconnect = user.meta.confirm_disconnect;
 var desktop_notifications = user.meta.desktop_notifications;
 var show_bbcode = user.meta.show_bbcode;
-// Add bbcode color option
+var show_bbcode_color = true; // USER META ADD
 var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
@@ -117,7 +117,7 @@ function addLine(msg){
       $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
     }
 
-    if (bbset == 1) {
+    if (show_bbcode_color == true) {
         message = bbEncode(htmlEncode(linkify(msg.text)));
     } else {
         message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
@@ -324,13 +324,13 @@ function updateChatPreview(){
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
         }
-    } else if (oocset == 1) {
+    } else if (ooc_mode == true) {
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
         } else {
             textPreview = "(( "+textPreview+" ))";
         }
-    } else if (oocset == 0) {
+    } else if (ooc_mode == false) {
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
         }
@@ -389,13 +389,13 @@ $(document).ready(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
-                    oocset = 1;
+                    ooc_mode = true;
                     glow('#ooclet');
                     $('.oocset').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
-                    oocset = 0;
+                    ooc_mode = false;
                     unGlow('#ooclet');
                     $('.oocset').removeAttr('checked');
                     $('#textInput').val('');
