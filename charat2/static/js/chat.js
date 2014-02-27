@@ -242,15 +242,12 @@ function messageParse(data,ape) {
         }
     }
     if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
-        if (msgClass == "system" && sysnot == 1) {}
-        else {
-            msgcont++;
-            msss = "Messages";
-            if (msgcont == 1) {
-                msss = "Message";
-            }
-            document.title = msgcont+" New "+msss+" - "+chat['url'];
+        msgcont++;
+        msss = "Messages";
+        if (msgcont == 1) {
+            msss = "Message";
         }
+        document.title = msgcont+" New "+msss+" - "+chat['url'];
     }
     if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
         $('.inPass').hide();
