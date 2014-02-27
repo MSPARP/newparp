@@ -1,7 +1,9 @@
+/* FINAL VARIABLES */
+
 var SEARCH_PERIOD = 1;
 var PING_PERIOD = 10;
 
-var META_POST = "/chat_ajax/post";
+var POST_URL = "/chat_ajax/post";
 var SAVE_URL = "/chat_ajax/save";
 
 var CHAT_PING = '/chat_api/ping';
@@ -27,6 +29,8 @@ var CONVERSATION_CONTAINER = '#conversation';
 var CONVERSATION_ID = '#convo';
 
 var MISSED_MESSAGE_COUNT_ID = '#exclaim';
+
+/* VARIABLES */
 
 var window_active;
 window.onfocus = function () {
@@ -63,6 +67,8 @@ var show_bbcode_color = true; // USER META ADD
 var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
+
+/* FUNCTIONS */
 
 function isIphone(){
     return (
@@ -171,7 +177,7 @@ function messageParse(data,ape) {
             latestNum = -1;
             chat = 'theoubliette'
             $('#userList h1')[0].innerHTML = 'theoubliette';
-            $('#conversation').empty();
+            $(CONVERSATION_CONTAINER).empty();
         }
         return true;
     } */
@@ -352,7 +358,7 @@ function updateChatPreview(){
     } else {
         $('#preview').html('&nbsp;');
     }
-    $('#conversation').css('bottom',($('.controls').height()+20)+'px');
+    $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
     return textPreview.length!=0;
     // Hide if typing at bottom
 }
@@ -381,10 +387,32 @@ function previewToggle() {
 
 // CUSTOM ALERTS, NO MORE alert();
 
+/* INITIAL WINDOW CHANGES */
+
+$(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER)[0].scrollHeight);
+
+if (!$(document.body).hasClass('mobile')) {
+    $("#textInput").focus();
+}
+
+var crom = conversation.scrollTop()+conversation.height()+24;
+var den = conversation[0].scrollHeight;
+$(window).resize(function(e) {
+    var lon = den-crom;
+    if (lon <= 50){
+        conversation.scrollTop(conversation[0].scrollHeight);
+    }
+});
+
+
 $(document).ready(function() {
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
+        /* START UP */
+        startChat();
+        
+        /* SUBMISSION AND ACTIVE CHANGES */
         $('.controls').submit(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
@@ -424,7 +452,7 @@ $(document).ready(function() {
                     $('#textInput').val('');
                 }
             }
-            if (cmobile()) {} else {
+            if ($(document.body).hasClass('mobile')) {} else {
                 $("#textInput").focus();
             }
             $('#textInput').val('');
@@ -443,7 +471,7 @@ $(document).ready(function() {
         }); */
 
         $("textarea#textInput").on('keydown', function(e) {
-            if (!cmobile()) {
+            if (!$(document.body).hasClass('mobile')) {
                 if (e.keyCode == 13 && !e.shiftKey)
                 {
                     e.preventDefault();
@@ -473,7 +501,7 @@ $(document).ready(function() {
         $('#statusButton').click(function() {
             newState = $('#statusInput').val();
             $('#statusInput').val('');
-            $.post(META_POST, {'chat_id': chat['id'], 'state': newState}, function(data) {
+            $.post(POST_URL, {'chat_id': chat['id'], 'state': newState}, function(data) {
                 userState = newState;
             });
         });
@@ -517,7 +545,74 @@ $(document).ready(function() {
             return false;
         });
         
+        $('#metaOptions input').click(function() {
+            var data = {'chat_id': chat['id'], 'meta_change': ''}
+            // Convert to integer then string.
+            data[this.id] = +this.checked+'';
+            $.post(POST_URL, data);
+        });
         
+        // NEW TOPIC CHANGE FUNCTION
+        
+        $('.hidedesc').click(function() {
+            if (topicHidden) {
+                topichide = 0;
+                $('#topic').show();
+            } else {
+                topichide = 1;
+                $('#topic').hide();
+            }
+            topicHidden = !topicHidden;
+            return false;
+        });
+        
+        if ($(document.body).hasClass('mobile')) {
+            unGlow('#topbar .right span');
+            setSidebar(null);
+            $('.sidebar .close').click(function() {
+                setSidebar(null);
+            }).show();
+            $('#userListButton').click(function() {
+                setSidebar('userList');
+            }).show();
+        }
+        
+        $(CONVERSATION_CONTAINER).scroll(function(){
+            var von = conversation.scrollTop()+conversation.height()+24;
+            var don = conversation[0].scrollHeight;
+            var lon = don-von;
+            if (lon <= 30){
+                $(MISSED_MESSAGE_COUNT_ID).html(0);
+            }
+        });
+
+        $('#extain').click(function(){
+            $(MISSED_MESSAGE_COUNT_ID).html(0);
+            conversation.scrollTop(conversation[0].scrollHeight);
+        });
+
+        $('#conversation p .spoiler').on('click', function() {
+            if ($(this).css('opacity') == '0') {
+                $(this).css('opacity','1');
+            } else {
+                $(this).css('opacity','0');
+            }
+        });
+        
+        window.onbeforeunload = function (e) {
+            if (confirm_disconnect == true) {
+                if (chat_state=='chat') {
+                    if (typeof e!="undefined") {
+                        e.preventDefault();
+                    }
+                    return 'Are you sure you want to leave? Your chat is still running.';
+                }
+            }
+        }
+        
+        $(window).unload(function() {
+            $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
+        });
     }
 });
 
