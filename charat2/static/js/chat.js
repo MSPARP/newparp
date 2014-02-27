@@ -25,7 +25,7 @@ var GROUP_DESCRIPTIONS = {
 
 var ORIGINAL_TITLE = document.title;
 var CHAT_NAME = chat['title'] || chat['url'];
-var CONVERSATION_CONTAINER = '#CONVERSATION_CONTAINER';
+var CONVERSATION_CONTAINER = '#conversation';
 var CONVERSATION_ID = '#convo';
 
 var MISSED_MESSAGE_COUNT_ID = '#exclaim';
@@ -94,7 +94,7 @@ function startChat() {
         document.title = ORIGINAL_TITLE+' - '+chat['url'];
     }
     msgcont = 0;
-    CONVERSATION_CONTAINER.removeClass('search');
+    $(CONVERSATION_CONTAINER).removeClass('search');
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
     $('#logLink').attr('href', '/chat/'+chat['url']+'/log');
@@ -114,8 +114,8 @@ function startChat() {
 
 function addLine(msg){
 	// MAKE A CONVERSATION SCROLL FUNCTION
-    var von = CONVERSATION_CONTAINER.scrollTop()+CONVERSATION_CONTAINER.height()+24;
-    var don = CONVERSATION_CONTAINER[0].scrollHeight;
+    var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
+    var don = $(CONVERSATION_CONTAINER)[0].scrollHeight;
     var lon = don-von;
     if (lon <= 30){
         flip = 1;
@@ -138,7 +138,7 @@ function addLine(msg){
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
 
     if (flip == 1) {
-        CONVERSATION_CONTAINER.scrollTop(CONVERSATION_CONTAINER[0].scrollHeight);
+        $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER)[0].scrollHeight);
         flip = 0;
     }
 
@@ -395,12 +395,12 @@ if (!$(document.body).hasClass('mobile')) {
     $("#textInput").focus();
 }
 
-var crom = CONVERSATION_CONTAINER.scrollTop()+CONVERSATION_CONTAINER.height()+24;
-var den = CONVERSATION_CONTAINER[0].scrollHeight;
+var crom = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
+var den = $(CONVERSATION_CONTAINER)[0].scrollHeight;
 $(window).resize(function(e) {
     var lon = den-crom;
     if (lon <= 50){
-        CONVERSATION_CONTAINER.scrollTop(CONVERSATION_CONTAINER[0].scrollHeight);
+        $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER)[0].scrollHeight);
     }
 });
 
@@ -578,8 +578,8 @@ $(document).ready(function() {
         }
         
         $(CONVERSATION_CONTAINER).scroll(function(){
-            var von = CONVERSATION_CONTAINER.scrollTop()+CONVERSATION_CONTAINER.height()+24;
-            var don = CONVERSATION_CONTAINER[0].scrollHeight;
+            var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
+            var don = $(CONVERSATION_CONTAINER)[0].scrollHeight;
             var lon = don-von;
             if (lon <= 30){
                 $(MISSED_MESSAGE_COUNT_ID).html(0);
@@ -588,10 +588,10 @@ $(document).ready(function() {
 
         $('#extain').click(function(){
             $(MISSED_MESSAGE_COUNT_ID).html(0);
-            CONVERSATION_CONTAINER.scrollTop(CONVERSATION_CONTAINER[0].scrollHeight);
+            $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER)[0].scrollHeight);
         });
 
-        $('#CONVERSATION_CONTAINER p .spoiler').on('click', function() {
+        $('#$(CONVERSATION_CONTAINER) p .spoiler').on('click', function() {
             if ($(this).css('opacity') == '0') {
                 $(this).css('opacity','1');
             } else {
