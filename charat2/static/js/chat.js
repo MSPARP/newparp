@@ -98,13 +98,13 @@ function startChat() {
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
     $('#logLink').attr('href', '/chat/'+chat['url']+'/log');
-    if (!sidebarset) {
+    if (!current_sidebar) {
         setSidebar(null);
         unGlow('#topbar .right span');
     } else {
-        setSidebar(sidebarset);
+        setSidebar(current_sidebar);
         unGlow('#topbar .right span');
-        glow('#topbar .right .'+sidebarset);
+        glow('#topbar .right .'+current_sidebar);
     }
     //getMeta();
     getMessages();
