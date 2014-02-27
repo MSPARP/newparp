@@ -324,13 +324,13 @@ function updateChatPreview(){
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
         }
-    } else if (ooc_mode == true) {
+    } else if (ooc_on == true) {
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
         } else {
             textPreview = "(( "+textPreview+" ))";
         }
-    } else if (ooc_mode == false) {
+    } else if (ooc_on == false) {
         if (textPreview.substr(0,3)=='/me') {
             textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
         }
@@ -389,13 +389,13 @@ $(document).ready(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
-                    ooc_mode = true;
+                    ooc_on = true;
                     glow('#ooclet');
                     $('.oocset').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
-                    ooc_mode = false;
+                    ooc_on = false;
                     unGlow('#ooclet');
                     $('.oocset').removeAttr('checked');
                     $('#textInput').val('');
