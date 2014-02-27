@@ -607,13 +607,15 @@ $(document).ready(function() {
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         });
 
-        $('#$(CONVERSATION_CONTAINER) p .spoiler').on('click', function() {
+        /* SPOILER
+        $('#conversation p .spoiler').on('click', function() {
             if ($(this).css('opacity') == '0') {
                 $(this).css('opacity','1');
             } else {
                 $(this).css('opacity','0');
             }
         });
+        */
         
         window.onbeforeunload = function (e) {
             if (confirm_disconnect == true) {
