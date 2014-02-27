@@ -389,7 +389,7 @@ function previewToggle() {
 
 /* INITIAL WINDOW CHANGES */
 
-$(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER)[0].scrollHeight);
+$('#conversation').scrollTop($('#conversation')[0].scrollHeight);
 
 if (!$(document.body).hasClass('mobile')) {
     $("#textInput").focus();
