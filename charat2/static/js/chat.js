@@ -41,7 +41,11 @@ window.onblur = function () {
 };
 
 chat_state = 'chat';
-current_sidebar = 'userList';
+if ($(document.body).hasClass('mobile')) {
+    var current_sidebar = null;
+} else {
+    var current_sidebar = "userList";
+}
 
 var hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") {
@@ -270,7 +274,7 @@ function clearChat() {
 }
 
 function setSidebar(sidebar) {
-    if (currentSidebar) {
+    if (current_sidebar) {
         $('#'+current_sidebar).hide();
     } else {
         $(document.body).addClass('withSidebar');
