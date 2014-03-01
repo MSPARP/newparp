@@ -195,7 +195,7 @@ function pingServer() {
     updateChatPreview();
 }
 
-function messageParse(data,ape) {
+function messageParse(data) {
 	// KICK/BAN RECEIVAL
     /* if (typeof data.exit!='undefined') {
         if (data.exit=='kick') {
@@ -211,10 +211,7 @@ function messageParse(data,ape) {
     } */
     var messages = data.messages;
     for (var i=0; i<messages.length; i++) {
-        if (ape == 1) {
-            addLine(messages[i]);
-            latestNum = Math.max(latestNum, messages[i]['id']);
-        }
+        latestNum = Math.max(latestNum, messages[i]['id']);
     }
     if (typeof data.counter!="undefined") {
         user.meta.counter = data.counter;
