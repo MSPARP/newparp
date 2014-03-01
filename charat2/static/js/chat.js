@@ -213,7 +213,7 @@ function messageParse(data,ape) {
     for (var i=0; i<messages.length; i++) {
         if (ape == 1) {
             addLine(messages[i]);
-            latestNum = messages[i].id;
+            latestNum = Math.max(latestNum, messages[i]['id']);
         }
     }
     if (typeof data.counter!="undefined") {
