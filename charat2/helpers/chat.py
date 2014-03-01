@@ -12,9 +12,11 @@ from charat2.model.connections import db_connect, get_user_chat
 def mark_alive(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        g.joining = False
         g.chat_id = int(request.form["chat_id"])
         online = g.redis.sismember("chat:%s:online" % g.chat_id, g.user_id)
         if not online:
+            g.joining = True
             # XXX DO BAN CHECKING, ONLINE USER LIMITS ETC. HERE.
             # Get UserChat if we haven't got it already.
             if not hasattr(g, "user_chat"):
@@ -40,8 +42,14 @@ def mark_alive(f):
 def send_message(db, redis, message):
     db.add(message)
     db.flush()
+    message_dict = message.to_dict()
+    # Cache before sending.
+    cache_key = "chat:%s" % message.chat_id
+    redis.zadd(cache_key, message.id, json.dumps(message_dict))
+    redis.zremrangebyrank(cache_key, 0, -51)
+    # Prepare pubsub message
     redis_message = {
-        "messages": [message.to_dict()],
+        "messages": [message_dict],
     }
     # Reload userlist if necessary.
     if message.type in (
@@ -65,7 +73,9 @@ def disconnect(redis, chat_id, user_id):
 def get_userlist(db, redis, chat):
     online_user_ids = redis.smembers("chat:%s:online" % chat.id)
     # Don't bother querying if the list is empty.
+    # Also delete the message cache.
     if len(online_user_ids) == 0:
+        redis.delete("chat:%s" % chat.id)
         return []
     return [
         _.to_dict() for _ in

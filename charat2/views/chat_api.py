@@ -20,23 +20,18 @@ from charat2.model.validators import color_validator
 @mark_alive
 def messages():
 
-	# XXX GET THIS FROM REDIS INSTEAD
-    # Look for messages in the database first, and only subscribe if there
-    # aren't any.
-    #message_query = g.db.query(Message).filter(Message.chat_id == g.chat.id)
-    #if "after" in request.form:
-    #    after = int(request.form["after"])
-    #    message_query = message_query.filter(Message.id > after)
-    # Order descending to limit it to the last 50 messages.
-    #message_query = message_query.order_by(Message.id.desc()).limit(50)
+    try:
+        after = int(request.form["after"])
+    except (KeyError, ValueError):
+        after = 0
 
-    #messages = message_query.all()
-    #if len(messages) != 0:
-    #    messages.reverse()
-    #    return jsonify({
-    #        "messages": [_.to_dict() for _ in messages],
-    #        "users": get_userlist(g.db, g.redis, g.chat),
-    #    })
+    # Look for stored messages first, and only subscribe if there aren't any.
+    messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
+    if len(messages) != 0:
+        message_dict = { "messages": [json.loads(_) for _ in messages] }
+        if g.joining:
+            message_dict["users"] = get_userlist(g.db, g.redis, g.chat)
+        return jsonify(message_dict)
 
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
