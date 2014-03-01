@@ -1,409 +1,114 @@
-$(document).ready(function() {
-    /* FINAL VARIABLES */
+/* FINAL VARIABLES */
 
-    var SEARCH_PERIOD = 1;
-    var PING_PERIOD = 10;
-    
-    var POST_URL = "/chat_ajax/post";
-    var SAVE_URL = "/chat_ajax/save";
-    
-    var CHAT_PING = '/chat_api/ping';
-    var CHAT_MESSAGES = '/chat_api/messages';
-    var CHAT_QUIT = '/chat_api/quit';
-    
-    var CHAT_FLAGS = ['autosilence','public','nsfw'];
-    
-    var MOD_GROUPS = ['globalmod', 'mod', 'mod2', 'mod3'];
-    var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
-    var GROUP_DESCRIPTIONS = {
-        'globalmod': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
-        'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
-        'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },
-        'mod3': { title: 'Little Mod', description: 'Silence' },
-        'user': { title: '', description: '' },
-        'silent': { title: 'Silenced', description: '' },
-    };
-    
-    var ORIGINAL_TITLE = document.title;
-    var CHAT_NAME = chat['title'] || chat.url;
-    var CONVERSATION_CONTAINER = '#conversation';
-    var CONVERSATION_ID = '#convo';
-    
-    var MISSED_MESSAGE_COUNT_ID = '#exclaim';
-    
-    /* VARIABLES */
-    
-    var window_active;
-    window.onfocus = function () {
-       window_active = true;
-    };
-    window.onblur = function () {
-       window_active = false;
-    };
-    
-    chat_state = 'chat';
-    if ($(document.body).hasClass('mobile')) {
-        var current_sidebar = null;
-    } else {
-        var current_sidebar = "userList";
-    }
-    
-    var hidden, visibilityChange;
-    if (typeof document.hidden !== "undefined") {
-        hidden = "hidden";
-        visibilityChange = "visibilitychange";
-    } else if (typeof document.mozHidden !== "undefined") {
-        hidden = "mozHidden";
-        visibilityChange = "mozvisibilitychange";
-    } else if (typeof document.msHidden !== "undefined") {
-        hidden = "msHidden";
-        visibilityChange = "msvisibilitychange";
-    } else if (typeof document.webkitHidden !== "undefined") {
-        hidden = "webkitHidden";
-        visibilityChange = "webkitvisibilitychange";
-    }
-    
-    var ooc_on = false; // USER META ADD
-    var preview_show = false; // USER META ADD
-    var confirm_disconnect = user.meta.confirm_disconnect;
-    var desktop_notifications = user.meta.desktop_notifications;
-    var show_bbcode = user.meta.show_bbcode;
-    var show_bbcode_color = true; // USER META ADD
-    var show_description = user.meta.show_description;
-    // Show and Hide different message types
-    var show_system_messages = user.meta.show_system_messages;
-    
-    /* FUNCTIONS */
-    
-    function topbarSelect(selector) {
-        $(selector).css({
-            'color' : '#C0F0C0',
-        });
-    }
-    
-    function topbarDeselect(selector) {
-        $(selector).css({
-            'color' : ''
-        });
-    }
-    
-    function isIphone(){
-        return (
-            navigator.platform.indexOf("iPhone") != -1 ||
-            navigator.platform.indexOf("iPod") != -1
-        );
-    }
-    
-    function isChecked(id) {
-        var checked = $("input[@id=" + id + "]:checked").length;
-        if (checked == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    function startChat() {
-        chatState = 'chat';
-        userState = 'online';
-        document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
-        if (chat.type=='unsaved' || chat.type=='saved') {
-            document.title = ORIGINAL_TITLE+' - '+chat.url;
-        }
-        msgcont = 0;
-        $(CONVERSATION_CONTAINER).removeClass('search');
-        $('input, select, button').removeAttr('disabled');
-        $('#preview').css('color', '#'+user.character.color);
-        $('#logLink').attr('href', '/chat/'+chat.url+'/log');
-        if (!current_sidebar) {
-            setSidebar(null);
-            topbarDeselect('#topbar .right span');
-        } else {
-            setSidebar(current_sidebar);
-            topbarDeselect('#topbar .right span');
-            topbarSelect('#topbar .right .'+current_sidebar);
-        }
-        //getMeta();
-        getMessages();
-        pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
-        updateChatPreview();
-    }
-    
-    function addLine(msg){
-    	// MAKE A CONVERSATION SCROLL FUNCTION
-        var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
-        var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
-        var lon = don-von;
-        if (lon <= 30){
-            flip = 1;
-        } else {
-          $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
-        }
-    
-        if (show_bbcode_color == true) {
-            message = bbEncode(htmlEncode(linkify(msg.text)));
-        } else {
-            message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
-        }
-    
-        msgClass = msg.type;
-        var alias = "";
-        if (msg.acronym) {
-            alias = msg.acronym+": ";
-        }
-    
-        var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    
-        if (flip == 1) {
-            $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
-            flip = 0;
-        }
-    
-        if (isActive == false && desktop_notifications == true) {
-            show(chat.url,htmlEncode(bbRemove(msg.text)));
-        }
-        shownotif = 0;
-    }
-    
-    function getMessages() {
-        var messageData = {'chat_id': chat['id'], 'after': latestNum};
-        $.post(CHAT_MESSAGES, messageData, function(data) {
-            messageParse(data);
-        }, "json").complete(function() {
-            if (chat_state=='chat') {
-                window.setTimeout(getMessages, 50);
-            } else {
-                // Disconnected methods
-            }
-        });
-    }
-    
-    function pingServer() {
-        $.post(CHAT_PING, {'chat_id': chat['id']});
-        pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
-        updateChatPreview();
-    }
-    
-    function messageParse(data,ape) {
-    	// KICK/BAN RECEIVAL
-        /* if (typeof data.exit!='undefined') {
-            if (data.exit=='kick') {
-                clearChat();
-                addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
-            } else if (data.exit=='ban') {
-                latestNum = -1;
-                chat = 'theoubliette'
-                $('#userList h1')[0].innerHTML = 'theoubliette';
-                $(CONVERSATION_CONTAINER).empty();
-            }
-            return true;
-        } */
-        var messages = data.messages;
-        for (var i=0; i<messages.length; i++) {
-            if (ape == 1) {
-                addLine(messages[i]);
-                latestNum = messages[i].id;
-            }
-        }
-        if (typeof data.counter!="undefined") {
-            user.meta.counter = data.counter;
-        }
-        if (typeof data.meta!='undefined') {
-            // Reload chat metadata.
-            var chat = data.meta;
-    
-            for (i=0; i<CHAT_FLAGS.length; i++) {
-                if (typeof data.meta[CHAT_FLAGS[i]]!='undefined') {
-                    $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
-                    $('#'+CHAT_FLAGS[i]+'Result').show();
-                } else {
-                    $('#'+CHAT_FLAGS[i]).removeAttr('checked');
-                    $('#'+CHAT_FLAGS[i]+'Result').hide();
-                }
-            }
-    
-            if (typeof data.meta.topic!='undefined') {
-                $('#topic').html(bbEncode(linkify(data.meta.topic)));
-            } else {
-                $('#topic').text('');
-            }
-    
-            if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
-                $('.inPass').hide();
-                $('.editPass').show();
-            } else {
-                $('.editPass').hide();
-                $('.inPass').show();
-            }
-            //NSFW
-            if (data.meta['nsfw'] == '1') {
-                //Change
-            } else {
-                //Changed
-            }
-        }
-        if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
-    
-        }
-        if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
-            $('.inPass').hide();
-            $('.editPass').show();
-            $('.opmod input').removeAttr('disabled');
-        } else {
-            $('.editPass').hide();
-            $('.inPass').show();
-            $('.opmod input').attr('disabled', 'disabled');
-        }
-    }
-    
-    function disconnect() {
-        if (confirm('Are you sure you want to disconnect?')) {
-            $.ajax(CHAT_QUIT, {'type': 'POST', data: {'chat_id': chat['id']}});
-            clearChat();
-        }
-    }
-    
-    function clearChat() {
-        chat_state = 'inactive';
-        if (pingInterval) {
-            window.clearTimeout(pingInterval);
-        }
-        $('input[name="chat"]').val(chat.url);
-        $('input, select, button').attr('disabled', 'disabled');
-        setSidebar(null);
-        document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
-        if (chat.type=='unsaved' || chat.type=='saved') {
-            document.title = ORIGINAL_TITLE+' - '+chat.url;
-        }
-        msgcont = 0;
-    }
-    
-    function setSidebar(sidebar) {
-        if (current_sidebar) {
-            $('#'+current_sidebar).hide();
-        } else {
-            $(document.body).addClass('withSidebar');
-        }
-        // null removes sidebar
-        if (sidebar) {
-            $('#'+sidebar).show();
-        } else {
-            $(document.body).removeClass('withSidebar');
-        }
-        current_sidebar = sidebar;
-        // if sidebar changed, check bottom and go to bottom if at bottom
-    }
-    
-    function closeSettings() {
-        //findit
-        if ($(document.body).hasClass('mobile')) {
-            if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
-                setSidebar(null);
-            }
-            topbarDeselect('#topbar .right span');
-        } else {
-            topbarDeselect('#topbar .right span');
-            topbarSelect('#topbar .right .userList');
-            setSidebar('userList');
-        }
-    }
-    
-    function readCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-    
-    function updateChatPreview(){
-        var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
-        textPreview = jQuery.trim(textPreview);
-    
-        if ($('#textInput').val().substr(0,1)=='/' && textPreview.substr(0,4)!=='/ooc' && textPreview.substr(0,3)!=='/ic' && textPreview.substr(0,3)!=='/me') {
-            textPreview = textPreview.substr(1);
-        }
-    
-        if (textPreview.substr(0,4)=='/ooc') {
-            textPreview = jQuery.trim(textPreview.substr(4));
-            if (textPreview.substr(0,3)=='/me') {
-                textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
-            } else {
-                textPreview = "(( "+textPreview+" ))";
-            }
-        } else if (textPreview.substr(0,3)=='/ic') {
-            textPreview = textPreview.substr(3);
-            if (textPreview.substr(0,3)=='/me') {
-                textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
-            }
-        } else if (ooc_on == true) {
-            if (textPreview.substr(0,3)=='/me') {
-                textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
-            } else {
-                textPreview = "(( "+textPreview+" ))";
-            }
-        } else if (ooc_on == false) {
-            if (textPreview.substr(0,3)=='/me') {
-                textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
-            }
-        }
-    
-        textPreview = jQuery.trim(textPreview);
-    
-        if ($('#textInput').val().substr(0,1)!=='/') {
-            textPreview = applyQuirks(textPreview);
-        }
-    
-        if (jQuery.trim($('#textInput').val())=='/ic') {
-            textPreview = 0;
-        }
-    
-        if (textPreview.length>0) {
-            textPreview = textPreview.replace(/\s+/g, ' ');
-            $('#preview').text(textPreview);
-        } else {
-            $('#preview').html('&nbsp;');
-        }
-        $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
-        return textPreview.length!=0;
-        // Hide if typing at bottom
-    }
-    
-    function previewToggle() {
-        if (previewHidden) {
-             $('#preview').show();
-        } else {
-            $('#preview').hide();
-        }
-        updateChatPreview();
-        previewHidden = !previewHidden;
+var SEARCH_PERIOD = 1;
+var PING_PERIOD = 10;
+
+var POST_URL = "/chat_ajax/post";
+var SAVE_URL = "/chat_ajax/save";
+
+var CHAT_PING = '/chat_api/ping';
+var CHAT_MESSAGES = '/chat_api/messages';
+var CHAT_QUIT = '/chat_api/quit';
+
+var CHAT_FLAGS = ['autosilence','public','nsfw'];
+
+var MOD_GROUPS = ['globalmod', 'mod', 'mod2', 'mod3'];
+var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
+var GROUP_DESCRIPTIONS = {
+    'globalmod': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
+    'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
+    'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },
+    'mod3': { title: 'Little Mod', description: 'Silence' },
+    'user': { title: '', description: '' },
+    'silent': { title: 'Silenced', description: '' },
+};
+
+var ORIGINAL_TITLE = document.title;
+var CHAT_NAME = chat['title'] || chat.url;
+var CONVERSATION_CONTAINER = '#conversation';
+var CONVERSATION_ID = '#convo';
+
+var MISSED_MESSAGE_COUNT_ID = '#exclaim';
+
+/* VARIABLES */
+
+var window_active;
+window.onfocus = function () {
+   window_active = true;
+};
+window.onblur = function () {
+   window_active = false;
+};
+
+var chat_state = 'chat';
+var user_state = 'online';
+
+if ($(document.body).hasClass('mobile')) {
+    var current_sidebar = null;
+} else {
+    var current_sidebar = "userList";
+}
+
+var hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") {
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+} else if (typeof document.mozHidden !== "undefined") {
+    hidden = "mozHidden";
+    visibilityChange = "mozvisibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+}
+
+var ooc_on = false; // USER META ADD
+var preview_show = false; // USER META ADD
+var confirm_disconnect = user.meta.confirm_disconnect;
+var desktop_notifications = user.meta.desktop_notifications;
+var show_bbcode = user.meta.show_bbcode;
+var show_bbcode_color = true; // USER META ADD
+var show_description = user.meta.show_description;
+// Show and Hide different message types
+var show_system_messages = user.meta.show_system_messages;
+
+/* FUNCTIONS */
+
+function topbarSelect(selector) {
+    $(selector).css({
+        'color' : '#C0F0C0',
+    });
+}
+
+function topbarDeselect(selector) {
+    $(selector).css({
+        'color' : ''
+    });
+}
+
+function isIphone(){
+    return (
+        navigator.platform.indexOf("iPhone") != -1 ||
+        navigator.platform.indexOf("iPod") != -1
+    );
+}
+
+function isChecked(id) {
+    var checked = $("input[@id=" + id + "]:checked").length;
+    if (checked == 0) {
         return false;
+    } else {
+        return true;
     }
-    
-    // CHANGE THE SETTINGS IN THE CHAT.HTML with {% %}
-    // CHANGE THE SETTINGS WITH AJAX REQUEST ON BUTTON CLICKS
-    // BBCODE REWRITE + REMEMBER TO GO THROUGH ALL PREVIOUS MESSAGES AND BBCODE THEM
-    // CHECK IF COOKIES ARE ENABLED
-    
-    // REWRITE USERLIST AND ADD IN NEW HIGHLIGHTING AND BLOCKING SCRIPTS
-    
-    // ADD NEW MESSAGE HIDING
-    
-    // SPLIT MESSAGE IF MESSAGE IS TOO LONG?
-    
-    // CUSTOM ALERTS, NO MORE alert();
-    
-    /* INITIAL WINDOW CHANGES */
-    
+}
+
+function startChat() {
     $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
-    
     if (!$(document.body).hasClass('mobile')) {
         $("#textInput").focus();
     }
-    
     var crom = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
     var den = $(CONVERSATION_CONTAINER).prop("scrollHeight");
     $(window).resize(function(e) {
@@ -412,10 +117,301 @@ $(document).ready(function() {
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         }
     });
+    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
+    if (chat.type=='unsaved' || chat.type=='saved') {
+        document.title = ORIGINAL_TITLE+' - '+chat.url;
+    }
+    msgcont = 0;
+    $(CONVERSATION_CONTAINER).removeClass('search');
+    $('input, select, button').removeAttr('disabled');
+    $('#preview').css('color', '#'+user.character.color);
+    $('#logLink').attr('href', '/chat/'+chat.url+'/log');
+    if (!current_sidebar) {
+        setSidebar(null);
+        topbarDeselect('#topbar .right span');
+    } else {
+        setSidebar(current_sidebar);
+        topbarDeselect('#topbar .right span');
+        topbarSelect('#topbar .right .'+current_sidebar);
+    }
+    //getMeta();
+    getMessages();
+    pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
+    updateChatPreview();
+}
 
+function addLine(msg){
+	// MAKE A CONVERSATION SCROLL FUNCTION
+    var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
+    var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
+    var lon = don-von;
+    if (lon <= 30){
+        flip = 1;
+    } else {
+      $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
+    }
+
+    if (show_bbcode_color == true) {
+        message = bbEncode(htmlEncode(linkify(msg.text)));
+    } else {
+        message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
+    }
+
+    msgClass = msg.type;
+    var alias = "";
+    if (msg.acronym) {
+        alias = msg.acronym+": ";
+    }
+
+    var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
+
+    if (flip == 1) {
+        $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
+        flip = 0;
+    }
+
+    if (isActive == false && desktop_notifications == true) {
+        show(chat.url,htmlEncode(bbRemove(msg.text)));
+    }
+    shownotif = 0;
+}
+
+function getMessages() {
+    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    $.post(CHAT_MESSAGES, messageData, function(data) {
+        messageParse(data);
+    }, "json").complete(function() {
+        if (chat_state=='chat') {
+            window.setTimeout(getMessages, 50);
+        } else {
+            // Disconnected methods
+        }
+    });
+}
+
+function pingServer() {
+    $.post(CHAT_PING, {'chat_id': chat['id']});
+    pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
+    updateChatPreview();
+}
+
+function messageParse(data,ape) {
+	// KICK/BAN RECEIVAL
+    /* if (typeof data.exit!='undefined') {
+        if (data.exit=='kick') {
+            clearChat();
+            addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
+        } else if (data.exit=='ban') {
+            latestNum = -1;
+            chat = 'theoubliette'
+            $('#userList h1')[0].innerHTML = 'theoubliette';
+            $(CONVERSATION_CONTAINER).empty();
+        }
+        return true;
+    } */
+    var messages = data.messages;
+    for (var i=0; i<messages.length; i++) {
+        if (ape == 1) {
+            addLine(messages[i]);
+            latestNum = messages[i].id;
+        }
+    }
+    if (typeof data.counter!="undefined") {
+        user.meta.counter = data.counter;
+    }
+    if (typeof data.meta!='undefined') {
+        // Reload chat metadata.
+        var chat = data.meta;
+
+        for (i=0; i<CHAT_FLAGS.length; i++) {
+            if (typeof data.meta[CHAT_FLAGS[i]]!='undefined') {
+                $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
+                $('#'+CHAT_FLAGS[i]+'Result').show();
+            } else {
+                $('#'+CHAT_FLAGS[i]).removeAttr('checked');
+                $('#'+CHAT_FLAGS[i]+'Result').hide();
+            }
+        }
+
+        if (typeof data.meta.topic!='undefined') {
+            $('#topic').html(bbEncode(linkify(data.meta.topic)));
+        } else {
+            $('#topic').text('');
+        }
+
+        if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
+            $('.inPass').hide();
+            $('.editPass').show();
+        } else {
+            $('.editPass').hide();
+            $('.inPass').show();
+        }
+        //NSFW
+        if (data.meta['nsfw'] == '1') {
+            //Change
+        } else {
+            //Changed
+        }
+    }
+    if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
+
+    }
+    if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
+        $('.inPass').hide();
+        $('.editPass').show();
+        $('.opmod input').removeAttr('disabled');
+    } else {
+        $('.editPass').hide();
+        $('.inPass').show();
+        $('.opmod input').attr('disabled', 'disabled');
+    }
+}
+
+function disconnect() {
+    if (confirm('Are you sure you want to disconnect?')) {
+        $.ajax(CHAT_QUIT, {'type': 'POST', data: {'chat_id': chat['id']}});
+        clearChat();
+    }
+}
+
+function clearChat() {
+    chat_state = 'inactive';
+    if (pingInterval) {
+        window.clearTimeout(pingInterval);
+    }
+    $('input[name="chat"]').val(chat.url);
+    $('input, select, button').attr('disabled', 'disabled');
+    setSidebar(null);
+    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
+    if (chat.type=='unsaved' || chat.type=='saved') {
+        document.title = ORIGINAL_TITLE+' - '+chat.url;
+    }
+    msgcont = 0;
+}
+
+function setSidebar(sidebar) {
+    if (current_sidebar) {
+        $('#'+current_sidebar).hide();
+    } else {
+        $(document.body).addClass('withSidebar');
+    }
+    // null removes sidebar
+    if (sidebar) {
+        $('#'+sidebar).show();
+    } else {
+        $(document.body).removeClass('withSidebar');
+    }
+    current_sidebar = sidebar;
+    // if sidebar changed, check bottom and go to bottom if at bottom
+}
+
+function closeSettings() {
+    //findit
+    if ($(document.body).hasClass('mobile')) {
+        if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
+            setSidebar(null);
+        }
+        topbarDeselect('#topbar .right span');
+    } else {
+        topbarDeselect('#topbar .right span');
+        topbarSelect('#topbar .right .userList');
+        setSidebar('userList');
+    }
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function updateChatPreview(){
+    var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
+    textPreview = jQuery.trim(textPreview);
+
+    if ($('#textInput').val().substr(0,1)=='/' && textPreview.substr(0,4)!=='/ooc' && textPreview.substr(0,3)!=='/ic' && textPreview.substr(0,3)!=='/me') {
+        textPreview = textPreview.substr(1);
+    }
+
+    if (textPreview.substr(0,4)=='/ooc') {
+        textPreview = jQuery.trim(textPreview.substr(4));
+        if (textPreview.substr(0,3)=='/me') {
+            textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
+        } else {
+            textPreview = "(( "+textPreview+" ))";
+        }
+    } else if (textPreview.substr(0,3)=='/ic') {
+        textPreview = textPreview.substr(3);
+        if (textPreview.substr(0,3)=='/me') {
+            textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
+        }
+    } else if (ooc_on == true) {
+        if (textPreview.substr(0,3)=='/me') {
+            textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
+        } else {
+            textPreview = "(( "+textPreview+" ))";
+        }
+    } else if (ooc_on == false) {
+        if (textPreview.substr(0,3)=='/me') {
+            textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
+        }
+    }
+
+    textPreview = jQuery.trim(textPreview);
+
+    if ($('#textInput').val().substr(0,1)!=='/') {
+        textPreview = applyQuirks(textPreview);
+    }
+
+    if (jQuery.trim($('#textInput').val())=='/ic') {
+        textPreview = 0;
+    }
+
+    if (textPreview.length>0) {
+        textPreview = textPreview.replace(/\s+/g, ' ');
+        $('#preview').text(textPreview);
+    } else {
+        $('#preview').html('&nbsp;');
+    }
+    $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
+    return textPreview.length!=0;
+    // Hide if typing at bottom
+}
+
+function previewToggle() {
+    if (previewHidden) {
+         $('#preview').show();
+    } else {
+        $('#preview').hide();
+    }
+    updateChatPreview();
+    previewHidden = !previewHidden;
+    return false;
+}
+
+// CHANGE THE SETTINGS IN THE CHAT.HTML with {% %}
+// CHANGE THE SETTINGS WITH AJAX REQUEST ON BUTTON CLICKS
+// BBCODE REWRITE + REMEMBER TO GO THROUGH ALL PREVIOUS MESSAGES AND BBCODE THEM
+// CHECK IF COOKIES ARE ENABLED
+
+// REWRITE USERLIST AND ADD IN NEW HIGHLIGHTING AND BLOCKING SCRIPTS
+
+// ADD NEW MESSAGE HIDING
+
+// SPLIT MESSAGE IF MESSAGE IS TOO LONG?
+
+// CUSTOM ALERTS, NO MORE alert();
+
+$(document).ready(function() {
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
+
         /* START UP */
         startChat();
         
@@ -506,10 +502,10 @@ $(document).ready(function() {
         $('#disconnectButton').click(disconnect);
 
         $('#statusButton').click(function() {
-            newState = $('#statusInput').val();
+            new_state = $('#statusInput').val();
             $('#statusInput').val('');
-            $.post(POST_URL, {'chat_id': chat['id'], 'state': newState}, function(data) {
-                userState = newState;
+            $.post(POST_URL, {'chat_id': chat['id'], 'state': new_state}, function(data) {
+                user_state = new_state;
             });
         });
         
