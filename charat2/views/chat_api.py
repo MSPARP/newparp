@@ -2,7 +2,6 @@ import json
 
 from flask import abort, g, jsonify, make_response, request
 
-from charat2.helpers.auth import user_chat_required
 from charat2.helpers.chat import (
     mark_alive,
     send_message,
@@ -10,39 +9,45 @@ from charat2.helpers.chat import (
     get_userlist,
 )
 from charat2.model import case_options, Message
+from charat2.model.connections import (
+    get_user_chat,
+    use_db_chat,
+    db_commit,
+    db_disconnect,
+)
 from charat2.model.validators import color_validator
 
-@user_chat_required
 @mark_alive
 def messages():
 
+	# XXX GET THIS FROM REDIS INSTEAD
     # Look for messages in the database first, and only subscribe if there
     # aren't any.
-    message_query = g.db.query(Message).filter(Message.chat_id == g.chat.id)
-    if "after" in request.form:
-        after = int(request.form["after"])
-        message_query = message_query.filter(Message.id > after)
+    #message_query = g.db.query(Message).filter(Message.chat_id == g.chat.id)
+    #if "after" in request.form:
+    #    after = int(request.form["after"])
+    #    message_query = message_query.filter(Message.id > after)
     # Order descending to limit it to the last 50 messages.
-    message_query = message_query.order_by(Message.id.desc()).limit(50)
+    #message_query = message_query.order_by(Message.id.desc()).limit(50)
 
-    messages = message_query.all()
-    if len(messages) != 0:
-        messages.reverse()
-        return jsonify({
-            "messages": [_.to_dict() for _ in messages],
-            "users": get_userlist(g.db, g.redis, g.chat),
-        })
+    #messages = message_query.all()
+    #if len(messages) != 0:
+    #    messages.reverse()
+    #    return jsonify({
+    #        "messages": [_.to_dict() for _ in messages],
+    #        "users": get_userlist(g.db, g.redis, g.chat),
+    #    })
 
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
-    pubsub.subscribe("channel:%s" % g.chat.id)
+    pubsub.subscribe("channel:%s" % g.chat_id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
-    pubsub.subscribe("channel:%s:%s" % (g.chat.id, g.user.id))
+    pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 
     # Get rid of the database connection here so we're not hanging onto it
     # while waiting for the redis message.
-    g.db.commit()
-    g.db.close()
+    db_commit()
+    db_disconnect()
 
     for msg in pubsub.listen():
         if msg["type"]=="message":
@@ -52,7 +57,11 @@ def messages():
             resp.headers["Content-type"] = "application/json"
             return resp
 
-@user_chat_required
+@mark_alive
+def ping():
+    return "", 204
+
+@use_db_chat
 @mark_alive
 def send():
 
@@ -83,32 +92,27 @@ def send():
 
     return "", 204
 
-@user_chat_required
 @mark_alive
 def set_state():
     raise NotImplementedError
 
-@user_chat_required
 @mark_alive
 def set_group():
     raise NotImplementedError
 
-@user_chat_required
 @mark_alive
 def user_action():
     raise NotImplementedError
 
-@user_chat_required
 @mark_alive
 def set_flag():
     raise NotImplementedError
 
-@user_chat_required
 @mark_alive
 def set_info():
     raise NotImplementedError
 
-@user_chat_required
+@use_db_chat
 @mark_alive
 def save():
 
@@ -164,15 +168,16 @@ def save():
 
     return "", 204
 
-@user_chat_required
-@mark_alive
-def ping():
-    return "", 204
-
-@user_chat_required
 def quit():
     # Only send the message if we were already online.
-    if disconnect(g.redis, g.chat.id, g.user.id):
+    if g.user_id is None or "chat_id" not in request.form:
+        abort(400)
+    try:
+        g.chat_id = int(request.form["chat_id"])
+    except ValueError:
+        abort(400)
+    if disconnect(g.redis, g.chat_id, g.user_id):
+        get_user_chat()
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             type="disconnect",

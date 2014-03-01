@@ -1,20 +1,17 @@
 from flask import Flask
 
-from charat2.helpers.auth import get_request_user, set_cookie
 from charat2.model.connections import (
-    db_connect,
     db_commit,
     db_disconnect,
     redis_connect,
     redis_disconnect,
+    set_cookie,
 )
 from charat2.views import home, account, chat, chat_api
 
 app = Flask(__name__)
 
 app.before_request(redis_connect)
-app.before_request(db_connect)
-app.before_request(get_request_user)
 
 app.after_request(set_cookie)
 app.after_request(db_commit)

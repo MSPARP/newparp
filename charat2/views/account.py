@@ -3,8 +3,10 @@ from flask import g, render_template, redirect, request, url_for
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.model import User
+from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, reserved_usernames
 
+@use_db
 def log_in():
     # Check username, lowercase to make it case-insensitive.
     try:
@@ -33,6 +35,7 @@ def log_out():
         g.redis.delete("session:" + request.cookies["session"])
     return redirect(url_for("home"))
 
+@use_db
 def register():
     # Don't accept blank fields.
     if request.form["username"]=="" or request.form["password"]=="":

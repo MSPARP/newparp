@@ -4,8 +4,10 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import login_required
 from charat2.model import AnyChat, Chat, GroupChat, Message, UserChat
+from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
+@use_db
 @login_required
 def create_chat():
     # Silently truncate to 50 because we've got a maxlength on the <input>.
@@ -32,6 +34,7 @@ def create_chat():
     ))
     return redirect(url_for("chat", url=lower_url))
 
+@use_db
 @login_required
 def chat(url):
     # PM chats aren't implemented yet so just 404 them for now.

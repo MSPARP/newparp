@@ -1,32 +1,104 @@
-from flask import g, request
-from redis import ConnectionPool, StrictRedis
 import os
 
-from charat2.model import sm
+from flask import g, request
+from functools import wraps
+from redis import ConnectionPool, StrictRedis
+from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 
-# Pre- and post-request handlers for the main database connection.
-# Also commit handler so we autocommit on successful requests.
+from charat2.model import sm, AnyChat, User, UserChat
 
-def db_connect():
-    g.db = sm()
+redis_pool = ConnectionPool(
+    host=os.environ['REDIS_HOST'],
+    port=int(os.environ['REDIS_PORT']),
+    db=int(os.environ['REDIS_DB'])
+)
 
-def db_commit(response):
-    g.db.commit()
-    return response
-
-def db_disconnect(response):
-    g.db.close()
-    del g.db
+def set_cookie(response):
+    if not "session" in request.cookies:
+        # XXX SET DOMAIN
+        response.set_cookie("session", g.session_id, max_age=365*24*60*60)
     return response
 
 # Pre- and post-request handlers for the Redis connection.
-
-redis_pool = ConnectionPool(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']), db=int(os.environ['REDIS_DB']))
+# Automatically get session's user ID too because we're always gonna need it.
 
 def redis_connect():
     g.redis = StrictRedis(connection_pool=redis_pool)
+    if "session" in request.cookies:
+        g.session_id = request.cookies["session"]
+        g.user_id = g.redis.get("session:" + g.session_id)
+    else:
+        g.session_id = str(uuid4())
+        g.user_id = None
 
 def redis_disconnect(response):
     del g.redis
+    return response
+
+# Connection function and decorators for connecting to the database.
+# The first decorator just fetches the User object and is for general stuff.
+# The second fetches the User, UserChat and Chat objects and is used by the
+# chat-related views.
+# (also the second is in a function by itself so it can be called by
+# mark_alive too)
+
+def db_connect():
+    if not hasattr(g, "db"):
+        g.db = sm()
+
+def use_db(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        db_connect()
+        g.user = None
+        if g.user_id is not None:
+            try:
+                g.user = g.db.query(User).filter(User.id==g.user_id).one()
+            except NoResultFound:
+                pass
+        return f(*args, **kwargs)
+    return decorated_function
+
+def get_user_chat():
+    db_connect()
+    try:
+        g.user_chat, g.user, g.chat = g.db.query(
+            UserChat, User, AnyChat,
+        ).join(
+            User, UserChat.user_id==User.id,
+        ).join(
+            AnyChat, UserChat.chat_id==AnyChat.id,
+        ).filter(and_(
+            UserChat.user_id==g.user_id,
+            UserChat.chat_id==int(request.form["chat_id"]),
+        )).one()
+    except NoResultFound:
+        abort(400)
+
+def use_db_chat(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        get_user_chat()
+        return f(*args, **kwargs)
+    return decorated_function
+
+# Post-request handlers for committing and disconnecting.
+# Disconnect is run on every request and commit is run on every successful
+# request.
+
+# They skip if there isn't a database connection because not all requests will
+# be connecting to the database.
+
+def db_commit(response=None):
+    if hasattr(g, "db"):
+        g.db.commit()
+    return response
+
+def db_disconnect(response=None):
+    if hasattr(g, "db"):
+        g.db.close()
+        del g.db
     return response
 
