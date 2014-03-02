@@ -76,18 +76,6 @@ var show_system_messages = user.meta.show_system_messages;
 
 /* FUNCTIONS */
 
-function topbarSelect(selector) {
-    $(selector).css({
-        'color' : '#C0F0C0',
-    });
-}
-
-function topbarDeselect(selector) {
-    $(selector).css({
-        'color' : ''
-    });
-}
-
 function isIphone(){
     return (
         navigator.platform.indexOf("iPhone") != -1 ||
@@ -285,20 +273,16 @@ function clearChat() {
 }
 
 function setSidebar(sidebar) {
+    current_sidebar = sidebar;
     if (current_sidebar) {
-        topbarDeselect('#topbar .right span');
         $('#'+current_sidebar).hide();
+        topbarDeselect('#topbar .right span');
+        $(document.body).removeClass('withSidebar');
     } else {
+        $('#'+current_sidebar).show();
+        topbarDeselect('#topbar .right .'+current_sidebar);
         $(document.body).addClass('withSidebar');
     }
-    // null removes sidebar
-    if (sidebar) {
-        $('#'+sidebar).show();
-        topbarDeselect('#topbar .right .'+sidebar);
-    } else {
-        $(document.body).removeClass('withSidebar');
-    }
-    current_sidebar = sidebar;
     // if sidebar changed, check bottom and go to bottom if at bottom
 }
 
@@ -404,6 +388,19 @@ function previewToggle() {
 // PUT LINKIFY INTO THE BBCODE FUNCTION AS WELL AS HTML TO TEXT
 
 $(document).ready(function() {
+
+function topbarSelect(selector) {
+    $(selector).css({
+        'color' : '#C0F0C0',
+    });
+}
+
+function topbarDeselect(selector) {
+    $(selector).css({
+        'color' : ''
+    });
+}
+
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
@@ -412,7 +409,6 @@ $(document).ready(function() {
         startChat();
         
         $('#topbar .right span').click(function() {
-            alert(current_sidebar);
             if ($(this).attr('class') == current_sidebar) {
                 current_sidebar = null;
                 setSidebar(current_sidebar);
@@ -420,7 +416,6 @@ $(document).ready(function() {
                 current_sidebar = $(this).attr('class');
                 setSidebar(current_sidebar);
             }
-            alert(current_sidebar);
         });
         
         /* SUBMISSION AND ACTIVE CHANGES */
