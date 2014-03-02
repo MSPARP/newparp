@@ -128,11 +128,8 @@ function startChat() {
     $('#logLink').attr('href', '/chat/'+chat.url+'/log');
     if (!current_sidebar) {
         setSidebar(null);
-        topbarDeselect('#topbar .right span');
     } else {
         setSidebar(current_sidebar);
-        topbarDeselect('#topbar .right span');
-        topbarSelect('#topbar .right .'+current_sidebar);
     }
     //getMeta();
     getMessages();
@@ -289,6 +286,7 @@ function clearChat() {
 
 function setSidebar(sidebar) {
     if (current_sidebar) {
+        topbarDeselect('#topbar .right span');
         $('#'+current_sidebar).hide();
     } else {
         $(document.body).addClass('withSidebar');
@@ -296,6 +294,7 @@ function setSidebar(sidebar) {
     // null removes sidebar
     if (sidebar) {
         $('#'+sidebar).show();
+        topbarDeselect('#topbar .right .'+sidebar);
     } else {
         $(document.body).removeClass('withSidebar');
     }
@@ -309,10 +308,7 @@ function closeSettings() {
         if (navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1) {} {
             setSidebar(null);
         }
-        topbarDeselect('#topbar .right span');
     } else {
-        topbarDeselect('#topbar .right span');
-        topbarSelect('#topbar .right .userList');
         setSidebar('userList');
     }
 }
@@ -414,6 +410,15 @@ $(document).ready(function() {
 
         /* START UP */
         startChat();
+        
+        $('#topbar .right span').click(function() {
+            if ($(this).attr('class') == current_sidebar) {
+                current_sidebar = null;
+            } else {
+                current_sidebar = $(this).attr('class');
+            }
+            setSidebar(current_sidebar);
+        });
         
         /* SUBMISSION AND ACTIVE CHANGES */
         $('.controls').submit(function() {
@@ -570,7 +575,6 @@ $(document).ready(function() {
         });
         
         if ($(document.body).hasClass('mobile')) {
-            topbarDeselect('#topbar .right span');
             setSidebar(null);
             $('.sidebar .close').click(function() {
                 setSidebar(null);
