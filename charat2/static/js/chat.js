@@ -88,13 +88,6 @@ function topbarDeselect(selector) {
     });
 }
 
-function isIphone(){
-    return (
-        navigator.platform.indexOf("iPhone") != -1 ||
-        navigator.platform.indexOf("iPod") != -1
-    );
-}
-
 function isChecked(id) {
     var checked = $("input[@id=" + id + "]:checked").length;
     if (checked == 0) {
@@ -285,16 +278,17 @@ function clearChat() {
 }
 
 function setSidebar(sidebar) {
+    $('#'+current_sidebar).hide();
+    topbarDeselect('#topbar .right span');
     current_sidebar = sidebar;
-    if (false) {
-        $('#'+current_sidebar).hide();
-        //topbarDeselect('#topbar .right span');
-        $(document.body).removeClass('withSidebar');
-    } else {
+    if (current_sidebar) {
         $('#'+current_sidebar).show();
-        //topbarSelect('#topbar .right .'+current_sidebar);
+        topbarSelect('#topbar .right .'+current_sidebar);
         $(document.body).addClass('withSidebar');
+    } else {
+        $(document.body).removeClass('withSidebar');
     }
+
     // if sidebar changed, check bottom and go to bottom if at bottom
 }
 
@@ -423,13 +417,13 @@ $(document).ready(function() {
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     ooc_on = true;
-                    //topbarSelect('#ooclet');
+                    topbarSelect('#ooclet');
                     $('.oocset').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
                     ooc_on = false;
-                    //topbarDeselect('#ooclet');
+                    topbarDeselect('#ooclet');
                     $('.oocset').removeAttr('checked');
                     $('#textInput').val('');
                     return false;
