@@ -76,6 +76,18 @@ var show_system_messages = user.meta.show_system_messages;
 
 /* FUNCTIONS */
 
+function topbarSelect(selector) {
+    $(selector).css({
+        'color' : '#C0F0C0',
+    });
+}
+
+function topbarDeselect(selector) {
+    $(selector).css({
+        'color' : ''
+    });
+}
+
 function isIphone(){
     return (
         navigator.platform.indexOf("iPhone") != -1 ||
@@ -280,7 +292,7 @@ function setSidebar(sidebar) {
         $(document.body).removeClass('withSidebar');
     } else {
         $('#'+current_sidebar).show();
-        topbarDeselect('#topbar .right .'+current_sidebar);
+        topbarSelect('#topbar .right .'+current_sidebar);
         $(document.body).addClass('withSidebar');
     }
     // if sidebar changed, check bottom and go to bottom if at bottom
@@ -388,19 +400,6 @@ function previewToggle() {
 // PUT LINKIFY INTO THE BBCODE FUNCTION AS WELL AS HTML TO TEXT
 
 $(document).ready(function() {
-
-function topbarSelect(selector) {
-    $(selector).css({
-        'color' : '#C0F0C0',
-    });
-}
-
-function topbarDeselect(selector) {
-    $(selector).css({
-        'color' : ''
-    });
-}
-
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
