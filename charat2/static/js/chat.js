@@ -514,10 +514,6 @@ $(document).ready(function() {
                 user_state = new_state;
             });
         });
-        
-        $('#settingsButton').click(function() {
-            setSidebar('settings');
-        });
 
         $('#settings').submit(function() {
             // Trim everything first
@@ -574,16 +570,6 @@ $(document).ready(function() {
             topicHidden = !topicHidden;
             return false;
         });
-        
-        if ($(document.body).hasClass('mobile')) {
-            setSidebar(null);
-            $('.sidebar .close').click(function() {
-                setSidebar(null);
-            }).show();
-            $('#userListButton').click(function() {
-                setSidebar('userList');
-            }).show();
-        }
         
         $(CONVERSATION_CONTAINER).scroll(function(){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
