@@ -418,6 +418,7 @@ $(document).ready(function() {
                 current_sidebar = $(this).attr('class');
             }
             setSidebar(current_sidebar);
+            alert(current_sidebar);
         });
         
         /* SUBMISSION AND ACTIVE CHANGES */
