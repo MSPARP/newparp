@@ -152,9 +152,9 @@ function addLine(msg){
     }
 
     if (show_bbcode_color == true) {
-        message = bbEncode(htmlEncode(linkify(msg.text)));
+        message = bbEncode(htmlEncode(msg.text));
     } else {
-        message = bbEncode(htmlEncode(linkify(bbRemove(msg.text))));
+        message = bbEncode(htmlEncode(bbRemove(msg.text)));
     }
 
     msgClass = msg.type;
@@ -232,7 +232,7 @@ function messageParse(data) {
         }
 
         if (typeof data.meta.topic!='undefined') {
-            $('#topic').html(bbEncode(linkify(data.meta.topic)));
+            $('#topic').html(bbEncode(data.meta.topic));
         } else {
             $('#topic').text('');
         }
@@ -404,6 +404,8 @@ function previewToggle() {
 // SPLIT MESSAGE IF MESSAGE IS TOO LONG?
 
 // CUSTOM ALERTS, NO MORE alert();
+
+// PUT LINKIFY INTO THE BBCODE FUNCTION
 
 $(document).ready(function() {
     if (document.cookie=="") {
