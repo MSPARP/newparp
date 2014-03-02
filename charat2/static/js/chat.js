@@ -412,12 +412,14 @@ $(document).ready(function() {
         startChat();
         
         $('#topbar .right span').click(function() {
+            alert(current_sidebar);
             if ($(this).attr('class') == current_sidebar) {
                 current_sidebar = null;
+                setSidebar(current_sidebar);
             } else {
                 current_sidebar = $(this).attr('class');
+                setSidebar(current_sidebar);
             }
-            setSidebar(current_sidebar);
             alert(current_sidebar);
         });
         
