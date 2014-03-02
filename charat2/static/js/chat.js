@@ -278,7 +278,7 @@ function clearChat() {
 }
 
 function setSidebar(sidebar) {
-    $('#'+current_sidebar).hide();
+    $('.sidebar').hide();
     topbarDeselect('#topbar .right span');
     current_sidebar = sidebar;
     if (current_sidebar) {
