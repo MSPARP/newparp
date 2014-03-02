@@ -174,8 +174,6 @@ function addLine(msg){
         show(chat.url,htmlEncode(bbRemove(msg.text)));
     }
     shownotif = 0;
-    
-    mp;
 }
 
 function getMessages() {
@@ -213,6 +211,7 @@ function messageParse(data) {
     } */
     var messages = data.messages;
     for (var i=0; i<messages.length; i++) {
+        addLine(messages[i]);
         latestNum = Math.max(latestNum, messages[i]['id']);
     }
     if (typeof data.counter!="undefined") {
