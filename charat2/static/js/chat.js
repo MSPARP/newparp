@@ -170,7 +170,7 @@ function addLine(msg){
         flip = 0;
     }
 
-    if (isActive == false && desktop_notifications == true) {
+    if (window_active == false && desktop_notifications == true) {
         show(chat.url,htmlEncode(bbRemove(msg.text)));
     }
     shownotif = 0;
@@ -405,7 +405,7 @@ function previewToggle() {
 
 // CUSTOM ALERTS, NO MORE alert();
 
-// PUT LINKIFY INTO THE BBCODE FUNCTION
+// PUT LINKIFY INTO THE BBCODE FUNCTION AS WELL AS HTML TO TEXT
 
 $(document).ready(function() {
     if (document.cookie=="") {
