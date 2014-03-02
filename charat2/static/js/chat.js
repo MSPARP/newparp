@@ -174,6 +174,8 @@ function addLine(msg){
         show(chat.url,htmlEncode(bbRemove(msg.text)));
     }
     shownotif = 0;
+    
+    mp;
 }
 
 function getMessages() {
