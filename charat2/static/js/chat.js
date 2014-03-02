@@ -43,11 +43,7 @@ window.onblur = function () {
 var chat_state = 'chat';
 var user_state = 'online';
 
-if ($(document.body).hasClass('mobile')) {
-    var current_sidebar = null;
-} else {
-    var current_sidebar = "userList";
-}
+var current_sidebar = null;
 
 var hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") {
@@ -119,6 +115,12 @@ function startChat() {
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
     $('#logLink').attr('href', '/chat/'+chat.url+'/log');
+    
+    if ($(document.body).hasClass('mobile')) {
+        var current_sidebar = null;
+    } else {
+        var current_sidebar = "userList";
+    }
     if (!current_sidebar) {
         setSidebar(null);
     } else {
