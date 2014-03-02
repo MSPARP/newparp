@@ -286,7 +286,7 @@ function clearChat() {
 
 function setSidebar(sidebar) {
     current_sidebar = sidebar;
-    if (current_sidebar) {
+    if (false) {
         $('#'+current_sidebar).hide();
         topbarDeselect('#topbar .right span');
         $(document.body).removeClass('withSidebar');
