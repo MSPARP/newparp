@@ -169,7 +169,7 @@ function addLine(msg){
 }
 
 function generateUserList(user_data) {
-    $(USER_LIST_ID).clear();
+    $(USER_LIST_ID).empty();
     for (var user in user_data) {
         $(USER_LIST_ID).append(user.meta.username);
     }
