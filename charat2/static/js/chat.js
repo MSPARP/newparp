@@ -169,12 +169,10 @@ function addLine(msg){
 }
 
 function generateUserList(user_data) {
-    console.log(user_data);
     $(USER_LIST_ID).empty();
     for (var i=0; i<user_data.length; i++) {
         user = user_data[i];
-        console.log(user);
-        $(USER_LIST_ID).append(user.meta.username);
+        $(USER_LIST_ID).append('<li id="user'+user.meta.user_id+'"><span>'+user.character.name+' ['+user.character.acronym+']</span><span class="UserID">'+user.meta.username+'</span></li>');
     }
 }
 

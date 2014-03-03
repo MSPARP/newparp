@@ -506,10 +506,6 @@ p.notificationLevel.default button, p.notificationLevel.denied button {
     text-decoration: underline;
 }
 
-.mod, .mod2, .mod3 {
-    font-style: italic;
-}
-
 .silent {
     text-decoration: line-through;
 }
