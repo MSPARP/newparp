@@ -174,6 +174,7 @@ function generateUserList(user_data) {
         user = user_data[i];
         $(USER_LIST_ID).append('<li id="user'+user.meta.user_id+'"><span>'+user.character.name+' ['+user.character.acronym+']</span><span class="UserID">'+user.meta.username+'</span></li>');
     }
+    // test
 }
 
 function getMessages() {
