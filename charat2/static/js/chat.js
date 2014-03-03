@@ -171,8 +171,8 @@ function addLine(msg){
 function generateUserList(user_data) {
     $(USER_LIST_ID).empty();
     for (var i=0; i<user_data.length; i++) {
-        user = user_data[i];
-        $(USER_LIST_ID).append('<li id="user'+user.meta.user_id+'"><span>'+user.character.name+' ['+user.character.acronym+']</span><span class="UserID">'+user.meta.username+'</span></li>');
+        list_user = user_data[i];
+        $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" style="color=#'+list_user.character.color+';"><span class="userCharacter">'+list_user.character.name+' ['+list_user.character.acronym+']</span><span class="username">'+list_user.meta.username+'</span></li>');
     }
     // test
 }
