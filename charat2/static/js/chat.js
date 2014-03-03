@@ -27,8 +27,8 @@ var ORIGINAL_TITLE = document.title;
 var CHAT_NAME = chat['title'] || chat.url;
 var CONVERSATION_CONTAINER = '#conversation';
 var CONVERSATION_ID = '#convo';
-
 var MISSED_MESSAGE_COUNT_ID = '#exclaim';
+var USER_LIST_ID = '#online';
 
 /* VARIABLES */
 
@@ -168,6 +168,13 @@ function addLine(msg){
     shownotif = 0;
 }
 
+function generateUserList(user_data) {
+    $(USER_LIST_ID).clear();
+    for (var user in user_data) {
+        $(USER_LIST_ID).append(user.meta.username);
+    }
+}
+
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
     $.post(CHAT_MESSAGES, messageData, function(data) {
@@ -208,6 +215,9 @@ function messageParse(data) {
     }
     if (typeof data.counter!="undefined") {
         user.meta.counter = data.counter;
+    }
+    if (typeof data.users!=="undefined") {
+        generateUserList(data.users);
     }
     if (typeof data.meta!='undefined') {
         // Reload chat metadata.
