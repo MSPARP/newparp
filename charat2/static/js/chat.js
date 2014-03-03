@@ -169,6 +169,7 @@ function addLine(msg){
 }
 
 function generateUserList(user_data) {
+    console.log(user_data);
     $(USER_LIST_ID).empty();
     for (var user in user_data) {
         console.log(user);
