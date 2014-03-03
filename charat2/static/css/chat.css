@@ -257,7 +257,6 @@ body.mobile .sidebarContain .card {
     content: "(empty)";
     padding: 2px 0;
     color: #999999;
-    font-style: italic;
 }
 
 ul#metaOptions {
@@ -272,7 +271,6 @@ ul#metaOptions {
     display: block;
     padding: 2px 0;
     color: #999999;
-    font-style: italic;
 }
 
 #online li, #idle li {
