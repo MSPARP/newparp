@@ -4,7 +4,7 @@ var SEARCH_PERIOD = 1;
 var PING_PERIOD = 10;
 
 var POST_URL = "/chat_ajax/post";
-var SAVE_URL = "/chat_ajax/save";
+var SAVE_URL = "/chat_api/save";
 
 var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
