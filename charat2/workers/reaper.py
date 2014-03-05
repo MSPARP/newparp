@@ -34,8 +34,7 @@ if __name__ == "__main__":
                 type="timeout",
                 # omg i've been waiting so long to get rid of that FUCKING
                 # SEMI COLON
-                text="%s's connection timed out. Please don't quit straight "
-                     "away, they could be back." % dead_user_chat.name,
+                text="%s's connection timed out." % dead_user_chat.name,
             ))
             print current_time, "Reaping ", dead
         db.commit()
