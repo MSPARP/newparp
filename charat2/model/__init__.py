@@ -44,16 +44,17 @@ Base.query = base_session.query_property()
 def now():
     return datetime.datetime.now()
 
-case_options = Enum(
-    u"alt-lines",
-    u"alternating",
-    u"inverted",
-    u"lower",
-    u"normal",
-    u"title",
-    u"upper",
-    name=u"case",
-)
+case_options = {
+    u"alt-lines": "ALTERNATING lines",
+    u"alternating": "AlTeRnAtInG",
+    u"inverted": "iNVERTED",
+    u"lower": u"lower case",
+    u"normal": u"Normal",
+    u"title": u"Title Case",
+    u"upper": u"UPPER CASE",
+}
+
+case_options_enum = Enum(*case_options.keys(), name=u"case")
 
 
 class User(Base):
@@ -90,7 +91,7 @@ class User(Base):
     quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
     quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
 
-    case = Column(case_options, nullable=False, default=u"normal")
+    case = Column(case_options_enum, nullable=False, default=u"normal")
 
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
 
@@ -217,7 +218,7 @@ class UserChat(Base):
     quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
     quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
 
-    case = Column(case_options, nullable=False, default=u"normal")
+    case = Column(case_options_enum, nullable=False, default=u"normal")
 
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
 

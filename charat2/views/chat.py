@@ -3,7 +3,14 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import login_required
-from charat2.model import AnyChat, Chat, GroupChat, Message, UserChat
+from charat2.model import (
+    case_options,
+    AnyChat,
+    Chat,
+    GroupChat,
+    Message,
+    UserChat,
+)
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
@@ -65,5 +72,6 @@ def chat(url):
         user_chat_dict=user_chat.to_dict(include_options=True),
         messages=messages,
         latest_num=latest_num,
+        case_options=case_options,
     )
 

@@ -126,7 +126,7 @@ def save():
     g.user_chat.color = request.form["color"]
 
     # Validate case.
-    if request.form["case"] not in case_options.enums:
+    if request.form["case"] not in case_options:
         abort(400)
     g.user_chat.case = request.form["case"]
 
