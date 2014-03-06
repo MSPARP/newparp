@@ -415,6 +415,19 @@ $(document).ready(function() {
         /* START UP */
         startChat();
         
+        $('#ooclet, .oocset').click(function() {
+            if (ooc_on == false) {
+                ooc_on = true;
+                $('.oocset').attr('checked','checked');
+                topbarSelect('#ooclet');
+            } else {
+                ooc_on = false;
+                $('.oocset').removeAttr('checked');
+                topbarDeselect('#ooclet');
+            }
+            updateChatPreview();
+        });
+        
         $('#topbar .right span').click(function() {
             if ($(this).attr('class') == current_sidebar) {
                 current_sidebar = null;
