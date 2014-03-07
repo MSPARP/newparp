@@ -69,6 +69,7 @@ def send_message(db, redis, message):
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
     redis.publish("channel:%s" % chat.id, json.dumps({
+        "messages": [],
         "users": get_userlist(db, redis, chat)
     }))
 
