@@ -29,13 +29,16 @@ if __name__ == "__main__":
                 )).one()
             except NoResultFound:
                 pass
-            send_message(db, redis, Message(
-                chat_id=chat_id,
-                type="timeout",
-                # omg i've been waiting so long to get rid of that FUCKING
-                # SEMI COLON
-                text="%s's connection timed out." % dead_user_chat.name,
-            ))
+            if dead_user_chat.group == "silent":
+                send_user_list(db, redis, chat_id)
+            else:
+                send_message(db, redis, Message(
+                    chat_id=chat_id,
+                    type="timeout",
+                    # omg i've been waiting so long to get rid of that FUCKING
+                    # SEMI COLON
+                    text="%s's connection timed out." % dead_user_chat.name,
+                ))
             print current_time, "Reaping ", dead
         db.commit()
         time.sleep(1)
