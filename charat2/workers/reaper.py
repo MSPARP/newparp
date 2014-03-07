@@ -4,9 +4,10 @@ import time
 
 from redis import StrictRedis
 from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.helpers.chat import disconnect, send_message
+from charat2.helpers.chat import disconnect, send_message, send_userlist
 from charat2.model import sm, Message, UserChat
 from charat2.model.connections import redis_pool
 
@@ -26,11 +27,11 @@ if __name__ == "__main__":
                 dead_user_chat = db.query(UserChat).filter(and_(
                     UserChat.user_id==user_id,
                     UserChat.chat_id==chat_id,
-                )).one()
+                )).options(joinedload(UserChat.chat)).one()
             except NoResultFound:
                 pass
             if dead_user_chat.group == "silent":
-                send_user_list(db, redis, chat_id)
+                send_userlist(db, redis, dead_user_chat.chat)
             else:
                 send_message(db, redis, Message(
                     chat_id=chat_id,

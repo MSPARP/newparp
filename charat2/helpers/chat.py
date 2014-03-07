@@ -25,7 +25,7 @@ def mark_alive(f):
             g.redis.sadd("chat:%s:online" % g.chat.id, g.user.id)
             # Send join message. Or not, if they're silent.
             if g.user_chat.group == "silent":
-                send_userlist(g.db, g.redis, g.chat.id)
+                send_userlist(g.db, g.redis, g.chat)
             else:
                 send_message(g.db, g.redis, Message(
                     chat_id=g.chat.id,
@@ -66,10 +66,10 @@ def send_message(db, redis, message):
         redis_message["users"] = get_userlist(db, redis, message.chat)
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
 
-def send_userlist(db, redis, chat_id):
+def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
-    redis.publish("channel:%s" % chat_id, json.dumps({
-        "users": get_userlist(db, redis, chat_id)
+    redis.publish("channel:%s" % chat.id, json.dumps({
+        "users": get_userlist(db, redis, chat)
     }))
 
 def disconnect(redis, chat_id, user_id):

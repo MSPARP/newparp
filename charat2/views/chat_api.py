@@ -232,7 +232,7 @@ def save():
     # Send a message if name or acronym has changed.
     if g.user_chat.name != old_name or g.user_chat.acronym != old_acronym:
         if g.user_chat.group == "silent":
-            send_userlist(g.db, g.redis, g.chat.id)
+            send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -256,7 +256,7 @@ def quit():
     if disconnect(g.redis, g.chat_id, g.user_id):
         get_user_chat()
         if g.user_chat.group == "silent":
-            send_userlist(g.db, g.redis, g.chat.id)
+            send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
