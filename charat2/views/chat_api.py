@@ -1,6 +1,9 @@
 import json
 
 from flask import abort, g, jsonify, make_response, request
+from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import (
     mark_alive,
@@ -8,7 +11,7 @@ from charat2.helpers.chat import (
     disconnect,
     get_userlist,
 )
-from charat2.model import case_options, Message
+from charat2.model import case_options, group_ranks, Message, UserChat
 from charat2.model.connections import (
     get_user_chat,
     use_db_chat,
@@ -91,9 +94,73 @@ def send():
 def set_state():
     raise NotImplementedError
 
+@use_db_chat
 @mark_alive
 def set_group():
-    raise NotImplementedError
+    # Only allow mods to be set in group chats.
+    if g.chat.type!="group":
+        abort(400)
+    # Validate group setting.
+    if request.form.get("group") not in group_ranks:
+        abort(400)
+    # If we're not a mod, creator or site admin, don't even bother looking up
+    # the other user.
+    if (
+        group_ranks[g.user_chat.group]==0
+        and g.chat.creator!=g.user
+        and g.user.group!="admin"
+    ):
+        abort(403)
+    # Fetch the UserChat we're trying to change.
+    try:
+        set_user_chat = g.db.query(UserChat).filter(and_(
+            UserChat.user_id==request.form["user_id"],
+            UserChat.chat_id==g.chat.id,
+        )).options(joinedload(UserChat.user)).one()
+    except NoResultFound:
+        abort(404)
+    # If they're the creator or a site admin, don't allow the change.
+    if set_user_chat.user==g.chat.creator or set_user_chat.user.group=="admin":
+        abort(403)
+    # Creator and admin can do anything, so only do the following checks if
+    # we're not.
+    if g.chat.creator!=g.user and g.user.group!="admin":
+        # If the other user's group is above our own, don't allow the change.
+        if group_ranks[set_user_chat.group]>group_ranks[g.user_chat.group]:
+            abort(403)
+        # If the group we're trying to set them to is above our own, don't allow
+        # the change.
+        if group_ranks[request.form["group"]]>group_ranks[g.user_chat.group]:
+            abort(403)
+    # If we're changing them to their current group, just send a 204 without
+    # actually doing anything.
+    if request.form["group"]==set_user_chat.group:
+        return "", 204
+    if request.form["group"]=="mod":
+        message = ("%s set %s to Magical Mod. They can now silence, kick and "
+                   "ban other users.")
+    elif request.form["group"]=="mod2":
+        message = ("%s set %s to Cute-Cute Mod. They can now silence and kick "
+                   "other users.")
+    elif request.form["group"]=="mod3":
+        message = ("%s set %s to Little Mod. They can now silence other users.")
+    elif request.form["group"]=="user":
+        if set_user_chat.group=="silent":
+            message = ("%s unsilenced %s.")
+        else:
+            message = ("%s removed moderator status from %s.")
+    elif request.form["group"]=="silent":
+        message = ("%s silenced %s.")
+    set_user_chat.group = request.form["group"]
+    send_message(g.db, g.redis, Message(
+        chat_id=g.chat.id,
+        type="user_group",
+        text=message % (
+            g.user_chat.name,
+            set_user_chat.name
+        ),
+    ))
+    return "", 204
 
 @mark_alive
 def user_action():

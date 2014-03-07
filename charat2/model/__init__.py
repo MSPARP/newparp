@@ -57,6 +57,20 @@ case_options = {
 case_options_enum = Enum(*case_options.keys(), name=u"case")
 
 
+# Group changes and user actions can only be performed on people of the same
+# group as yourself and lower. To make this easier to check, we store a numeric
+# value for each rank so we can do a simple less-than-or-equal-to comparison.
+# Also 0 indicates that the person is not a mod, so they can't perform group
+# changes and user actions at all.
+group_ranks = {
+    "mod": 3,
+    "mod2": 2,
+    "mod3": 1,
+    "user": 0,
+    "silent": 0,
+}
+
+
 class User(Base):
 
     __tablename__ = "users"
