@@ -330,48 +330,16 @@ function readCookie(name) {
 
 function updateChatPreview(){
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
-    textPreview = jQuery.trim(textPreview);
-
-    if ($('#textInput').val().substr(0,1)=='/' && textPreview.substr(0,4)!=='/ooc' && textPreview.substr(0,3)!=='/ic' && textPreview.substr(0,3)!=='/me') {
+    
+    if ($('#textInput').val().substr(0,1)=='/') {
         textPreview = textPreview.substr(1);
-    }
-
-    if (textPreview.substr(0,4)=='/ooc') {
-        textPreview = jQuery.trim(textPreview.substr(4));
-        if (textPreview.substr(0,3)=='/me') {
-            textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
-        } else {
-            textPreview = "(( "+textPreview+" ))";
-        }
-    } else if (textPreview.substr(0,3)=='/ic') {
-        textPreview = textPreview.substr(3);
-        if (textPreview.substr(0,3)=='/me') {
-            textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
-        }
-    } else if (ooc_on == true) {
-        if (textPreview.substr(0,3)=='/me') {
-            textPreview = "(( -"+jQuery.trim(textPreview.substr(3))+"- ))";
-        } else {
-            textPreview = "(( "+textPreview+" ))";
-        }
-    } else if (ooc_on == false) {
-        if (textPreview.substr(0,3)=='/me') {
-            textPreview = "-"+jQuery.trim(textPreview.substr(3))+"-";
-        }
-    }
-
-    textPreview = jQuery.trim(textPreview);
-
-    if ($('#textInput').val().substr(0,1)!=='/') {
+    } else {
         textPreview = applyQuirks(textPreview);
     }
-
-    if (jQuery.trim($('#textInput').val())=='/ic') {
-        textPreview = 0;
-    }
-
+    
+    textPreview = jQuery.trim(textPreview);
+    
     if (textPreview.length>0) {
-        textPreview = textPreview.replace(/\s+/g, ' ');
         $('#preview').text(textPreview);
     } else {
         $('#preview').html('&nbsp;');
