@@ -398,11 +398,11 @@ $(document).ready(function() {
         startChat();
         
         $('html').on('mousedown',function(){
-            console.log('down');
+            $('p').css('visibility','hidden');
         });
         
         $('html').on('mouseup',function(){
-            console.log('up');
+            $('p').css('visibility','visible');
         });
 
         $('#ooclet, #oocToggle input').click(function() {
