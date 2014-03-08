@@ -183,7 +183,7 @@ function addLine(msg){
 
     var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var timestamp = new Date(msg.posted*1000);
-    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getMinutes();
+    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
     var right_text = timestamp_text;
     if (msg.user_id) {
         right_text = user_list[msg.user_id].username+' '+timestamp_text;
