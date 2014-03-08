@@ -170,7 +170,7 @@ function addLine(msg){
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass("info").html('<span class="left">'+msg.acronym+'</span><span class="right">'+Date(msg.posted)+'</span>').appendTo(CONVERSATION_ID);
+    var mi = $('<p>').addClass("message"+msg.id).addClass("info").html('<span class="left">'+user_list[msg.user_id]+'</span><span class="right">'+Date(msg.posted)+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
@@ -401,16 +401,6 @@ $(document).ready(function() {
 
         /* START UP */
         startChat();
-
-        $(CONVERSATION_CONTAINER).on('mousedown',function(e){
-            if (e.which == 1) {
-                $('p.info').css('visibility','hidden');
-            }
-        });
-
-        $(CONVERSATION_CONTAINER).on('mouseup',function(){
-            $('p.info').css('visibility','visible');
-        });
 
         $('#ooclet, #oocToggle input').click(function() {
             if (ooc_on == false) {
