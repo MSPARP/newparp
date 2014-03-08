@@ -171,15 +171,6 @@ function addLine(msg){
     if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && !$(CONVERSATION_CONTAINER+' p:last').hasClass('ooc')) {
         $(CONVERSATION_CONTAINER+' p:last').hide();
     }
-    
-    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var timestamp = new Date(msg.posted*1000);
-    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getMinutes();
-    
-    var username = "";
-    if (msg.user_id) {
-        username = user_list[msg.user_id].username;
-    }
 
     var left_text = msg.type;
     if (msg.user_id) {
@@ -190,8 +181,16 @@ function addLine(msg){
         }
     }
 
+    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var timestamp = new Date(msg.posted*1000);
+    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getMinutes();
+    var right_text = timestamp_text;
+    if (msg.user_id) {
+        right_text = user_list[msg.user_id].username+'/'+timestamp_text;
+    }
+
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+username+' '+timestamp_text+'</span>').appendTo(CONVERSATION_ID);
+    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+right_text+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
