@@ -167,6 +167,10 @@ body.menu #topbar #toptitle {
     overflow: hidden;
 }
 
+#conversation .ooc {
+    opacity: .5;
+}
+
 #conversation .info {
     position: relative;
     top: -3px;
