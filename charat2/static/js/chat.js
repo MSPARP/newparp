@@ -190,7 +190,7 @@ function addLine(msg){
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+right_text+'</span>').appendTo(CONVERSATION_ID);
+    var mi = $('<p>').addClass("message"+msg.id).addClass(msg.type).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+right_text+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
