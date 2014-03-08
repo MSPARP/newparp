@@ -440,6 +440,14 @@ $(document).ready(function() {
             updateChatPreview();
         });
         
+        $('.ooc').on('mouseover',function() {
+            $(this).css('opacity','1');
+        });
+        
+        $('.ooc').on('mouseout',function() {
+            $(this).css('opacity','.5');
+        });
+
         $('#topbar .right span').click(function() {
             if ($(this).attr('class') == current_sidebar) {
                 current_sidebar = null;
