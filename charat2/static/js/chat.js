@@ -398,11 +398,9 @@ $(document).ready(function() {
         startChat();
         
         $('html').on('mousedown',function(){
-            $(window).mousemove(function() {
-                $('p').css('visibility','hidden');
-            });
+            $('p').css('visibility','hidden');
         });
-        
+
         $('html').on('mouseup',function(){
             $('p').css('visibility','visible');
         });
