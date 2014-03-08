@@ -614,7 +614,11 @@ body.mobile #userListButton {
     padding-right: 2px;
 }
 
-.spoiler{
+.spoiler {
     opacity: 0;
     cursor: pointer;
+}
+
+.spoiler:hover {
+    opacity: 1;
 }
