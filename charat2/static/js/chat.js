@@ -331,8 +331,8 @@ function readCookie(name) {
 function updateChatPreview(){
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     
-    if ($('#textInput').val().substr(0,1)=='/') {
-        textPreview = textPreview.substr(1);
+    if ($('#textInput').val().substr(0,2)=='/ ') {
+        textPreview = textPreview.substr(2);
     } else {
         textPreview = applyQuirks(textPreview);
     }
