@@ -46,7 +46,7 @@
         {% for message in messages %}
         <p id="message{{message.id}}" class="{{message.type}}{% if message.user_id %} user{{message.user_id}}{% endif %}" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
         {% endfor %}
-        <div class="divide">Last Fifty Messages</div>
+        <div class="info">Last 50 Messages</div>
     </div>
 </div>
 

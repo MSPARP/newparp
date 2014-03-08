@@ -163,18 +163,13 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
-.divide {
-    font-size: 10px;
-    color: #cccccc;
-    border-bottom: solid;
-    border-bottom-width: 1px;
-}
-
 #conversation p, #archiveConversation p, #online {
     overflow: hidden;
 }
 
 #conversation p.info {
+    position: relative;
+    top: -3px;
     font-size: 10px;
     color: #cccccc;
     border-bottom: solid;
