@@ -455,14 +455,14 @@ $(document).ready(function() {
                     $('#textInput').val('');
                     return false;
                 }
-
-                if (!$('#textInput').val()) {
-                    return false;
-                }
-
-                if (jQuery.trim($('#textInput').val())=='/usr') {
-                    alert(readCookie('session'));
-                    $('#textInput').val('');
+                
+                if ($('#textInput').val().charAt(0)=='/') {
+                    var command = $('#textInput').val().split(' ');
+                    if (command[0] == '/mod') {
+                        if (MOD_GROUPS.indexOf(command[2])!=-1) {
+                            alert('Setting '+command[1]+" to "+command[2]);
+                        }
+                    }
                 } else if ($('#textInput').val()!='') {
                     if (pingInterval) {
                         window.clearTimeout(pingInterval);
@@ -472,10 +472,6 @@ $(document).ready(function() {
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
                     updateChatPreview();
-                } else if (textPreview.substr(0,4)=='/usr') {
-                    textPreview = textPreview.substr(4);
-                    alert(readCookie('session'));
-                    $('#textInput').val('');
                 }
             }
             if ($(document.body).hasClass('mobile')) {} else {
