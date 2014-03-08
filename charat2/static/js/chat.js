@@ -341,6 +341,7 @@ function readCookie(name) {
 }
 
 function updateChatPreview(){
+    var at_bottom = atBottom(CONVERSATION_CONTAINER);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
@@ -359,6 +360,9 @@ function updateChatPreview(){
     $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
     return textPreview.length!=0;
     // Hide if typing at bottom
+    if(at_bottom) {
+        goBottom(CONVERSATION_CONTAINER);
+    }
 }
 
 function previewToggle() {
