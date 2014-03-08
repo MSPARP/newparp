@@ -172,9 +172,13 @@ function addLine(msg){
     if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id)) {
         $(CONVERSATION_CONTAINER+' p:last').hide();
     }
+    
+    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var timestamp = new Date(msg.posted);
+    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getSeconds();
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+user_list[msg.user_id]+'</span><span class="right">'+Date(msg.posted)+'</span>').appendTo(CONVERSATION_ID);
+    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+user_list[msg.user_id]+'</span><span class="right">'+timestamp_text+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
