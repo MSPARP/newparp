@@ -397,6 +397,14 @@ $(document).ready(function() {
         /* START UP */
         startChat();
         
+        $('html').on('mousedown',function(){
+            console.log('down');
+        });
+        
+        $('html').on('mouseup',function(){
+            console.log('up');
+        });
+
         $('#ooclet, #oocToggle input').click(function() {
             if (ooc_on == false) {
                 ooc_on = true;
