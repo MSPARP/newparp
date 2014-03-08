@@ -172,7 +172,7 @@ body.menu #topbar #toptitle {
 }
 
 #conversation .ooc:hover {
-    opacity: .5;
+    opacity: 1;
 }
 
 #conversation .info {
