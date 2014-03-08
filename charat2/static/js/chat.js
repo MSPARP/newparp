@@ -359,11 +359,10 @@ function updateChatPreview(){
         $('#preview').html('&nbsp;');
     }
     $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
-    return textPreview.length!=0;
-    // Hide if typing at bottom
     if(at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
     }
+    return textPreview.length!=0;
 }
 
 function previewToggle() {
