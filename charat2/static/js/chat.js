@@ -427,7 +427,7 @@ $(document).ready(function() {
                     var command = $('#textInput').val().split(' ');
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
-                        if (MOD_GROUPS.indexOf(command[2].toLowerCase())!=-1) {
+                        if (groups.indexOf(command[2].toLowerCase())!=-1) {
                             alert('Setting '+command[1]+" to "+command[2]);
                         }
                         $('#textInput').val('');
