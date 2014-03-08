@@ -177,17 +177,17 @@ function addLine(msg){
     var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getSeconds();
     
     var username = "";
-    if (msg.meta.user_id) {
-        username = user_list[msg.meta.user_id];
+    if (msg.user_id) {
+        username = user_list[msg.user_id];
     }
     
     var left_text = msg.type;
-    if (msg.character.acronym) {
-        left_text = msg.character.acronym+':'+msg.type;
+    if (msg.acronym) {
+        left_text = msg.acronym+':'+msg.type;
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+msg.type+'</span><span class="right">'+username+' '+timestamp_text+'</span>').appendTo(CONVERSATION_ID);
+    var mi = $('<p>').addClass("message"+msg.id).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+username+' '+timestamp_text+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
