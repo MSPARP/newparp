@@ -382,14 +382,13 @@ function updateChatPreview(){
 }
 
 function previewToggle() {
-    if (previewHidden) {
+    if (!preview_show) {
          $('#preview').show();
     } else {
         $('#preview').hide();
     }
     updateChatPreview();
-    previewHidden = !previewHidden;
-    return false;
+    preview_show = !preview_show;
 }
 
 // CHANGE THE SETTINGS IN THE CHAT.HTML with {% %}
