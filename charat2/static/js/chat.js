@@ -397,9 +397,11 @@ $(document).ready(function() {
 
         /* START UP */
         startChat();
-        
-        $(CONVERSATION_CONTAINER).on('mousedown',function(){
-            $('p.info').css('visibility','hidden');
+
+        $(CONVERSATION_CONTAINER).on('mousedown',function(e){
+            if (e.which == 1) {
+                $('p.info').css('visibility','hidden');
+            }
         });
 
         $(CONVERSATION_CONTAINER).on('mouseup',function(){

@@ -163,14 +163,21 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
-#conversation p, #archiveConversation p, #online, #idle {
+#conversation p, #archiveConversation p, #online {
     overflow: hidden;
 }
 
-#conversation.search {
-    background-image: url('/static/img/throbber-big.gif');
-    background-repeat: no-repeat;
-    background-position: center;
+#conversation p.info {
+    font-size: 10px;
+    color: #cccccc;
+    border-top: solid;
+    border-top-width: 1px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#conversation p.info .right {
+    float: right;
 }
 
 body.withSidebar #conversation {
