@@ -70,6 +70,8 @@ var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
 
+var user_list = {};
+
 /* FUNCTIONS */
 
 function topbarSelect(selector) {
@@ -186,6 +188,8 @@ function generateUserList(user_data) {
     for (var i=0; i<user_data.length; i++) {
         list_user = user_data[i];
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'"><span class="userCharacter"  style="color:#'+list_user.character.color+';">'+list_user.character.name+' ['+list_user.character.acronym+']</span><span class="username">'+list_user.meta.username+'</span></li>');
+        user_list[list_user.meta.user_id] = list_user.meta.username;
+        user_list[list_user.meta.username] = list_user.meta.user_id;
     }
     // test
 }
