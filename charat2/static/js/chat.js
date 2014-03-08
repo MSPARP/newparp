@@ -174,7 +174,7 @@ function addLine(msg){
     
     var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var timestamp = new Date(msg.posted*1000);
-    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getSeconds();
+    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getMinutes();
     
     var username = "";
     if (msg.user_id) {
