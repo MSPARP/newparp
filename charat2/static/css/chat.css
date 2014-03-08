@@ -163,6 +163,12 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
+.divide {
+    color: #cccccc;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+}
+
 #conversation p, #archiveConversation p, #online {
     overflow: hidden;
 }
@@ -170,8 +176,8 @@ body.menu #topbar #toptitle {
 #conversation p.info {
     font-size: 10px;
     color: #cccccc;
-    border-top: solid;
-    border-top-width: 1px;
+    border-bottom: solid;
+    border-bottom-width: 1px;
     margin-left: 5px;
     margin-right: 5px;
 }
