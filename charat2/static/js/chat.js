@@ -168,6 +168,7 @@ function addLine(msg){
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
+    var in = $('<p>').addClass("message"+msg.id).addClass("info").html('<span class="left">'+msg.acronym+'</span><span class="right">'+Date(msg.posted)+'</span>').appendTo(CONVERSATION_ID);
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
@@ -398,11 +399,11 @@ $(document).ready(function() {
         startChat();
         
         $(CONVERSATION_CONTAINER).on('mousedown',function(){
-            $('p').css('visibility','hidden');
+            $('p.info').css('visibility','hidden');
         });
 
         $(CONVERSATION_CONTAINER).on('mouseup',function(){
-            $('p').css('visibility','visible');
+            $('p.info').css('visibility','visible');
         });
 
         $('#ooclet, #oocToggle input').click(function() {
