@@ -415,14 +415,14 @@ $(document).ready(function() {
         /* START UP */
         startChat();
         
-        $('#ooclet, .oocset').click(function() {
+        $('#ooclet, #oocToggle input').click(function() {
             if (ooc_on == false) {
                 ooc_on = true;
-                $('.oocset').attr('checked','checked');
+                $('#oocToggle input').attr('checked','checked');
                 topbarSelect('#ooclet');
             } else {
                 ooc_on = false;
-                $('.oocset').removeAttr('checked');
+                $('#oocToggle input').removeAttr('checked');
                 topbarDeselect('#ooclet');
             }
             updateChatPreview();
@@ -445,21 +445,22 @@ $(document).ready(function() {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     ooc_on = true;
                     topbarSelect('#ooclet');
-                    $('.oocset').attr('checked','checked');
+                    $('#oocToggle input').attr('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
                     ooc_on = false;
                     topbarDeselect('#ooclet');
-                    $('.oocset').removeAttr('checked');
+                    $('#oocToggle input').removeAttr('checked');
                     $('#textInput').val('');
                     return false;
                 }
                 
                 if ($('#textInput').val().charAt(0)=='/') {
                     var command = $('#textInput').val().split(' ');
-                    if (command[0] == '/mod') {
-                        if (MOD_GROUPS.indexOf(command[2])!=-1) {
+                    if (command[0] == '/set') {
+                        var groups = ['magical','cute','little','unsilence','silence'];
+                        if (MOD_GROUPS.indexOf(command[2].toLowerCase())!=-1) {
                             alert('Setting '+command[1]+" to "+command[2]);
                         }
                     }
@@ -509,14 +510,10 @@ $(document).ready(function() {
         });
 
         // MAKE PREVIEW A SETTING, DEFAULT OFF
-        /* $('#hidePreview').click(function() {
-            if (previewHidden) {
-                 $(this).text("Hide Preview");
-            } else {
-                $(this).text("Show Preview");
-            }
+        $('#previewToggle input').click(function() {
+            preview_show != preview_show;
             previewToggle();
-        }); */
+        });
         
         $('#disconnectButton').click(disconnect);
 
