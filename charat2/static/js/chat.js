@@ -132,15 +132,27 @@ function startChat() {
     updateChatPreview();
 }
 
-function addLine(msg){
-	// MAKE A CONVERSATION SCROLL FUNCTION
-    var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
-    var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
+function atBottom(element) {
+    var von = $(element).scrollTop()+$(element).height()+24;
+    var don = $(element).prop("scrollHeight");
     var lon = don-von;
     if (lon <= 30){
-        flip = 1;
+        return true;
     } else {
-      $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
+      return false;
+    }
+}
+
+function goBottom(element) {
+    $(element).scrollTop($(element).prop("scrollHeight"));
+}
+
+function addLine(msg){
+	// MAKE A CONVERSATION SCROLL FUNCTION
+    if (atBottom(CONVERSATION_CONTAINER)){
+        at_bottom = true;
+    } else {
+        $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
     }
 
     if (show_bbcode_color == true) {
@@ -157,9 +169,9 @@ function addLine(msg){
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
 
-    if (flip == 1) {
-        $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
-        flip = 0;
+    if (at_bottom) {
+        goBottom(CONVERSATION_CONTAINER);
+        at_bottom = false;
     }
 
     if (window_active == false && desktop_notifications == true) {
