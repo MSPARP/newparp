@@ -342,7 +342,6 @@ function readCookie(name) {
 
 function updateChatPreview(){
     var at_bottom = atBottom(CONVERSATION_CONTAINER);
-    console.log(at_bottom);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
