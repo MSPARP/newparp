@@ -430,8 +430,11 @@ $(document).ready(function() {
                         if (MOD_GROUPS.indexOf(command[2].toLowerCase())!=-1) {
                             alert('Setting '+command[1]+" to "+command[2]);
                         }
+                        return false;
                     }
-                } else if ($('#textInput').val()!='') {
+                }
+                
+                if ($('#textInput').val()!='') {
                     if (pingInterval) {
                         window.clearTimeout(pingInterval);
                     }
