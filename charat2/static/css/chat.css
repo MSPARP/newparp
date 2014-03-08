@@ -164,6 +164,7 @@ body.menu #topbar #toptitle {
 }
 
 .divide {
+    font-size: 10px;
     color: #cccccc;
     border-bottom: solid;
     border-bottom-width: 1px;
