@@ -70,25 +70,6 @@ var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
 
-/* PLUGINS */
-$.fn.extend({
-    disableSelection: function() { 
-        this.each(function() { 
-            if (typeof this.onselectstart != 'undefined') {
-                this.onselectstart = function() { return false; };
-            } else if (typeof this.style.MozUserSelect != 'undefined') {
-                this.style.MozUserSelect = 'none';
-            } else {
-                this.onmousedown = function() { return false; };
-            }
-        }); 
-    } 
-});
-
-$(document).ready(function() {
-    $('p').disableSelection();
-});
-
 /* FUNCTIONS */
 
 function topbarSelect(selector) {
