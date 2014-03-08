@@ -397,11 +397,11 @@ $(document).ready(function() {
         /* START UP */
         startChat();
         
-        $('html').on('mousedown',function(){
+        $(CONVERSATION_CONTAINER).on('mousedown',function(){
             $('p').css('visibility','hidden');
         });
 
-        $('html').on('mouseup',function(){
+        $(CONVERSATION_CONTAINER).on('mouseup',function(){
             $('p').css('visibility','visible');
         });
 
