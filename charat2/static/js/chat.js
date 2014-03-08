@@ -183,7 +183,11 @@ function addLine(msg){
 
     var left_text = msg.type;
     if (msg.user_id) {
-        left_text = user_list[msg.user_id].character+':'+msg.type;
+        if (msg.type == 'ic') {
+            left_text = user_list[msg.user_id].character;
+        } else {
+            left_text = user_list[msg.user_id].character+':'+msg.type;
+        }
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
