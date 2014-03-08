@@ -178,12 +178,12 @@ function addLine(msg){
     
     var username = "";
     if (msg.user_id) {
-        username = user_list[msg.user_id];
+        username = user_list[msg.user_id].username;
     }
-    
+
     var left_text = msg.type;
-    if (msg.acronym) {
-        left_text = msg.acronym+':'+msg.type;
+    if (msg.user_id) {
+        left_text = user_list[msg.user_id].character+':'+msg.type;
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
@@ -210,8 +210,8 @@ function generateUserList(user_data) {
             $('#textInput').css('color','#'+list_user.character.color);
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'"><span class="userCharacter'+is_self+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+' ['+list_user.character.acronym+']</span><span class="username">'+list_user.meta.username+'</span></li>');
-        user_list[list_user.meta.user_id] = list_user.meta.username;
-        user_list[list_user.meta.username] = list_user.meta.user_id;
+        user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name};
+        user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character' : list_user.character.name};
     }
     // test
 }
