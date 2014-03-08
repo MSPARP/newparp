@@ -169,6 +169,10 @@ function addLine(msg){
         alias = msg.acronym+": ";
     }
 
+    if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id)) {
+        $(CONVERSATION_CONTAINER+' p:last').hide();
+    }
+
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
     var mi = $('<p>').addClass("message"+msg.id).addClass("info").html('<span class="left">'+user_list[msg.user_id]+'</span><span class="right">'+Date(msg.posted)+'</span>').appendTo(CONVERSATION_ID);
 
