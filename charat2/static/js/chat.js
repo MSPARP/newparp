@@ -186,7 +186,7 @@ function addLine(msg){
     var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+timestamp.getMinutes();
     var right_text = timestamp_text;
     if (msg.user_id) {
-        right_text = user_list[msg.user_id].username+'/'+timestamp_text;
+        right_text = user_list[msg.user_id].username+' '+timestamp_text;
     }
 
     var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
