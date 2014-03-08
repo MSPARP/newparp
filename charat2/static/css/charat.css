@@ -18,6 +18,8 @@
     word-wrap: break-word;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 body {
