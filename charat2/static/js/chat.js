@@ -158,9 +158,9 @@ function addLine(msg){
     }
 
     if (show_bbcode_color == true) {
-        message = bbEncode(htmlEncode(msg.text));
+        message = bbEncode(msg.text);
     } else {
-        message = bbEncode(htmlEncode(bbRemove(msg.text)));
+        message = bbEncode(bbRemove(msg.text));
     }
 
     var alias = "";
@@ -451,6 +451,11 @@ $(document).ready(function() {
                 current_sidebar = $(this).attr('class');
                 setSidebar(current_sidebar);
             }
+        });
+        
+        $('#convo p').each(function() {
+            line = bbEncode($(this).html());
+            $(this).html(line);
         });
         
         /* SUBMISSION AND ACTIVE CHANGES */
