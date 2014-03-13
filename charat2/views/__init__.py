@@ -1,6 +1,7 @@
 from flask import g, render_template
 
 from charat2.model.connections import use_db
+from charat2.helpers.auth import login_required
 
 @use_db
 def home():
