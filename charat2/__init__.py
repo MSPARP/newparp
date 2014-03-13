@@ -7,7 +7,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import home, account, chat, chat_api
+from charat2.views import home, rooms, account, chat, chat_api
 
 app = Flask(__name__)
 
