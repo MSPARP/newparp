@@ -175,6 +175,14 @@ body.menu #topbar #toptitle {
     opacity: 1;
 }
 
+#conversation .ooc * {
+    opacity: .5;
+}
+
+#conversation .ooc:hover * {
+    opacity: 1;
+}
+
 #conversation .info {
     position: relative;
     top: -3px;
