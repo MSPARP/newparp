@@ -9,8 +9,8 @@ def home():
     else:
         return render_template("register.html")
 
-@login_required
 @use_db
+@login_required
 def rooms():
     if g.user is not None:
         return render_template("rooms.html")
