@@ -189,8 +189,11 @@ function addLine(msg){
         right_text = user_list[msg.user_id].username+' '+timestamp_text;
     }
 
-    var mp = $('<p>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).css('color', '#'+msg.color).html(alias+message).appendTo(CONVERSATION_ID);
-    var mi = $('<p>').addClass("message"+msg.id).addClass(msg.type).addClass("info").addClass("user"+msg.user_id).html('<span class="left">'+left_text+'</span><span class="right">'+right_text+'</span>').appendTo(CONVERSATION_ID);
+    var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).appendTo(CONVERSATION_ID);
+    var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
+    var info = $('<p>').addClass("info").addClass("user"+msg.user_id).appendTo("#message"+msg.id);
+    var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
+    var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
 
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
