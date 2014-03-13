@@ -150,7 +150,7 @@ function goBottom(element) {
 }
 
 function addLine(msg){
-	// MAKE A CONVERSATION SCROLL FUNCTION
+
     if (atBottom(CONVERSATION_CONTAINER)){
         at_bottom = true;
     } else {
