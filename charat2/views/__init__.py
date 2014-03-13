@@ -9,3 +9,9 @@ def home():
     else:
         return render_template("register.html")
 
+@use_db
+def rooms():
+    if g.user is not None:
+        return render_template("rooms.html")
+    else:
+        abort(404)

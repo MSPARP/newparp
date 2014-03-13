@@ -21,6 +21,8 @@ app.teardown_request(redis_disconnect)
 
 app.add_url_rule("/", "home", home, methods=("GET",))
 
+app.add_url_rule("/rooms", "rooms", rooms, methods=("GET",))
+
 app.add_url_rule("/login", "log_in", account.log_in, methods=("POST",))
 app.add_url_rule("/logout", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
