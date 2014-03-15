@@ -18,6 +18,9 @@ def mark_alive(f):
         if not online:
             g.joining = True
             # XXX DO BAN CHECKING, ONLINE USER LIMITS ETC. HERE.
+            # If they've been kicked recently, don't let them in.
+            if g.redis.exists("kicked:%s:%s" % (g.chat_id, g.user_id)):
+                return "{\"exit\":\"kick\"}"
             # Get UserChat if we haven't got it already.
             if not hasattr(g, "user_chat"):
                 get_user_chat()
