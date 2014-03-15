@@ -243,18 +243,18 @@ function pingServer() {
 
 function messageParse(data) {
 	// KICK/BAN RECEIVAL
-    /* if (typeof data.exit!='undefined') {
+    if (typeof data.exit!='undefined') {
         if (data.exit=='kick') {
             clearChat();
             addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
-        } else if (data.exit=='ban') {
+        } /* else if (data.exit=='ban') {
             latestNum = -1;
             chat = 'theoubliette'
             $('#userList h1')[0].innerHTML = 'theoubliette';
             $(CONVERSATION_CONTAINER).empty();
-        }
+        } */
         return true;
-    } */
+    }
     var messages = data.messages;
     for (var i=0; i<messages.length; i++) {
         addLine(messages[i]);

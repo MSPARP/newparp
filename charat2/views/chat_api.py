@@ -12,7 +12,13 @@ from charat2.helpers.chat import (
     disconnect,
     get_userlist,
 )
-from charat2.model import case_options, group_ranks, Message, UserChat
+from charat2.model import (
+    action_ranks,
+    case_options,
+    group_ranks,
+    Message,
+    UserChat,
+)
 from charat2.model.connections import (
     get_user_chat,
     use_db_chat,
@@ -177,9 +183,56 @@ def set_group():
 
     return "", 204
 
+@use_db_chat
 @mark_alive
 def user_action():
-    raise NotImplementedError
+
+    if request.form.get("action") not in ("kick", "ban"):
+        abort(400)
+
+    # Make sure we're allowed to perform this action.
+    if (
+        group_ranks[g.user_chat.group] < action_ranks[request.form["action"]]
+        and g.chat.creator != g.user
+        and g.user.group != "admin"
+    ):
+        abort(403)
+
+    # Fetch the UserChat we're trying to act upon.
+    try:
+        set_user_chat = g.db.query(UserChat).filter(and_(
+            UserChat.user_id==request.form["user_id"],
+            UserChat.chat_id==g.chat.id,
+        )).options(joinedload(UserChat.user)).one()
+    except NoResultFound:
+        abort(404)
+
+    # If they're above us, creator or admin, don't allow the action.
+    if (
+        group_ranks[set_user_chat.group] > group_ranks[g.user_chat.group]
+        or set_user_chat.user==g.chat.creator
+        or set_user_chat.user.group=="admin"
+    ):
+        abort(403)
+
+    if request.form["action"]=="kick":
+        g.redis.publish(
+            "channel:%s:%s" % (g.chat.id, set_user_chat.user_id),
+            "{\"exit\":\"kick\"}",
+        )
+        disconnect(g.redis, g.chat.id, set_user_chat.user_id)
+        send_message(g.db, g.redis, Message(
+            chat_id=g.chat.id,
+            type="user_action",
+            text="%s [%s] kicked %s [%s] from the chat." % (
+                g.user_chat.name, g.user_chat.acronym,
+                set_user_chat.name, set_user_chat.acronym,
+            ),
+        ))
+        return "", 204
+
+    elif request.form["action"]=="ban":
+        raise NotImplementedError
 
 @mark_alive
 def set_flag():

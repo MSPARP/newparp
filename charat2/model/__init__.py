@@ -70,6 +70,12 @@ group_ranks = {
     "silent": 0,
 }
 
+# Minimum ranks for user actions.
+action_ranks = {
+    "ban": 3,
+    "kick": 2,
+}
+
 
 class User(Base):
 
