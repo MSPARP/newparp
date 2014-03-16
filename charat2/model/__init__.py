@@ -359,6 +359,7 @@ class Ban(Base):
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
 
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created = Column(DateTime(), nullable=False, default=now)
     expires = Column(DateTime())
 
@@ -394,6 +395,15 @@ UserChat.chat = relation(Chat, backref='users')
 Message.chat = relation(Chat)
 Message.user = relation(User)
 
-Ban.user = relation(User, backref='bans')
+Ban.user = relation(
+    User,
+    backref='bans',
+    primaryjoin=Ban.user_id==User.id,
+)
 Ban.chat = relation(Chat, backref='bans')
+Ban.creator = relation(
+    User,
+    backref='bans_created',
+    primaryjoin=Ban.creator_id==User.id,
+)
 

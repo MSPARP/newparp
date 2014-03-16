@@ -249,6 +249,7 @@ def user_action():
         g.db.add(Ban(
             user_id=set_user_chat.user_id,
             chat_id=g.chat.id,
+            creator_id=g.user.id,
             name=set_user_chat.name,
             acronym=set_user_chat.acronym,
             reason=request.form.get("reason"),
