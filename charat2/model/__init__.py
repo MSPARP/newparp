@@ -349,6 +349,22 @@ class Message(Base):
         }
 
 
+class Ban(Base):
+
+    __tablename__ = "bans"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+
+    created = Column(DateTime(), nullable=False, default=now)
+    expires = Column(DateTime())
+
+    name = Column(Unicode(50), nullable=False)
+    acronym = Column(Unicode(15), nullable=False)
+
+    reason = Column(UnicodeText)
+
+
 # Index to make generating the public chat list easier.
 # This is a partial index, a feature only supported by Postgres, so I don't
 # know what will happen if you try to run this on anything else.
@@ -374,4 +390,7 @@ UserChat.chat = relation(Chat, backref='users')
 
 Message.chat = relation(Chat)
 Message.user = relation(User)
+
+Ban.user = relation(User, backref='bans')
+Ban.chat = relation(Chat, backref='bans')
 

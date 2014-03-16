@@ -247,12 +247,10 @@ function messageParse(data) {
         if (data.exit=='kick') {
             clearChat();
             addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
-        } /* else if (data.exit=='ban') {
-            latestNum = -1;
-            chat = 'theoubliette'
-            $('#userList h1')[0].innerHTML = 'theoubliette';
-            $(CONVERSATION_CONTAINER).empty();
-        } */
+        } else if (data.exit=='ban') {
+			clearChat();
+            window.location.replace('/chat/theoubliette');
+        }
         return true;
     }
     var messages = data.messages;

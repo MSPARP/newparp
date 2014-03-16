@@ -1,7 +1,7 @@
 import json
 
 from flask import abort, g, jsonify, make_response, request
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -16,12 +16,14 @@ from charat2.model import (
     action_ranks,
     case_options,
     group_ranks,
+    Ban,
     Message,
     UserChat,
 )
 from charat2.model.connections import (
     get_user_chat,
     use_db_chat,
+    db_connect,
     db_commit,
     db_disconnect,
 )
@@ -236,7 +238,41 @@ def user_action():
         return "", 204
 
     elif request.form["action"]=="ban":
-        raise NotImplementedError
+        # Skip if they're already banned.
+        if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+            Ban.chat_id==g.chat.id,
+            Ban.user_id==set_user_chat.user_id,
+        )).scalar() != 0:
+            return "", 204
+        g.db.add(Ban(
+            user_id=set_user_chat.user_id,
+            chat_id=g.chat.id,
+            name=set_user_chat.name,
+            acronym=set_user_chat.acronym,
+            reason=request.form.get("reason"),
+        ))
+        if request.form.get("reason") is not None:
+            ban_message = "%s [%s] banned %s [%s] from the chat. Reason: %s" % (
+                g.user_chat.name, g.user_chat.acronym,
+                set_user_chat.name, set_user_chat.acronym,
+                request.form["reason"],
+            )
+        else:
+            ban_message = "%s [%s] banned %s [%s] from the chat." % (
+                g.user_chat.name, g.user_chat.acronym,
+                set_user_chat.name, set_user_chat.acronym,
+            )
+        g.redis.publish(
+            "channel:%s:%s" % (g.chat.id, set_user_chat.user_id),
+            "{\"exit\":\"ban\"}",
+        )
+        disconnect(g.redis, g.chat.id, set_user_chat.user_id)
+        send_message(g.db, g.redis, Message(
+            chat_id=g.chat.id,
+            type="user_action",
+            text=ban_message,
+        ))
+        return "", 204
 
 @mark_alive
 def set_flag():
@@ -311,6 +347,7 @@ def quit():
     except ValueError:
         abort(400)
     if disconnect(g.redis, g.chat_id, g.user_id):
+        db_connect()
         get_user_chat()
         if g.user_chat.group == "silent":
             send_userlist(g.db, g.redis, g.chat)

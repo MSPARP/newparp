@@ -1,11 +1,12 @@
 from flask import abort, g, redirect, render_template, request, url_for
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import login_required
 from charat2.model import (
     case_options,
     AnyChat,
+    Ban,
     Chat,
     GroupChat,
     Message,
@@ -51,6 +52,14 @@ def chat(url):
         chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
     except NoResultFound:
         abort(404)
+    # Redirect them to the oubliette if they're banned.
+    if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+        Ban.chat_id==chat.id,
+        Ban.user_id==g.user.id,
+    )).scalar() != 0:
+        if chat.url != "theoubliette":
+            return redirect(url_for("chat", url="theoubliette"))
+        abort(403)
     try:
         user_chat = g.db.query(UserChat).filter(and_(
             UserChat.user_id==g.user.id,

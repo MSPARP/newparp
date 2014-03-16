@@ -3,10 +3,10 @@ import time
 
 from flask import abort, g, request
 from functools import wraps
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
-from charat2.model import AnyChat, Message, UserChat
+from charat2.model import AnyChat, Ban, Message, UserChat
 from charat2.model.connections import db_connect, get_user_chat
 
 def mark_alive(f):
@@ -17,10 +17,18 @@ def mark_alive(f):
         online = g.redis.sismember("chat:%s:online" % g.chat_id, g.user_id)
         if not online:
             g.joining = True
-            # XXX DO BAN CHECKING, ONLINE USER LIMITS ETC. HERE.
+            # XXX ONLINE USER LIMITS ETC. HERE.
             # If they've been kicked recently, don't let them in.
             if g.redis.exists("kicked:%s:%s" % (g.chat_id, g.user_id)):
                 return "{\"exit\":\"kick\"}"
+            # Make sure we're connected to the database for the ban checking.
+            db_connect()
+            # Check if we're banned.
+            if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+                Ban.chat_id==g.chat_id,
+                Ban.user_id==g.user_id,
+            )).scalar() != 0:
+                abort(403)
             # Get UserChat if we haven't got it already.
             if not hasattr(g, "user_chat"):
                 get_user_chat()

@@ -62,7 +62,6 @@ def use_db(f):
     return decorated_function
 
 def get_user_chat():
-    db_connect()
     try:
         g.user_chat, g.user, g.chat = g.db.query(
             UserChat, User, AnyChat,
@@ -80,6 +79,7 @@ def get_user_chat():
 def use_db_chat(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        db_connect()
         get_user_chat()
         return f(*args, **kwargs)
     return decorated_function
