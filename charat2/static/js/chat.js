@@ -184,10 +184,7 @@ function addLine(msg){
     var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var timestamp = new Date(msg.posted*1000);
     var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
-    var right_text = timestamp_text;
-    if (msg.user_id) {
-        right_text = msg.user.username+' '+timestamp_text;
-    }
+    var right_text = msg.user.username+' '+timestamp_text;
 
     var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
     var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
