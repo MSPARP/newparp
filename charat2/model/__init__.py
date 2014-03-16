@@ -348,7 +348,6 @@ class Message(Base):
             "type": self.type,
             "color": self.color,
             "acronym": self.acronym,
-            "name": self.name,
             "text": self.text,
         }
 
