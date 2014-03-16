@@ -40,6 +40,7 @@ def mark_alive(f):
             else:
                 send_message(g.db, g.redis, Message(
                     chat_id=g.chat.id,
+                    user_id=g.user.id,
                     type="join",
                     text="%s [%s] joined chat." % (
                         g.user_chat.name, g.user_chat.acronym,

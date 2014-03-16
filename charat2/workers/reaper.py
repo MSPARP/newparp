@@ -35,6 +35,7 @@ if __name__ == "__main__":
             else:
                 send_message(db, redis, Message(
                     chat_id=chat_id,
+                    user_id=dead_user_chat.user_id,
                     type="timeout",
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON

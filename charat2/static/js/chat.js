@@ -173,11 +173,11 @@ function addLine(msg){
     }
 
     var left_text = msg.type;
-    if (msg.user_id) {
+    if (msg.user) {
         if (msg.type == 'ic') {
-            left_text = user_list[msg.user_id].character;
+            left_text = msg.user.username;
         } else {
-            left_text = user_list[msg.user_id].character+':'+msg.type;
+            left_text = msg.user.username+':'+msg.type;
         }
     }
 
@@ -185,9 +185,9 @@ function addLine(msg){
     var timestamp = new Date(msg.posted*1000);
     var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
     var right_text = timestamp_text;
-    if (msg.user_id) {
+    /*if (msg.user_id) {
         right_text = user_list[msg.user_id].username+' '+timestamp_text;
-    }
+    }*/
 
     var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user_id).appendTo(CONVERSATION_ID);
     var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);

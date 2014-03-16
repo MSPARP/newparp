@@ -340,7 +340,10 @@ class Message(Base):
     def to_dict(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+            } if self.user is not None else None,
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,

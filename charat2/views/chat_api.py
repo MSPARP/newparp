@@ -176,6 +176,7 @@ def set_group():
 
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
+        user_id=set_user_chat.user_id,
         type="user_group",
         text=message % (
             g.user_chat.name,
@@ -229,6 +230,7 @@ def user_action():
         disconnect(g.redis, g.chat.id, set_user_chat.user_id)
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
+            user_id=set_user_chat.user_id,
             type="user_action",
             text="%s [%s] kicked %s [%s] from the chat." % (
                 g.user_chat.name, g.user_chat.acronym,
@@ -269,6 +271,7 @@ def user_action():
         disconnect(g.redis, g.chat.id, set_user_chat.user_id)
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
+            user_id=set_user_chat.user_id,
             type="user_action",
             text=ban_message,
         ))
@@ -329,6 +332,7 @@ def save():
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
+                user_id=g.user.id,
                 type="user_info",
                 text="%s [%s] is now %s [%s]." % (
                     old_name, old_acronym,
@@ -354,6 +358,7 @@ def quit():
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
+                user_id=g.user.id,
                 type="disconnect",
                 text="%s [%s] disconnected." % (
                     g.user_chat.name, g.user_chat.acronym,
