@@ -87,6 +87,5 @@ def chat(url):
         case_options=case_options,
     )
 
-def to_timestamp(posted):
-    return posted
+
 
