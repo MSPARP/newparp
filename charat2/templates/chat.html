@@ -42,7 +42,7 @@
 
 <div id="conversation" class="body">
     <div id="convo">
-        <p class="eMessages">[url=/chat/{{chat.url}}/log]View earlier messages[/url]</p>
+        <p class="eMessages"><a href="/chat/{{chat.url}}/log">View earlier messages</a></p>
         {% for message in messages %}
         <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
             <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
