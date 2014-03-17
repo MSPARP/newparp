@@ -173,11 +173,11 @@ function addLine(msg){
     }
 
     var left_text = msg.type;
-    if (msg.user) {
+    if (msg.name) {
         if (msg.type == 'ic') {
-            left_text = msg.user.username;
+            left_text = msg.name;
         } else {
-            left_text = msg.user.username+':'+msg.type;
+            left_text = msg.name+':'+msg.type;
         }
     }
 
@@ -448,7 +448,7 @@ $(document).ready(function() {
             }
         });
         
-        $('#convo p').each(function() {
+        $('#convo span p.message').each(function() {
             line = bbEncode($(this).html());
             $(this).html(line);
         });
