@@ -3,8 +3,6 @@ from flask import g, render_template
 from charat2.model.connections import use_db
 from charat2.helpers.auth import login_required
 
-import datetime
-
 @use_db
 def home():
     if g.user is not None:
