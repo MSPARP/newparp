@@ -76,6 +76,7 @@ def chat(url):
     ).order_by(Message.posted.desc()).limit(50).all()
     messages.reverse()
     latest_num = messages[-1].id if len(messages) > 0 else 0
+    #{{datetime.fromtimestamp(message.posted).strftime("%B")[:3]}} {{datetime.fromtimestamp(message.posted).strftime("%d %H:%M")}}
     return render_template(
         "chat.html",
         chat=chat,
@@ -85,4 +86,7 @@ def chat(url):
         latest_num=latest_num,
         case_options=case_options,
     )
+
+def to_timestamp(posted):
+    return posted
 
