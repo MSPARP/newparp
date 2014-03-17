@@ -97,6 +97,7 @@ def send():
         type=message_type,
         color=g.user_chat.color,
         acronym=g.user_chat.acronym,
+        name=g.user_chat.name,
         text=text,
     ))
 
@@ -177,6 +178,7 @@ def set_group():
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
         user_id=set_user_chat.user_id,
+        name=set_user_chat.name,
         type="user_group",
         text=message % (
             g.user_chat.name,
@@ -232,6 +234,7 @@ def user_action():
             chat_id=g.chat.id,
             user_id=set_user_chat.user_id,
             type="user_action",
+            name=g.user_chat.name,
             text="%s [%s] kicked %s [%s] from the chat." % (
                 g.user_chat.name, g.user_chat.acronym,
                 set_user_chat.name, set_user_chat.acronym,
@@ -274,6 +277,7 @@ def user_action():
             chat_id=g.chat.id,
             user_id=set_user_chat.user_id,
             type="user_action",
+            name=g.user_chat.name,
             text=ban_message,
         ))
         return "", 204
@@ -335,6 +339,7 @@ def save():
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
+                name=g.user_chat.name,
                 text="%s [%s] is now %s [%s]." % (
                     old_name, old_acronym,
                     g.user_chat.name, g.user_chat.acronym,
@@ -361,6 +366,7 @@ def quit():
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="disconnect",
+                name=g.user_chat.name,
                 text="%s [%s] disconnected." % (
                     g.user_chat.name, g.user_chat.acronym,
                 ),

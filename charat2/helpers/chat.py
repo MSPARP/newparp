@@ -42,6 +42,7 @@ def mark_alive(f):
                     chat_id=g.chat.id,
                     user_id=g.user.id,
                     type="join",
+                    name=g.user_chat.name,
                     text="%s [%s] joined chat." % (
                         g.user_chat.name, g.user_chat.acronym,
                     ),

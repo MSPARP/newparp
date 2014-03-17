@@ -37,6 +37,7 @@ if __name__ == "__main__":
                     chat_id=chat_id,
                     user_id=dead_user_chat.user_id,
                     type="timeout",
+                    name=dead_user_chat.name,
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON
                     text="%s's connection timed out." % dead_user_chat.name,

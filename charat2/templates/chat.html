@@ -47,7 +47,7 @@
         <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
             <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
             <p class="info">
-                <span class="left"></span>
+                <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
                 <span class="right">{{message.user.username}}</span>
             </p>
         </span>
