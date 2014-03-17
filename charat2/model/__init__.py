@@ -332,9 +332,8 @@ class Message(Base):
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
-
     acronym = Column(Unicode(50), nullable=False, default=u"")
-
+    name = Column(Unicode(50), nullable=False, default=u"")
     text = Column(UnicodeText, nullable=False)
 
     def to_dict(self):
@@ -348,6 +347,7 @@ class Message(Base):
             "type": self.type,
             "color": self.color,
             "acronym": self.acronym,
+            "name": self.name,
             "text": self.text,
         }
 
