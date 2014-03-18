@@ -512,12 +512,10 @@ $(document).ready(function() {
         }); */
 
         $("textarea#textInput").on('keydown', function(e) {
-            if (!$(document.body).hasClass('mobile')) {
-                if (e.keyCode == 13 && !e.shiftKey)
-                {
-                    e.preventDefault();
-                    $('.controls').submit();
-                }
+            if (e.keyCode == 13 && !e.shiftKey)
+            {
+                e.preventDefault();
+                $('.controls').submit();
             }
         });
         
