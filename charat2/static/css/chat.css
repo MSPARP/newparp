@@ -183,7 +183,7 @@ body.menu #topbar #toptitle {
     opacity: 1;
 }
 
-#conversation span:active .info {
+#conversation span:hover .info {
     display: block;
 }
 
