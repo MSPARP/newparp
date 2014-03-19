@@ -3,8 +3,10 @@
 var SEARCH_PERIOD = 1;
 var PING_PERIOD = 10;
 
-var POST_URL = "/chat_ajax/post";
-var SAVE_URL = "/chat_api/save";
+var SET_USER_URL = '/chat_api/set_group';
+var USER_ACTION_URL = '/chat_api/user_action';
+
+var SAVE_URL = '/chat_api/save';
 
 var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
@@ -217,6 +219,26 @@ function generateUserList(user_data) {
         user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character' : list_user.character.name};
     }
     // test
+}
+
+function userAction(user,action,reason) {
+    if (user_list[user]) {
+        user_id = user_list[user];
+    } else {
+        return false;
+    }
+    var actionData = {'chat_id': chat.id, 'action': action, 'user_id': user_id, 'reason': reason};
+    $.post(USER_ACTION_URL,actionData)
+}
+
+function setGroup(user,group) {
+    if (user_list[user]) {
+        user_id = user_list[user];
+    } else {
+        return false;
+    }
+    var actionData = {'chat_id': chat.id, 'group': group, 'user_id': user_id};
+    $.post(SET_GROUP_URL,actionData)
 }
 
 function getMessages() {
@@ -475,10 +497,15 @@ $(document).ready(function() {
                     var command = $('#textInput').val().split(' ');
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
+                        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silent':'silent'}
                         if (groups.indexOf(command[2].toLowerCase())!=-1) {
-                            alert('Setting '+command[1]+" to "+command[2]);
+                            setGroup(command[1],command[2]);
                         }
                         $('#textInput').val('');
+                    } else if (command[0] == '/ban') {
+                        userAction(command[1],'ban',command[2]);
+                    } else if (command[0] == '/kick') {
+                        userAction(command[1],'kick',command[2]);
                     }
                 }
                 
