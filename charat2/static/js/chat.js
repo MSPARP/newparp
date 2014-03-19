@@ -223,7 +223,7 @@ function generateUserList(user_data) {
 
 function userAction(user,action,reason) {
     if (user_list[user]) {
-        user_id = user_list[user];
+        user_id = user_list[user].id;
     } else {
         return false;
     }
@@ -233,7 +233,7 @@ function userAction(user,action,reason) {
 
 function setGroup(user,group) {
     if (user_list[user]) {
-        user_id = user_list[user];
+        user_id = user_list[user].id;
     } else {
         return false;
     }
@@ -502,9 +502,11 @@ $(document).ready(function() {
                             setGroup(command[1],command[2]);
                         }
                         $('#textInput').val('');
-                    } else if (command[0] == '/ban') {
+                    }
+                    if (command[0] == '/ban') {
                         userAction(command[1],'ban',command[2]);
-                    } else if (command[0] == '/kick') {
+                    }
+                    if (command[0] == '/kick') {
                         userAction(command[1],'kick','');
                     }
                 }
