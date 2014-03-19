@@ -476,6 +476,17 @@ $(document).ready(function() {
         });
         
         /* SUBMISSION AND ACTIVE CHANGES */
+        
+        // Hiding and showing info on clicks
+        $('#conversation span').on('click', function() {
+            $('#conversation span .info').hide();
+            if ($(this).find('.info').css('display') == 'hidden') {
+                $(this).find('.info').show();
+            } else {
+                $(this).find('.info').hide();
+            }
+        });
+        
         $('.controls').submit(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
