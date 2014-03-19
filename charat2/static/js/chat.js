@@ -478,31 +478,11 @@ $(document).ready(function() {
         
         /* SUBMISSION AND ACTIVE CHANGES */
         
-        $('div').on('click', function() {
-            if ($(this).attr('id') != 'conversation') {
-                $('#conversation span .info').hide();
-            }
-        });
-        
-        // Show info if setting is off
+        // Show info if setting is true
         if (show_all_info) {
             $('#conversation span .info').show();
             goBottom(CONVERSATION_CONTAINER);
         }
-        
-        // Hiding and showing info on clicks
-        $('#conversation span').on('click', function() {
-            var at_bottom = atBottom(CONVERSATION_CONTAINER)
-            $('#conversation span .info').hide();
-            if (!$(this).find('.info').is(":visible")) {
-                $(this).find('.info').show();
-            } else {
-                $(this).find('.info').hide();
-            }
-            if (at_bottom) {
-                goBottom(CONVERSATION_CONTAINER);
-            }
-        });
         
         $('.controls').submit(function() {
             $('#textInput').focus();
