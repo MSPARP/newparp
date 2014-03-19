@@ -478,6 +478,12 @@ $(document).ready(function() {
         
         /* SUBMISSION AND ACTIVE CHANGES */
         
+        $('div').on('click', function() {
+            if ($(this).attr('id') != 'conversation') {
+                $('#conversation span .info').hide();
+            }
+        });
+        
         // Show info if setting is off
         if (show_all_info) {
             $('#conversation span .info').show();
@@ -485,13 +491,13 @@ $(document).ready(function() {
         }
         
         // Hiding and showing info on clicks
-        $('html').on('click', function() {
+        $('#conversation span').on('click', function() {
             var at_bottom = atBottom(CONVERSATION_CONTAINER)
             $('#conversation span .info').hide();
-            if (!$(this).find('#conversation span .info').is(":visible")) {
-                $(this).find('#conversation span .info').show();
+            if (!$(this).find('.info').is(":visible")) {
+                $(this).find('.info').show();
             } else {
-                $(this).find('#conversation span .info').hide();
+                $(this).find('.info').hide();
             }
             if (at_bottom) {
                 goBottom(CONVERSATION_CONTAINER);
