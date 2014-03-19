@@ -505,7 +505,7 @@ $(document).ready(function() {
                     } else if (command[0] == '/ban') {
                         userAction(command[1],'ban',command[2]);
                     } else if (command[0] == '/kick') {
-                        userAction(command[1],'kick',command[2]);
+                        userAction(command[1],'kick','');
                     }
                 }
                 
