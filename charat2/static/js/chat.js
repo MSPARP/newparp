@@ -3,7 +3,7 @@
 var SEARCH_PERIOD = 1;
 var PING_PERIOD = 10;
 
-var SET_USER_URL = '/chat_api/set_group';
+var SET_GROUP_URL = '/chat_api/set_group';
 var USER_ACTION_URL = '/chat_api/user_action';
 
 var SAVE_URL = '/chat_api/save';
