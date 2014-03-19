@@ -480,7 +480,7 @@ $(document).ready(function() {
         // Hiding and showing info on clicks
         $('#conversation span').on('click', function() {
             $('#conversation span .info').hide();
-            if ($(this).find('.info').css('display') == 'hidden') {
+            if (!$(this).find('.info').is(":visible") ) {
                 $(this).find('.info').show();
             } else {
                 $(this).find('.info').hide();
