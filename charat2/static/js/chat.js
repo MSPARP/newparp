@@ -478,6 +478,10 @@ $(document).ready(function() {
         
         /* SUBMISSION AND ACTIVE CHANGES */
         
+        $('html').on('click', function() {
+            $('#conversation span .info').hide();
+        });
+        
         // Show info if setting is off
         if (show_all_info) {
             $('#conversation span .info').show();
