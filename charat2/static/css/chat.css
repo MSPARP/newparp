@@ -184,6 +184,7 @@ body.menu #topbar #toptitle {
 }
 
 #conversation .info {
+    display: none;
     position: relative;
     top: -3px;
     font-size: 10px;

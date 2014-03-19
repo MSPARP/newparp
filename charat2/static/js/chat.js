@@ -71,6 +71,7 @@ var show_bbcode_color = true; // USER META ADD
 var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
+var show_all_info = false; // USER META ADD
 
 var user_list = {};
 
@@ -477,13 +478,23 @@ $(document).ready(function() {
         
         /* SUBMISSION AND ACTIVE CHANGES */
         
+        // Show info if setting is off
+        if (show_all_info) {
+            $('#conversation span .info').show();
+            goBottom(CONVERSATION_CONTAINER);
+        }
+        
         // Hiding and showing info on clicks
         $('#conversation span').on('click', function() {
+            var at_bottom = atBottom(CONVERSATION_CONTAINER)
             $('#conversation span .info').hide();
-            if (!$(this).find('.info').is(":visible") ) {
+            if (!$(this).find('.info').is(":visible")) {
                 $(this).find('.info').show();
             } else {
                 $(this).find('.info').hide();
+            }
+            if (at_bottom) {
+                goBottom(CONVERSATION_CONTAINER);
             }
         });
         
