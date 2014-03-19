@@ -499,7 +499,7 @@ $(document).ready(function() {
                         var groups = ['magical','cute','little','unsilence','silence'];
                         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silent':'silent'}
                         if (groups.indexOf(command[2].toLowerCase())!=-1) {
-                            setGroup(command[1],command[2]);
+                            setGroup(command[1],group_map[command[2]]);
                         }
                         $('#textInput').val('');
                     }
