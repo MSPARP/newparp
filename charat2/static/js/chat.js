@@ -484,6 +484,12 @@ $(document).ready(function() {
             goBottom(CONVERSATION_CONTAINER);
         }
         
+        $('#conversation').on('click', function() {
+            if (atBottom(CONVERSATION_CONTAINER)) {
+                goToBottom(CONVERSATION_CONTAINER);
+            } 
+        });
+        
         $('.controls').submit(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
