@@ -8,9 +8,8 @@ body {
     background-color: #FFFFFF;
 }
 
-#chardrop option, #datadrop option {
-    width: 180px;
-    text-overflow: hidden;
+a#logAnchor {
+    text-decoration: none;
 }
 
 .timestamp {
