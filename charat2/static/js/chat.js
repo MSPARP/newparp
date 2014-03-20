@@ -134,6 +134,7 @@ function startChat() {
     //getMeta();
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
+    goBottom(CONVERSATION_CONTAINER);
     updateChatPreview();
 }
 
@@ -478,7 +479,7 @@ $(document).ready(function() {
         
         // Show info if setting is true
         if (show_all_info) {
-            $('#conversation span .info').show();
+            $('#conversation span .info').css('visibility','visible');
             goBottom(CONVERSATION_CONTAINER);
         }
         
