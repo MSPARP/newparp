@@ -21,7 +21,7 @@
 
 <div id="topbar">
     <center>
-        <a id="toptitle" href="/"><img src="/static/icon.png" /></a>
+        <p><a id="toptitle" href="/"><img src="/static/icon.png" /></a></p>
         <div id="topmenu">
             <div id="statusContain"><input type="text" id="statusInput" autocomplete="off" maxlength="50" placeholder="Status"><div type="button" id="statusButton">!</div></div>
             <div class="topborder"></div>
@@ -42,7 +42,7 @@
 
 <div id="conversation" class="body">
     <div id="convo">
-        <p><a id="logAnchor" href="/chat/{{chat.url}}/log">View Log</a><p>
+        <a id="logAnchor" href="/chat/{{chat.url}}/log">View Log</a>
         {% for message in messages %}
         <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
             <p class="info">
