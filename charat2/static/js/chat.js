@@ -187,13 +187,13 @@ function addLine(msg){
     var timestamp = new Date(msg.posted*1000);
     var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
     var right_text = msg.user.username+' '+timestamp_text;
-
+    
     var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
-    var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
     var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
     var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
     var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
-
+    var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
+    
     if (at_bottom) {
         goBottom(CONVERSATION_CONTAINER);
         at_bottom = false;

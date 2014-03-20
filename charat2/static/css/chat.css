@@ -188,8 +188,8 @@ body.menu #topbar #toptitle {
     top: -3px;
     font-size: 10px;
     color: #aaaaaa;
-    border-bottom: solid;
-    border-bottom-width: 1px;
+    border-top: solid;
+    border-top-width: 1px;
     padding: 0;
     margin-left: 5px;
     margin-right: 5px;
