@@ -153,10 +153,8 @@ function goBottom(element) {
 }
 
 function addLine(msg){
-
-    if (atBottom(CONVERSATION_CONTAINER)){
-        at_bottom = true;
-    } else {
+    at_bottom = atBottom(CONVERSATION_CONTAINER);
+    if (!at_bottom) {
         $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
     }
 
