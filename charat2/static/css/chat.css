@@ -185,15 +185,15 @@ body.menu #topbar #toptitle {
 
 #conversation .info {
     position: relative;
-    top: -3px;
+    top: 4px;
     font-size: 10px;
     color: #aaaaaa;
     border-top: solid;
     border-top-width: 1px;
     padding: 0;
+    margin: 0;
     margin-left: 5px;
     margin-right: 5px;
-    margin-bottom: 1px;
 }
 
 #conversation span .info .left, #conversation span .info .right{
