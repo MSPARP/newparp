@@ -183,12 +183,7 @@ body.menu #topbar #toptitle {
     opacity: 1;
 }
 
-#conversation span:hover .info {
-    visibility: visible;
-}
-
 #conversation .info {
-    visibility: hidden;
     position: relative;
     top: -3px;
     font-size: 10px;
@@ -199,6 +194,14 @@ body.menu #topbar #toptitle {
     margin-left: 5px;
     margin-right: 5px;
     margin-bottom: 1px;
+}
+
+#conversation span .info .left, #conversation span .info .right{
+    visibility: hidden;
+}
+
+#conversation span:hover .info .left, #conversation span:hover .info .right{
+    visibility: visible;
 }
 
 #conversation p.info .right {
