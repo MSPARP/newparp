@@ -184,11 +184,11 @@ body.menu #topbar #toptitle {
 }
 
 #conversation span:hover .info {
-    display: block;
+    visibility: visible;
 }
 
 #conversation .info {
-    display: none;
+    visibility: hidden;
     position: relative;
     top: -3px;
     font-size: 10px;
