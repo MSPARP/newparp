@@ -512,9 +512,11 @@ $(document).ready(function() {
                     }
                     if (command[0] == '/ban') {
                         userAction(command[1],'ban',command[2]);
+                        $('#textInput').val('');
                     }
                     if (command[0] == '/kick') {
                         userAction(command[1],'kick','');
+                        $('#textInput').val('');
                     }
                 }
                 
