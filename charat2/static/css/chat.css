@@ -162,8 +162,12 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
-#conversation p, #archiveConversation p, #online {
+#conversation p, #online {
     overflow: hidden;
+}
+
+#conversation span:last-child p.message {
+    margin-bottom: 5px;
 }
 
 #conversation .ooc {
