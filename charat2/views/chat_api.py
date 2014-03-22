@@ -212,11 +212,14 @@ def user_action():
     except NoResultFound:
         abort(404)
 
-    # If they're above us, creator or admin, don't allow the action.
+    # If creator or admin, don't allow the action.
+    if set_user_chat.user==g.chat.creator or set_user_chat.user.group=="admin":
+        abort(403)
+
+    # If they're above us and we're not creator or admin, don't allow it.
     if (
         group_ranks[set_user_chat.group] > group_ranks[g.user_chat.group]
-        or set_user_chat.user==g.chat.creator
-        or set_user_chat.user.group=="admin"
+        and g.chat.creator != g.user and g.user.group != "admin"
     ):
         abort(403)
 
