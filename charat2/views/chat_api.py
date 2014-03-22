@@ -18,6 +18,7 @@ from charat2.model import (
     group_ranks,
     Ban,
     Message,
+    User,
     UserChat,
 )
 from charat2.model.connections import (
@@ -204,16 +205,24 @@ def user_action():
         abort(403)
 
     # Fetch the UserChat we're trying to act upon.
+    if "user_id" in request.form:
+        user_condition = UserChat.user_id==request.form["user_id"]
+    elif "username" in request.form:
+        user_condition = User.username==request.form["username"]
+    else:
+        abort(400)
     try:
-        set_user_chat = g.db.query(UserChat).filter(and_(
-            UserChat.user_id==request.form["user_id"],
+        set_user_chat, set_user = g.db.query(UserChat, User).join(
+            User, UserChat.user_id==User.id,
+        ).filter(and_(
+            user_condition,
             UserChat.chat_id==g.chat.id,
-        )).options(joinedload(UserChat.user)).one()
+        )).one()
     except NoResultFound:
         abort(404)
 
     # If creator or admin, don't allow the action.
-    if set_user_chat.user==g.chat.creator or set_user_chat.user.group=="admin":
+    if set_user==g.chat.creator or set_user.group=="admin":
         abort(403)
 
     # If they're above us and we're not creator or admin, don't allow it.
@@ -225,17 +234,17 @@ def user_action():
 
     if request.form["action"]=="kick":
         g.redis.publish(
-            "channel:%s:%s" % (g.chat.id, set_user_chat.user_id),
+            "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"kick\"}",
         )
         # Don't allow them back in for 10 seconds.
-        kick_key = "kicked:%s:%s" % (g.chat.id, set_user_chat.user_id)
+        kick_key = "kicked:%s:%s" % (g.chat.id, set_user.id)
         g.redis.set(kick_key, 1)
         g.redis.expire(kick_key, 10)
-        disconnect(g.redis, g.chat.id, set_user_chat.user_id)
+        disconnect(g.redis, g.chat.id, set_user.id)
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
-            user_id=set_user_chat.user_id,
+            user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
             text="%s [%s] kicked %s [%s] from the chat." % (
@@ -249,11 +258,11 @@ def user_action():
         # Skip if they're already banned.
         if g.db.query(func.count('*')).select_from(Ban).filter(and_(
             Ban.chat_id==g.chat.id,
-            Ban.user_id==set_user_chat.user_id,
+            Ban.user_id==set_user.id,
         )).scalar() != 0:
             return "", 204
         g.db.add(Ban(
-            user_id=set_user_chat.user_id,
+            user_id=set_user.id,
             chat_id=g.chat.id,
             creator_id=g.user.id,
             name=set_user_chat.name,
@@ -272,13 +281,13 @@ def user_action():
                 set_user_chat.name, set_user_chat.acronym,
             )
         g.redis.publish(
-            "channel:%s:%s" % (g.chat.id, set_user_chat.user_id),
+            "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"ban\"}",
         )
-        disconnect(g.redis, g.chat.id, set_user_chat.user_id)
+        disconnect(g.redis, g.chat.id, set_user.id)
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
-            user_id=set_user_chat.user_id,
+            user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
             text=ban_message,
