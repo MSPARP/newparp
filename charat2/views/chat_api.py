@@ -130,11 +130,19 @@ def set_group():
         abort(403)
 
     # Fetch the UserChat we're trying to change.
+    if "user_id" in request.form:
+        user_condition = UserChat.user_id==request.form["user_id"]
+    elif "username" in request.form:
+        user_condition = User.username==request.form["username"]
+    else:
+        abort(400)
     try:
-        set_user_chat = g.db.query(UserChat).filter(and_(
-            UserChat.user_id==request.form["user_id"],
+        set_user_chat, set_user = g.db.query(UserChat, User).join(
+            User, UserChat.user_id==User.id,
+        ).filter(and_(
+            user_condition,
             UserChat.chat_id==g.chat.id,
-        )).options(joinedload(UserChat.user)).one()
+        )).one()
     except NoResultFound:
         abort(404)
 
