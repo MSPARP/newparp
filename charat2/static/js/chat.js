@@ -222,23 +222,13 @@ function generateUserList(user_data) {
 }
 
 function userAction(user,action,reason) {
-    if (user_list[user]) {
-        user_id = user_list[user].id;
-    } else {
-        return false;
-    }
-    var actionData = {'chat_id': chat.id, 'action': action, 'user_id': user_id, 'reason': reason};
-    $.post(USER_ACTION_URL,actionData)
+    var actionData = {'chat_id': chat.id, 'action': action, 'username': user, 'reason': reason};
+    $.post(USER_ACTION_URL,actionData);
 }
 
 function setGroup(user,group) {
-    if (user_list[user]) {
-        user_id = user_list[user].id;
-    } else {
-        return false;
-    }
-    var actionData = {'chat_id': chat.id, 'group': group, 'user_id': user_id};
-    $.post(SET_GROUP_URL,actionData)
+    var actionData = {'chat_id': chat.id, 'group': group, 'username': user};
+    $.post(SET_GROUP_URL,actionData);
 }
 
 function getMessages() {
