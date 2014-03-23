@@ -9,6 +9,14 @@ from sqlalchemy.orm import joinedload
 from charat2.model import AnyChat, Ban, Message, UserChat
 from charat2.model.connections import db_connect, get_user_chat
 
+def group_chat_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.chat.type!="group":
+			abort(404)
+        return f(*args, **kwargs)
+    return decorated_function
+
 def mark_alive(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -77,6 +85,9 @@ def send_message(db, redis, message):
         u"user_action",
     ):
         redis_message["users"] = get_userlist(db, redis, message.chat)
+    # Reload chat metadata if necessary.
+    if message.type == "chat_meta":
+        redis_message["chat"] = message.chat.to_dict()
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
 
 def send_userlist(db, redis, chat):

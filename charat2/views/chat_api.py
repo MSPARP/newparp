@@ -6,6 +6,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import (
+    group_chat_only,
     mark_alive,
     send_message,
     send_userlist,
@@ -109,12 +110,9 @@ def set_state():
     raise NotImplementedError
 
 @use_db_chat
+@group_chat_only
 @mark_alive
 def set_group():
-
-    # Only allow mods to be set in group chats.
-    if g.chat.type!="group":
-        abort(400)
 
     # Validate group setting.
     if request.form.get("group") not in group_ranks:
@@ -198,6 +196,7 @@ def set_group():
     return "", 204
 
 @use_db_chat
+@group_chat_only
 @mark_alive
 def user_action():
 
@@ -302,13 +301,52 @@ def user_action():
         ))
         return "", 204
 
+@use_db_chat
+@group_chat_only
 @mark_alive
 def set_flag():
     raise NotImplementedError
 
+@use_db_chat
+@group_chat_only
 @mark_alive
-def set_info():
-    raise NotImplementedError
+def set_topic():
+
+    # Make sure we're allowed to set the topic.
+    if (
+        group_ranks[g.user_chat.group] < action_ranks["set_topic"]
+        and g.chat.creator != g.user
+        and g.user.group != "admin"
+    ):
+        abort(403)
+
+    if "topic" not in request.form:
+        abort(400)
+
+    topic = request.form["topic"].strip()
+
+    # If it hasn't changed, don't bother sending a message about it.
+    if topic == g.chat.topic:
+        return "", 204
+
+    g.chat.topic = topic
+
+    if topic == "":
+        send_message(g.db, g.redis, Message(
+            chat_id=g.chat.id,
+            user_id=g.user.id,
+            type="chat_meta",
+            text="%s removed the conversation topic." % g.user_chat.name,
+        ))
+    else:
+        send_message(g.db, g.redis, Message(
+            chat_id=g.chat.id,
+            user_id=g.user.id,
+            type="chat_meta",
+            text="%s changed the topic to \"%s\"." % (g.user_chat.name, topic),
+        ))
+
+    return "", 204
 
 @use_db_chat
 @mark_alive

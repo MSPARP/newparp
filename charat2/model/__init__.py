@@ -74,6 +74,7 @@ group_ranks = {
 action_ranks = {
     "ban": 3,
     "kick": 2,
+    "set_topic": 1,
 }
 
 
@@ -176,7 +177,7 @@ class GroupChat(Chat):
     }
 
     title = Column(Unicode(50), nullable=False, default=u"")
-    description = Column(UnicodeText, nullable=False, default=u"")
+    topic = Column(UnicodeText, nullable=False, default=u"")
 
     autosilence = Column(Boolean, nullable=False, default=False)
     nsfw = Column(Boolean, nullable=False, default=False)
@@ -196,7 +197,7 @@ class GroupChat(Chat):
             "url": self.url,
             "type": self.type,
             "title": self.title,
-            "description": self.description,
+            "topic": self.topic,
             "autosilence": self.autosilence,
             "nsfw": self.nsfw,
             "publicity": self.publicity,
@@ -325,7 +326,6 @@ class Message(Base):
         u"user_info",
         u"user_group",
         u"user_action",
-        u"chat_info",
         u"chat_meta",
         name=u"messages_type",
     ), nullable=False, default=u"ic")

@@ -273,12 +273,12 @@ function messageParse(data) {
     if (typeof data.users!=="undefined") {
         generateUserList(data.users);
     }
-    if (typeof data.meta!='undefined') {
+    if (typeof data.chat!='undefined') {
         // Reload chat metadata.
-        var chat = data.meta;
+        var chat = data.chat;
 
         for (i=0; i<CHAT_FLAGS.length; i++) {
-            if (typeof data.meta[CHAT_FLAGS[i]]!='undefined') {
+            if (typeof data.chat[CHAT_FLAGS[i]]!='undefined') {
                 $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
                 $('#'+CHAT_FLAGS[i]+'Result').show();
             } else {
@@ -287,8 +287,8 @@ function messageParse(data) {
             }
         }
 
-        if (typeof data.meta.topic!='undefined') {
-            $('#topic').html(bbEncode(data.meta.topic));
+        if (typeof data.chat.topic!='undefined') {
+            $('#topic').html(bbEncode(data.chat.topic));
         } else {
             $('#topic').text('');
         }
@@ -301,7 +301,7 @@ function messageParse(data) {
             $('.inPass').show();
         }
         //NSFW
-        if (data.meta['nsfw'] == '1') {
+        if (data.chat['nsfw'] == '1') {
             //Change
         } else {
             //Changed
