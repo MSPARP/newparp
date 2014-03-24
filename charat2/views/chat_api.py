@@ -305,7 +305,56 @@ def user_action():
 @group_chat_only
 @mark_alive
 def set_flag():
-    raise NotImplementedError
+
+    if "flag" not in request.form or "value" not in request.form:
+        abort(400)
+
+    # Make sure we're a mod, creator, or admin.
+    if (
+        group_ranks[g.user_chat.group] < 1
+        and g.chat.creator != g.user
+        and g.user.group != "admin"
+    ):
+        abort(403)
+
+    # Boolean flags.
+    if (
+        request.form["flag"] in ("autosilence", "nsfw")
+        and request.form["value"] in ("on", "off")
+    ):
+        new_value = request.form["value"] == "on"
+        if new_value == getattr(g.chat, request.form["flag"]):
+            return "", 204
+        setattr(g.chat, request.form["flag"], new_value)
+        message = "%%s switched %s %s." % (
+            request.form["flag"], request.form["value"],
+        )
+
+    # Publicity is an enum because we might add options for password protected
+    # or invite only chats in the future.
+    elif (
+        request.form["flag"] == "publicity"
+        and request.form["value"] in ("listed", "unlisted")
+    ):
+        if request.form["value"] == g.chat.publicity:
+            return "", 204
+        g.chat.publicity = request.form["value"]
+        if g.chat.publicity == "listed":
+            message = ("%s listed the chat. It's now listed on the public"
+                " rooms page.")
+        elif g.chat.publicity == "unlisted":
+            message = "%s unlisted the chat."
+    else:
+        abort(400)
+
+    send_message(g.db, g.redis, Message(
+        chat_id=g.chat.id,
+        user_id=g.user.id,
+        type="chat_meta",
+        text=message % g.user_chat.name,
+    ))
+
+    return "", 204
 
 @use_db_chat
 @group_chat_only
