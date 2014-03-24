@@ -47,13 +47,16 @@ def create_chat():
 @use_db
 @login_required
 def chat(url):
+
     # PM chats aren't implemented yet so just 404 them for now.
     if url=="pm" or url.startswith("pm/"):
         abort(404)
+
     try:
         chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
     except NoResultFound:
         abort(404)
+
     # Redirect them to the oubliette if they're banned.
     if g.db.query(func.count('*')).select_from(Ban).filter(and_(
         Ban.chat_id==chat.id,
@@ -62,6 +65,8 @@ def chat(url):
         if chat.url != "theoubliette":
             return redirect(url_for("chat", url="theoubliette"))
         abort(403)
+
+    # Get or create UserChat.
     try:
         user_chat = g.db.query(UserChat).filter(and_(
             UserChat.user_id==g.user.id,
@@ -69,13 +74,22 @@ def chat(url):
         )).one()
     except NoResultFound:
         user_chat = UserChat.from_user(g.user, chat_id=chat.id)
+        if (
+            chat.type == "group" and chat.autosilence
+            and g.user.group != "admin" and g.user != chat.creator
+        ):
+            user_chat.group = "silent"
         g.db.add(user_chat)
         g.db.flush()
+
+    # Show the last 50 messages.
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
     ).order_by(Message.posted.desc()).limit(50).all()
     messages.reverse()
+
     latest_num = messages[-1].id if len(messages) > 0 else 0
+
     return render_template(
         "chat.html",
         chat=chat,
@@ -85,6 +99,4 @@ def chat(url):
         latest_num=latest_num,
         case_options=case_options,
     )
-
-
 

@@ -74,7 +74,11 @@ def ping():
 @mark_alive
 def send():
 
-    if g.user_chat.group == "silent":
+    if (
+        g.user_chat.group == "silent"
+        and g.chat.creator != g.user
+        and g.user.group != "admin"
+    ):
         abort(403)
 
     if "text" not in request.form:
