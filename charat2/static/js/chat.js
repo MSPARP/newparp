@@ -287,7 +287,7 @@ function messageParse(data) {
     if (typeof data.chat!='undefined') {
         // Reload chat metadata.
         var chat = data.chat;
-
+        
         for (i=0; i<CHAT_FLAGS.length; i++) {
             if (typeof data.chat[CHAT_FLAGS[i]]!='undefined') {
                 $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
