@@ -294,6 +294,8 @@ function messageParse(data) {
         var chat = data.chat;
         
         for (i=0; i<CHAT_FLAGS.length; i++) {
+            console.log(data.chat[CHAT_FLAGS[i]]);
+            console.log(CHAT_FLAG_MAP[CHAT_FLAGS[i]]);
             if (data.chat[CHAT_FLAGS[i]] == CHAT_FLAG_MAP[CHAT_FLAGS[i]]) {
                 $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
                 $('#'+CHAT_FLAGS[i]+'Result').show();
