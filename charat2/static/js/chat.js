@@ -3,8 +3,9 @@
 var SEARCH_PERIOD = 1;
 var PING_PERIOD = 10;
 
-var SET_GROUP_URL = '/chat_api/set_group';
 var USER_ACTION_URL = '/chat_api/user_action';
+var SET_GROUP_URL = '/chat_api/set_group';
+var SET_TOPIC_URL = '/chat_api/set_topic';
 
 var SAVE_URL = '/chat_api/save';
 
@@ -231,6 +232,16 @@ function setGroup(user,group) {
     $.post(SET_GROUP_URL,actionData);
 }
 
+function setTopic(topic) {
+    var actionData = {'chat_id': chat.id, 'topic': topic};
+    $.post(SET_TOPIC_URL,actionData);
+}
+
+function setFlag(flag,val) {
+    var actionData = {'chat_id': chat.id, flag: val};
+    $.post(SET_TOPIC_URL,actionData);
+}
+
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
     $.post(CHAT_MESSAGES, messageData, function(data) {
@@ -374,8 +385,8 @@ function readCookie(name) {
     var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        while (c.charAt(0)==' ') c = c.substr(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substr(nameEQ.length,c.length);
     }
     return null;
 }
@@ -492,6 +503,14 @@ $(document).ready(function() {
                 
                 if ($('#textInput').val().charAt(0)=='/') {
                     var command = $('#textInput').val().split(' ');
+                    if (command[0] == '/ban') {
+                        userAction(command[1],'ban',command[2]);
+                        $('#textInput').val('');
+                    }
+                    if (command[0] == '/kick') {
+                        userAction(command[1],'kick','');
+                        $('#textInput').val('');
+                    }
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
                         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silent':'silent'}
@@ -500,12 +519,12 @@ $(document).ready(function() {
                         }
                         $('#textInput').val('');
                     }
-                    if (command[0] == '/ban') {
-                        userAction(command[1],'ban',command[2]);
+                    if (command[0] == '/topic') {
+                        setTopic(command[1]);
                         $('#textInput').val('');
                     }
-                    if (command[0] == '/kick') {
-                        userAction(command[1],'kick','');
+                    if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
+                        setFlag(command[0].substr(1),command[1]);
                         $('#textInput').val('');
                     }
                 }
