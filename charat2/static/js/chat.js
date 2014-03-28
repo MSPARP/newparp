@@ -14,6 +14,11 @@ var CHAT_MESSAGES = '/chat_api/messages';
 var CHAT_QUIT = '/chat_api/quit';
 
 var CHAT_FLAGS = ['autosilence','public','nsfw'];
+var CHAT_FLAG_MAP = {
+    'autosilence':true,
+    'public':'listed',
+    'nsfw':true
+};
 
 var MOD_GROUPS = ['globalmod', 'mod', 'mod2', 'mod3'];
 var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
@@ -289,7 +294,7 @@ function messageParse(data) {
         var chat = data.chat;
         
         for (i=0; i<CHAT_FLAGS.length; i++) {
-            if (typeof data.chat[CHAT_FLAGS[i]]!='undefined') {
+            if (data.chat[CHAT_FLAGS[i]] == CHAT_FLAG_MAP[CHAT_FLAGS[i]]) {
                 $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
                 $('#'+CHAT_FLAGS[i]+'Result').show();
             } else {
@@ -471,11 +476,12 @@ $(document).ready(function() {
             }
         });
         
+        $('#topic').html(bbEncode($('#topic').html()));
         $('#convo span p.message').each(function() {
             line = bbEncode($(this).html());
             $(this).html(line);
         });
-        
+
         /* SUBMISSION AND ACTIVE CHANGES */
         
         // Show info if setting is true
@@ -520,7 +526,10 @@ $(document).ready(function() {
                         $('#textInput').val('');
                     }
                     if (command[0] == '/topic') {
-                        setTopic(command[1]);
+                        var com = command;
+                        com.splice(0,1);
+                        var topic_set = com.join(' ');
+                        setTopic(topic_set);
                         $('#textInput').val('');
                     }
                     if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
