@@ -14,10 +14,10 @@ var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
 var CHAT_QUIT = '/chat_api/quit';
 
-var CHAT_FLAGS = ['autosilence','public','nsfw'];
+var CHAT_FLAGS = ['autosilence','publicity','nsfw'];
 var CHAT_FLAG_MAP = {
     'autosilence':true,
-    'public':'listed',
+    'publicity':'listed',
     'nsfw':true
 };
 
@@ -268,10 +268,7 @@ function pingServer() {
     updateChatPreview();
 }
 
-var dataparse;
-
 function messageParse(data) {
-    dataparse = data;
     // KICK/BAN RECEIVAL
     if (typeof data.exit!='undefined') {
         if (data.exit=='kick') {
