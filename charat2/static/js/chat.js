@@ -6,6 +6,7 @@ var PING_PERIOD = 10;
 var USER_ACTION_URL = '/chat_api/user_action';
 var SET_GROUP_URL = '/chat_api/set_group';
 var SET_TOPIC_URL = '/chat_api/set_topic';
+var SET_FLAG_URL = '/chat_api/set_flag';
 
 var SAVE_URL = '/chat_api/save';
 
@@ -244,7 +245,7 @@ function setTopic(topic) {
 
 function setFlag(flag,val) {
     var actionData = {'chat_id': chat.id, flag: val};
-    $.post(SET_TOPIC_URL,actionData);
+    $.post(SET_FLAG_URL,actionData);
 }
 
 function getMessages() {
