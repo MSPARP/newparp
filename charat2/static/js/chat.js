@@ -244,7 +244,8 @@ function setTopic(topic) {
 }
 
 function setFlag(flag,val) {
-    var actionData = {'chat_id': chat.id, flag: val};
+    var actionData = {'chat_id': chat.id};
+    actionData[flag] = val;
     $.post(SET_FLAG_URL,actionData);
 }
 
@@ -267,8 +268,11 @@ function pingServer() {
     updateChatPreview();
 }
 
+var dataparse;
+
 function messageParse(data) {
-	// KICK/BAN RECEIVAL
+    dataparse = data;
+    // KICK/BAN RECEIVAL
     if (typeof data.exit!='undefined') {
         if (data.exit=='kick') {
             clearChat();
