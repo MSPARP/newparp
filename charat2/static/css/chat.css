@@ -540,12 +540,42 @@ p.notificationLevel.default button, p.notificationLevel.denied button {
 
 /* User groups */
 
-.globalmod {
+span.globalmod {
     text-decoration: underline;
 }
 
-.silent {
+span.silent {
     text-decoration: line-through;
+}
+
+/* User List */
+#online.mod .user_buttons .mod,
+#online.mod2 .user_buttons .mod, #online.mod2 .user_buttons .mod2,
+#online.mod3 .user_buttons .mod, #online.mod3 .user_buttons .mod2, #online.mod3 .user_buttons .mod3,
+#online.user .user_buttons .mod, #online.user .user_buttons .mod2, #online.user .user_buttons .mod3, #online.user .user_buttons .user, #online.user .user_buttons .silent,
+#online.silent .user_buttons .mod, #online.silent .user_buttons .mod2, #online.silent .user_buttons .mod3, #online.silent .user_buttons .user, #online.silent .user_buttons .silent {
+    display: none;
+}
+
+#online .user_action {
+    display: none;
+}
+
+#online.creator .user_action, #online.mod .user_action, #online.mod2 .user_action, #online.mod3 .user_action {
+    display: inline;
+}
+
+#online.mod3 .user_action .ban, #online.mod2 .user_action .ban,
+#online.mod3 .user_action .kick {
+    display: none;
+}
+
+.user_buttons.mod .mod,
+.user_buttons.mod2 .mod2,
+.user_buttons.mod3 .mod3,
+.user_buttons.user .user,
+.user_buttons.silent .silent {
+    display: none;
 }
 
 /* Moderation */

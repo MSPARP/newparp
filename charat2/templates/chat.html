@@ -114,9 +114,9 @@
                 <input id="sufi" type="text" name="quirk_suffix" value="{{user_chat.quirk_suffix}}" /><br />
                 <div class="select-bind"><div class="arrow">▼</div>
                     <select id="casing" name="case">
-{% for value, name in case_options.items(): %}
+                        {% for value, name in case_options.items(): %}
                         <option value="{{value}}"{% if value==user_chat.case %} selected="selected"{% endif %}>{{name}}</option>
-{% endfor %}
+                        {% endfor %}
                     </select>
                 </div>
             </div>

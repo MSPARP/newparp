@@ -239,7 +239,7 @@ function generateUserList(user_data) {
             </span>
         </ul>
         */
-        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"><span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="user">Unilence</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span></ul>');
+        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"><span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="user">Unilence</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span></ul>');
         user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
         user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
     }
