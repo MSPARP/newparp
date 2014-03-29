@@ -10,7 +10,6 @@
 <script src="/static/js/quirks.js"></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
-    //var chat = {{chat.id|tojson|safe}};
     var chat = {{chat.to_dict()|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
@@ -81,7 +80,7 @@
         {% endif %}
         <div id="onlineContainer" class="card">
             <h1 class="titi">USERS</h1>
-            <ul id="online"></ul>
+            <ul id="online" class="{{user_chat.group}}"></ul>
         </div>
     </div>
 </div>
