@@ -664,7 +664,7 @@ $(document).ready(function() {
         
         /* User Action Settings */
         $('.user_buttons .set li').on('click',function(){
-            setGroup($(this).attr('class'),$(this).parent('li').attr('class'))
+            setGroup($(this).attr('class'),$(this).parent('li').attr('class'));
         });
 
         $(CONVERSATION_CONTAINER).scroll(function(){
