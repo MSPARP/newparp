@@ -222,13 +222,15 @@ function generateUserList(user_data) {
             is_self = " self";
             $('#textInput').css('color','#'+list_user.character.color);
         }
-        $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
+        $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
         /*
         <ul class="user_buttons">
             <span class="set">
-                <li class="magical">Make Magical Mod</li>
-                <li class="cute">Make Cute-Cute Mod</li>
-                <li class="little">Make Little Mod</li>
+                <li class="mod">Make Magical Mod</li>
+                <li class="mod2">Make Cute-Cute Mod</li>
+                <li class="mod3">Make Little Mod</li>
+                <li class="silent">Silence</li>
+                <li class="user">Unilence</li>
             </span>
             <span class="user_action">
                 <li class="kick">Kick</li>
@@ -236,7 +238,7 @@ function generateUserList(user_data) {
             </span>
         </ul>
         */
-        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"><span class="set"><li class="magical">Make Magical Mod</li><li class="cute">Make Cute-Cute Mod</li><li class="little">Make Little Mod</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span></ul>');
+        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"><span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="user">Unilence</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span></ul>');
         user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
         user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
     }
@@ -535,9 +537,9 @@ $(document).ready(function() {
                     }
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
-                        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silent':'silent'}
+                        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'}
                         if (groups.indexOf(command[2].toLowerCase())!=-1) {
-                            setGroup(command[1],group_map[command[2]]);
+                            setGroup(command[1],group_map[command[2]].toLowerCase());
                         }
                         $('#textInput').val('');
                     }
@@ -573,15 +575,6 @@ $(document).ready(function() {
         });
 
         $('#textInput').change(updateChatPreview).keyup(updateChatPreview).change();
-
-        /* $("#textInput").on('keydown', function() {
-            var num = 1489;
-            if ($('#preview').html().length > num) {
-                values = $(this).val();
-                values = values.substr(0,num+3);
-                $(this).val(values);
-            }
-        }); */
 
         $("textarea#textInput").on('keydown', function(e) {
             if (e.keyCode == 13 && !e.shiftKey)
@@ -656,7 +649,7 @@ $(document).ready(function() {
         });
         
         // NEW TOPIC CHANGE FUNCTION
-        
+
         $('.hidedesc').click(function() {
             if (topicHidden) {
                 topichide = 0;
@@ -669,6 +662,11 @@ $(document).ready(function() {
             return false;
         });
         
+        /* User Action Settings */
+        $('.user_buttons .set li').on('click',function(){
+            setGroup($(this).attr('class'),$(this).parent().parent().attr('class'))
+        });
+
         $(CONVERSATION_CONTAINER).scroll(function(){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
             var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
