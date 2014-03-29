@@ -665,8 +665,14 @@ $(document).ready(function() {
         /* User Action Settings */
         $(document).on('click', '.user_buttons .set li', function() {
             setGroup($(this).parent().parent().parent().attr('class'),$(this).attr('class'));
-            console.log($(this).attr('class'));
-            console.log($(this).parent().parent().parent().attr('class'));
+        });
+        
+        $(document).on('click', '.user_buttons .user_action li', function() {
+            if ($(this).attr('class') != 'ban') {
+                userAction($(this).parent().parent().parent().attr('class'),$(this).attr('class'));
+            } else {
+                $('#textInput').val('/ban '+$(this).parent().parent().parent().attr('class')+' <reason>');
+            }
         });
 
         $(CONVERSATION_CONTAINER).scroll(function(){
