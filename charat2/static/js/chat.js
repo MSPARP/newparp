@@ -223,20 +223,20 @@ function generateUserList(user_data) {
             $('#textInput').css('color','#'+list_user.character.color);
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
-        var user_action_buttons = '
-            <ul class="user_buttons">\
-                <span class="set">\
-                    <li class="magical">Make Magical Mod</li>\
-                    <li class="cute">Make Cute-Cute Mod</li>\
-                    <li class="little">Make Little Mod</li>\
-                </span>\
-                <span class="user_action">\
-                    <li class="kick">Kick</li>\
-                    <li class="ban">Ban</li>\
-                </span>\
-            </ul>\
-        ';
-        $('#user'+list_user.meta.user_id).append('');
+        /*
+        <ul class="user_buttons">
+            <span class="set">
+                <li class="magical">Make Magical Mod</li>
+                <li class="cute">Make Cute-Cute Mod</li>
+                <li class="little">Make Little Mod</li>
+            </span>
+            <span class="user_action">
+                <li class="kick">Kick</li>
+                <li class="ban">Ban</li>
+            </span>
+        </ul>
+        */
+        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"><span class="set"><li class="magical">Make Magical Mod</li><li class="cute">Make Cute-Cute Mod</li><li class="little">Make Little Mod</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span></ul>');
         user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
         user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
     }
