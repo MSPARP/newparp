@@ -663,7 +663,7 @@ $(document).ready(function() {
         });
         
         /* User Action Settings */
-        $('.user_buttons .set li').on('click',function(){
+        $(document).on('click', '.user_buttons .set li', function() {
             setGroup($(this).parent().parent().parent().attr('class'),$(this).attr('class'));
             console.log($(this).attr('class'));
             console.log($(this).parent().parent().parent().attr('class'));
