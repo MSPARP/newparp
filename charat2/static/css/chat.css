@@ -570,9 +570,9 @@ span.silent {
     display: none;
 }
 
-.user_buttons.mod .mod,
-.user_buttons.mod2 .mod2,
-.user_buttons.mod3 .mod3,
+.user_buttons.mod .mod, .user_buttons.mod .user,
+.user_buttons.mod2 .mod2, .user_buttons.mod2 .user,
+.user_buttons.mod3 .mod3, .user_buttons.mod3 .user,
 .user_buttons.user .user,
 .user_buttons.silent .silent {
     display: none;
