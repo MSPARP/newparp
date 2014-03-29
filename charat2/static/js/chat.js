@@ -80,6 +80,7 @@ var show_description = user.meta.show_description;
 var show_system_messages = user.meta.show_system_messages;
 var show_all_info = false; // USER META ADD
 
+var current_user_array = [];
 var user_list = {};
 
 /* FUNCTIONS */
@@ -222,6 +223,19 @@ function generateUserList(user_data) {
             $('#textInput').css('color','#'+list_user.character.color);
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
+        $('#user'+list_user.meta.user_id).append('
+            <ul>
+                <span class="set">
+                    <li class="magical">Make Magical Mod</li>
+                    <li class="cute">Make Cute-Cute Mod</li>
+                    <li class="little">Make Little Mod</li>
+                </span>
+                <span class="user_action">
+                    <li class="kick">Kick</li>
+                    <li class="ban">Ban</li>
+                </span>
+            </ul>
+        ');
         user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
         user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
     }
