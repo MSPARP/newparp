@@ -45,9 +45,12 @@ var window_active;
 window.onfocus = function () {
    window_active = true;
 };
+
 window.onblur = function () {
    window_active = false;
 };
+
+var missed_messages = 0;
 
 var chat_state = 'chat';
 var user_state = 'online';
@@ -206,7 +209,14 @@ function addLine(msg){
         goBottom(CONVERSATION_CONTAINER);
         at_bottom = false;
     }
-
+    
+    if (window_active == false) {
+        missed_messages++;
+        if (missed_messages !=0) {
+            document.title = "("+missed_messages+" new) - "+chat.title;
+        }
+    }
+    
     if (window_active == false && desktop_notifications == true) {
         show(chat.url,htmlEncode(bbRemove(msg.text)));
     }
@@ -453,6 +463,23 @@ function previewToggle() {
     }
     updateChatPreview();
     preview_show = !preview_show;
+}
+
+if (typeof document.addEventListener!=="undefined" && typeof hidden!=="undefined") {
+    document.addEventListener(visibilityChange, function() {
+        if (chatState=='chat' && document[hidden]==false) {
+            if (navigator.userAgent.indexOf('Chrome')!=-1) {
+                // You can't change document.title here in Chrome. #googlehatesyou
+                window.setTimeout(function() {
+                    document.title = chat.title+' - '+ORIGINAL_TITLE;
+                    missed_messages = 0;
+                }, 200);
+            } else {
+                document.title = chat.title+' - '+ORIGINAL_TITLE;
+                missed_messages = 0;
+            }
+        }
+    }, false);
 }
 
 // CHANGE THE SETTINGS IN THE CHAT.HTML with {% %}
