@@ -570,6 +570,10 @@ span.silent {
     display: none;
 }
 
+.user_buttons.mod3 .mod3 {
+    display: none;
+}
+
 /* Moderation */
 
 .metaOptions, .modPowers #metaResults, #metaResults li {
