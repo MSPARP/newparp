@@ -566,11 +566,7 @@ span.silent {
 .user_buttons.mod2 .mod2, .user_buttons.mod2 .unsilent,
 .user_buttons.mod3 .mod3, .user_buttons.mod3 .unsilent,
 .user_buttons.user .user,
-.user_buttons.silent .silent, .user_buttons.silent .user, {
-    display: none;
-}
-
-.user_buttons.mod3 .mod3 {
+.user_buttons.silent .silent, .user_buttons.silent .user {
     display: none;
 }
 
