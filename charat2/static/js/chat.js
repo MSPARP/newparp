@@ -467,7 +467,7 @@ function previewToggle() {
 
 if (typeof document.addEventListener!=="undefined" && typeof hidden!=="undefined") {
     document.addEventListener(visibilityChange, function() {
-        if (chatState=='chat' && document[hidden]==false) {
+        if (document[hidden]==false) {
             if (navigator.userAgent.indexOf('Chrome')!=-1) {
                 // You can't change document.title here in Chrome. #googlehatesyou
                 window.setTimeout(function() {
