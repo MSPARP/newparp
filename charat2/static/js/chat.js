@@ -530,7 +530,7 @@ $(document).ready(function() {
         
         $('#topic').html(bbEncode($('#topic').html()));
         $('#convo span p.message').each(function() {
-            line = bbEncode($(this).html());
+            line = bbEncode($(this).text());
             $(this).html(line);
         });
 
