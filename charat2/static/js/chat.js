@@ -224,25 +224,27 @@ function generateUserList(user_data) {
             $('#textInput').css('color','#'+list_user.character.color);
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
-        /*
-        <ul class="user_buttons">
-            <span class="set">
-                <li class="mod">Make Magical Mod</li>
-                <li class="mod2">Make Cute-Cute Mod</li>
-                <li class="mod3">Make Little Mod</li>
-                <li class="silent">Silence</li>
-                <li class="unsilent">Unilence</li>
-                <li class="user">Remove Mod Status</li>
-            </span>
-            <span class="user_action">
-                <li class="kick">Kick</li>
-                <li class="ban">Ban</li>
-            </span>
-        </ul>
-        */
+
+        var user_buttons = '<span class="set">' +
+                '<li class="mod">Make Magical Mod</li>' +
+                '<li class="mod2">Make Cute-Cute Mod</li>' +
+                '<li class="mod3">Make Little Mod</li>' +
+                '<li class="silent">Silence</li>' +
+                '<li class="unsilent">Unilence</li>' +
+                '<li class="user">Remove Mod Status</li>' +
+            '</span>' +
+            '<span class="user_action">' +
+                '<li class="kick">Kick</li>' +
+                '<li class="ban">Ban</li>' +
+            '</span>' +
+            '<span class="chat_action">' +
+                '<li class="block">block</li>' +
+                '<li class="highlight">Highlight</li>' +
+            '</span>';
+
         $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
         if (list_user.meta.user_id != user.meta.user_id) {
-            $('#user'+list_user.meta.user_id+' .user_buttons').append('<span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="unsilent">Unilence</li><li class="user">Remove Mod Status</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span>');
+            $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
             user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
             user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
         }
@@ -507,9 +509,9 @@ $(document).ready(function() {
 
         /* SUBMISSION AND ACTIVE CHANGES */
         
-        // Show info if setting is true
-        if (show_all_info) {
-            $('#conversation span .info').css('visibility','visible');
+        // Hide info if setting is false
+        if (!show_all_info) {
+            $(document.body).addClass('hideInfo');
             goBottom(CONVERSATION_CONTAINER);
         }
         

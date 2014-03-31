@@ -199,12 +199,8 @@ body.menu #topbar #toptitle {
     margin-right: 5px;
 }
 
-#conversation span .info .left, #conversation span .info .right{
-    visibility: hidden;
-}
-
-#conversation span:hover .info .left, #conversation span:hover .info .right{
-    visibility: visible;
+body.hideInfo .info {
+    display: none;
 }
 
 #conversation p.info .right {
@@ -565,8 +561,14 @@ span.silent {
 .user_buttons.mod .mod, .user_buttons.mod .unsilent,
 .user_buttons.mod2 .mod2, .user_buttons.mod2 .unsilent,
 .user_buttons.mod3 .mod3, .user_buttons.mod3 .unsilent,
-.user_buttons.user .user,
+.user_buttons.user .user, .user_buttons.silent .unsilent,
 .user_buttons.silent .silent, .user_buttons.silent .user {
+    display: none;
+}
+
+#online.mod .user_buttons.mod .kick, #online.mod .user_buttons.mod .ban,
+#online.mod2 .user_buttons.mod .kick, #online.mod2 .user_buttons.mod2 .kick,
+#online.mod3 .user_buttons.mod .silent, #online.mod3 .user_buttons.mod2 .silent, #online.mod3 .user_buttons.mod3 .silent {
     display: none;
 }
 
