@@ -559,11 +559,11 @@ span.silent {
 }
 
 #online.mod .user_buttons.mod .kick, #online.mod .user_buttons.mod .ban,
-#online.mod .user_buttons.mod .unsilent,
+#online.mod .user_buttons.mod .user,
 #online.mod2 .user_buttons.mod .kick, #online.mod2 .user_buttons.mod2 .kick,
-#online.mod2 .user_buttons.mod .unsilent, #online.mod2 .user_buttons.mod2 .unsilent,
+#online.mod2 .user_buttons.mod .user, #online.mod2 .user_buttons.mod2 .user,
 #online.mod3 .user_buttons.mod .silent, #online.mod3 .user_buttons.mod2 .silent, #online.mod3 .user_buttons.mod3 .silent,
-#online.mod3 .user_buttons.mod .unsilent, #online.mod3 .user_buttons.mod2 .unsilent, #online.mod3 .user_buttons.mod3 .unsilent {
+#online.mod3 .user_buttons.mod .user, #online.mod3 .user_buttons.mod2 .user, #online.mod3 .user_buttons.mod3 .user {
     display: none;
 }
 
