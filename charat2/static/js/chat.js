@@ -78,7 +78,7 @@ var show_bbcode_color = true; // USER META ADD
 var show_description = user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
-var show_all_info = false; // USER META ADD
+var show_all_info = true; // USER META ADD
 
 var current_user_array = [];
 var user_list = {};
@@ -238,7 +238,7 @@ function generateUserList(user_data) {
                 '<li class="ban">Ban</li>' +
             '</span>' +
             '<span class="chat_action">' +
-                '<li class="block">block</li>' +
+                '<li class="block">Block</li>' +
                 '<li class="highlight">Highlight</li>' +
             '</span>';
 

@@ -456,14 +456,6 @@ body #userListButton {
     bottom: 2px;
 }
 
-.highlight {
-    background-color: #CCFFCC;
-}
-
-.blocking {
-    display: none;
-}
-
 body > #save {
     display: none;
 }
@@ -534,7 +526,7 @@ p.notificationLevel.default button, p.notificationLevel.denied button {
     margin-bottom: 20px;
 }
 
-/* User groups */
+/* User List */
 
 span.globalmod {
     text-decoration: underline;
@@ -544,7 +536,7 @@ span.silent {
     text-decoration: line-through;
 }
 
-/* User List */
+/* User Buttons */
 #online.mod .set .mod,
 #online.mod2 .set .mod, #online.mod2 .set .mod2,
 #online.mod3 .set .mod, #online.mod3 .set .mod2, #online.mod3 .user_buttons .mod3,
@@ -567,8 +559,11 @@ span.silent {
 }
 
 #online.mod .user_buttons.mod .kick, #online.mod .user_buttons.mod .ban,
+#online.mod .user_buttons.mod .unsilent,
 #online.mod2 .user_buttons.mod .kick, #online.mod2 .user_buttons.mod2 .kick,
-#online.mod3 .user_buttons.mod .silent, #online.mod3 .user_buttons.mod2 .silent, #online.mod3 .user_buttons.mod3 .silent {
+#online.mod2 .user_buttons.mod .unsilent, #online.mod2 .user_buttons.mod2 .unsilent,
+#online.mod3 .user_buttons.mod .silent, #online.mod3 .user_buttons.mod2 .silent, #online.mod3 .user_buttons.mod3 .silent,
+#online.mod3 .user_buttons.mod .unsilent, #online.mod3 .user_buttons.mod2 .unsilent, #online.mod3 .user_buttons.mod3 .unsilent {
     display: none;
 }
 
@@ -584,10 +579,6 @@ span.silent {
 
 #metaOptions label {
     width: 100%;
-}
-
-#editPass {
-    display: none;
 }
 
 /* Mobile */
