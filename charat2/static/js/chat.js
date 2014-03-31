@@ -231,7 +231,8 @@ function generateUserList(user_data) {
                 <li class="mod2">Make Cute-Cute Mod</li>
                 <li class="mod3">Make Little Mod</li>
                 <li class="silent">Silence</li>
-                <li class="user">Unilence</li>
+                <li class="unsilent">Unilence</li>
+                <li class="user">Remove Mod Status</li>
             </span>
             <span class="user_action">
                 <li class="kick">Kick</li>
@@ -241,7 +242,7 @@ function generateUserList(user_data) {
         */
         $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
         if (list_user.meta.user_id != user.meta.user_id) {
-            $('#user'+list_user.meta.user_id+' .user_buttons').append('<span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="user">Unilence</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span>');
+            $('#user'+list_user.meta.user_id+' .user_buttons').append('<span class="set"><li class="mod">Make Magical Mod</li><li class="mod2">Make Cute-Cute Mod</li><li class="mod3">Make Little Mod</li><li class="silent">Silence</li><li class="unsilent">Unilence</li><li class="user">Remove Mod Status</li></span><span class="user_action"><li class="kick">Kick</li><li class="ban">Ban</li></span>');
             user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
             user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
         }
@@ -587,7 +588,7 @@ $(document).ready(function() {
                 $('.controls').submit();
             }
         });
-        
+
         $("#statusInput").on('keydown', function(e) {
             if (e.keyCode == 13) {
                 $('#statusButton').click();
@@ -599,7 +600,7 @@ $(document).ready(function() {
             preview_show != preview_show;
             previewToggle();
         });
-        
+
         $('#disconnectButton').click(disconnect);
 
         $('#statusButton').click(function() {
@@ -668,7 +669,11 @@ $(document).ready(function() {
         
         /* User Action Settings */
         $(document).on('click', '.user_buttons .set li', function() {
-            setGroup($(this).parent().parent().parent().attr('class'),$(this).attr('class'));
+            var set_group = $(this).attr('class');
+            if (set_group == 'unsilent') {
+                set_group = 'user';
+            }
+            setGroup($(this).parent().parent().parent().attr('class'),set_group);
         });
         
         $(document).on('click', '.user_buttons .user_action li', function() {

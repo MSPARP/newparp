@@ -549,20 +549,12 @@ span.silent {
 }
 
 /* User List */
-#online.mod .user_buttons .mod,
-#online.mod2 .user_buttons .mod, #online.mod2 .user_buttons .mod2,
-#online.mod3 .user_buttons .mod, #online.mod3 .user_buttons .mod2, #online.mod3 .user_buttons .mod3,
-#online.user .user_buttons .mod, #online.user .user_buttons .mod2, #online.user .user_buttons .mod3, #online.user .user_buttons .user, #online.user .user_buttons .silent,
-#online.silent .user_buttons .mod, #online.silent .user_buttons .mod2, #online.silent .user_buttons .mod3, #online.silent .user_buttons .user, #online.silent .user_buttons .silent {
+#online.mod .set .mod,
+#online.mod2 .set .mod, #online.mod2 .set .mod2,
+#online.mod3 .set .mod, #online.mod3 .set .mod2, #online.mod3 .user_buttons .mod3,
+#online.user .set, #online.user .user_action,
+#online.silent .set, #online.silent .user_action {
     display: none;
-}
-
-#online .user_action {
-    display: none;
-}
-
-#online.creator .user_action, #online.mod .user_action, #online.mod2 .user_action, #online.mod3 .user_action {
-    display: inline;
 }
 
 #online.mod3 .user_action .ban, #online.mod2 .user_action .ban,
@@ -570,11 +562,11 @@ span.silent {
     display: none;
 }
 
-.user_buttons.mod .mod, .user_buttons.mod .user,
-.user_buttons.mod2 .mod2, .user_buttons.mod2 .user,
-.user_buttons.mod3 .mod3, .user_buttons.mod3 .user,
+.user_buttons.mod .mod, .user_buttons.mod .unsilent,
+.user_buttons.mod2 .mod2, .user_buttons.mod2 .unsilent,
+.user_buttons.mod3 .mod3, .user_buttons.mod3 .unsilent,
 .user_buttons.user .user,
-.user_buttons.silent .silent {
+.user_buttons.silent .silent, .user_buttons.silent .user, {
     display: none;
 }
 
