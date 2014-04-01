@@ -42,13 +42,6 @@ var USER_LIST_ID = '#online';
 /* VARIABLES */
 
 var window_active;
-window.onfocus = function () {
-   window_active = true;
-};
-
-window.onblur = function () {
-   window_active = false;
-};
 
 var missed_messages = 0;
 
@@ -465,23 +458,6 @@ function previewToggle() {
     preview_show = !preview_show;
 }
 
-if (typeof document.addEventListener!=="undefined" && typeof hidden!=="undefined") {
-    document.addEventListener(visibilityChange, function() {
-        if (document[hidden]==false) {
-            if (navigator.userAgent.indexOf('Chrome')!=-1) {
-                // You can't change document.title here in Chrome. #googlehatesyou
-                window.setTimeout(function() {
-                    document.title = chat.title+' - '+ORIGINAL_TITLE;
-                    missed_messages = 0;
-                }, 200);
-            } else {
-                document.title = chat.title+' - '+ORIGINAL_TITLE;
-                missed_messages = 0;
-            }
-        }
-    }, false);
-}
-
 // CHANGE THE SETTINGS IN THE CHAT.HTML with {% %}
 // CHANGE THE SETTINGS WITH AJAX REQUEST ON BUTTON CLICKS
 // BBCODE REWRITE + REMEMBER TO GO THROUGH ALL PREVIOUS MESSAGES AND BBCODE THEM
@@ -535,7 +511,7 @@ $(document).ready(function() {
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
-        
+
         // Hide info if setting is false
         if (!show_all_info) {
             $(document.body).addClass('hideInfo');
@@ -736,6 +712,24 @@ $(document).ready(function() {
             }
         });
         */
+        
+        $(window).blur(function(e) {
+            window_active = false;
+        });
+
+        $(window).focus(function(e) {
+            if (navigator.userAgent.indexOf('Chrome')!=-1) {
+                // You can't change document.title here in Chrome. #googlehatesyou
+                window.setTimeout(function() {
+                    document.title = chat.title+' - '+ORIGINAL_TITLE;
+                    missed_messages = 0;
+                }, 200);
+            } else {
+                document.title = chat.title+' - '+ORIGINAL_TITLE;
+                missed_messages = 0;
+            }
+            window_active = true;
+        });
         
         window.onbeforeunload = function (e) {
             if (confirm_disconnect == true) {
