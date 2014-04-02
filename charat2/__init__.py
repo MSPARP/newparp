@@ -37,7 +37,7 @@ app.add_url_rule("/", "rp_home", rp_home, subdomain="rp", methods=("GET",))
 app.add_url_rule("/rooms", "rooms", rooms, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat/<url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, subdomain="rp", methods=("post",))
