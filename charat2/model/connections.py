@@ -15,10 +15,17 @@ redis_pool = ConnectionPool(
     db=int(os.environ['REDIS_DB'])
 )
 
+cookie_domain = "."+os.environ['BASE_DOMAIN']
+
 def set_cookie(response):
     if not "session" in request.cookies:
         # XXX SET DOMAIN
-        response.set_cookie("session", g.session_id, max_age=365*24*60*60)
+        response.set_cookie(
+            "session",
+            g.session_id,
+            max_age=365*24*60*60,
+            domain=cookie_domain,
+        )
     return response
 
 # Pre- and post-request handlers for the Redis connection.
