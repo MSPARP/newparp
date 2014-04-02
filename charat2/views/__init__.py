@@ -6,10 +6,14 @@ from charat2.helpers.auth import login_required
 
 @use_db
 def home():
+    return render_template("home.html")
+
+@use_db
+def rp_home():
     if g.user is not None:
-        return render_template("home.html")
+        return render_template("rp_home.html", rooms=rooms)
     else:
-        return render_template("register.html")
+        return render_template("rp_register.html", rooms=rooms)
 
 @use_db
 @login_required
@@ -18,4 +22,3 @@ def rooms():
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
     return render_template("rooms.html", rooms=rooms)
-

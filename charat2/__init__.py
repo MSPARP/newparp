@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import home, rooms, account, chat, chat_api
+from charat2.views import home, rooms, rp_home, account, chat, chat_api
 
 app = Flask(__name__)
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
@@ -24,13 +24,15 @@ app.teardown_request(redis_disconnect)
 
 # Root domain (charat.net)
 
-app.add_url_rule("/", "home", home, subdomain="rp", methods=("GET",))
+app.add_url_rule("/", "home", home, methods=("GET",))
 
 app.add_url_rule("/login", "log_in", account.log_in, methods=("POST",))
 app.add_url_rule("/logout", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
 # RP subdomain (rp.charat.net)
+
+app.add_url_rule("/", "rp_home", rp_home, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/rooms", "rooms", rooms, subdomain="rp", methods=("GET",))
 
