@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block header %}
-<link rel="stylesheet" media="screen" type="text/css" href="/static/css/home.css" />
-<link rel="stylesheet" media="screen" type="text/css" href="/static/css/front.css" />
-<link rel="stylesheet" media="screen" type="text/css" href="/static/colorpicker/css/colorpicker.css" />
-<script type="text/javascript" src="/static/colorpicker/js/colorpicker.js"></script>
-<script src="/static/js/characters.js"></script>
-<script src="/static/js/home.js"></script>
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/home.css")}}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/front.css")}}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="colorpicker/css/colorpicker.css")}}" />
+<script type="text/javascript" src="{{url_for("static", filename="colorpicker/js/colorpicker.js")}}"></script>
+<script src="{{url_for("static", filename="js/characters.js")}}"></script>
+<script src="{{url_for("static", filename="js/home.js")}}"></script>
 {% endblock %}
 
 {% block content %}

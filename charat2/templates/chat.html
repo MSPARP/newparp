@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block title%}{% endblock %}
 {% block header %}
-<script src="/static/js/jquery.kinetic.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{url_for("static", filename="js/jquery.kinetic.min.js")}}" type="text/javascript" charset="utf-8"></script>
 
-<link rel="stylesheet" href="/static/css/chat.css?1">
-<link rel="stylesheet" media="screen" type="text/css" href="/static/colorpicker/css/colorpicker.css" />
-<script type="text/javascript" src="/static/colorpicker/js/colorpicker.js"></script>
-<script src="/static/js/characters.js?1"></script>
-<script src="/static/js/quirks.js"></script>
+<link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="colorpicker/css/colorpicker.css")}}" />
+<script type="text/javascript" src="{{url_for("static", filename="colorpicker/js/colorpicker.js")}}"></script>
+<script src="{{url_for("static", filename="js/characters.js")}}"></script>
+<script src="{{url_for("static", filename="js/quirks.js")}}"></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
     var chat = {{chat.to_dict()|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
 
-<script src="/static/js/chat.js"></script>
+<script src="{{url_for("static", filename="js/chat.js")}}"></script>
 {% endblock %}
 {% block content %}
 
 <div id="topbar">
     <center>
-       <a id="toptitle" href="/"><img src="/static/icon.png" /></a>
+       <a id="toptitle" href="/"><img src="{{url_for("static", filename="icon.png")}}" /></a>
         <div id="topmenu">
             <div id="statusContain"><input type="text" id="statusInput" autocomplete="off" maxlength="50" placeholder="Status"><div type="button" id="statusButton">!</div></div>
             <div class="topborder"></div>

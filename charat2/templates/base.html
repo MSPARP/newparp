@@ -1,17 +1,17 @@
 <!DOCTYPE html>
     <head>
-        <link id="favicon" rel="icon" type="image/ico" href="/static/favicon.ico" />
-        <link id="shocon" rel="shortcut icon" href="/static/favicon.ico" />
-        <link id="applecon" rel="apple-touch-icon" href="/static/favicon.ico"/>
+        <link id="favicon" rel="icon" type="image/ico" href="{{url_for("static", filename="favicon.ico")}}" />
+        <link id="shocon" rel="shortcut icon" href="{{url_for("static", filename="favicon.ico")}}" />
+        <link id="applecon" rel="apple-touch-icon" href="{{url_for("static", filename="favicon.ico")}}"/>
 
         <title>{%block title %}{% endblock %}Charat</title>
-        <link rel="stylesheet" href="/static/css/charat.css" type="text/css"/>
-        <script src="/static/js/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{url_for("static", filename="css/charat.css")}}" type="text/css"/>
+        <script src="{{url_for("static", filename="js/jquery.min.js")}}"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
-        <script src="/static/js/bbcode.js"></script>
-        <script src="/static/js/desktop-notify.js"></script>
-        <script src="/static/js/modernizr.localstorage.js"></script>
-        <script src="/static/js/quirks.js?2"></script>
+        <script src="{{url_for("static", filename="js/bbcode.js")}}"></script>
+        <script src="{{url_for("static", filename="js/desktop-notify.js")}}"></script>
+        <script src="{{url_for("static", filename="js/modernizr.localstorage.js")}}"></script>
+        <script src="{{url_for("static", filename="js/quirks.js")}}"></script>
         <script>
             function NotificationCenter($scope) {
                 var permissionLevels = {};
@@ -44,12 +44,11 @@
             }
     
             function show(title,body) {
-                notify.createNotification(title, {body:body, icon: "/static/img/notification.png", tag:title+body+Math.random(), timeout: 5000})
+                notify.createNotification(title, {body:body, icon: "{{url_for("static", filename="img/notification.png")}}", tag:title+body+Math.random(), timeout: 5000})
             }
         </script>
-        <script src="/static/js/charat.js"></script>
+        <script src="{{url_for("static", filename="js/charat.js")}}"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <!-- This doesn't do anything: <script src="/static/js/msparp.js"></script>-->
         {%block header %}{%endblock%}
     </head>
 
