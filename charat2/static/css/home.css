@@ -14,13 +14,13 @@ noscript, .error {
 
 /* NEW */
 
-#frontform {
-    text-align: center;
-}
-
 body.nobile .section-bind {
     display: inline-block;
     width: 290px;
+}
+
+div.body {
+    text-align: center;
 }
 
 .section {
