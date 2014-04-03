@@ -26,10 +26,9 @@
 </div>
 
 <div class="body">
-    <div id="frontform" method="post" action="" >
         <!-- Put in some noscript things -->
-        <form id="frontform" method="post" action="" >
         <div class="section" id="character-config">
+            <form id="frontform" method="post" action="" >
             <div class="titli">CHARACTER SETTINGS</div>
             <div id="char_left" class="left">
                 <div class="card character">
@@ -52,8 +51,8 @@
                 {% if error=="color" %}<span class="error">You entered an invalid hex code. Try using the color picker.</span><br />{% endif %}
                 <span id="inzone"><button class="save_character">Save Settings</button></span>
             </div>
+            </form>
         </div>
-        </form>
 
         <div id="login-register" class="section">
             <div class="titli">LOGIN/REGISTER</div>
