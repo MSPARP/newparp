@@ -82,5 +82,8 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    return redirect(url_for("home"))
+    if request.form["referrer"]:
+        return redirect(request.form["referrer"])
+    else:
+        return redirect(url_for("home"))
 

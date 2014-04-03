@@ -60,7 +60,7 @@
                 {% if register_error: %}
                 <p class="error">{{register_error}}</p>
                 {% endif %}
-                <form action="{{url_for("register")}}" method="post">
+                <form action="{{url_for("register")}}" method="post"><input type="hidden" name="referrer" value="http://rp.{{base_domain}}/">
                     <div class="left">
                         <label>Username: </label><br />
                         <label>Password: </label><br />
