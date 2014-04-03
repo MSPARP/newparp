@@ -28,6 +28,8 @@ def log_in():
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
+    if request.form["username"]:
+        return redirect(url_for("rp_home"))
     return redirect(url_for("home"))
 
 def log_out():
