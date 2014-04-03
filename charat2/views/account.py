@@ -15,7 +15,7 @@ def log_in():
         ).one()
     except NoResultFound:
         return render_template(
-            "register.html",
+            "rp_register.html",
             log_in_error="The username or password you entered is incorrect.",
         )
     # Check password.
@@ -24,13 +24,14 @@ def log_in():
         user.password.encode()
     )!=user.password:
         return render_template(
-            "register.html",
+            "rp_register.html",
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
     if request.form["username"]:
-        return redirect(url_for("rp_home"))
-    return redirect(url_for("home"))
+        return redirect(request.form["username"])
+    else:
+        return redirect(url_for("home"))
 
 def log_out():
     if "session" in request.cookies:
