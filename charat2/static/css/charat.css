@@ -61,7 +61,7 @@ input, button, textarea {
     border-radius: 0;
 }
 
-input[type="text"], input[type="submit"], textarea {
+input[type="text"], input[type="submit"], input[type="password"], textarea {
     cursor: text;
     -webkit-appearance: none;
     -moz-appearance-: none;
