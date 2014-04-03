@@ -15,6 +15,7 @@ noscript, .error {
 /* NEW */
 
 #frontform {
+    display: inline-block;
     text-align: center;
 }
 
