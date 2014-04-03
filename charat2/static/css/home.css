@@ -18,6 +18,11 @@ noscript, .error {
     text-align: center;
 }
 
+body.nobile .section-bind {
+    display: inline-block;
+    width: 290px;
+}
+
 .section {
     display: inline-block;
     background-color: #BBDDBB;
