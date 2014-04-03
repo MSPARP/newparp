@@ -28,15 +28,19 @@ def log_in():
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
-    if request.form["username"]:
-        return redirect(request.form["username"])
+    if request.form["referrer"]:
+        return redirect(request.form["referrer"])
     else:
         return redirect(url_for("home"))
 
 def log_out():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
-    return redirect(url_for("home"))
+
+    if request.form["referrer"]:
+        return redirect(request.form["referrer"])
+    else:
+        return redirect(url_for("home"))
 
 @use_db
 def register():
