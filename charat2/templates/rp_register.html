@@ -28,7 +28,7 @@
 <div class="body">
     <div id="frontform" method="post" action="" >
         <!-- Put in some noscript things -->
-    
+        <form id="frontform" method="post" action="" >
         <div class="section" id="character-config">
             <div class="titli">CHARACTER SETTINGS</div>
             <div id="char_left" class="left">
@@ -53,6 +53,7 @@
                 <span id="inzone"><button class="save_character">Save Settings</button></span>
             </div>
         </div>
+        </form>
 
         <div id="login-register" class="section">
             <div class="titli">LOGIN/REGISTER</div>
@@ -91,40 +92,6 @@
                     <button type="submit">Login</button>
                 </form>
             </div>
-        </div>
-
-        <div id="chat-config" class="section">
-            <div class="titli">CHAT SETTINGS</div>
-            <div class="card right">
-                <div class="titi">CHAT STYLE</div>
-                <div class="select-bind"><div class="arrow">▼</div>
-                    <select name="para">
-                        <!-- PARAGRAPH PICKY OPTIONS -->
-                        <option value="">No preference</option>
-                        <option value="0">Script</option>
-                        <option value="1">Paragraph</option>
-                    </select>
-                </div>
-            </div>
-            <div class="card right">
-                <div class="titi">CHAT CONTENT</div>
-                <div class="select-bind"><div class="arrow">▼</div>
-                    <select id="nsfwsfw" name="nsfw">
-                        <!-- NSFW PICKY OPTIONS -->
-                        <option id="sfwsel" value="0">Safe for work</option>
-                        <option id="nsfwsel" value="1">Not safe for work</option>
-                        <option id="nopref" value="2">No preference</option>
-                    </select>
-                </div>
-            </div>
-            <div class="card right">
-                <div class="titi">TAGS</div>
-                <textarea class="tags" name="tags" size="5" maxlength="500" placeholder="Seperate tags with commas: your tags, -exclude this tag"></textarea><div class="clear"></div>
-                <div class="stats">
-                    <!-- STATS -->
-                </div>
-            </div>
-            <span id="inzthree"><button class="save_character">Save Settings</button><button class="save_preset">Save Character Preset</button><input type="submit" name="search" value="Start Chatting"></span>
         </div>
     </div>
 </div>
