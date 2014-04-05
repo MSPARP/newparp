@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -83,24 +82,15 @@
         
         <div class="block">
             {% if not logged_in %}
-            <form action="{{url_for("log_in")}}" method="post">
-                <tr>
-                    <td>Username: </label></td>
-                    <td><input id="logUsername" type="text" name="username"></td>
-                </tr>
-                <tr>
-                    <td><label>Password: </label></td>
-                    <td><input id="logPassword" type="password" name="password"></td>
-                </tr>
-                <button class="block-button" type="submit">Login</button>
-            </form>
+            <header>Welcome Guest</header>
+            <subtitle>What would you like to do?</subtitle>
+            <a class="block-button" href="{{url_for("login")}}">Login</a>
+            <a class="block-button" href="{{url_for("login")}}">Register</a>
             {% else %}
             <header>Welcome {{g.user.username}}</header>
             <subtitle>What would you like to do?</subtitle>
             <a class="block-button" href="/settings">Settings</a>
-            <form id="logout" action="{{url_for("log_out")}}" method="post">
-                <a class="block-button" onclick="document.getElementById('logout').submit();">Logout</a>
-            </form>
+            <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
             {% endif %}
         </div>
         
