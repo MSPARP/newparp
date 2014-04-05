@@ -45,7 +45,7 @@
         </div>
         
         <div class="block">
-            {% if logged_in %}
+            {% if not logged_in %}
             <form action="{{url_for("log_in")}}" method="post">
                 <div class="left">
                     <label>Username: </label><br />
