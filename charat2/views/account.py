@@ -28,7 +28,7 @@ def log_in():
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
-    if request.headers["referer"]:
+    if request.headers["referer"] is not None:
         return redirect(request.headers["referer"])
     else:
         return redirect(url_for("home"))
@@ -37,8 +37,10 @@ def log_out():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
 
-    return redirect(url_for("home"))
-    
+    if request.headers["referer"] is not None:
+        return redirect(request.headers["referer"])
+    else:
+        return redirect(url_for("home"))
 
 @use_db
 def register():
@@ -80,7 +82,7 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    if request.headers["referer"]:
+    if request.headers["referer"] is not None:
         return redirect(request.headers["referer"])
     else:
         return redirect(url_for("home"))
