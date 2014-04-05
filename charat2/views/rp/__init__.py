@@ -10,7 +10,7 @@ def home():
     if g.user is not None:
         return render_template("rp/home.html", rooms=rooms, base_domain=os.environ['BASE_DOMAIN'])
     else:
-        return render_template("rp/register.html", rooms=rooms, base_domain=os.environ['BASE_DOMAIN'])
+        return render_template("rp/register.html", rooms=rooms, base_domain=os.environ['BASE_DOMAIN'], error=request.form['error'])
 
 @use_db
 @login_required

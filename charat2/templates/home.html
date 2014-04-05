@@ -60,6 +60,10 @@
             {% else %}
             <header>Welcome {{g.user.username}}</header>
             <subtitle>What would you like to do?</subtitle>
+            <a href="/settings">Settings</a>
+            <form id="logout" action="{{url_for("log_out")}}" method="post">
+                <a onclick="document.getElementById('logout').submit();">Logout</a>
+            </form>
             {% endif %}
         </div>
         
