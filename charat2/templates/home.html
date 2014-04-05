@@ -54,9 +54,17 @@
             <subtitle>Pan Fandom Chat</subtitle>
         </div>
         <div class="block">
-            <logo>+</logo>
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+            <form action="{{url_for("log_in")}}" method="post">
+                <div class="left">
+                    <label>Username: </label><br />
+                    <label>Password: </label>
+                </div>
+                <div class="right">
+                    <input id="logUsername" type="text" name="username"><br />
+                    <input id="logPassword" type="password" name="password">
+                </div>
+                <button type="submit">Login</button>
+            </form>
         </div>
         <div class="block">
             <logo>+</logo>
