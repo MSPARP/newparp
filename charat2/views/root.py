@@ -13,7 +13,7 @@ def login():
     if logged_in:
         return redirect(url_for("home"))
     else:
-        return render_template("login.html", logged_in=logged_in)
+        return render_template("login.html")
 
 @use_db
 def logout():
