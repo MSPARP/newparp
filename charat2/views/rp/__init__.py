@@ -19,3 +19,10 @@ def rooms():
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
     return render_template("rp/rooms.html", rooms=rooms)
+
+@use_db
+def logout():
+    if "session" in request.cookies:
+        g.redis.delete("session:" + request.cookies["session"])
+    return redirect(url_for("rp_home"))
+
