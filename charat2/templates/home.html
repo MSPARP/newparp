@@ -43,17 +43,9 @@
             <header>Charat</header>
             <subtitle>Simple Machinations</subtitle>
         </div>
+        
         <div class="block">
-            <logo>+</logo>
-            <header>Charat Roleplay</header>
-            <subtitle>Pan Fandom Chat</subtitle>
-        </div>
-        <div class="block">
-            <logo>+</logo>
-            <header>Charat Roleplay</header>
-            <subtitle>Pan Fandom Chat</subtitle>
-        </div>
-        <div class="block">
+            {% if logged_in %}
             <form action="{{url_for("log_in")}}" method="post">
                 <div class="left">
                     <label>Username: </label><br />
@@ -65,34 +57,38 @@
                 </div>
                 <button type="submit">Login</button>
             </form>
+            {% else %}
+            <header>Welcome {{g.user.username}}</header>
+            <subtitle>What would you like to do?</subtitle>
+            {% endif %}
         </div>
+        
         <div class="block">
-            <logo>+</logo>
+            <header>Charat Roleplay</header>
+            <subtitle>Pan Fandom Chat</subtitle>
+        </div>
+        
+        <div class="block">
             <header>Sample</header>
             <subtitle>Lorem Ipsum</subtitle>
         </div>
+        
         <div class="block">
-            <logo>+</logo>
             <header>Sample</header>
             <subtitle>Lorem Ipsum</subtitle>
         </div>
+        
         <div class="block">
-            <logo>+</logo>
             <header>Sample</header>
             <subtitle>Lorem Ipsum</subtitle>
         </div>
+        
         <div class="block">
-            <logo>+</logo>
             <header>Sample</header>
             <subtitle>Lorem Ipsum</subtitle>
         </div>
+        
         <div class="block">
-            <logo>+</logo>
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
-        </div>
-        <div class="block">
-            <logo>+</logo>
             <header>Sample</header>
             <subtitle>Lorem Ipsum</subtitle>
         </div>

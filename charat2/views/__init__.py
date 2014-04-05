@@ -7,7 +7,8 @@ from charat2.helpers.auth import login_required
 
 @use_db
 def home():
-    return render_template("home.html")
+    logged_in = True if g.user is not None else False
+    return render_template("home.html", logged_in=logged_in)
 
 @use_db
 def rp_home():
