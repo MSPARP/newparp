@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Charat - Login</title>
+        <style>
+            body {
+                background-color: #1E4D2B;
+                font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+                text-align: center;
+            }
+            
+            input[type="text"], input[type="submit"], input[type="password"], textarea {
+                cursor: text;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                resize: none;
+            }
+            
+            .block {
+                display: inline-block;
+                background-color: #4E8D6B;
+                color: #0E3D1B;
+                width: 100%;
+                max-width: 270px;
+                height: 150px;
+                padding-top: 20px;
+                margin-bottom: 5px;
+                text-align: center;
+                vertical-align: top;
+            }
+            
+            .block logo {
+                font-size: 70px;
+                line-height: 40px;
+            }
+            
+            .block header {
+                font-size: 30px;
+            }
+            
+            button.block-button {
+                background-color: #7EBD9B;
+                color: #0E3D1B;
+                font-size: 18px;
+                width: 200px;
+                max-width: 100%;
+                height: 30px;
+                padding: 0;
+                margin-top: 5px;
+                border: none;
+                cursor: pointer;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="block">
+            <form action="{{url_for("log_in")}}" method="post">
+                <tr>
+                    <td>Username: </label></td>
+                    <td><input id="logUsername" type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td><label>Password: </label></td>
+                    <td><input id="logPassword" type="password" name="password"></td>
+                </tr>
+                <button class="block-button" type="submit">Login</button>
+            </form>
+        </div>
+    </body>
+</html>
