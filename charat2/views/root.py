@@ -12,8 +12,7 @@ def login():
     logged_in = True if g.user is not None else False
     if logged_in:
         return redirect(url_for("home"))
-    else:
-        return render_template("login.html")
+    return render_template("login.html")
 
 @use_db
 def logout():
