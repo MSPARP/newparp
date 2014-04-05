@@ -47,14 +47,14 @@
         <div class="block">
             {% if not logged_in %}
             <form action="{{url_for("log_in")}}" method="post">
-                <div class="left">
-                    <label>Username: </label><br />
-                    <label>Password: </label>
-                </div>
-                <div class="right">
-                    <input id="logUsername" type="text" name="username"><br />
-                    <input id="logPassword" type="password" name="password">
-                </div>
+                <tr>
+                    <td>Username: </label></td>
+                    <td><input id="logUsername" type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td><label>Password: </label></td>
+                    <td><input id="logPassword" type="password" name="password"></td>
+                </tr>
                 <button type="submit">Login</button>
             </form>
             {% else %}
