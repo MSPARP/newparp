@@ -37,10 +37,7 @@ def log_out():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
 
-    if request.headers["referer"] is not None:
-        return redirect(request.headers["referer"])
-    else:
-        return redirect(url_for("home"))
+    return redirect(url_for("home"))
 
 @use_db
 def register():
