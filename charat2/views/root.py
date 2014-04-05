@@ -15,7 +15,7 @@ def login():
     else:
         return render_template("login.html", logged_in=logged_in)
 
-
+@use_db
 def logout():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
