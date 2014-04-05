@@ -28,7 +28,7 @@ app.teardown_request(redis_disconnect)
 app.add_url_rule("/", "home", root.home, methods=("GET",))
 
 app.add_url_rule("/login", "log_in", account.log_in, methods=("POST",))
-app.add_url_rule("/logout", "log_out", account.log_out, methods=("POST",))
+app.add_url_rule("/logout", "log_out", account.log_out)
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
 # RP subdomain (rp.charat.net)
