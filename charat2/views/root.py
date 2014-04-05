@@ -4,12 +4,12 @@ from charat2.model.connections import use_db
 
 @use_db
 def home():
-    logged_in = True if g.user is not None else False
+    logged_in = g.user is not None
     return render_template("home.html", logged_in=logged_in)
 
 @use_db
 def login():
-    logged_in = True if g.user is not None else False
+    logged_in = g.user is not None
     if logged_in:
         return redirect(url_for("home"))
     return render_template("login.html")
