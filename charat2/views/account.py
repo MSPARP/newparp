@@ -30,8 +30,7 @@ def log_in():
     g.redis.set("session:" + g.session_id, user.id)
     if request.headers["referer"]:
         return redirect(request.headers["referer"])
-    else:
-        return redirect(url_for("home"))
+    return redirect(url_for("home"))
 
 @use_db
 def register():
@@ -75,5 +74,4 @@ def register():
     g.db.commit()
     if request.headers["referer"]:
         return redirect(request.headers["referer"])
-    else:
-        return redirect(url_for("home"))
+    return redirect(url_for("home"))
