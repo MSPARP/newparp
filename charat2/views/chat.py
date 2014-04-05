@@ -26,7 +26,7 @@ def create_chat():
     lower_url = url.lower()
     if url_validator.match(lower_url) is None:
         return render_template(
-            "home.html",
+            "rp/home.html",
             create_chat_error="That URL isn't valid. Chat URLs can only "
             "contain letters, numbers, hyphens and underscores."
         )
@@ -34,7 +34,7 @@ def create_chat():
     # chat URLs.
     if url=="pm" or g.db.query(Chat.id).filter(Chat.url==lower_url).count()!=0:
         return render_template(
-            "home.html",
+            "rp/home.html",
             create_chat_error="The URL \"%s\" has already been taken." % url
         )
     g.db.add(GroupChat(
@@ -91,7 +91,7 @@ def chat(url):
     latest_num = messages[-1].id if len(messages) > 0 else 0
 
     return render_template(
-        "chat.html",
+        "rp/chat.html",
         chat=chat,
         user_chat=user_chat,
         user_chat_dict=user_chat.to_dict(include_options=True),

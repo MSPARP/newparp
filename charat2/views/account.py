@@ -15,7 +15,7 @@ def log_in():
         ).one()
     except NoResultFound:
         return render_template(
-            "rp_register.html",
+            "rp/register.html",
             log_in_error="The username or password you entered is incorrect.",
         )
     # Check password.
@@ -24,7 +24,7 @@ def log_in():
         user.password.encode()
     )!=user.password:
         return render_template(
-            "rp_register.html",
+            "rp/register.html",
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
@@ -47,20 +47,20 @@ def register():
     # Don't accept blank fields.
     if request.form["username"]=="" or request.form["password"]=="":
         return render_template(
-            "register.html",
+            "rp/register.html",
             register_error="Please enter a username and password.",
         )
     # Make sure the two passwords match.
     if request.form["password"]!=request.form["password_again"]:
         return render_template(
-            "register.html",
+            "rp/register.html",
             register_error="The two passwords didn't match.",
         )
     # Check username against username_validator.
     username = request.form["username"].lower()[:50]
     if username_validator.match(username) is None:
         return render_template(
-            "register.html",
+            "rp/register.html",
             register_error="Usernames can only contain letters, numbers, hyphens and underscores.",
         )
     # XXX DON'T ALLOW USERNAMES STARTING WITH GUEST_.
@@ -71,7 +71,7 @@ def register():
     ).count()
     if existing_username==1 or username in reserved_usernames:
         return render_template(
-            "register.html",
+            "rp/register.html",
             register_error="The username \"%s\" has already been taken." % username
         )
     new_user = User(
