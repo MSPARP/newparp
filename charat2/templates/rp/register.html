@@ -79,7 +79,7 @@
                 {% if log_in_error: %}
                 <p class="error">{{log_in_error}}</p>
                 {% endif %}
-                <form action="{{url_for("log_in")}}" method="post">
+                <form action="{{url_for("login_post")}}" method="post">
                     <div class="left">
                         <label>Username: </label><br />
                         <label>Password: </label>

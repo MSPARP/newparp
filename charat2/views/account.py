@@ -6,8 +6,19 @@ from charat2.model import User
 from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, reserved_usernames
 
+def referer_or_home():
+    if "Referer" in request.headers and request.base_url!=request.headers["Referer"]:
+        return request.headers["Referer"]
+    return url_for("home")
+
 @use_db
-def log_in():
+def login_get():
+    if g.user is not None:
+        return redirect(referer_or_home())
+    return render_template("login.html")
+
+@use_db
+def login_post():
     # Check username, lowercase to make it case-insensitive.
     try:
         user = g.db.query(User).filter(
@@ -28,9 +39,13 @@ def log_in():
             log_in_error="The username or password you entered is incorrect.",
         )
     g.redis.set("session:" + g.session_id, user.id)
-    if request.headers["referer"]:
-        return redirect(request.headers["referer"])
-    return redirect(url_for("home"))
+    return redirect(referer_or_home())
+
+@use_db
+def logout():
+    if "session" in request.cookies:
+        g.redis.delete("session:" + request.cookies["session"])
+    return redirect(referer_or_home())
 
 @use_db
 def register():
@@ -72,6 +87,5 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    if request.headers["referer"]:
-        return redirect(request.headers["referer"])
-    return redirect(url_for("home"))
+    return redirect(referer_or_home())
+
