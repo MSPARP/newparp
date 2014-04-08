@@ -3,15 +3,16 @@
 {% block header %}
 <title>Charat - Login/Register</title>
 <style>
-    header {
+    #main-block header {
         margin-bottom: 10px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="block-container"><div class="block">
-    <header>+ Charat</header>
+<div id="main-block" class="block-container"><div class="block">
+    <logo>+</logo>
+    <header>Charat</header>
     <form action="{{url_for("login_post")}}" method="post">
         <label>Username: </label><input id="regUsername" type="text" name="username">
         <label>Password: </label><input id="regPassword" type="password" name="password">
