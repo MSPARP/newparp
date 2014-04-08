@@ -18,6 +18,12 @@ def login_get():
     return render_template("login.html")
 
 @use_db
+def register_get():
+    if g.user is not None:
+        return redirect(referer_or_home())
+    return render_template("register.html")
+
+@use_db
 def login_post():
     # Check username, lowercase to make it case-insensitive.
     try:

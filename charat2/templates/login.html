@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-<title>Charat - Login/Register</title>
+<title>Charat - Login</title>
 <style>
     #main-block header {
         margin-bottom: 10px;
@@ -19,48 +19,5 @@
         <button class="block-button" type="submit">Login</button>
     </form>
 </div></div>
-
-<div class="block-container"><div class="block">
-    <form action="{{url_for("register")}}" method="post">
-        <label>Username: </label><input id="regUsername" type="text" name="username">
-        <label>Password: </label><input id="regPassword" type="password" name="password">
-        <label>Confirmation: </label><input id="regConfirm" type="password" name="password_again">
-        <button class="block-button" type="submit">Register</button>
-    </form>
-</div></div>
-
-<!--
-<div class="block-container"><div class="block">
-    <form action="{{url_for("login_post")}}" method="post">
-        <tr>
-            <td>Username: </label></td>
-            <td><input id="logUsername" type="text" name="username"></td>
-        </tr>
-        <tr>
-            <td><label>Password: </label></td>
-            <td><input id="logPassword" type="password" name="password"></td>
-        </tr>
-        <button class="block-button" type="submit">Login</button>
-    </form>
-</div></div>
-
-<div class="block-container"><div class="block">
-    <form action="{{url_for("register")}}" method="post">
-        <tr>
-            <td><label>Username: </label></td>
-            <td><input id="regUsername" type="text" name="username"></td>
-        </tr>
-        <tr>
-            <td><label>Password: </label></td>
-            <td><input id="regPassword" type="password" name="password"></td>
-        </tr>
-        <tr>
-            <td><label>Confirmation: </label></td>
-            <td><input id="regConfirm" type="password" name="password_again"></td>
-        </tr>
-        <button class="block-button" type="submit">Register</button>
-    </form>
-</div></div>
--->
 {% endblock %}
 

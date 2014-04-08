@@ -15,7 +15,8 @@
         {% if not logged_in %}
         <header>Welcome Guest</header>
         <subtitle>What would you like to do?</subtitle>
-        <a class="block-button" href="{{url_for("login_get")}}">Login/Register</a>
+        <a class="block-button" href="{{url_for("login_get")}}">Login</a>
+        <a class="block-button" href="{{url_for("register_get")}}">Register</a>
         {% else %}
         <header>Welcome {{g.user.username}}</header>
         <subtitle>What would you like to do?</subtitle>
