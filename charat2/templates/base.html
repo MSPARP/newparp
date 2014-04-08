@@ -2,6 +2,15 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <script src="{{url_for("static", filename="js/jquery.min.js")}}"></script>
+        <script>
+            $(document).ready(function(){
+                $('.block-container').each(function(){
+                    var margin = ($(this).height() - $(this).find('.block').height())/2;
+                    $(this).find('.block').css('margin-top',margin);
+                });
+            });
+        </script>
         <style>
             body {
                 background-color: #1E4D2B;
