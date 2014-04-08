@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="block">
+<div class="block-container"><div class="block">
     <form action="{{url_for("login_post")}}" method="post">
         <tr>
             <td>Username: </label></td>
@@ -17,9 +17,9 @@
         </tr>
         <button class="block-button" type="submit">Login</button>
     </form>
-</div>
+</div></div>
 
-<div class="block">
+<div class="block-container"><div class="block">
     <form action="{{url_for("register")}}" method="post">
         <tr>
             <td>Username: </label></td>
@@ -35,6 +35,6 @@
         </tr>
         <button class="block-button" type="submit">Register</button>
     </form>
-</div>
+</div></div>
 {% endblock %}
 

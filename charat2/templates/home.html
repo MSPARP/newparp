@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <div id="main-block" class="block">
+    <div id="main-block" class="block-container"><div class="block">
         <logo>+</logo>
         <header>Charat</header>
         <subtitle>Simple Machinations</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         {% if not logged_in %}
         <header>Welcome Guest</header>
         <subtitle>What would you like to do?</subtitle>
@@ -22,35 +22,35 @@
         <a class="block-button" href="/settings">Settings</a>
         <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
         {% endif %}
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Charat Roleplay</header>
         <subtitle>Pan Fandom Chat</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Sample</header>
         <subtitle>Lorem Ipsum</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Sample</header>
         <subtitle>Lorem Ipsum</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Sample</header>
         <subtitle>Lorem Ipsum</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Sample</header>
         <subtitle>Lorem Ipsum</subtitle>
-    </div>
+    </div></div>
     
-    <div class="block">
+    <div class="block-container"><div class="block">
         <header>Sample</header>
         <subtitle>Lorem Ipsum</subtitle>
-    </div>
+    </div></div>
 {% endblock %}
