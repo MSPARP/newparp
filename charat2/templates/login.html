@@ -21,8 +21,18 @@
 
 <div class="block-container"><div class="block">
     <form action="{{url_for("register")}}" method="post">
+        <label>Username: </label><input id="regUsername" type="text" name="username">
+        <label>Password: </label><input id="regPassword" type="password" name="password">
+        <label>Confirmation: </label><input id="regConfirm" type="password" name="password_again">
+        <button class="block-button" type="submit">Register</button>
+    </form>
+</div></div>
+
+<!--
+<div class="block-container"><div class="block">
+    <form action="{{url_for("register")}}" method="post">
         <tr>
-            <td>Username: </label></td>
+            <td><label>Username: </label></td>
             <td><input id="regUsername" type="text" name="username"></td>
         </tr>
         <tr>
@@ -36,5 +46,6 @@
         <button class="block-button" type="submit">Register</button>
     </form>
 </div></div>
+-->
 {% endblock %}
 
