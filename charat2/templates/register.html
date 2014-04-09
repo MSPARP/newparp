@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block header %}
+<title>Charat - Login</title>
+<style>
+    #main-block header {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="main-block" class="block-container"><div class="block">
+    <a href="{{url_for("home")}}">
+        <logo>+</logo>
+        <header>Charat</header>
+    </a>
+    <form action="{{url_for("register")}}" method="post">
+        <label>Username: </label><input id="regUsername" type="text" name="username">
+        <label>Password: </label><input id="regPassword" type="password" name="password">
+        <label>Confirmation: </label><input id="regConfirm" type="password" name="password_again">
+        <button class="block-button" type="submit">Register</button>
+    </form>
+</div></div>
+{% endblock %}
+
