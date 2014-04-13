@@ -8,6 +8,9 @@
                 $('.block-container').each(function(){
                     var margin = ($(this).height() - $(this).find('.block').height())/2;
                     $(this).find('.block').css('margin-top',margin);
+                    if ($(this).find('.description').length !== 0) {
+                        $(this).addClass('has-description');
+                    }
                 });
                 $('.block-container').on('click', function() {
                     if ($(this).find('.description').length !== 0) {
@@ -73,6 +76,10 @@
                 vertical-align: top;
             }
             
+            .block-container.has-description {
+                cursor: pointer;
+            }
+            
             .block {
 
             }
@@ -81,7 +88,7 @@
                 color: #0E3D1B;
             }
             
-            #main-block header {
+            #main-block .block header {
                 font-size: 40px;
             }
             
