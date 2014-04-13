@@ -9,7 +9,7 @@
                     var margin = ($(this).height() - $(this).find('.block').height())/2;
                     $(this).find('.block').css('margin-top',margin);
                 });
-                $('block-container').on('click', function() {
+                $('block-container').click(function() {
                     alert('test');
                     $(this).find('.block, .description').slideToggle();
                 });
