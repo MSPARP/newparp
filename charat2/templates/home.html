@@ -5,53 +5,100 @@
 {% endblock %}
 
 {% block content %}
-    <div id="main-block" class="block-container"><div class="block">
-        <logo>+</logo>
-        <header>Charat</header>
-        <subtitle>Intuitive Fanservice</subtitle>
-    </div></div>
+    <div id="main-block" class="block-container">
+        <div class="block" style="display:none;">
+            <logo>+</logo>
+            <header>Charat</header>
+            <subtitle>Intuitive Fanservice</subtitle>
+        </div>
+        <div class="description">
+            Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Enjoy your stay and visit this page regularly because we're always adding new things!
+        </div>
+    </div>
     
-    <div class="block-container"><div class="block">
-        {% if not logged_in %}
-        <header>Welcome Guest</header>
-        <subtitle>What would you like to do?</subtitle>
-        <a class="block-button" href="{{url_for("login_get")}}">Login</a>
-        <a class="block-button" href="{{url_for("register_get")}}">Register</a>
-        {% else %}
-        <header>Welcome {{g.user.username}}</header>
-        <subtitle>What would you like to do?</subtitle>
-        <a class="block-button" href="/settings">Settings</a>
-        <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
-        {% endif %}
-    </div></div>
+    <div class="block-container">
+        <div class="block">
+            {% if not logged_in %}
+            <header>Welcome Guest</header>
+            <subtitle>What would you like to do?</subtitle>
+            <a class="block-button" href="{{url_for("login_get")}}">Login</a>
+            <a class="block-button" href="{{url_for("register_get")}}">Register</a>
+            {% else %}
+            <header>Welcome {{g.user.username}}</header>
+            <subtitle>What would you like to do?</subtitle>
+            <a class="block-button" href="/settings">Settings</a>
+            <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
+            {% endif %}
+        </div>
+    </div>
     
-    <div class="block-container"><div class="block">
-        <header>Charat Roleplay</header>
-        <subtitle>Character Chat</subtitle>
-    </div></div>
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
     
-    <div class="block-container"><div class="block">
-        <header>Sample</header>
-        <subtitle>Lorem Ipsum</subtitle>
-    </div></div>
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
     
-    <div class="block-container"><div class="block">
-        <header>Sample</header>
-        <subtitle>Lorem Ipsum</subtitle>
-    </div></div>
-    
-    <div class="block-container"><div class="block">
-        <header>Sample</header>
-        <subtitle>Lorem Ipsum</subtitle>
-    </div></div>
-    
-    <div class="block-container"><div class="block">
-        <header>Sample</header>
-        <subtitle>Lorem Ipsum</subtitle>
-    </div></div>
-    
-    <div class="block-container"><div class="block">
-        <header>Sample</header>
-        <subtitle>Lorem Ipsum</subtitle>
-    </div></div>
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <div class="block">
+            <header>Charat Roleplay</header>
+            <subtitle>Character Chat</subtitle>
+        </div>
+    </div>
 {% endblock %}
