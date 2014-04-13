@@ -9,6 +9,9 @@
                     var margin = ($(this).height() - $(this).find('.block').height())/2;
                     $(this).find('.block').css('margin-top',margin);
                 });
+                $('block-container').on('click', function() {
+                    $(this).find('.block, .description').slideToggle();
+                });
             });
         </script>
         <style>
@@ -81,6 +84,7 @@
             }
             
             .description {
+                display: none;
                 text-align: left;
                 margin: 10px;
             }
