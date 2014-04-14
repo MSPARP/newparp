@@ -18,9 +18,7 @@
                     });
                     if ($(this).find('.description').length !== 0) {
                         $(this).addClass('selected');
-                    }
-                    $('.block-container').each(function(){
-                        if ($(this).find('.description').length !== 0) {
+                        $('.block-container').each(function(){
                             if ($(this).hasClass('selected')) {
                                 $(this).find('.block, .description').stop().slideToggle();
                             } else {
@@ -28,8 +26,8 @@
                                     $(this).find('.block, .description').stop().slideToggle();
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 });
             });
         </script>
