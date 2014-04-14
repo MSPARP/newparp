@@ -13,10 +13,10 @@
                     }
                 });
                 $('.block-container').on('click', function() {
-                    $('.block-container').each(function(){
-                        $(this).removeClass('selected');
-                    });
                     if ($(this).find('.description').length !== 0) {
+                        $('.block-container').each(function(){
+                            $(this).removeClass('selected');
+                        });
                         $(this).addClass('selected');
                     }
                     $('.block-container').each(function(){
