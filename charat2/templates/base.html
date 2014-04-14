@@ -13,11 +13,21 @@
                     }
                 });
                 $('.block-container').on('click', function() {
-                    $('.block-container .block').stop().slideUp();
-                    $('.block-container .description').stop().slideDown();
+                    $('.block-container').each(function(){
+                        $(this).removeClass('selected');
+                    });
                     if ($(this).find('.description').length !== 0) {
-                        $(this).find('.block, .description').stop().slideToggle();
+                        $(this).addClass('selected');
                     }
+                    $('.block-container').each(function(){
+                        if ($(this).find('.description').length !== 0) {
+                            if ($(this).hasClass('selected')) {
+                                $(this).find('.block, .description').stop().slideToggle();
+                            }
+                        } else {
+                            
+                        }
+                    });
                 });
             });
         </script>
