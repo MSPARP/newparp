@@ -13,6 +13,8 @@
                     }
                 });
                 $('.block-container').on('click', function() {
+                    $('.block-container .block').stop().slideUp();
+                    $('.block-container .description').stop().slideDown();
                     if ($(this).find('.description').length !== 0) {
                         $(this).find('.block, .description').stop().slideToggle();
                     }
