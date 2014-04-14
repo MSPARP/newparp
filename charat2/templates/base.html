@@ -23,9 +23,11 @@
                         if ($(this).find('.description').length !== 0) {
                             if ($(this).hasClass('selected')) {
                                 $(this).find('.block, .description').stop().slideToggle();
+                            } else {
+                                if ($(this).find('.description:visible').length !== 0) {
+                                    $(this).find('.block, .description').stop().slideToggle();
+                                }
                             }
-                        } else {
-                            
                         }
                     });
                 });
