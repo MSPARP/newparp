@@ -14,7 +14,7 @@
                 });
                 $('.block-container').on('click', function() {
                     if ($(this).find('.description').length !== 0) {
-                        $(this).find('.block, .description').slideToggle();
+                        $(this).find('.block, .description').stop().slideToggle();
                     }
                 });
             });
