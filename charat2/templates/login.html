@@ -24,7 +24,9 @@
         <input id="logPassword" type="password" name="password" placeholder="Password">
         <button class="block-button" type="submit">Login</button>
     </form>
+    {% if log_in_error: %}
     <span class="error">{{log_in_error}}</span>
+    {% endif %}
 </div></div>
 {% endblock %}
 
