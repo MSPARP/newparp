@@ -504,7 +504,7 @@ $(document).ready(function() {
             }
         });
         
-        $('#topic').html(bbEncode($('#topic').html()));
+        $('#topic').html(bbEncode($('#topic').text()));
         $('#convo span p.message').each(function() {
             line = bbEncode($(this).text());
             $(this).html(line);

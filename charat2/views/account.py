@@ -1,6 +1,7 @@
 from bcrypt import gensalt, hashpw
 from flask import g, render_template, redirect, request, url_for
 from sqlalchemy.orm.exc import NoResultFound
+import urlparse
 
 from charat2.model import User
 from charat2.model.connections import use_db
@@ -8,8 +9,8 @@ from charat2.model.validators import username_validator, reserved_usernames
 
 def referer_or_home():
     if "Referer" in request.headers:
-        referer = '?'.split(request.headers["Referer"])
-        return referer[0]
+        r = urlparse(request.headers["Referer"])
+        return r.scheme+"://"+r.netloc+r.path
     return url_for("home")
 
 @use_db
