@@ -4,7 +4,11 @@
 <title>Charat - Login</title>
 <style>
     #main-block {
-        height: 250px;
+        {% if log_in_error: %}
+            height: 250px;
+        {% else %}
+            height: 220px;
+        {% endif %}
     }
     
     #main-block header {

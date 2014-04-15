@@ -4,7 +4,11 @@
 <title>Charat - Register</title>
 <style>
     #main-block {
-        height: 270px;
+        {% if log_in_error: %}
+            height: 270px;
+        {% else %}
+            height: 250px;
+        {% endif %}
     }
     
     #main-block header {
