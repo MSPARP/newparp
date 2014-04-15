@@ -1,7 +1,7 @@
 from bcrypt import gensalt, hashpw
 from flask import g, render_template, redirect, request, url_for
 from sqlalchemy.orm.exc import NoResultFound
-import urlparse
+from urlparse import urlparse
 
 from charat2.model import User
 from charat2.model.connections import use_db
