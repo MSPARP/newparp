@@ -18,7 +18,7 @@ def rooms():
     rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
-    return render_template("rp/rooms.html", rooms=rooms, log_in_error=request.form["log_in_error"], register_error=request.form["register_error"])
+    return render_template("rp/rooms.html", rooms=rooms, log_in_error=request.args.get["log_in_error"], register_error=request.args.get["register_error"])
 
 @use_db
 def logout():
