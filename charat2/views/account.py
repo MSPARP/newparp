@@ -40,10 +40,7 @@ def login_post():
         request.form["password"].encode(),
         user.password.encode()
     )!=user.password:
-        return render_template(
-            "rp/register.html",
-            log_in_error="The username or password you entered is incorrect.",
-        )
+        return redirect(referer_or_home())
     g.redis.set("session:" + g.session_id, user.id)
     return redirect(referer_or_home())
 
