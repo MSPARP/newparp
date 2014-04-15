@@ -31,16 +31,13 @@ def login_post():
             User.username==request.form["username"].lower()
         ).one()
     except NoResultFound:
-        return render_template(
-            "rp/register.html",
-            log_in_error="The username or password you entered is incorrect.",
-        )
+        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect.")
     # Check password.
     if hashpw(
         request.form["password"].encode(),
         user.password.encode()
     )!=user.password:
-        return redirect(referer_or_home()+"?test=test")
+        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect.")
     g.redis.set("session:" + g.session_id, user.id)
     return redirect(referer_or_home())
 
@@ -54,23 +51,14 @@ def logout():
 def register():
     # Don't accept blank fields.
     if request.form["username"]=="" or request.form["password"]=="":
-        return render_template(
-            "rp/register.html",
-            register_error="Please enter a username and password.",
-        )
+        return redirect(referer_or_home()+"?register_error=Please enter a username and password.")
     # Make sure the two passwords match.
     if request.form["password"]!=request.form["password_again"]:
-        return render_template(
-            "rp/register.html",
-            register_error="The two passwords didn't match.",
-        )
+        return redirect(referer_or_home()+"?register_error=The two passwords didn't match.")
     # Check username against username_validator.
     username = request.form["username"].lower()[:50]
     if username_validator.match(username) is None:
-        return render_template(
-            "rp/register.html",
-            register_error="Usernames can only contain letters, numbers, hyphens and underscores.",
-        )
+        return redirect(referer_or_home()+"?register_error=Usernames can only contain letters, numbers, hyphens and underscores.")
     # XXX DON'T ALLOW USERNAMES STARTING WITH GUEST_.
     # Make sure this username hasn't been taken before.
     # Also check against reserved usernames.
@@ -78,10 +66,7 @@ def register():
         User.username==username
     ).count()
     if existing_username==1 or username in reserved_usernames:
-        return render_template(
-            "rp/register.html",
-            register_error="The username \"%s\" has already been taken." % username
-        )
+        return redirect(referer_or_home()+"?register_error=The username "+username+" has already been taken.")
     new_user = User(
         username=username,
         password=hashpw(request.form["password"].encode(), gensalt()),
