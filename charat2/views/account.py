@@ -7,7 +7,7 @@ from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, reserved_usernames
 
 def referer_or_home():
-    if "Referer" in request.headers and request.base_url!=request.headers["Referer"]:
+    if "Referer" in request.headers:
         return request.headers["Referer"]
     return url_for("home")
 
