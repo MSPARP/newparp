@@ -14,7 +14,7 @@ def referer_or_home():
 @use_db
 def login_get():
     if g.user is not None:
-        return redirect(referer_or_home())
+        return redirect(url_for("home"))
     return render_template("login.html")
 
 @use_db
