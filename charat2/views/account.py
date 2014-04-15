@@ -15,13 +15,13 @@ def referer_or_home():
 def login_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    return render_template("login.html", log_in_error=request.args.get["log_in_error"])
+    return render_template("login.html", log_in_error=request.args["log_in_error"])
 
 @use_db
 def register_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    return render_template("register.html", register_error=request.args.get["register_error"])
+    return render_template("register.html", register_error=request.args["register_error"])
 
 @use_db
 def login_post():
