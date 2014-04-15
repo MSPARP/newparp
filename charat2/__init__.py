@@ -13,6 +13,7 @@ from charat2.views import root, account, rp
 from charat2.views.rp import chat, chat_api
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
 app.before_request(redis_connect)
