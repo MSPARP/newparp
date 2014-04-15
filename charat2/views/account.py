@@ -40,7 +40,7 @@ def login_post():
         request.form["password"].encode(),
         user.password.encode()
     )!=user.password:
-        return redirect(referer_or_home())
+        return redirect(referer_or_home()+"?")
     g.redis.set("session:" + g.session_id, user.id)
     return redirect(referer_or_home())
 
