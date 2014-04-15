@@ -14,20 +14,22 @@
 {% endblock %}
 
 {% block content %}
-<div id="main-block" class="block-container"><div class="block">
-    <a href="{{url_for("home")}}">
-        <logo>+</logo>
-        <header>Charat</header>
-    </a>
-    <form action="{{url_for("register")}}" method="post">
-        <input id="regUsername" type="text" name="username" placeholder="Username">
-        <input id="regPassword" type="password" name="password" placeholder="Password">
-        <input id="regConfirm" type="password" name="password_again" placeholder="Confirm Pass">
-        <button class="block-button" type="submit">Register</button>
-    </form>
-    {% if register_error: %}
-    <span class="error">{{register_error}}</span>
-    {% endif %}
-</div></div>
+<div id="main-block" class="block-container">
+    <div class="block">
+        <a href="{{url_for("home")}}">
+            <logo>+</logo>
+            <header>Charat</header>
+        </a>
+        {% if register_error: %}
+        <span class="error">{{register_error}}</span>
+        {% endif %}
+        <form action="{{url_for("register")}}" method="post">
+            <input id="regUsername" type="text" name="username" placeholder="Username">
+            <input id="regPassword" type="password" name="password" placeholder="Password">
+            <input id="regConfirm" type="password" name="password_again" placeholder="Confirm Pass">
+            <button class="block-button" type="submit">Register</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
 

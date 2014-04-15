@@ -14,19 +14,21 @@
 {% endblock %}
 
 {% block content %}
-<div id="main-block" class="block-container"><div class="block">
-    <a href="{{url_for("home")}}">
-        <logo>+</logo>
-        <header>Charat</header>
-    </a>
-    <form action="{{url_for("login_post")}}" method="post">
-        <input id="logUsername" type="text" name="username" placeholder="Username">
-        <input id="logPassword" type="password" name="password" placeholder="Password">
-        <button class="block-button" type="submit">Login</button>
-    </form>
-    {% if log_in_error: %}
-    <span class="error">{{log_in_error}}</span>
-    {% endif %}
-</div></div>
+<div id="main-block" class="block-container">
+    <div class="block">
+        <a href="{{url_for("home")}}">
+            <logo>+</logo>
+            <header>Charat</header>
+        </a>
+        {% if log_in_error: %}
+        <span class="error">{{log_in_error}}</span>
+        {% endif %}
+        <form action="{{url_for("login_post")}}" method="post">
+            <input id="logUsername" type="text" name="username" placeholder="Username">
+            <input id="logPassword" type="password" name="password" placeholder="Password">
+            <button class="block-button" type="submit">Login</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
