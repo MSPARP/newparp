@@ -547,7 +547,7 @@ $(document).ready(function() {
                     }
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
-                        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'}
+                        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
                         if (groups.indexOf(command[2].toLowerCase())!=-1) {
                             setGroup(command[1],group_map[command[2]].toLowerCase());
                         }
@@ -571,7 +571,11 @@ $(document).ready(function() {
                         window.clearTimeout(pingInterval);
                     }
                     var lineSend = $('#preview').text();
-                    $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend}); // todo: check for for error
+                    var type = ooc_on ? "ooc" : "ic";
+                    if (lineSend.match("^\(\(") || lineSend.match("\)\)$") || lineSend.match("^\[\[") || lineSend.match("\]\]$") || lineSend.match("^\{\{") || lineSend.match("\}\}$")) {
+                        type = "ooc";
+                    }
+                    $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
                     updateChatPreview();

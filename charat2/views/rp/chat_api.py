@@ -87,16 +87,12 @@ def send():
     text = request.form["text"].strip()
     if text == "":
         abort(400)
-
-    message_type = "ic"
-    # Automatic OOC detection
-    if (
-        text.startswith("((") or text.endswith("))")
-        or text.startswith("[[") or text.endswith("]]")
-        or text.startswith("{{") or text.endswith("}}")
-    ):
-        message_type="ooc"
-
+    
+    message_type = request.form["type"]
+    
+    if message_type is None:
+        message_type = "ic"
+    
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
         user_id=g.user.id,
@@ -388,6 +384,7 @@ def set_topic():
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=g.user.id,
+            name=g.user_chat.name,
             type="chat_meta",
             text="%s removed the conversation topic." % g.user_chat.name,
         ))
@@ -395,6 +392,7 @@ def set_topic():
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=g.user.id,
+            name=g.user_chat.name,
             type="chat_meta",
             text="%s changed the topic to \"%s\"." % (g.user_chat.name, topic),
         ))
