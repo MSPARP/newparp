@@ -584,9 +584,7 @@ $(document).ready(function() {
                     }
                     var lineSend = $('#preview').text();
                     var type = ooc_on ? "ooc" : "ic";
-                    if (lineSend.startsWith("((") || lineSend.endsWith("))") ||
-                    lineSend.startsWith("[[") || lineSend.endsWith("]]") ||
-                    lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
+                    if (lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
                         type = "ooc";
                     }
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
