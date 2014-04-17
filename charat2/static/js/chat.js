@@ -81,6 +81,18 @@ var user_list = {};
 
 /* FUNCTIONS */
 
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.slice(0, str.length) == str;
+  };
+}
+
+if (typeof String.prototype.endsWith != 'function') {
+  String.prototype.endsWith = function (str){
+    return this.slice(-str.length) == str;
+  };
+}
+
 function topbarSelect(selector) {
     $(selector).css({
         'color' : '#C0F0C0',
@@ -572,9 +584,9 @@ $(document).ready(function() {
                     }
                     var lineSend = $('#preview').text();
                     var type = ooc_on ? "ooc" : "ic";
-                    if (lineSend.match("^((") || lineSend.match("))$") ||
-                    lineSend.match("^[[") || lineSend.match("]]$") ||
-                    lineSend.match("^{{") || lineSend.match("}}$")) {
+                    if (lineSend.startsWith("((") || lineSend.endsWith("))") ||
+                    lineSend.startsWith("[[") || lineSend.endsWith("]]") ||
+                    lineSend.startsWith("{{") || lineSend.endsWith("}}") {
                         type = "ooc";
                     }
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
