@@ -399,7 +399,7 @@ function setSidebar(sidebar) {
         $(document.body).removeClass('withSidebar');
     }
 
-    // if sidebar changed, check bottom and go to bottom if at bottom
+    // if the sidebar changed, check bottom and go to bottom if at bottom
 }
 
 function closeSettings() {
