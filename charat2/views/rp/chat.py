@@ -16,15 +16,6 @@ from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
 from datetime import datetime
-from flask.ext.babel import to_user_timezone
-
-app = Flask(__name__)
-
-@app.context_processor
-def utility_processor():
-    def usertz(datetimeobj):
-        return to_user_timezone(datetimeobj)
-    return dict(to_user_timezone=to_user_timezone)
 
 @use_db
 @login_required

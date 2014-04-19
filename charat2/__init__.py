@@ -13,6 +13,7 @@ from charat2.views import root, account, rp
 from charat2.views.rp import chat, chat_api
 
 from flask.ext.babel import Babel
+from flask.ext.babel import to_user_timezone
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -27,6 +28,12 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+@app.context_processor
+def utility_processor():
+    def usertz(datetimeobj):
+        return to_user_timezone(datetimeobj)
+    return dict(to_user_timezone=to_user_timezone)
 
 # Root domain (charat.net)
 
