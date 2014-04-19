@@ -205,7 +205,7 @@ function addLine(msg){
         }
     }
 
-    var right_text = '<span class="username">'msg.user.username+'</span> <span class="timestamp">'+get_timestamp(msg.posted)+'<span>';
+    var right_text = '<span class="username">'+msg.user.username+'</span> <span class="post_timestamp">'+get_timestamp(msg.posted)+'<span>';
     
     var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
     var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
@@ -521,7 +521,7 @@ $(document).ready(function() {
         $('#convo span').each(function() {
             line = bbEncode($(this).find('.message').text());
             $(this).find('.message').html(line);
-            $(this).find('.info .right .timestamp').text(get_timestamp($(this).find('.info .right .timestamp').text();));
+            $(this).find('.info .right .post_timestamp').text(get_timestamp($(this).find('.info .right .post_timestamp').text();));
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
