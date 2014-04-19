@@ -46,7 +46,7 @@
         <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
             <p class="info">
                 <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
-                <span class="right">{{message.user.username}} {{(message.posted).replace(tzinfo=tz.tzlocal()).astimezone(datetime.now(tz.tzutc()).tzname()).strftime("%b %d %H:%M")}}</span>
+                <span class="right">{{message.user.username}} {{message.posted.strftime("%b %d %H:%M")}}</span>
             </p>
             <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
         </span>
