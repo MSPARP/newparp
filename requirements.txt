@@ -12,4 +12,4 @@ pycparser==2.10
 redis==2.9.1
 gunicorn==18.0
 gevent==1.0
-python-dateutil==2.2
+Flask-Babel=0.9
