@@ -16,7 +16,7 @@ from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
 from datetime import datetime
-from dateutil.tz import *
+from dateutil import tz
 
 @use_db
 @login_required
@@ -99,5 +99,6 @@ def chat(url):
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
+        tz=tz(),
     )
 
