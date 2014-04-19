@@ -19,6 +19,7 @@ app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
 babel = Babel(app)
+app.jinja_env.globals.update(get_timezone=get_timezone)
 
 app.before_request(redis_connect)
 
