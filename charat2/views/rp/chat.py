@@ -15,8 +15,6 @@ from charat2.model import (
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
-from datetime import datetime
-
 @use_db
 @login_required
 def create_chat():

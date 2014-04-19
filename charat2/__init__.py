@@ -12,7 +12,7 @@ from charat2.model.connections import (
 from charat2.views import root, account, rp
 from charat2.views.rp import chat, chat_api
 
-from flask.ext.babel import *
+from flask.ext.babel import Babel, gettext
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
