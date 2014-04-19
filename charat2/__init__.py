@@ -13,14 +13,12 @@ from charat2.views import root, account, rp
 from charat2.views.rp import chat, chat_api
 
 from flask.ext.babel import Babel
-from flask.ext.babel import to_user_timezone
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
 babel = Babel(app)
-app.jinja_env.globals.update(to_user_timezone=to_user_timezone)
 
 app.before_request(redis_connect)
 

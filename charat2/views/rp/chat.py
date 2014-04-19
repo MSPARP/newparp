@@ -1,4 +1,4 @@
-from flask import abort, g, redirect, render_template, request, url_for
+from flask import Flask, abort, g, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -16,6 +16,13 @@ from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
 from datetime import datetime
+from flask.ext.babel import to_user_timezone
+
+@app.context_processor
+def utility_processor():
+    def usertz(datetimeobj):
+        return to_user_timezone(datetimeobj)
+    return dict(to_user_timezone=to_user_timezone)
 
 @use_db
 @login_required
