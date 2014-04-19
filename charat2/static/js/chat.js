@@ -93,6 +93,12 @@ if (typeof String.prototype.endsWith != 'function') {
   };
 }
 
+function getTimestamp(seconds_from_epoch) {
+    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var timestamp = new Date(seconds_from_epoch*1000);
+    return month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
+}
+
 function topbarSelect(selector) {
     $(selector).css({
         'color' : '#C0F0C0',
@@ -199,10 +205,7 @@ function addLine(msg){
         }
     }
 
-    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var timestamp = new Date(msg.posted*1000);
-    var timestamp_text = month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
-    var right_text = msg.user.username+' '+timestamp_text;
+    var right_text = '<span class="username">'msg.user.username+'</span> <span class="timestamp">'+get_timestamp(msg.posted)+'<span>';
     
     var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
     var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
@@ -515,9 +518,10 @@ $(document).ready(function() {
         });
         
         $('#topic').html(bbEncode($('#topic').text()));
-        $('#convo span p.message').each(function() {
-            line = bbEncode($(this).text());
-            $(this).html(line);
+        $('#convo span').each(function() {
+            line = bbEncode($(this).find('.message').text());
+            $(this).find('.message').html(line);
+            $(this).find('.info .right .timestamp').text(get_timestamp($(this).find('.info .right .timestamp').text();));
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
