@@ -521,7 +521,7 @@ $(document).ready(function() {
         $('#convo span').each(function() {
             line = bbEncode($(this).find('.message').text());
             $(this).find('.message').html(line);
-            $(this).find('.info .right .post_timestamp').text(get_timestamp($(this).find('.info .right .post_timestamp').text();));
+            $(this).find('.info .right .post_timestamp').text(get_timestamp($(this).find('.info .right .post_timestamp').text()));
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
