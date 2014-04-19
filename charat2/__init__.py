@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
-babel = babel.Babel(app)
+babel = Babel(app)
 
 app.before_request(redis_connect)
 
