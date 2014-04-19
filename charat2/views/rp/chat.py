@@ -16,7 +16,6 @@ from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
 from datetime import datetime
-from flask.ext.babel import to_user_timezone
 
 @use_db
 @login_required
