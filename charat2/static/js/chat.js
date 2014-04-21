@@ -587,19 +587,19 @@ $(document).ready(function() {
                     
                     if (command[0] == '/ooc') {
                         command.splice(0,1);
-                        $('#textInput').val(command.join(' '));
+                        $('#preview').text(command.join(' '));
                         type_force = 'ooc';
                     }
                     
                     if (command[0] == '/ic') {
                         command.splice(0,1);
-                        $('#textInput').val(command.join(' '));
+                        $('#preview').text(command.join(' '));
                         type_force = 'ic';
                     }
                     
                     if (command[0] == '/me') {
                         command.splice(0,1);
-                        $('#textInput').val(command.join(' '));
+                        $('#preview').text(command.join(' '));
                         type_force = 'me';
                     }
                     console.log(command);
