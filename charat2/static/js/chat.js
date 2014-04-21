@@ -79,6 +79,8 @@ var show_all_info = true; // USER META ADD
 var current_user_array = [];
 var user_list = {};
 
+var type_force = '';
+
 /* FUNCTIONS */
 
 if (typeof String.prototype.startsWith != 'function') {
@@ -555,10 +557,12 @@ $(document).ready(function() {
                         userAction(command[1],'ban',command[2]);
                         $('#textInput').val('');
                     }
+                    
                     if (command[0] == '/kick') {
                         userAction(command[1],'kick','');
                         $('#textInput').val('');
                     }
+                    
                     if (command[0] == '/set') {
                         var groups = ['magical','cute','little','unsilence','silence'];
                         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
@@ -567,6 +571,7 @@ $(document).ready(function() {
                         }
                         $('#textInput').val('');
                     }
+                    
                     if (command[0] == '/topic') {
                         var com = command;
                         com.splice(0,1);
@@ -574,9 +579,28 @@ $(document).ready(function() {
                         setTopic(topic_set);
                         $('#textInput').val('');
                     }
+                    
                     if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
                         setFlag(command[0].substr(1),command[1]);
                         $('#textInput').val('');
+                    }
+                    
+                    if (command[0] == '/ooc') {
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
+                        type_force = 'ooc';
+                    }
+                    
+                    if (command[0] == '/ic') {
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
+                        type_force = 'ic';
+                    }
+                    
+                    if (command[0] == '/me') {
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
+                        type_force = 'me';
                     }
                 }
                 
@@ -589,6 +613,10 @@ $(document).ready(function() {
                     if (lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
                         type = "ooc";
                     }
+                    if (type_force) {
+                        type = type_force;
+                    }
+                    type_force = '';
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
