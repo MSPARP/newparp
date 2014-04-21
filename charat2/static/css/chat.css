@@ -163,6 +163,7 @@ body.menu #topbar #toptitle {
 }
 
 #conversation p, #online {
+    margin-top: 5px;
     overflow: hidden;
 }
 
