@@ -586,19 +586,23 @@ $(document).ready(function() {
                     }
                     
                     if (command[0] == '/ooc') {
-                        $('#textInput').val(command.splice(0,1).join(' '));
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
                         type_force = 'ooc';
                     }
                     
                     if (command[0] == '/ic') {
-                        $('#textInput').val(command.splice(0,1).join(' '));
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
                         type_force = 'ic';
                     }
                     
                     if (command[0] == '/me') {
-                        $('#textInput').val(command.splice(0,1).join(' '));
+                        command.splice(0,1);
+                        $('#textInput').val(command.join(' '));
                         type_force = 'me';
                     }
+                    console.log(command);
                 }
                 
                 if ($('#textInput').val()!='') {
