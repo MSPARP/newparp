@@ -143,7 +143,7 @@ function startChat() {
     $(CONVERSATION_CONTAINER).removeClass('search');
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
-    $('#logLink').attr('href', '/chat/'+chat.url+'/log');
+    $('#logAnchor').prop('href', '/chat/'+chat.url+'/log');
     
     if ($(document.body).hasClass('mobile')) {
         var current_sidebar = null;
@@ -209,7 +209,7 @@ function addLine(msg){
 
     var right_text = '<span class="username">'+msg.user.username+'</span> <span class="post_timestamp">'+getTimestamp(msg.posted)+'<span>';
     
-    var message_container = $('<span>').attr("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
+    var message_container = $('<span>').prop("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
     var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
     var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
     var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
@@ -240,7 +240,7 @@ function generateUserList(user_data) {
         var is_self = "";
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
-            $('#online').attr('class',list_user.meta.group);
+            $('#online').prop('class',list_user.meta.group);
             $('#textInput').css('color','#'+list_user.character.color);
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
@@ -340,7 +340,7 @@ function messageParse(data) {
         
         for (i=0; i<CHAT_FLAGS.length; i++) {
             if (data.chat[CHAT_FLAGS[i]] == CHAT_FLAG_MAP[CHAT_FLAGS[i]]) {
-                $('#'+CHAT_FLAGS[i]).attr('checked', 'checked');
+                $('#'+CHAT_FLAGS[i]).prop('checked', 'checked');
                 $('#'+CHAT_FLAGS[i]+'Result').show();
             } else {
                 $('#'+CHAT_FLAGS[i]).removeAttr('checked');
@@ -378,7 +378,7 @@ function messageParse(data) {
     } else {
         $('.editPass').hide();
         $('.inPass').show();
-        $('.opmod input').attr('disabled', 'disabled');
+        $('.opmod input').prop('disabled', 'disabled');
     }
 }
 
@@ -395,7 +395,7 @@ function clearChat() {
         window.clearTimeout(pingInterval);
     }
     $('input[name="chat"]').val(chat.url);
-    $('input, select, button').attr('disabled', 'disabled');
+    $('input, select, button').prop('disabled', 'disabled');
     setSidebar(null);
     document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
     if (chat.type=='unsaved' || chat.type=='saved') {
@@ -499,22 +499,22 @@ $(document).ready(function() {
         $('#ooclet, #oocToggle input').click(function() {
             if (ooc_on == false) {
                 ooc_on = true;
-                $('#oocToggle input').attr('checked','checked');
+                $('#oocToggle input').prop('checked','checked');
                 topbarSelect('#ooclet');
             } else {
                 ooc_on = false;
-                $('#oocToggle input').removeAttr('checked');
+                $('#oocToggle input').removeProp('checked');
                 topbarDeselect('#ooclet');
             }
             updateChatPreview();
         });
 
         $('#topbar .right span').click(function() {
-            if ($(this).attr('class') == current_sidebar) {
+            if ($(this).prop('class') == current_sidebar) {
                 current_sidebar = null;
                 setSidebar(current_sidebar);
             } else {
-                current_sidebar = $(this).attr('class');
+                current_sidebar = $(this).prop('class');
                 setSidebar(current_sidebar);
             }
         });
@@ -540,7 +540,7 @@ $(document).ready(function() {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     ooc_on = true;
                     topbarSelect('#ooclet');
-                    $('#oocToggle input').attr('checked','checked');
+                    $('#oocToggle input').prop('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
@@ -749,16 +749,6 @@ $(document).ready(function() {
             $(MISSED_MESSAGE_COUNT_ID).html(0);
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         });
-
-        /* SPOILER
-        $('#conversation p .spoiler').on('click', function() {
-            if ($(this).css('opacity') == '0') {
-                $(this).css('opacity','1');
-            } else {
-                $(this).css('opacity','0');
-            }
-        });
-        */
         
         $(window).blur(function(e) {
             window_active = false;

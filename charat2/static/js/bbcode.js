@@ -132,3 +132,15 @@ function bbRemoveAll(S) {
     var result = R(A(A(S, I), B));
     return result;
 }
+
+$(document).ready(function(){
+    $('#conversation p .spoiler').on('click', function() {
+        if ($(this).css('opacity') == '0') {
+            $(this).css('opacity','1');
+        } else {
+            $(this).css('opacity','0');
+        }
+    });
+});
+
+
