@@ -96,6 +96,18 @@ input:hover, textarea:hover {
     background-color: #FFFFFF;
 }
 
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"] + .checkbox {
+    border: 1px solid #92B792;
+}
+
+input[type="checkbox"]:checked + .checkbox {
+    background-color: #92B792;
+}
+
 .select-bind {
     font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
     position: relative;

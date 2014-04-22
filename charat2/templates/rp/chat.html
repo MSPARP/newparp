@@ -72,9 +72,9 @@
             <div class="card metaOptions stoptions">
                 <h1 class="titi">CHAT SETTINGS</h1>
                 <ul id="metaOptions">
-                    <li><label><input type="checkbox" id="autosilence"><button>Autosilence</button></label></li>
-                    <li><label><input type="checkbox" id="public"><button>Public Chat</button></label></li>
-                    <li class="opmod"><label><input type="checkbox" id="nsfw"><button>NSFW</button></label></li>
+                    <li><label><input type="checkbox" id="autosilence"><div class="checkbox"></div><button>Autosilence</button></label></li>
+                    <li><label><input type="checkbox" id="public"><div class="checkbox"></div><button>Public Chat</button></label></li>
+                    <li class="opmod"><label><input type="checkbox" id="nsfw"><div class="checkbox"></div><button>NSFW</button></label></li>
                 </ul>
            </div>
         {% endif %}
@@ -142,17 +142,17 @@
         <div class="card">
             <h1 class="titi">OPTIONS</h1>
             <div class="stoptions">
-                <label id="confirmCloseToggle"><input type="checkbox" checked><button type="button" class="labeling">Confirm Window Close</button></label>
-                <label id="oocToggle"><input type="checkbox"><button type="button" class="labeling">Out Of Character</button></label>
-                <label id="bbColorToggle"><input type="checkbox" checked><button type="button" class="labeling">Show BBCode Colors (Refresh)</button></label>
+                <label id="confirmCloseToggle"><input type="checkbox" checked><div class="checkbox"></div><button type="button" class="labeling">Confirm Window Close</button></label>
+                <label id="oocToggle"><input type="checkbox"><div class="checkbox"></div><button type="button" class="labeling">Out Of Character</button></label>
+                <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox"></div><button type="button" class="labeling">Show BBCode Colors (Refresh)</button></label>
                 <div id="notificationHead" data-ng-app>
                     <div id="notificationController" data-ng-controller="NotificationCenter">
                         <p class="notificationLevel" ng-class="getClassName()" data-ng-click="requestPermissions()">
-                            <label><input type="checkbox" class="deskset" name="deskset"><button type="button" class="labeling deskseta">Desktop Notifications</button></label>
+                            <label><input type="checkbox" class="deskset" name="deskset"><div class="checkbox"></div><button type="button" class="labeling deskseta">Desktop Notifications</button></label>
                         </p>
                     </div>
                </div>
-               <label id="previewToggle"><input type="checkbox"><button type="button" class="labeling">Show Preview</button></label>
+               <label id="previewToggle"><input type="checkbox"><div class="checkbox"></div><button type="button" class="labeling">Show Preview</button></label>
            </div>
         </div>
         

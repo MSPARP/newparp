@@ -38,6 +38,7 @@ p:hover .timestamp {
     display: inline-block;
 }
 
+/*
 input[type='checkbox'] + button {
     text-decoration: line-through;
 }
@@ -58,6 +59,8 @@ input[type='checkbox']:checked + button:hover {
 .card input[type='checkbox'] {
     display: none;
 }
+
+*/
 
 /* Top Bar */
 
