@@ -20,7 +20,7 @@ from wtforms import TextField
 RECAPTCHA_PRIVATE_KEY = '6LetOPISAAAAAKN2LCPUYt7sk1Ogh7rWXVGEWZ9Z'
 RECAPTCHA_PUBLIC_KEY = '6LetOPISAAAAAEBLq4_tCYcr1XcA3LO3rrQX2Th9'
 
-class SignupForm(Form):
+class SignupForm():
     username = TextField('Username')
     recaptcha = RecaptchaField()
 

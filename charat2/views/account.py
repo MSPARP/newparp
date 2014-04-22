@@ -21,9 +21,10 @@ def login_get():
 
 @use_db
 def register_get():
+    form = SignupForm()
     if g.user is not None:
         return redirect(url_for("home"))
-    return render_template("register.html", register_error=request.args.get("register_error"))
+    return render_template("register.html", register_error=request.args.get("register_error"), form)
 
 @use_db
 def login_post():
