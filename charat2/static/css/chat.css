@@ -516,8 +516,13 @@ body > #save {
     padding: 0;
 }
 
-p.notificationLevel.default button, p.notificationLevel.denied button {
+#notificationController.default label, #notificationController.denied label {
+    pointer-events: none;
+}
+
+#notificationController.default .checkbox, #notificationController.denied .checkbox {
     background-color: #D56063;
+    border-color: #D56063;
 }
 
 .sidebar label button a {
