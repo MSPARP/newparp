@@ -103,8 +103,8 @@ input[type="checkbox"] {
 input[type="checkbox"] + .checkbox {
     display: inline-block;
     border: 2px solid #92B792;
-    width: 15px;
-    height: 15px;
+    width: 13px;
+    height: 13px;
     margin-right: 5px;
 }
 
