@@ -516,6 +516,10 @@ body > #save {
     padding: 0;
 }
 
+#notificationController {
+    cursor: pointer;
+}
+
 #notificationController.default label, #notificationController.denied label {
     pointer-events: none;
 }
