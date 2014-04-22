@@ -14,14 +14,8 @@ from charat2.views.rp import chat, chat_api
 
 from flask.ext.babel import Babel, gettext
 
-from flask_wtf import Form, RecaptchaField
-
 RECAPTCHA_PRIVATE_KEY = '6LetOPISAAAAAKN2LCPUYt7sk1Ogh7rWXVGEWZ9Z'
 RECAPTCHA_PUBLIC_KEY = '6LetOPISAAAAAEBLq4_tCYcr1XcA3LO3rrQX2Th9'
-
-class SignupForm(Form):
-    username = TextField('Username')
-    recaptcha = RecaptchaField()
 
 form = SignupForm()
 
