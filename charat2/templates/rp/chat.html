@@ -146,10 +146,8 @@
                 <label id="oocToggle"><input type="checkbox"><div class="checkbox"></div>Out Of Character</label>
                 <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox"></div>Show BBCode Colors (Refresh)</label>
                 <div id="notificationHead" data-ng-app>
-                    <div id="notificationController" data-ng-controller="NotificationCenter">
-                        <p class="notificationLevel" ng-class="getClassName()" data-ng-click="requestPermissions()">
-                            <input type="checkbox" class="deskset" name="deskset"><div class="checkbox"></div>Desktop Notifications</label>
-                        </p>
+                    <div id="notificationController" class="notificationLevel" ng-class="getClassName()" data-ng-click="requestPermissions()" data-ng-controller="NotificationCenter">
+                        <label><input type="checkbox" class="deskset" name="deskset"><div class="checkbox"></div>Desktop Notifications</label>
                     </div>
                </div>
                <label id="previewToggle"><input type="checkbox"><div class="checkbox"></div>Show Preview</label>
