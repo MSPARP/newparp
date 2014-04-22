@@ -525,6 +525,10 @@ body > #save {
     border-color: #D56063;
 }
 
+#notificationController.default, #notificationController.denied {
+    color: #D56063;
+}
+
 .sidebar label button a {
     color: #FFFFFF;
     text-decoration: none;
