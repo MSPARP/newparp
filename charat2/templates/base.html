@@ -13,7 +13,7 @@
                     }
                 });
                 $('logo').each(function(){
-                    $(this).css('background-image',"("+{{url_for("static", filename="img/")}}+$(this).class()+".png)");
+                    $(this).css('background-image',"("+"{{url_for("static", filename="img/")}}"+$(this).class()+".png)");
                 });
                 $('.block-container').on('click', function() {
                     $('.block-container').each(function(){
@@ -52,8 +52,9 @@
             
             logo {
                 display: block;
-                font-size: 70px;
-                line-height: 40px;
+                height: 40px;
+                width: 40px;
+                margin: auto;
             }
             
             header {
