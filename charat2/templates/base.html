@@ -12,6 +12,9 @@
                         $(this).addClass('has-description');
                     }
                 });
+                $('logo').each(function(){
+                    $(this).css('background-image',"("+{{url_for("static", filename="img/")}}+$(this).class()+".png)");
+                });
                 $('.block-container').on('click', function() {
                     $('.block-container').each(function(){
                         $(this).removeClass('selected');
