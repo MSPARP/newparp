@@ -13,7 +13,7 @@
                     }
                 });
                 $('logo').each(function(){
-                    $(this).css('background-image','({{url_for("static", filename="img/")}}'+$(this).getClass()+'.png)');
+                    $(this).css('background-image','({{url_for("static", filename="img/")}}'+$(this).prop('class')+'.png)');
                 });
                 $('.block-container').on('click', function() {
                     $('.block-container').each(function(){
