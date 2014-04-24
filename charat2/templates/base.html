@@ -5,15 +5,16 @@
         <script src="{{url_for("static", filename="js/jquery.min.js")}}"></script>
         <script>
             $(document).ready(function(){
-                $('.block-container').each(function(){
+                $('.block-container').each(function() {
                     var margin = ($(this).height() - $(this).find('.block').height())/2;
                     $(this).find('.block').css('margin-top',margin);
                     if ($(this).find('.description').length !== 0) {
                         $(this).addClass('has-description');
                     }
                 });
-                $('logo').each(function(){
-                    $(this).css('background-image','({{url_for("static", filename="img/")}}'+$(this).prop('class')+'.png)');
+                $('logo').each(function() {
+                    $(this).css('background-image','url({{url_for("static", filename="img/")}}'+$(this).prop('class')+'.png)');
+                    console.log('url({{url_for("static", filename="img/")}}'+$(this).prop('class')+'.png)');
                 });
                 $('.block-container').on('click', function() {
                     $('.block-container').each(function(){
