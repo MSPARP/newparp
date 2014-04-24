@@ -15,10 +15,12 @@ def home():
 def feed():
     data = [{
         "title" : "Test Blog",
+        "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything"
     },
     {
         "title" : "Test Bloggy Stuff",
+        "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything yyyyeee"
     }]
     return json.dumps(data, sort_keys=True)
