@@ -12,5 +12,5 @@ def feed():
         "title" : "Test Bloggy Stuff",
         "content" : "lorem ipsum testing everything yyyyeee"
     }]
-    return jsonify(**json)
-
+    #return jsonify(**json)
+    return "ok"
