@@ -1,8 +1,11 @@
 <!DOCTYPE html>
     <head>
-        <link id="favicon" rel="icon" type="image/ico" href="{{url_for("static", filename="favicon.ico")}}" />
-        <link id="shocon" rel="shortcut icon" href="{{url_for("static", filename="favicon.ico")}}" />
-        <link id="applecon" rel="apple-touch-icon" href="{{url_for("static", filename="favicon.ico")}}"/>
+        <link rel="shortcut icon" href="{{url_for('static', filename='img/favicons/rp/favicon.png')}}" />
+        
+        /* Apple Icons */
+        <link rel="apple-touch-icon" href="{{url_for('static', filename='img/favicons/rp/touch-icon-iphone.png')}}" />
+        <link rel="apple-touch-icon" sizes="76x76" href="{{url_for('static', filename='img/favicons/rp/touch-icon-ipad.png')}}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{url_for('static', filename='img/favicons/rp/touch-icon-iphone-retina.png')}}">
 
         <title>{%block title %}{% endblock %}Charat</title>
         <link rel="stylesheet" href="{{url_for("static", filename="css/charat.css")}}" type="text/css"/>
