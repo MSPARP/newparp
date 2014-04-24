@@ -1,4 +1,6 @@
-from flask import g, render_template, request, redirect, url_for, jsonify
+import json
+
+from flask import g, render_template, request, redirect, url_for
 
 from charat2.model.connections import use_db
 
@@ -19,5 +21,5 @@ def feed():
         "title" : "Test Bloggy Stuff",
         "content" : "lorem ipsum testing everything yyyyeee"
     }]
-    return jsonify(**data)
+    return json.dumps(data, sort_keys=True)
 
