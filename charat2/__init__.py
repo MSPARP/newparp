@@ -61,5 +61,5 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", method
 
 # Blog subdomain (blog.charat.net)
 
-app.add_url_rule("/feed", "blog_feed", blog.feed, methods=("GET",))
+app.add_url_rule("/feed", "blog_feed", blog.feed, subdomain="blog",methods=("GET",))
 
