@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import root, account, rp
+from charat2.views import root, account, rp, blog
 from charat2.views.rp import chat, chat_api
 
 from flask.ext.babel import Babel, gettext
@@ -58,4 +58,8 @@ app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, subdoma
 app.add_url_rule("/chat_api/save", "save", chat_api.save, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
+
+# Blog subdomain (blog.charat.net)
+
+app.add_url_rule("/feed", "blog_feed", blog.feed, methods=("GET",))
 
