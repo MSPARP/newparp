@@ -33,7 +33,7 @@ app.teardown_request(redis_disconnect)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
 
-app.add_url_rule("/feed", "feed", blog.feed, methods=("GET",))
+app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
 
 app.add_url_rule("/login", "login_get", account.login_get, methods=("GET",))
 app.add_url_rule("/register", "register_get", account.register_get, methods=("GET",))
