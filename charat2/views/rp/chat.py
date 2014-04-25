@@ -98,3 +98,29 @@ def chat(url):
         case_options=case_options,
     )
 
+@use_db
+@login_required
+def log(url):
+
+    # PM chats aren't implemented yet so just 404 them for now.
+    if url=="pm" or url.startswith("pm/"):
+        abort(404)
+
+    try:
+        chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
+    except NoResultFound:
+        abort(404)
+
+    # TODO PAGING
+
+    messages = g.db.query(Message).filter(
+        Message.chat_id==chat.id,
+    ).order_by(Message.id).all()
+
+    return render_template(
+        "rp/log.html",
+        url=url,
+        chat=chat,
+        messages=messages,
+    )
+
