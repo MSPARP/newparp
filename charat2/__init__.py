@@ -29,16 +29,19 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
-def favicon():
-    return redirect(url_for("static", filename="img/favicons/root/favicon.ico"))
+@app.route("/favicon.ico", subdomain="<domain>")
+def favicon(domain):
+    try:
+        path=domain
+    except:
+        path="root"
+    else:
+        path="root"
+    return redirect(url_for("static", filename="img/favicons/"+path+"/favicon.ico"))
 
 # Root domain (charat.net)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
-
-@app.route("/favicon.ico", "favicon")
-favicon():
-    return redirect(url_for("static", filename="img/favicons/root/favicon.ico"))
 
 app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
 
