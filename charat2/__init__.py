@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, url_for
 
 from charat2.model.connections import (
     db_commit,
