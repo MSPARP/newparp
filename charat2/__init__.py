@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, send_from_directory
 
 from charat2.model.connections import (
     db_commit,
@@ -28,6 +28,18 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+# Favicon testing
+
+@app.route("/favicon.ico", subdomain="<domain>")
+def favicon(domain):
+    try:
+        path = domain
+    except:
+        path = "root"
+    else:
+        path = "root"
+    return send_from_directory(os.path.join(app.root_path, 'static'),'/img/favicons/'+path+'/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 # Root domain (charat.net)
 
