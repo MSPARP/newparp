@@ -29,9 +29,9 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
-@app.route("/favicon.ico", subdomain="<domain>")
-def favicon(domain):
-    return redirect(url_for("static", filename="img/favicons/root/favicon.ico"))
+@app.route("/favicon.ico", subdomain="rp")
+def rp_favicon():
+    return redirect(url_for("static", filename="img/favicons/rp/favicon.ico"))
 
 # Root domain (charat.net)
 
