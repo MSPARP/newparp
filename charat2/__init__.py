@@ -29,21 +29,11 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
-# Favicon testing
-
-@app.route("/favicon.ico", subdomain="<domain>")
-def favicon(domain):
-    try:
-        path = domain
-    except:
-        path = "root"
-    else:
-        path = "root"
-    return send_from_directory(os.path.join(app.root_path, 'static'),'/img/favicons/'+path+'/favicon.ico', mimetype='image/vnd.microsoft.icon')
-
 # Root domain (charat.net)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
+
+app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='img/favicons/root/favicon.ico'))
 
 app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
 
@@ -56,6 +46,8 @@ app.add_url_rule("/register", "register", account.register, methods=("POST",))
 # RP subdomain (rp.charat.net)
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
+
+app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='img/favicons/rp/favicon.ico'))
 
 app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
