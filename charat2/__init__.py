@@ -47,7 +47,7 @@ app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 
-app.add_url_rule('/favicon.ico', "rp_favicon", redirect_to=url_for('static', filename='img/favicons/rp/favicon.ico'), subdomain="rp")
+#app.add_url_rule('/favicon.ico', "rp_favicon", redirect_to=url_for('static', filename='img/favicons/rp/favicon.ico'), subdomain="rp")
 
 app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
