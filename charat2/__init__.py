@@ -31,13 +31,7 @@ app.teardown_request(redis_disconnect)
 
 @app.route("/favicon.ico", subdomain="<domain>")
 def favicon(domain):
-    try:
-        path=domain
-    except:
-        path="root"
-    else:
-        path="root"
-    return path
+    return redirect(url_for("static", filename="img/favicons/root/favicon.ico"))
 
 # Root domain (charat.net)
 
