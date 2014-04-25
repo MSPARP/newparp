@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, send_from_directory
 
 from charat2.model.connections import (
     db_commit,
@@ -29,13 +29,13 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
-@app.route("/favicon.ico", subdomain="rp")
-def rp_favicon():
-    return redirect(url_for("static", filename="img/favicons/rp/favicon.ico"))
-
 # Root domain (charat.net)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/root/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
 
@@ -49,7 +49,9 @@ app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 
-#app.add_url_rule('/favicon.ico', "rp_favicon", redirect_to=url_for('static', filename='img/favicons/rp/favicon.ico'), subdomain="rp")
+@app.route("/favicon.ico", subdomain="rp")
+def rp_favicon():
+    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/rp/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
