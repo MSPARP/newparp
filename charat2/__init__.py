@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, url_for
+from flask import Flask, redirect, url_for
 
 from charat2.model.connections import (
     db_commit,
@@ -30,7 +30,7 @@ app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
 def favicon():
-    return "ok"
+    return redirect(url_for("static", filename="img/favicons/root/favicon.ico"))
 
 # Root domain (charat.net)
 
