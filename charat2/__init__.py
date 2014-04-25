@@ -37,7 +37,7 @@ def favicon(domain):
         path="root"
     else:
         path="root"
-    return redirect(url_for("static", filename="img/favicons/"+path+"/favicon.ico"))
+    return path
 
 # Root domain (charat.net)
 
