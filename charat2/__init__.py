@@ -29,11 +29,14 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
+def favicon():
+    return "ok"
+
 # Root domain (charat.net)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
 
-app.add_url_rule('/favicon.ico', "favicon", redirect_to=url_for('static', filename='img/favicons/root/favicon.ico'))
+app.add_url_rule('/favicon.ico', "favicon", favicon)
 
 app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
 
