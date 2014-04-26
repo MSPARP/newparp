@@ -13,6 +13,7 @@
                     $("<header>").html(post.title).appendTo("#post-"+post.id+" .block");
                     $("<subtitle>").html(post.author).appendTo("#post-"+post.id+" .block");
                     $("<div>").addClass("content").html(post.content).appendTo("#post-"+post.id);
+                    $(document.body).append(" ");
                 });
             });
         });
