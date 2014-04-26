@@ -7,8 +7,9 @@
         $(function() {
             $.getJSON("feed.json", function(data) {
                 $.each(data, function(key, val) {
-                    console.log("test");
                     var post = data[key];
+                    console.log(post);
+                    console.log(val);
                     $("</div>").addClass("blog-post").prop("id","post-"+post.id).appendTo(document.body);
                     $("</div>").addClass("block").appendTo("#post-"+post.id);
                     $("</header>").html(post.title).appendTo("#post-"+post.id+" .block");
