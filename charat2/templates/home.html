@@ -1,148 +1,148 @@
 {% extends "base.html" %}
 
 {% block header %}
-<title>Charat - Intuitive Fanservice</title>
-<meta name="description" content="Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!" />
+        <title>Charat - Intuitive Fanservice</title>
+        <meta name="description" content="Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!" />
 {% endblock %}
 
 {% block content %}
-    <div id="main-block" class="block-container">
-        <div class="block">
-            <logo class="charat"></logo>
-            <header>Charat</header>
-            <subtitle>Intuitive Fanservice</subtitle>
+        <div id="main-block" class="block-container">
+            <div class="block">
+                <logo class="charat"></logo>
+                <header>Charat</header>
+                <subtitle>Intuitive Fanservice</subtitle>
+            </div>
+            <div class="description">
+                <a href="{{url_for("home")}}"><header>Charat</header></a>
+                <p>
+                    Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!
+                </p>
+            </div>
         </div>
-        <div class="description">
-            <a href="{{url_for("home")}}"><header>Charat</header></a>
-            <p>
-                Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!
-            </p>
+        
+        <div class="block-container">
+            <div class="block">
+                {% if not logged_in %}
+                <header>Welcome Guest</header>
+                <subtitle>What would you like to do?</subtitle>
+                <a class="block-button" href="{{url_for("login_get")}}">Login</a>
+                <a class="block-button" href="{{url_for("register_get")}}">Register</a>
+                {% else %}
+                <header>Welcome {{g.user.username}}</header>
+                <subtitle>What would you like to do?</subtitle>
+                <a class="block-button" href="/settings">Settings</a>
+                <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
+                {% endif %}
+            </div>
         </div>
-    </div>
+        
+        <div class="block-container">
+            <div class="block">
+                <logo class="rp"></logo>
+                <header>Charat Roleplay</header>
+                <subtitle>Character Chat</subtitle>
+            </div>
+            <div class="description">
+                <a href="{{url_for("rp_home")}}"><header>Charat Roleplay</header></a>
+                <p>
+                    Our first and most popular service! Here, you can chat and roleplay with your friends and connect to different people to roleplay with as well.
+                </p>
+            </div>
+        </div>
     
-    <div class="block-container">
-        <div class="block">
-            {% if not logged_in %}
-            <header>Welcome Guest</header>
-            <subtitle>What would you like to do?</subtitle>
-            <a class="block-button" href="{{url_for("login_get")}}">Login</a>
-            <a class="block-button" href="{{url_for("register_get")}}">Register</a>
-            {% else %}
-            <header>Welcome {{g.user.username}}</header>
-            <subtitle>What would you like to do?</subtitle>
-            <a class="block-button" href="/settings">Settings</a>
-            <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
-            {% endif %}
+        <div class="blog-post">
+            <div class="inner-blog-post">
+                <div class="block">
+                    <header>Sample</header>
+                    <subtitle>Sho Tran</subtitle>
+                </div>
+                <div class="content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consectetur porttitor neque, sed feugiat lacus faucibus non. Maecenas felis tellus, imperdiet sit amet aliquam eget, tempor sed est. Pellentesque velit ipsum, aliquam a pretium non, venenatis non odio. Morbi at auctor diam. Integer ut mauris id ligula lobortis egestas. Vivamus id leo et tellus aliquet luctus eget in sapien. Etiam ut molestie arcu. Mauris elit risus, malesuada ut erat consectetur, hendrerit rhoncus metus. Donec vitae tristique leo. Aenean aliquet ultrices quam et vestibulum. Maecenas dignissim quam sem, vel posuere sapien consequat sit amet. Phasellus rutrum urna vitae vehicula tempor. Nunc faucibus et turpis sed imperdiet. Duis pellentesque mi id consectetur porta. Proin luctus arcu a massa feugiat consectetur. Sed porttitor libero sapien, ut faucibus neque elementum eu.
+                </div>
+            </div>
         </div>
-    </div>
     
-    <div class="block-container">
-        <div class="block">
-            <logo class="rp"></logo>
-            <header>Charat Roleplay</header>
-            <subtitle>Character Chat</subtitle>
-        </div>
-        <div class="description">
-            <a href="{{url_for("rp_home")}}"><header>Charat Roleplay</header></a>
-            <p>
-                Our first and most popular service! Here, you can chat and roleplay with your friends and connect to different people to roleplay with as well.
-            </p>
-        </div>
-    </div>
-
-    <div class="blog-post">
-        <div class="inner-blog-post">
+        <div class="block-container">
             <div class="block">
                 <header>Sample</header>
-                <subtitle>Sho Tran</subtitle>
-            </div>
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consectetur porttitor neque, sed feugiat lacus faucibus non. Maecenas felis tellus, imperdiet sit amet aliquam eget, tempor sed est. Pellentesque velit ipsum, aliquam a pretium non, venenatis non odio. Morbi at auctor diam. Integer ut mauris id ligula lobortis egestas. Vivamus id leo et tellus aliquet luctus eget in sapien. Etiam ut molestie arcu. Mauris elit risus, malesuada ut erat consectetur, hendrerit rhoncus metus. Donec vitae tristique leo. Aenean aliquet ultrices quam et vestibulum. Maecenas dignissim quam sem, vel posuere sapien consequat sit amet. Phasellus rutrum urna vitae vehicula tempor. Nunc faucibus et turpis sed imperdiet. Duis pellentesque mi id consectetur porta. Proin luctus arcu a massa feugiat consectetur. Sed porttitor libero sapien, ut faucibus neque elementum eu.
+                <subtitle>Lorem Ipsum</subtitle>
             </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
+    
+        <div class="block-container">
+            <div class="block">
+                <header>Sample</header>
+                <subtitle>Lorem Ipsum</subtitle>
+            </div>
         </div>
-    </div>
-
-    <div class="block-container">
-        <div class="block">
-            <header>Sample</header>
-            <subtitle>Lorem Ipsum</subtitle>
-        </div>
-    </div>
 {% endblock %}

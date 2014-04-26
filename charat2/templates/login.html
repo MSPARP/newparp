@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 
 {% block header %}
-<title>Charat - Login</title>
-<style>
-    #main-block {
-        {% if log_in_error: %}
-            height: 250px;
-        {% else %}
-            height: 220px;
-        {% endif %}
-    }
-    
-    #main-block header {
-        margin-bottom: 10px;
-    }
-</style>
+        <title>Charat - Login</title>
+        <style>
+            #main-block {
+                {% if log_in_error: %}
+                    height: 250px;
+                {% else %}
+                    height: 220px;
+                {% endif %}
+            }
+            
+            #main-block header {
+                margin-bottom: 10px;
+            }
+        </style>
 {% endblock %}
 
 {% block content %}
-<div id="main-block" class="block-container">
-    <div class="block">
-        <a href="{{url_for("home")}}">
-            <logo>+</logo>
-            <header>Charat</header>
-        </a>
-        {% if log_in_error: %}
-        <span class="error">{{log_in_error}}</span>
-        {% endif %}
-        <form action="{{url_for("login_post")}}" method="post">
-            <input id="logUsername" type="text" name="username" placeholder="Username">
-            <input id="logPassword" type="password" name="password" placeholder="Password">
-            <button class="block-button" type="submit">Login</button>
-        </form>
-    </div>
-</div>
+        <div id="main-block" class="block-container">
+            <div class="block">
+                <a href="{{url_for("home")}}">
+                    <logo class="root"></logo>
+                    <header>Charat</header>
+                </a>
+                {% if log_in_error: %}
+                <span class="error">{{log_in_error}}</span>
+                {% endif %}
+                <form action="{{url_for("login_post")}}" method="post">
+                    <input id="logUsername" type="text" name="username" placeholder="Username">
+                    <input id="logPassword" type="password" name="password" placeholder="Password">
+                    <button class="block-button" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
 {% endblock %}
 
