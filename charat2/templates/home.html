@@ -6,7 +6,14 @@
         <script>
         $(function() {
             $.getJSON("feed.json", function(data) {
-                console.log(data);
+                $.each(data, function(key, val) {
+                    var post = data[key];
+                    $("</div>").addClass("blog-post").prop("id","post-"+post.id).appendTo(document.body);
+                    $("</div>").addClass("block").appendTo("#post-"+post.id);
+                    $("</header>").html(post.title).appendTo("#post-"+post.id+" .block");
+                    $("</subtitle>").html(post.author).appendTo("#post-"+post.id+" .block");
+                    $("</div>").addClass("content").html(post.content).appendTo("#post-"+post.id);
+                });
             });
         });
         </script>

@@ -14,11 +14,13 @@ def home():
 @use_db
 def feed():
     data = [{
+        "id" : 1,
         "title" : "Test Blog",
         "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything"
     },
     {
+        "id" : 2,
         "title" : "Test Bloggy Stuff",
         "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything yyyyeee"
