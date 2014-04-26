@@ -13,6 +13,7 @@ def home():
 
 @use_db
 def feed():
+    data = []
     for i in range (1,50):
         post = {
             "id" : i,
