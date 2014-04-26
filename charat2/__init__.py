@@ -37,7 +37,7 @@ app.add_url_rule("/", "home", root.home, methods=("GET",))
 def favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/root/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-app.add_url_rule("/feed", "feed", root.feed, methods=("GET",))
+app.add_url_rule("/feed.json", "feed", root.feed, methods=("GET",))
 
 app.add_url_rule("/login", "login_get", account.login_get, methods=("GET",))
 app.add_url_rule("/register", "register_get", account.register_get, methods=("GET",))
