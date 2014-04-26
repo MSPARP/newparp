@@ -8,11 +8,11 @@
             $.getJSON("feed.json", function(data) {
                 $.each(data, function(key, val) {
                     var post = val;
-                    $("</div>").addClass("blog-post").prop("id","post-"+post.id).appendTo("body");
-                    $("</div>").addClass("block").appendTo("#post-"+post.id);
-                    $("</header>").html(post.title).appendTo("#post-"+post.id+" .block");
-                    $("</subtitle>").html(post.author).appendTo("#post-"+post.id+" .block");
-                    $("</div>").addClass("content").html(post.content).appendTo("#post-"+post.id);
+                    $("<div>").addClass("blog-post").prop("id","post-"+post.id).appendTo(document.body);
+                    $("<div>").addClass("block").appendTo("#post-"+post.id);
+                    $("<header>").html(post.title).appendTo("#post-"+post.id+" .block");
+                    $("<subtitle>").html(post.author).appendTo("#post-"+post.id+" .block");
+                    $("<div>").addClass("content").html(post.content).appendTo("#post-"+post.id);
                 });
             });
         });
