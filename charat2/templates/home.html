@@ -6,13 +6,15 @@
         <script>
         $(function() {
             $.getJSON("feed.json", function(data) {
+                $(document.body).append(" ");
                 $.each(data, function(key, val) {
                     var post = val;
                     $("<div>").addClass("blog-post").prop("id","post-"+post.id).appendTo(document.body);
-                    $("<div>").addClass("block").appendTo("#post-"+post.id);
-                    $("<header>").html(post.title).appendTo("#post-"+post.id+" .block");
-                    $("<subtitle>").html(post.author).appendTo("#post-"+post.id+" .block");
-                    $("<div>").addClass("content").html(post.content).appendTo("#post-"+post.id);
+                    $("<div>").addClass("inner-blog-post").appendTo("#post-"+post.id);
+                    $("<div>").addClass("block").appendTo("#post-"+post.id+" .inner-blog.post");
+                    $("<header>").html(post.title).appendTo("#post-"+post.id+" .inner-blog.post .block");
+                    $("<subtitle>").html(post.author).appendTo("#post-"+post.id+" .inner-blog.post .block");
+                    $("<div>").addClass("content").html(post.content).appendTo("#post-"+post.id+" .inner-blog.post");
                     $(document.body).append(" ");
                 });
             });
