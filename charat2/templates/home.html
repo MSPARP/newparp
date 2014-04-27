@@ -38,7 +38,7 @@
                     Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!
                 </p>
             </div>
-        </div><div class="block-container">
+        </div> <div class="block-container">
             <div class="block">
                 {% if not logged_in %}
                 <header>Welcome Guest</header>
@@ -52,7 +52,7 @@
                 <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
                 {% endif %}
             </div>
-        </div><div class="block-container">
+        </div> <div class="block-container">
             <div class="block">
                 <logo class="rp"></logo>
                 <header>Charat Roleplay</header>
@@ -64,12 +64,12 @@
                     Our first and most popular service! Here, you can chat and roleplay with your friends and connect to different people to roleplay with as well.
                 </p>
             </div>
-        </div>{% for post in posts %}<div id="post-{{post.id}}" class="blog-post">
+        </div> {% for post in posts %}<div id="post-{{post.id}}" class="blog-post">
             <div class="inner-blog-post">
                 <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
                 <div class="content">{{post.content}}</div>
             </div>
-        </div>{% endfor %}
+        </div> {% endfor %}
 {% endblock %}
 
 
