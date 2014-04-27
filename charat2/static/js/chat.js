@@ -32,7 +32,7 @@ var GROUP_DESCRIPTIONS = {
     'silent': { title: 'Silenced', description: '' },
 };
 
-var ORIGINAL_TITLE = document.title;
+var ORIGINAL_TITLE = "Charat RP";
 var CHAT_NAME = chat['title'] || chat.url;
 var CONVERSATION_CONTAINER = '#conversation';
 var CONVERSATION_ID = '#convo';

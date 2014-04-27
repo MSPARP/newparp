@@ -169,27 +169,27 @@ body.menu #topbar #toptitle {
     overflow: hidden;
 }
 
-#conversation span:last-child p.message {
+span:last-child p.message {
     padding-bottom: 5px !important;
 }
 
-#conversation .ooc {
+.ooc {
     opacity: .5;
 }
 
-#conversation .ooc:hover {
+.ooc:hover {
     opacity: 1;
 }
 
-#conversation .ooc * {
+.ooc * {
     opacity: .5;
 }
 
-#conversation .ooc:hover * {
+.ooc:hover * {
     opacity: 1;
 }
 
-#conversation .info {
+.info {
     position: relative;
     top: 4px;
     font-size: 10px;
@@ -206,7 +206,7 @@ body.hideInfo .info {
     display: none;
 }
 
-#conversation p.info .right {
+p.info .right {
     float: right;
 }
 

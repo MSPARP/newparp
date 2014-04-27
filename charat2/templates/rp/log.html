@@ -1,38 +1,40 @@
 {% extends "rp/base.html" %}
-{% block title%}{% endblock %}
+{% block title%}{{chat.title}} Log - Charat RP{% endblock %}
 {% block header %}
 <link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
 {% endblock %}
+
 {% block pager %}
 {% if paginator.page_count!=1 %}
 <div class="pager">
 {{paginator.pager(format='~20~')}}
 </div>
 {% endif %}
+
 {% endblock %}
 {% block content %}
 
-<div id="archiveConversation">
-    {% if messages|length!=0 %}
-        {% set last_date = None %}
-        {% for message in messages %}
-            {% set current_date = message.posted.date() %}
-            {% if current_date!=last_date %}
-                <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
-                {% set last_date = current_date %}
-            {% endif %}
-        <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
-            <p class="info">
-                <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
-                <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
-            </p>
-            <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
-        </span>
-        {% endfor %}
-    {% else %}
-        <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
-    {% endif %}
-    <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
-</div>
+    <div id="archiveConversation">
+        {% if messages|length!=0 %}
+            {% set last_date = None %}
+            {% for message in messages %}
+                {% set current_date = message.posted.date() %}
+                {% if current_date!=last_date %}
+                    <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
+                    {% set last_date = current_date %}
+                {% endif %}
+            <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
+                <p class="info">
+                    <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
+                    <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
+                </p>
+                <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+            </span>
+            {% endfor %}
+        {% else %}
+            <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
+        {% endif %}
+        <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
+    </div>
 
 {% endblock %}

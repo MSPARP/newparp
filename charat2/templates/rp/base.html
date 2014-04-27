@@ -7,7 +7,8 @@
         <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{url_for('static', filename='img/favicons/rp/touch-icon-iphone-retina-precomposed.png')}}">
         <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{url_for('static', filename='img/favicons/rp/touch-icon-ipad-retina-precomposed.png')}}">
 
-        <title>{%block title %}{% endblock %}Charat</title>
+        <title>Charat RP</title>
+        <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{url_for("static", filename="css/charat.css")}}" type="text/css"/>
         <script src="{{url_for("static", filename="js/jquery.min.js")}}"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
