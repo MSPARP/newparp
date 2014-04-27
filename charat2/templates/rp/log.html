@@ -46,13 +46,14 @@ $(function(){
 
 <div id="archiveConversation">
     {% if messages|length!=0 %}
-        {% set last_date = None %}
+    {% set last_date = None %}
         {% for message in messages %}
-            {% set current_date = message.posted.date() %}
-            {% if current_date!=last_date %}
-                <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
-                {% set last_date = current_date %}
-            {% endif %}
+        {% set current_date = message.posted.date() %}
+        {% if current_date!=last_date %}
+        <p class="info"></p>
+        <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
+        {% set last_date = current_date %}
+        {% endif %}
         <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
             <p class="info">
                 <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
@@ -62,7 +63,7 @@ $(function(){
         </span>
         {% endfor %}
     {% else %}
-        <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
+    <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
     {% endif %}
     <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
 </div>
