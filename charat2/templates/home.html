@@ -6,7 +6,6 @@
         <script>
         $(function() {
             $.getJSON("feed.json", function(data) {
-                $(document.body).append(" ");
                 $.each(data, function(key, val) {
                     var post = val;
                     $("<div>").addClass("blog-post").prop("id","post-"+post.id).appendTo(document.body);
