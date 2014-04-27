@@ -9,7 +9,7 @@ import json
 
 @use_db
 def home():
-    req = urllib2.Request(url_for("feed"), None, {'user-agent':'syncstream/vimeo'})
+    req = urllib2.Request("http://charat.thae.li/feed.json", None, {'user-agent':'syncstream/vimeo'})
     opener = urllib2.build_opener()
     f = opener.open(req)
     posts = json.loads(f)
