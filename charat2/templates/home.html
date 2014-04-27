@@ -4,7 +4,7 @@
         <title>Charat - Intuitive Fanservice</title>
         <meta name="description" content="Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!" />
         <script>
-        $(function() {
+        /* $(function() {
             $.getJSON("feed.json", function(data) {
                 $.each(data, function(key, val) {
                     var post = val;
@@ -21,7 +21,7 @@
                     //$(document.body).append(" ");
                 });
             });
-        });
+        }); */
         </script>
 {% endblock %}
 
@@ -64,5 +64,13 @@
                     Our first and most popular service! Here, you can chat and roleplay with your friends and connect to different people to roleplay with as well.
                 </p>
             </div>
-        </div>
+        </div>{% for post in posts %}<div id="post-{{post.id}}" class="blog-post">
+            <div class="inner-blog-post">
+                <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
+                <div class="content">{{post.content}}</div>
+            </div>
+        </div>{% endfor %}
 {% endblock %}
+
+
+

@@ -4,11 +4,19 @@ from flask import g, render_template, request, redirect, url_for
 
 from charat2.model.connections import use_db
 
+import urllib2
+import json
+
 @use_db
 def home():
+    req = urllib2.Request(url_for("feed"), None, {'user-agent':'syncstream/vimeo'})
+    opener = urllib2.build_opener()
+    f = opener.open(req)
+    posts = json.loads(f)
     return render_template(
         "home.html",
         logged_in=g.user is not None,
+        posts=posts
     )
 
 @use_db
