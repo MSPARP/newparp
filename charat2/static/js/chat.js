@@ -135,10 +135,6 @@ function startChat() {
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         }
     });
-    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
-    if (chat.type=='unsaved' || chat.type=='saved') {
-        document.title = ORIGINAL_TITLE+' - '+chat.url;
-    }
     msgcont = 0;
     $(CONVERSATION_CONTAINER).removeClass('search');
     $('input, select, button').removeAttr('disabled');

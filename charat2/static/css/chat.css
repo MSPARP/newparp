@@ -164,7 +164,7 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
-#conversation p, #online {
+#conversation p, #archiveConversation p, #online {
     margin-top: 5px;
     overflow: hidden;
 }
