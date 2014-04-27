@@ -4,15 +4,13 @@ from flask import g, render_template, request, redirect, url_for
 
 from charat2.model.connections import use_db
 
-import urllib2
+from urllib import urlopen
 import json
 
 @use_db
 def home():
-    req = urllib2.Request("http://charat.thae.li/feed.json", None, {'user-agent':'syncstream/vimeo'})
-    opener = urllib2.build_opener()
-    f = opener.open(req)
-    posts = json.loads(f)
+    jsonurl = urlopen("http://charat.thae.li/feed.json")
+    posts = json.loads(jsonurl.read())
     return render_template(
         "home.html",
         logged_in=g.user is not None,
