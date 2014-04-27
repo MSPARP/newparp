@@ -14,7 +14,7 @@
                     $("<header>").html(post.title).appendTo("#post-"+post.id+" .inner-blog-post .block");
                     $("<subtitle>").html(post.author).appendTo("#post-"+post.id+" .inner-blog-post .block");
                     $("<div>").addClass("content").html(post.content).appendTo("#post-"+post.id+" .inner-blog-post");
-                    $(document.body).append(" ");
+                    //$(document.body).append(" ");
                 });
             });
         });
@@ -34,9 +34,7 @@
                     Welcome to Charat, we provide different services for people that enjoy different things. From anime to webcomics to TV shows! Visit this page regularly because we're always adding new things!
                 </p>
             </div>
-        </div>
-        
-        <div class="block-container">
+        </div><div class="block-container">
             <div class="block">
                 {% if not logged_in %}
                 <header>Welcome Guest</header>
@@ -50,9 +48,7 @@
                 <a class="block-button" href="{{url_for("logout")}}">Log Out</a>
                 {% endif %}
             </div>
-        </div>
-        
-        <div class="block-container">
+        </div><div class="block-container">
             <div class="block">
                 <logo class="rp"></logo>
                 <header>Charat Roleplay</header>
