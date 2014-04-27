@@ -2,6 +2,11 @@
 {% block title%}{{chat.title}} Log - Charat RP{% endblock %}
 {% block header %}
 <link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
+<style>
+#topbar {
+    position: fixed;
+}
+</style>
 <script>
 function getTimestamp(seconds_from_epoch) {
     var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
