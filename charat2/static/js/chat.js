@@ -139,7 +139,6 @@ function startChat() {
     $(CONVERSATION_CONTAINER).removeClass('search');
     $('input, select, button').removeAttr('disabled');
     $('#preview').css('color', '#'+user.character.color);
-    $('#logAnchor').prop('href', '/chat/'+chat.url+'/log');
     
     if ($(document.body).hasClass('mobile')) {
         var current_sidebar = null;
