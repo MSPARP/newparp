@@ -134,7 +134,7 @@ function bbRemoveAll(S) {
 }
 
 $(document).ready(function(){
-    $('#conversation').on('click', '.spoiler', function() {
+    $(document.body).on('click', '.spoiler', function() {
         if ($(this).css('opacity') == '0') {
             $(this).css('opacity','1');
         } else {
