@@ -108,6 +108,9 @@ input[type="checkbox"] + .checkbox {
     margin-right: 5px;
 }
 
+input[type="checkbox"]:checked + .checkbox {
+    background-color: #92B792;
+}
 
 .select-bind {
     font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
