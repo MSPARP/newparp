@@ -50,6 +50,20 @@
             </div>
         </div>
         
+        <div class="block-container">
+            <div class="block">
+                <logo class="blog"></logo>
+                <header>The Charat Blog</header>
+                <subtitle>Updates and Information</subtitle>
+            </div>
+            <div class="description">
+                <a href="{{url_for("blog_home")}}"><header>The Charat Blog</header></a>
+                <p>
+                    This is The Charat Blog, check here for information on new products or updates on current ones.
+                </p>
+            </div>
+        </div>
+        
         {% for post in posts %}
         <div id="post-{{post.id}}" class="blog-post">
             <div class="inner-blog-post">

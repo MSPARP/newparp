@@ -64,11 +64,5 @@ def feed():
         "title" : "Test Bloggy Stuff",
         "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything yyyyeee"
-    },
-    {
-        "id" : 9,
-        "title" : "Test Bloggy Stuff",
-        "author" : "Sho Tran",
-        "content" : "lorem ipsum testing everything yyyyeee"
     }]
     return json.dumps(data, sort_keys=True)
