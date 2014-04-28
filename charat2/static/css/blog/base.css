@@ -46,9 +46,11 @@ input[type="text"], input[type="password"] {
 
 .blog-post {
     background-color: #daf5e6;
-    text-align: left;
-    overflow: hidden;
     color: #0e3d1b;
+    width: 800px;
+    max-width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 .blog-post .block {
@@ -56,6 +58,10 @@ input[type="text"], input[type="password"] {
     width: 80%;
     padding: 5px;
     margin-top: 10px;
+}
+
+.blog-post .content {
+    padding: 10px;
 }
 
 .error {
