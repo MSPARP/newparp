@@ -38,29 +38,6 @@ p:hover .timestamp {
     display: inline-block;
 }
 
-/*
-input[type='checkbox'] + button {
-    text-decoration: line-through;
-}
-
-input[type='checkbox']:checked + button {
-    background-color: #82B383;
-    text-decoration: none;
-}
-
-input[type='checkbox']:checked + button:active {
-    background-color: transparent;
-}
-
-input[type='checkbox']:checked + button:hover {
-    background-color: #97CF98;
-}
-
-.card input[type='checkbox'] {
-    display: none;
-}
-*/
-
 /* Top Bar */
 
 #topbar {
