@@ -5,12 +5,17 @@
 {% endblock %}
 
 {% block content %}
-        {% for post in posts %}
-        <div id="post-{{post.id}}" class="blog-post">
-            <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
-            <div class="content">{{post.content}}</div>
+        <div class="header">
+            <h2 id="title">The Charat Blog</h2>
         </div>
-        {% endfor %}
+        <div class="posts">
+            {% for post in posts %}
+            <div id="post-{{post.id}}" class="blog-post">
+                <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
+                <div class="content">{{post.content}}</div>
+            </div>
+            {% endfor %}
+        </div>
 {% endblock %}
 
 

@@ -54,6 +54,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post .block {
+    display: inline-block;
     background-color: #4e8d6b;
     width: 80%;
     padding: 5px;
