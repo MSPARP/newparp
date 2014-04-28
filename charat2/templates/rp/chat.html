@@ -1,18 +1,17 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} - Charat RP{% endblock %}
 {% block header %}
-<link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
+<link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}" defer>
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="colorpicker/css/colorpicker.css")}}" />
-<script type="text/javascript" src="{{url_for("static", filename="colorpicker/js/colorpicker.js")}}"></script>
-<script src="{{url_for("static", filename="js/rp/characters.js")}}"></script>
-<script src="{{url_for("static", filename="js/rp/quirks.js")}}"></script>
+<script type="text/javascript" src="{{url_for("static", filename="colorpicker/js/colorpicker.js")}}" defer></script>
+<script src="{{url_for("static", filename="js/rp/characters.js")}}" defer></script>
+<script src="{{url_for("static", filename="js/rp/quirks.js")}}" defer></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
     var chat = {{chat.to_dict()|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
-
-<script src="{{url_for("static", filename="js/rp/chat.js")}}"></script>
+<script src="{{url_for("static", filename="js/rp/chat.js")}}" defer></script>
 {% endblock %}
 {% block content %}
 

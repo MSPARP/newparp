@@ -10,12 +10,12 @@
         <title>Charat RP</title>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{url_for("static", filename="css/charat.css")}}" type="text/css"/>
-        <script src="{{url_for("static", filename="js/jquery.min.js")}}"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
-        <script src="{{url_for("static", filename="js/rp/bbcode.js")}}"></script>
-        <script src="{{url_for("static", filename="js/desktop-notify.js")}}"></script>
-        <script src="{{url_for("static", filename="js/rp/quirks.js")}}"></script>
-        <script src="{{url_for("static", filename="js/rp/base.js")}}"></script>
+        <script src="{{url_for("static", filename="js/jquery.min.js")}}" defer></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js" defer></script>
+        <script src="{{url_for("static", filename="js/desktop-notify.js")}}" defer></script>
+        <script src="{{url_for("static", filename="js/rp/bbcode.js")}}" defer></script>
+        <script src="{{url_for("static", filename="js/rp/quirks.js")}}" defer></script>
+        <script src="{{url_for("static", filename="js/rp/base.js")}}" defer></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         {%block header%}{%endblock%}
     </head>

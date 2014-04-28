@@ -1,6 +1,7 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} Log - Charat RP{% endblock %}
 {% block header %}
+<script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
 <link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
 <style>
 #topbar {
@@ -8,21 +9,6 @@
     position: fixed;
 }
 </style>
-<script>
-function getTimestamp(seconds_from_epoch) {
-    var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var timestamp = new Date(seconds_from_epoch*1000);
-    return month_names[timestamp.getMonth()]+' '+timestamp.getDate()+' '+(timestamp.getHours()===0?'0':'')+timestamp.getHours()+':'+(timestamp.getMinutes()<10?'0':'')+timestamp.getMinutes();
-}
-
-$(function(){
-    $('#archiveConversation span').each(function() {
-        var line = bbEncode($(this).find('.message').text());
-        $(this).find('.message').html(line);
-        $(this).find('.info .right .post_timestamp').text(getTimestamp($(this).find('.info .right .post_timestamp').text()));
-    });
-});
-</script>
 {% endblock %}
 
 {% block pager %}
