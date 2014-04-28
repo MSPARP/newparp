@@ -43,7 +43,7 @@ app.add_url_rule("/login", "login_post", account.login_post, methods=("POST",))
 app.add_url_rule("/logout", "logout", account.logout)
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
-# RP subdomain (rp.charat.net)#
+# RP subdomain (rp.charat.net)
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 
@@ -51,7 +51,7 @@ app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 def rp_favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/rp/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
+"""app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
 app.add_url_rule("/<url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
@@ -66,7 +66,7 @@ app.add_url_rule("/chat_api/set_flag", "set_flag", chat_api.set_flag, subdomain=
 app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/save", "save", chat_api.save, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
+app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))"""
 
 # Blog subdomain (blog.charat.net)
 
