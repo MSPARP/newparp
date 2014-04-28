@@ -9,7 +9,7 @@ import json
 
 @use_db
 def home():
-    jsonurl = urlopen("http://charat.thae.li/feed.json")
+    jsonurl = urlopen(url_for("blog_feed"))
     posts = json.loads(jsonurl.read())
     return render_template(
         "home.html",
