@@ -67,14 +67,6 @@ input[type="text"], input[type="password"] {
     overflow: hidden;
 }
 
-.inner-blog-post {
-    height: 200px;
-    width: 100%;
-    padding-right: 20px;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-}
-
 .blog-post .block {
     background-color: #4e8d6b;
     width: 80%;
@@ -83,7 +75,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post .content {
-    padding: 5px;
+    padding: 10px;
 }
 
 #main-block header {
