@@ -1,0 +1,360 @@
+@font-face {
+  font-family: 'Source Sans Pro A';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Source Sans Pro B';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGNbE_oMaV8t2eFeISPpzbdE.woff) format('woff');
+}
+
+/* Global*/
+
+* {
+    word-wrap: break-word;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+body {
+    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    background-attachment: fixed;
+    word-wrap: break-word;
+    padding-top: 50px;
+    background-color: #C0F0C0;
+    margin: 0;
+}
+
+a {
+    color: #507050;
+}
+
+a:hover {
+    color: #80A080;
+}
+
+div.body a {
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+button.big {
+    font-size: 20px;
+    width: 270px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+input, button, textarea {
+    border: 1px solid #92B792;
+    border-radius: 0;
+}
+
+input[type="text"], input[type="submit"], input[type="password"], textarea {
+    cursor: text;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    resize: none;
+}
+
+input[type="submit"], button {
+    font-family: 'Source Sans Pro B';
+    background-color: #69926A;
+    color: #FFFFFF;
+    border: 0;
+    padding: 5px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #70A070;
+}
+
+input, textarea, select {
+    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    font-size: 16px;
+    background-color: #F8F8F8;
+    padding-left: 2px;
+    height: 25px;
+    margin-bottom: 5px;
+}
+
+input:hover, textarea:hover {
+    background-color: #FFFFFF;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"] + .checkbox {
+    display: inline-block;
+    border: 2px solid #92B792;
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+}
+
+input[type="checkbox"]:checked + .checkbox {
+    background-color: #92B792;
+}
+
+.select-bind {
+    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    position: relative;
+    height: 25px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    border: 1px solid #92B792;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.select-bind:hover {
+    background-color: #FFFFFF;
+}
+
+.select-bind .arrow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #EEEEEE;
+    background-color: #92B792;
+    font-size: 20px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.select-bind:hover > .arrow {
+    color: #FFFFFF;
+}
+
+.select-bind select {
+    position: relative;
+    top: -2px;
+    background: transparent;
+    width: 100%;
+    height: 25px;
+    border: 0;
+    margin: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+label {
+    display: inline-block;
+}
+
+a {
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+optgroup {
+    color: #666666;
+    font-style: normal;
+}
+
+optgroup option {
+    color: #000000;
+    padding: 0 10px;
+}
+
+h1 {
+    font-size: 14pt;
+    word-wrap: break-word;
+    margin: 5px;
+}
+
+p {
+    margin: 0;
+    padding: 2px 5px;
+}
+
+hr {
+    margin: 5px 0;
+    border-color: #92B792;
+    border-style: solid;
+    border-width: 1px 0 0 0;
+}
+
+div.options h1, div.options h2 {
+	margin: 0px;
+	display: inline;
+}
+
+div.options button {
+	vertical-align: 20%;
+}
+
+label.quirk {
+	display: block;
+}
+
+.picky-group {
+	margin: 5px;
+	margin-left: 0.5em;
+}
+
+.picky-header {
+	font-weight: bold;
+}
+
+/* Top Bar */
+
+#topbar {
+    font-family: "Source Sans Pro B", Sans-Serif;
+    font-size: 35px;
+    text-align: center;
+    background-color: #AACCAA;
+    background-color: rgba(170, 204, 170, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 44px;
+    z-index: 100;
+}
+
+#topbar #toptitle {
+    background-color: #90B090;
+    background-color: rgba(144, 174, 144, 0.8);
+}
+
+#topbar #toptitle:hover, #topbar #topmenu a:hover {
+    background-color: #80A080;
+}
+
+#topbar #topmenu {
+    background-color: #90B090;
+    background-color: rgba(144, 174, 144, 0.9);
+}
+
+#topbar #toptitle, #topbar #topmenu, #topbar #topmenu a {
+    color: #CCFFCC;
+    width: 300px;
+    cursor: pointer;
+}
+
+body.mobile #topbar #toptitle {
+    width: 110px;
+}
+
+body.mobile #topmenu .topborder:first-child {
+    display: none;
+}
+
+#topbar #toptitle {
+    display: inline-block;
+    cursor: pointer;
+}
+
+#topbar #topmenu {
+    display: none;
+}
+
+body.menu #topbar #topmenu {
+    display: block;
+}
+
+#topbar .topborder {
+    background-color: inherit;
+    width: 270px;
+    border-bottom: solid 1px #CCFFCC;
+}
+
+#topbar #topmenu a {
+    display: block;
+}
+
+a#goSupport {
+    padding-bottom: 5px;
+}
+
+/* Chat */
+
+.stoptions label {
+    display: block;	
+}
+
+div.chat-container {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: #EEE;
+}
+
+#chat-log {
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
+	position: absolute;
+}
+
+#chat-log-inner {
+	margin: 1em;
+}
+
+#chat-hover {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	border-top: 1px solid #DDD;	
+}
+
+#chat-hover input#chat-line {
+	width: 100%;
+	margin:0;
+	border-left: 0;
+	border-right: 0;
+}
+
+#preview-text {
+    margin-top: 3px;
+}
+
+#hide-preview {
+	position: absolute;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	bottom: 23px;
+	text-decoration: none;
+}
+
+#hide-preview:link ,#hide-preview:visited {	
+	color: grey;
+}
+
+/* MOBILE */
+
+body.mobile div.online-notice {
+    float: left;
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+}
