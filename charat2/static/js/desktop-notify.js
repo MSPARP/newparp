@@ -226,5 +226,5 @@ function NotificationCenter($scope) {
 }
 
 function show(title,body) {
-    notify.createNotification(title, {body:body, icon: "{{url_for("static", filename="img/notification.png")}}", tag:title+body+Math.random(), timeout: 5000})
+    notify.createNotification(title, {body:body, icon: "/static/img/favicons/rp/touch-icon-iphone-retina-precomposed.png", tag:title+body+Math.random(), timeout: 5000})
 }
