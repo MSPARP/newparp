@@ -43,7 +43,7 @@ app.add_url_rule("/login", "login_post", account.login_post, methods=("POST",))
 app.add_url_rule("/logout", "logout", account.logout)
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
-# RP subdomain (rp.charat.net)
+# RP subdomain (rp.charat.net)#
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 
