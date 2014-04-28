@@ -9,11 +9,7 @@ from charat2.model.connections import use_db
 def home():
     jsonurl = urlopen(url_for("blog_feed"))
     posts = json.loads(jsonurl.read())
-    return render_template(
-        "blog/home.html",
-        logged_in=g.user is not None,
-        posts=posts
-    )
+    return "ok"
 
 @use_db
 def feed():
