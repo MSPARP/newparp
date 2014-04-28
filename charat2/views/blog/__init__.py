@@ -6,7 +6,12 @@ from charat2.model.connections import use_db
 
 @use_db
 def home():
-    return "ok"
+    posts = json.loads(feed())
+    return render_template(
+        "blog/home.html",
+        logged_in=g.user is not None,
+        posts=posts
+    )
 
 @use_db
 def feed():
