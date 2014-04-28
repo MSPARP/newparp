@@ -1,14 +1,14 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} Log - Charat RP{% endblock %}
 {% block header %}
-<script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
-<link rel="stylesheet" href="{{url_for("static", filename="css/chat.css")}}">
+<link rel="stylesheet" href="{{url_for("static", filename="css/rp/chat.css")}}">
 <style>
 #topbar {
     background-color: rgba(255,255,255,.9);
     position: fixed;
 }
 </style>
+<script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
 {% endblock %}
 
 {% block pager %}
