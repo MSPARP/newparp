@@ -1,0 +1,19 @@
+{% extends "blog/base.html" %}
+
+{% block header %}
+        <title>The Charat Blog</title>
+{% endblock %}
+
+{% block content %}
+        {% for post in posts %}
+        <div id="post-{{post.id}}" class="blog-post">
+            <div class="inner-blog-post">
+                <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
+                <div class="content">{{post.content}}</div>
+            </div>
+        </div>
+        {% endfor %}
+{% endblock %}
+
+
+
