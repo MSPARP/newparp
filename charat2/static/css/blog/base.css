@@ -54,6 +54,7 @@ input[type="text"], input[type="password"] {
 
 #menu a {
    color: #000000;
+   text-decoration: underline;
 }
 
 #menu a:hover {
