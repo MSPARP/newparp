@@ -44,6 +44,12 @@ input[type="text"], input[type="password"] {
     text-align: center;
 }
 
+.header {
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+}
+
 .posts {
     display: inline-block;
 }
