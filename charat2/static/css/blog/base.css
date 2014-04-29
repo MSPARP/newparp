@@ -43,7 +43,7 @@ input[type="text"], input[type="password"] {
     text-align: center;
 }
 
-.header {
+#header {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -52,7 +52,7 @@ input[type="text"], input[type="password"] {
     bottom: 5px;
 }
 
-.header a {
+#header a {
    color: #000000;
 }
 
