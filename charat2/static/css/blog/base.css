@@ -44,9 +44,12 @@ input[type="text"], input[type="password"] {
 }
 
 .header {
+    position: relative;
     display: inline-block;
     width: 100%;
     max-width: 800px;
+    left: 2px;
+    bottom: 5px;
 }
 
 .header a {
