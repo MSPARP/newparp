@@ -52,8 +52,17 @@ input[type="text"], input[type="password"] {
     bottom: 5px;
 }
 
-#header a {
+#menu a {
    color: #000000;
+}
+
+#menu a:hover {
+   background-color: #0e3d1b;
+}
+
+#menu {
+    font-size: 20px;
+    text-align: left;
 }
 
 .posts {
