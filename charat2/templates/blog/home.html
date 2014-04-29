@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block content %}
-        <div class="posts">
-            {% for post in posts %}
-            <div id="post-{{post.id}}" class="blog-post">
-                <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
-                <div class="content">{{post.content}}</div>
+            <div class="posts">
+                {% for post in posts %}
+                <div id="post-{{post.id}}" class="blog-post">
+                    <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
+                    <div class="content">{{post.content}}</div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
 {% endblock %}
 
 
