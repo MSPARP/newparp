@@ -32,8 +32,6 @@ div.body {
 
 .section, .section * {
     box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 .section .left, .section .center, .section .right {
