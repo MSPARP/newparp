@@ -51,22 +51,13 @@ $(document).ready(function() {
     }
     
     /* Topbar Menu */
-    $('div.body').click(function() {
-        $(document.body).removeClass('menu');
-    });
     $('#toptitle').click(function(e) {
-        if (!$('body.menu').exists(e)) {
-            e.preventDefault();
-            $(document.body).delay(10).addClass('menu');
+        if ($('body.menu').exists(e)) {
+            $(document.body).removeClass('menu');
+        } else {
+            $(document.body).addClass('menu');
         }
     });
-    $('#toptitle, #topmenu').hover(
-        function() {
-            $(document.body).addClass('menu');
-        }, function() {
-            $(document.body).removeClass('menu');
-        }
-    );
 });
 
 $(window).load(function() {
