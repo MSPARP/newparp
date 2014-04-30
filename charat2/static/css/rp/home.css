@@ -113,3 +113,7 @@ label {
     width: 50%;
 }
 
+body.mobile .section {
+    max-width: 310px;
+}
+
