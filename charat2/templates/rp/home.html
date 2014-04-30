@@ -21,8 +21,6 @@
             <a id="goGroups" href="/groups">Groups</a>
             <div class="topborder"></div>
             <a id="goHelp" href="/help">Help</a>
-            <div class="topborder"></div>
-            <a id="logout" href="{{url_for("logout")}}">Log Out</a>
         </div>
     </center>
 </div>
@@ -30,8 +28,6 @@
 <div class="body">
     <!-- Put in some noscript things -->
     <div class="section" id="character-config">
-        <div class="titli">Character Chat</div>
-        
         <div id="chat-options" class="section">
             <div class="titli">CHAT</div>
             <div id="choices" class="card">
@@ -40,6 +36,7 @@
                 <a href="">Search</a>
                 <a href="">Rooms</a>
                 <a href="">Settings</a>
+                <a id="logout" href="{{url_for("logout")}}">Logout</a>
             </div>
         </div>
 
