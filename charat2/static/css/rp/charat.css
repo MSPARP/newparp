@@ -252,7 +252,7 @@ label.quirk {
     max-width: 100%;
 }
 
-#topbar #toptitle:hover, #topbar #topmenu #toptitle:hover {
+#topbar #toptitle:hover, #topbar #topmenu a:hover {
     background-color: #80A080;
 }
 
