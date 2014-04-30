@@ -31,14 +31,11 @@ body {
 
 a {
     color: #507050;
+    text-decoration: none;
 }
 
 a:hover {
     color: #80A080;
-}
-
-div.body a {
-    text-decoration: underline;
 }
 
 a.button {
@@ -49,7 +46,7 @@ a.button {
     padding: 5px;
     margin-bottom: 5px;
     width: 100px;
-    text-decoration: none;
+    text-align: center;
 }
 
 a.button:hover {
