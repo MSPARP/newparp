@@ -34,6 +34,10 @@ div.body {
     box-sizing: border-box;
 }
 
+.section p {
+    font-size: 16px;
+}
+
 .section .left, .section .center, .section .right {
     display: inline-block;
     vertical-align: top;
