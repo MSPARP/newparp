@@ -10,19 +10,19 @@
 {% block content %}
 
 <div id="topbar">
-	<center>
-	    <div id="toptitle">Charat RP</div>
-        <div id="topmenu">
-            <div class="topborder"></div>
-            <a id="goUser" href="/user/{{g.user.username}}">Hello {{g.user.username}}!</a>
-            <div class="topborder"></div>
-            <a id="goPresets" href="#">Presets</a>
-            <div class="topborder"></div>
-            <a id="goGroups" href="/groups">Groups</a>
-            <div class="topborder"></div>
-            <a id="goHelp" href="/help">Help</a>
-        </div>
-    </center>
+    <div id="toptitle">Charat RP</div>
+    <div id="topmenu">
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for("rp_home")}}">Home</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="/user/{{g.user.username}}">Account</a>
+        <div class="topborder"></div>
+        <a id="goPresets" href="#">Characters</a>
+        <div class="topborder"></div>
+        <a id="goGroups" href="{{url_for("rp_rooms")}}">Rooms</a>
+        <div class="topborder"></div>
+        <a id="goHelp" href="/help">Help</a>
+    </div>
 </div>
 
 <div class="body">

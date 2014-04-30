@@ -247,6 +247,7 @@ label.quirk {
 #topbar #topmenu {
     background-color: #90B090;
     background-color: rgba(144, 174, 144, 0.9);
+    margin: auto;
 }
 
 #topbar #toptitle, #topbar #topmenu, #topbar #topmenu a {
@@ -275,6 +276,7 @@ body.menu #topbar #topmenu {
 #topbar .topborder {
     background-color: inherit;
     width: 270px;
+    margin: auto;
     border-bottom: solid 1px #CCFFCC;
 }
 
