@@ -41,6 +41,21 @@ div.body a {
     text-decoration: underline;
 }
 
+a.button {
+    font-family: 'Source Sans Pro B';
+    background-color: #69926A;
+    color: #FFFFFF;
+    padding: 5px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+a.button:hover {
+    background-color: #70A070;
+}
+
 ul {
     list-style: none;
     padding: 0;
