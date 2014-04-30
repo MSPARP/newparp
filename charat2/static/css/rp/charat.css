@@ -43,12 +43,13 @@ div.body a {
 
 a.button {
     font-family: 'Source Sans Pro B';
+    display: inline-block;
     background-color: #69926A;
     color: #FFFFFF;
     padding: 5px;
+    margin-bottom: 5px;
     width: 100px;
-    height: auto;
-    cursor: pointer;
+    text-decoration: none;
 }
 
 a.button:hover {
