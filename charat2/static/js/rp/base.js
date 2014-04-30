@@ -51,15 +51,15 @@ $(document).ready(function() {
     }
     
     /* Topbar Menu */
-    $('#toptitle').click(function(e) {
-        if ($('body.menu').exists(e)) {
+    $('#toptitle').click(function() {
+        if ($('body.menu').exists()) {
             $(document.body).removeClass('menu');
         } else {
             $(document.body).addClass('menu');
         }
     });
-    $('#topbar').mouseout(function(){
-        if ($('body.menu').exists(e)) {
+    $('#topbar').on("mouseleave", function(){
+        if ($('body.menu').exists()) {
             $(document.body).removeClass('menu');
         }
     });
