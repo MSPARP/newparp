@@ -51,7 +51,7 @@ app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 def rp_favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/rp/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-app.add_url_rule("/rooms", "rooms", rp.rooms, subdomain="rp", methods=("GET",))
+app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
 app.add_url_rule("/<url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
