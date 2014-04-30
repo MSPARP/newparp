@@ -58,6 +58,11 @@ $(document).ready(function() {
             $(document.body).addClass('menu');
         }
     });
+    $('#topbar').mouseout(function(){
+        if ($('body.menu').exists(e)) {
+            $(document.body).removeClass('menu');
+        }
+    });
 });
 
 $(window).load(function() {
