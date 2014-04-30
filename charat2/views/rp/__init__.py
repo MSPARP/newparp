@@ -7,10 +7,10 @@ from charat2.helpers.auth import login_required
 
 @use_db
 def home():
+    logged_in = False
     if g.user is not None:
-        return render_template("rp/home.html", rooms=rooms, base_domain=os.environ['BASE_DOMAIN'])
-    else:
-        return render_template("rp/register.html", rooms=rooms, base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
+        logged_in = True
+    return render_template("rp/home.html", logged_in=logged_in, base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
 
 @use_db
 @login_required

@@ -28,73 +28,54 @@
 </div>
 
 <div class="body">
-<form id="frontform" method="post" action="" >
     <!-- Put in some noscript things -->
-
     <div class="section" id="character-config">
-        <div class="titli">CHARACTER SETTINGS</div>
+        <div class="titli">Character Chat</div>
         <div id="char_left" class="left">
-            <div class="card char_search">
-                <div class="titi">CHARACTER SEARCH</div>
-                <input id="char_search" type="text" />
-                <button class="char_search_button">Search</button>
-            </div>
-            <div class="card character">
-                <div class="titi">CHARACTER DETAILS</div>
-                <div class="left">
-                    <label>Name:</label><br />
-                    <label>Alias:</label><br />
-                    <label>Color:</label>
-                </div>
-                <div class="right">
-                    <input id="usingname" type="text" name="name" value="anonymous" maxlength="50" /><br />
-                    <input id="ailin" type="text" name="acronym" value="??" maxlength="15" /><br />
-                    <input id="coln" type="text" name="color" value="000000" maxlength="6" />
-                </div>
+            Test
+        </div>
+
+        {% if logged_in %}
+        <div id="login-register" class="section">
+            <div class="titli">LOGIN/REGISTER</div>
+            <div id="register" class="card">
+                {% if register_error: %}
+                <p class="error">{{register_error}}</p>
+                {% endif %}
+                <form action="{{url_for("register")}}" method="post">
+                    <div class="left">
+                        <label>Username: </label><br />
+                        <label>Password: </label><br />
+                        <label>Confimation: </label>
+                    </div>
+                    <div class="right">
+                        <input id="regUsername" type="text" name="username"><br />
+                        <input id="regPassword" type="password" name="password"><br />
+                        <input id="regConfirm" type="password" name="password_again">
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
             </div>
             
-            <div class="card pester-line" id="color-preview" style="color:#000000;">
-                <span id="acronym">??: </span><span id="quote"></span>
-            </div>
-            {% if error=="color" %}<span class="error">You entered an invalid hex code. Try using the color picker.</span><br />{% endif %}
-            <span id="inzone"><button class="save_character">Save Settings</button></span>
-        </div>
-
-        <div id="char_center" class="center">
-            <div class="card" id="typing-quirks">
-                <div class="titi">TYPING PATTERNS</div>
-                <div class="left">
-                    <label>Prefix: </label><br />
-                    <label>Suffix: </label><br />
-                    <label>Case: </label>
-                </div>
-                <div class="right">
-                    <input id="prei" type="text" name="quirk_prefix" value="" /><br />
-                    <input id="sufi" type="text" name="quirk_suffix" value="" /><br />
-                    <div class="select-bind"><div class="arrow">▼</div>
-                        <select id="casing" name="case">
-                            <!-- CASE OPTIONS -->
-                            <option value="Case">Case</option>
-                        </select>
+            <div id="login" class="card">
+                {% if log_in_error: %}
+                <p class="error">{{log_in_error}}</p>
+                {% endif %}
+                <form action="{{url_for("login_post")}}" method="post">
+                    <div class="left">
+                        <label>Username: </label><br />
+                        <label>Password: </label>
                     </div>
-                </div>
-                <!-- CASE ERROR -->
-
-                <div class="titi">REPLACEMENTS</div>
-                <div class="replacementContainer">
-                    <ul id="replacementList">
-                        <!-- REPLACEMENTS -->
-                        <li><input type="text" name="quirk_from" size="4" value=""> to <input type="text" name="quirk_to" size="4" value=""> <a href="#" class="deleteReplacement">x</a></li>
-                    </ul>
-                    <a href="#" id="addReplacement">+Add another replacement</a>
-                    <br />
-                    <a href="#" id="clearReplacements">-Clear replacements</a>
-                </div>
+                    <div class="right">
+                        <input id="logUsername" type="text" name="username"><br />
+                        <input id="logPassword" type="password" name="password">
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
             </div>
-            <span id="inztwo"><button class="save_character">Save Settings</button><button class="save_preset">Save Character Preset</button></span>
         </div>
+        {% endif %}
+
     </div>
-    
-</form>
 </div>
 {% endblock %}
