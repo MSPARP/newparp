@@ -24,9 +24,9 @@
         <a id="goPresets" href="">Chat</a>
         <div class="topborder"></div>
         {% if logged_in %}
-        <a class="button" id="logout" href="{{url_for("logout")}}">Logout</a>
+        <a class="logout" href="{{url_for("logout")}}">Logout</a>
         {% else %}
-        <a class="button" id="logout" href="">Login</a>
+        <a class="login" href="">Login</a>
         {% endif %}
     </div>
 </div>
