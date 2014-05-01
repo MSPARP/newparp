@@ -457,6 +457,7 @@ body #userListButton {
     top: 0;
     left: 0;
     right: 0;
+    border-bottom: 2px solid #696969;
 }
 
 #control-buttons .ooc-button, #control-buttons .me-button {
@@ -473,10 +474,12 @@ body #userListButton {
 
 #control-buttons .ooc-button {
     left: 0;
+    border-right: 1px solid #696969;
 }
 
 #control-buttons .me-button {
     right: 0;
+    border-left: 1px solid #696969;
 }
 
 body > #save {
