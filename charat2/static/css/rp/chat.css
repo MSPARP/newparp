@@ -411,11 +411,11 @@ body.withSidebar.mobile .controls {
     font-size: 16px;
     background-color: #FFFFFF;
     display: block;
-    height: 50px;
+    height: 48px;
     width: 100%;
     padding: 5px;
-    padding-right: 60px;
     margin: 0;
+    border: none;
 }
 
 #statusInput {
@@ -442,9 +442,11 @@ body #userListButton {
     font-family: "Source Sans Pro A", Sans-Serif;
     position: absolute;
     font-size: 20px;
+    width: 60px;
     height: 48px;
-    right: -2px;
-    bottom: 2px;
+    margin: 0;
+    right: 0;
+    bottom: 0;
 }
 
 body > #save {
