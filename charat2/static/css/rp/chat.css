@@ -212,12 +212,10 @@ body.mobile.withSidebar #conversation {
     padding-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    box-sizing: initial;
 }
 
 body.mobile .sidebarContain {
     padding-right: 5px;
-    box-sizing: border-box;
 }
 
 .card {
@@ -377,21 +375,6 @@ a#addReplacement, a#clearReplacements {
     z-index: -1;
 }
 
-#control-container {
-    position: relative;
-    background-color: #FFFFFF;
-    width: 100%;
-    height: 50px;
-    border-bottom: solid 2px #696969;
-}
-
-#textInput-container {
-    position: absolute;
-    top: 0px;
-    left: 0;
-    right: 60px;
-}
-
 body.withSidebar .controls {
     right: 340px;
 }
@@ -407,15 +390,32 @@ body.withSidebar.mobile .controls {
     border-bottom: solid 1px #DDDDDD;
 }
 
+#control-container {
+    position: relative;
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 50px;
+    border-bottom: solid 2px #696969;
+}
+
+#textInput-container {
+    position: absolute;
+    padding: 0 5px;
+    top: 0px;
+    left: 0;
+    right: 60px;
+}
+
 #textInput {
     font-size: 16px;
     background-color: #FFFFFF;
     display: block;
-    height: 48px;
+    height: 50px;
     width: 100%;
-    padding: 5px;
+    padding: 0;
     margin: 0;
     border: none;
+    outline: none;
 }
 
 #statusInput {
@@ -443,7 +443,7 @@ body #userListButton {
     position: absolute;
     font-size: 20px;
     width: 60px;
-    height: 48px;
+    height: 50px;
     margin: 0;
     right: 0;
     bottom: 0;

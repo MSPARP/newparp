@@ -17,7 +17,6 @@
 * {
     word-wrap: break-word;
     -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
 }
 
 body {
