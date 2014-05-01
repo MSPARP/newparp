@@ -389,7 +389,7 @@ body.withSidebar.mobile .controls {
     position: relative;
     background-color: #FFFFFF;
     width: 100%;
-    height: 50px;
+    height: 60px;
     border-bottom: solid 2px #696969;
 }
 
@@ -398,14 +398,14 @@ body.withSidebar.mobile .controls {
     padding: 0 5px;
     top: 0px;
     left: 0;
-    right: 60px;
+    right: 80px;
 }
 
 #textInput {
     font-size: 16px;
     background-color: #FFFFFF;
     display: block;
-    height: 45px;
+    height: 55px;
     width: 100%;
     padding: 0;
     padding-top: 5px;
@@ -436,7 +436,7 @@ body #userListButton {
 
 #control-buttons {
     position: absolute;
-    width: 60px;
+    width: 80px;
     height: 50px;
     margin: 0;
     right: 0;
@@ -449,9 +449,22 @@ body #userListButton {
 
 #control-buttons .send {
     font-size: 18px;
-    width: 60px;
-    height: 25px;
+    width: 100%;
+    height: 30x;
     padding: 0;
+}
+
+#control-buttons .ooc {
+    position: absolute;
+    width: 50%;
+    left: 0;
+    bottom: 0;
+}
+
+#control-buttons .me {
+    width: 50%;
+    right: 0;
+    bottom: 0;
 }
 
 body > #save {
