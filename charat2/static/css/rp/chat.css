@@ -450,6 +450,7 @@ body #userListButton {
 #control-buttons .send {
     font-size: 18px;
     width: 60px;
+    height: 25px;
 }
 
 body > #save {
