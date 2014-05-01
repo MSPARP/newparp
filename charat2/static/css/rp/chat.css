@@ -247,11 +247,6 @@ body.mobile .sidebarContain {
     cursor: pointer;
 }
 
-body.mobile .sidebarContain .card {
-    position: relative;
-    right: 2px;
-}
-
 #topic {
     padding: 0 5px 5px;
     word-wrap: break-word;
