@@ -434,15 +434,21 @@ body #userListButton {
     display: none;
 }
 
-.controls button[type="submit"] {
-    font-family: "Source Sans Pro A", Sans-Serif;
+#control-buttons {
     position: absolute;
-    font-size: 20px;
     width: 60px;
     height: 50px;
     margin: 0;
     right: 0;
     bottom: 0;
+}
+
+#control-buttons button {
+    font-family: "Source Sans Pro A", Sans-Serif;
+}
+
+#controlbuttons .send {
+    font-size: 20px;
 }
 
 body > #save {
