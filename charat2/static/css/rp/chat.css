@@ -405,9 +405,10 @@ body.withSidebar.mobile .controls {
     font-size: 16px;
     background-color: #FFFFFF;
     display: block;
-    height: 50px;
+    height: 45px;
     width: 100%;
     padding: 0;
+    padding-top: 5px;
     margin: 0;
     border: none;
     outline: none;
