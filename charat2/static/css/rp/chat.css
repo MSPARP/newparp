@@ -446,14 +446,14 @@ body #userListButton {
 
 #control-buttons button {
     font-family: "Source Sans Pro A", Sans-Serif;
+    padding: 0;
+    height: 30px;
 }
 
 #control-buttons .send-button {
     position: absolute;
     font-size: 18px;
     width: 100%;
-    height: 30px;
-    padding: 0;
     top: 0;
     left: 0;
     right: 0;
