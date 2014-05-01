@@ -221,14 +221,12 @@ body.mobile .sidebarContain {
 }
 
 .card {
-    position: relative;
     font-family: "Source Sans Pro A" sans-serif;
     font-weight: 400;
     background-color: #FFFFFF;
     color: #6A936B;
     margin-bottom: 15px;
     padding: 10px;
-    right: 2px;
 }
 
 .card button {
@@ -249,6 +247,11 @@ body.mobile .sidebarContain {
 .stoptions label {
     margin-top: 10px;
     cursor: pointer;
+}
+
+body.mobile .sidebarContain .card {
+    position: relative;
+    right: 2px;
 }
 
 #topic {
