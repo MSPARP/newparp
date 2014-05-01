@@ -267,10 +267,6 @@ label.quirk {
     cursor: pointer;
 }
 
-body.mobile #topmenu .topborder:first-child {
-    display: none;
-}
-
 #topbar #toptitle {
     display: inline-block;
     cursor: pointer;
