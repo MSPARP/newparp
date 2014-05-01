@@ -447,8 +447,9 @@ body #userListButton {
     font-family: "Source Sans Pro A", Sans-Serif;
 }
 
-#controlbuttons .send {
-    font-size: 20px;
+#control-buttons .send {
+    font-size: 18px;
+    width: 60px;
 }
 
 body > #save {
