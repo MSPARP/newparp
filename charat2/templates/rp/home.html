@@ -17,16 +17,16 @@
         <div class="topborder"></div>
         <a id="goHome" href="{{url_for("rp_home")}}">RP Home</a>
         <div class="topborder"></div>
-        <a id="goUser" href="{{}}">Guide</a>
+        <a id="goUser" href="">Guide</a>
         <div class="topborder"></div>
-        <a id="goUser" href="{{}}">Settings</a>
+        <a id="goUser" href="">Settings</a>
         <div class="topborder"></div>
-        <a id="goPresets" href="{{}}">Chat</a>
+        <a id="goPresets" href="">Chat</a>
         <div class="topborder"></div>
         {% if logged_in %}
         <a class="button" id="logout" href="{{url_for("logout")}}">Logout</a>
         {% else %}
-        <a class="button" id="logout" href="{{}}">Login</a>
+        <a class="button" id="logout" href="">Login</a>
         {% endif %}
     </div>
 </div>
