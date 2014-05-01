@@ -598,14 +598,9 @@ body.mobile .sidebar {
     width: auto;
 }
 
-body.mobile .sidebar .close {
-    display: block;
-    margin: 5px;
-    float: right;
-}
-
-body.mobile #userListButton {
-    display: inline;
+body.mobile .sidebarContain .card {
+    position: relative;
+    right: 2px;
 }
 
 #userList li .username {
