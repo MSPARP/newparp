@@ -467,6 +467,7 @@ body #userListButton {
 }
 
 #control-buttons .me-button {
+    position: absolute;
     width: 50%;
     right: 0;
     bottom: 0;
