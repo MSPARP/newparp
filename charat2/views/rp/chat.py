@@ -87,6 +87,10 @@ def chat(url):
     messages.reverse()
 
     latest_num = messages[-1].id if len(messages) > 0 else 0
+    
+    logged_in = False
+    if g.user is not None:
+        logged_in = True
 
     return render_template(
         "rp/chat.html",
@@ -96,6 +100,7 @@ def chat(url):
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
+        logged_in=logged_in
     )
 
 @use_db
