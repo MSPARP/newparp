@@ -45,7 +45,7 @@ input[type="text"], input[type="password"] {
 .block-container, .blog-post {
     position: relative;
     display: inline-block;
-    background-color: #4e8d6b;
+    background-color: #63a37d;
     color: #0e3d1b;
     width: 270px;
     max-width: 100%;
@@ -60,7 +60,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post {
-    background-color: #daf5e6;
+    background-color: #63a37d;
     text-align: left;
     overflow: hidden;
 }
