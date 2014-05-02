@@ -60,7 +60,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post {
-    background-color: #63a37d;
+    background-color: #daf5e6;
     text-align: left;
     overflow: hidden;
 }
@@ -74,7 +74,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post .block {
-    background-color: #4e8d6b;
+    background-color: #63a37d;
     width: 80%;
     padding: 5px;
     margin-top: 10px;
