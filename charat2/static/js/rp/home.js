@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     $('.stats a.tag').on('click', function(e){
         if ($('textarea.tags').val()) {
             $('textarea.tags').val($('textarea.tags').val()+', '+$(this).text());
@@ -6,14 +7,6 @@ $(document).ready(function() {
             $('textarea.tags').val($(this).text());
         }
         e.preventDefault();
-    });
-
-    $("#nsfwsfw").change(function(){
-        if ($(this).children(":selected").val() == 1) {
-            //NSFW
-        } else {
-            //SFW
-        }
     });
 
     jQuery.expr[':'].focus = function( elem ) {
@@ -27,7 +20,7 @@ $(document).ready(function() {
     });
 
     if (document.cookie=="") {
-        $('<p class="error">').text("It seems you have cookies disabled. Unfortunately cookies are essential for MSPARP to work, so you'll need to either enable them or add an exception in order to use MSPARP.").appendTo(document.body);
+        $('<p class="error">').text("It seems you have cookies disabled. Unfortunately cookies are essential for Charat RP to work, so you'll need to either enable them or add an exception in order to use MSPARP.").appendTo(document.body);
     }
 
     var settingUp = true;
