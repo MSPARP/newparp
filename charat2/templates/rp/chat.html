@@ -52,7 +52,7 @@
                 <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
             </p>
             {% if message.type == 'me' %}
-            <p class="message" style="color: #000000;">{{message.name}} {{message.text}}</p>
+            <p class="message" style="color: #{{message.color}};">{{message.name}} {{message.text}}</p>
             {% else %}
             <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
             {% endif %}
@@ -174,7 +174,6 @@
             id="twitShare" target="_blank">Twitter</a></button></label>
             <label><button type="button"><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}"
             id="faceShare" target="_blank">Facebook</a></button></label>
-            <label><button type="button"><a href="http://www.Pesternote.com/partners/charat/share/?l={{chat.url}}" id="pestershare" target="_blank">Pesternote</a></button></label>
         </div>
     </div>
 </form>

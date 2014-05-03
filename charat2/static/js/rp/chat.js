@@ -173,59 +173,65 @@ function goBottom(element) {
 }
 
 function addLine(msg){
-    at_bottom = atBottom(CONVERSATION_CONTAINER);
-    if (!at_bottom) {
-        $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
-    }
-
-    if (show_bbcode_color == true) {
-        message = bbEncode(msg.text);
-    } else {
-        message = bbEncode(bbRemove(msg.text));
-    }
-
-    var alias = "";
-    if (msg.acronym) {
-        alias = msg.acronym+": ";
-    }
-
-    if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
-        $(CONVERSATION_CONTAINER+' p:last').hide();
-    }
-
-    var left_text = msg.type;
-    if (msg.name) {
-        if (msg.type == 'ic') {
-            left_text = msg.name;
+    if (msg) {
+        var at_bottom = atBottom(CONVERSATION_CONTAINER);
+        if (!at_bottom) {
+            $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
+        }
+    
+        if (show_bbcode_color == true) {
+            message = bbEncode(msg.text);
         } else {
-            left_text = msg.name+':'+msg.type;
+            message = bbEncode(bbRemove(msg.text));
         }
-    }
-
-    var right_text = '<span class="username">'+msg.user.username+'</span> <span class="post_timestamp">'+getTimestamp(msg.posted)+'<span>';
     
-    var message_container = $('<span>').prop("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
-    var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
-    var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
-    var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
-    var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
-    
-    if (at_bottom) {
-        goBottom(CONVERSATION_CONTAINER);
-        at_bottom = false;
-    }
-    
-    if (window_active == false) {
-        missed_messages++;
-        if (missed_messages !=0) {
-            document.title = missed_messages+" new - "+chat.title;
+        var alias = "";
+        if (msg.acronym) {
+            alias = msg.acronym+": ";
         }
-    }
     
-    if (window_active == false && desktop_notifications == true) {
-        show(chat.url,htmlEncode(bbRemove(msg.text)));
+        if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
+            $(CONVERSATION_CONTAINER+' p:last').hide();
+        }
+    
+        var left_text = msg.type;
+        if (msg.name) {
+            if (msg.type == 'ic') {
+                left_text = msg.name;
+            } else {
+                left_text = msg.name+':'+msg.type;
+            }
+        }
+    
+        var right_text = '<span class="username">'+msg.user.username+'</span> <span class="post_timestamp">'+getTimestamp(msg.posted)+'<span>';
+        
+        var message_container = $('<span>').prop("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
+        var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
+        var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
+        var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
+        if (msg.type == 'me') {
+            var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(msg.name+" "+message).appendTo("#message"+msg.id);
+        } else {
+            var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
+        }
+        
+        if (at_bottom) {
+            goBottom(CONVERSATION_CONTAINER);
+            at_bottom = false;
+        }
+        
+        if (window_active == false) {
+            missed_messages++;
+            if (missed_messages !=0) {
+                document.title = missed_messages+" new - "+chat.title;
+            }
+        }
+        
+        if (window_active == false && desktop_notifications == true) {
+            show(chat.url,htmlEncode(bbRemove(msg.text)));
+        }
+        shownotif = 0;
     }
-    shownotif = 0;
 }
 
 function generateUserList(user_data) {
