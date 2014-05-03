@@ -14,7 +14,7 @@ def home():
     )
 
 @use_db
-def view_post(id,title_path):
+def view_post(id,title_path=None):
     posts = json.loads(feed())
     if id in posts:
         post = posts[id]
