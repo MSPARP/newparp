@@ -515,6 +515,7 @@ $(document).ready(function() {
                 } else {
                     $('#control-buttons .ooc-button').css('background-color','');
                 }
+                console.log("three: "+type_force);
             } else {
                 console.log("test2");
                 type_force = 'me';
