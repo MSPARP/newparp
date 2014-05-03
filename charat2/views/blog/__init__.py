@@ -16,7 +16,7 @@ def home():
 @use_db
 def post(id):
     posts = json.loads(feed())
-    post = posts[id]
+    post = posts[int(id)]
     return render_template(
         "blog/home.html",
         logged_in=g.user is not None,

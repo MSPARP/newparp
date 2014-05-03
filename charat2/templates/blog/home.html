@@ -6,7 +6,8 @@
 
 {% block content %}
             <div class="posts">
-                {% for post in posts %}
+                {% for key in posts %}
+                {% set post = posts[key] %}
                 <div id="post-{{post.id}}" class="blog-post">
                     <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
                     <div class="content">{{post.content}}</div>
