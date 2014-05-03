@@ -517,6 +517,7 @@ $(document).ready(function() {
                 $('#control-buttons .me-button').css('background-color','#70A070');
                 $('#control-buttons .ooc-button').css('background-color','');
             }
+            console.log(type_force);
             updateChatPreview();
         });
 
