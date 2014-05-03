@@ -506,6 +506,7 @@ $(document).ready(function() {
 
         $('#control-buttons .me-button').click(function() {
             if (type_force == 'me') {
+                type_force == '';
                 $('#control-buttons .me-button').css('background-color','');
                 if (ooc_on) {
                     $('#control-buttons .ooc-button').css('background-color','#70A070');
@@ -517,7 +518,6 @@ $(document).ready(function() {
                 $('#control-buttons .me-button').css('background-color','#70A070');
                 $('#control-buttons .ooc-button').css('background-color','');
             }
-            console.log(type_force);
             updateChatPreview();
         });
 
