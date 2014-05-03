@@ -254,9 +254,9 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="%s [%s] kicked %s [%s] from the chat." % (
-                g.user_chat.name, g.user_chat.acronym,
-                set_user_chat.name, set_user_chat.acronym,
+            text="%s kicked %s from the chat." % (
+                g.user_chat.name,
+                set_user_chat.name,
             ),
         ))
         return "", 204
@@ -277,15 +277,15 @@ def user_action():
             reason=request.form.get("reason"),
         ))
         if request.form.get("reason") is not None:
-            ban_message = "%s [%s] banned %s [%s] from the chat. Reason: %s" % (
-                g.user_chat.name, g.user_chat.acronym,
-                set_user_chat.name, set_user_chat.acronym,
+            ban_message = "%s banned %s from the chat. Reason: %s" % (
+                g.user_chat.name,
+                set_user_chat.name,
                 request.form["reason"],
             )
         else:
-            ban_message = "%s [%s] banned %s [%s] from the chat." % (
-                g.user_chat.name, g.user_chat.acronym,
-                set_user_chat.name, set_user_chat.acronym,
+            ban_message = "%s banned %s from the chat." % (
+                g.user_chat.name,
+                set_user_chat.name,
             )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
@@ -476,8 +476,8 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="%s [%s] disconnected." % (
-                    g.user_chat.name, g.user_chat.acronym,
+                text="%s disconnected." % (
+                    g.user_chat.name,
                 ),
             ))
     return "", 204
