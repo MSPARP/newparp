@@ -480,7 +480,7 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] disconnected." % (#
+                text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] disconnected." % (
                     g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
                 ),
             ))
