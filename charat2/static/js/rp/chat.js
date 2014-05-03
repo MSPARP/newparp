@@ -518,7 +518,6 @@ $(document).ready(function() {
                     $('#control-buttons .ooc-button').css('background-color','');
                 }
             } else {
-                console.log("test2");
                 type_force = 'me';
                 $('#control-buttons .me-button').css('background-color','#70A070');
                 $('#control-buttons .ooc-button').css('background-color','');
