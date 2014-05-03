@@ -14,7 +14,7 @@ def home():
     )
 
 @use_db
-def post(id):
+def view_post(id):
     posts = json.loads(feed())
     if id in posts:
         post = posts[id]
@@ -25,6 +25,10 @@ def post(id):
         logged_in=g.user is not None,
         post=post
     )
+    
+@use_db
+def view_title_post(id,title):
+    view_post(id)
 
 @use_db
 def feed():
