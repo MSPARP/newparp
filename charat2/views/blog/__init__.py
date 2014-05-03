@@ -26,9 +26,9 @@ def view_post(id):
         post=post
     )
     
-#@use_db
-#def view_title_post(id,title):
-#    view_post(id)
+@use_db
+def view_title_post(id,title):
+    return view_post(id)
 
 @use_db
 def feed():
