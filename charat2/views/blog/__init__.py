@@ -16,12 +16,13 @@ def home():
 @use_db
 def post(id):
     posts = json.loads(feed())
-    post = posts[int(id)]
-    return render_template(
-        "blog/home.html",
-        logged_in=g.user is not None,
-        post=post
-    )
+    #post = posts[int(id)]
+    #return render_template(
+    #    "blog/home.html",
+    #    logged_in=g.user is not None,
+    #    post=post
+    #)
+    return id
 
 @use_db
 def feed():

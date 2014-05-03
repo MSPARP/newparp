@@ -462,6 +462,7 @@ body #userListButton {
 
 #control-buttons .ooc-button, #control-buttons .me-button {
     position: absolute;
+    background-color: #69926A;
     font-size: 16px;
     width: 50%;
     bottom: 0;
