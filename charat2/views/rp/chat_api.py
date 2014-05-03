@@ -453,7 +453,7 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.user_chat.name,
-                text="<span style=\"color: #%s;\">%s [%s]</span> is now <span style=\"color: #%s;\">%s [%s]</span>." % (
+                text="[color=#%s]%s [%s][/color] is now [color=#%s]%s [%s][/color]." % (
                     old_color, old_name, old_acronym,
                     g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
                 ),
