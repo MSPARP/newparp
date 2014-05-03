@@ -491,15 +491,15 @@ $(document).ready(function() {
         /* START UP */
         startChat();
 
-        $('#ooclet, #oocToggle input').click(function() {
+        $('#control-buttons .ooc-button, #oocToggle input').click(function() {
             if (ooc_on == false) {
                 ooc_on = true;
                 $('#oocToggle input').prop('checked','checked');
-                topbarSelect('#ooclet');
+                $('#control-buttons .ooc-button').css('background-color','#70A070');
             } else {
                 ooc_on = false;
                 $('#oocToggle input').removeProp('checked');
-                topbarDeselect('#ooclet');
+                $('#control-buttons .ooc-button').css('background-color','');
             }
             updateChatPreview();
         });
