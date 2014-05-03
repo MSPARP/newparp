@@ -51,8 +51,8 @@ def mark_alive(f):
                     user_id=g.user.id,
                     type="join",
                     name=g.user_chat.name,
-                    text="[color=#%s]%s[/color] joined chat." % (
-                        g.user_chat.color, g.user_chat.name,
+                    text="[color=#%s]%s [%s][/color] joined chat." % (
+                        g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
                     ),
                 ))
         g.redis.zadd(
