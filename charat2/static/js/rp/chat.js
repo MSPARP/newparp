@@ -500,14 +500,16 @@ $(document).ready(function() {
                 ooc_on = true;
                 $('#oocToggle input').prop('checked','checked');
                 $('#control-buttons .ooc-button').css('background-color','#70A070');
+                if (type_force == 'me') {
+                    type_force = '';
+                    $('#control-buttons .me-button').css('background-color','');
+                }
             }
             updateChatPreview();
         });
 
         $('#control-buttons .me-button').click(function() {
-            console.log("one: "+type_force);
             if (type_force == "me") {
-                console.log("test");
                 type_force = '';
                 $('#control-buttons .me-button').css('background-color','');
                 if (ooc_on) {
@@ -515,14 +517,12 @@ $(document).ready(function() {
                 } else {
                     $('#control-buttons .ooc-button').css('background-color','');
                 }
-                console.log("three: "+type_force);
             } else {
                 console.log("test2");
                 type_force = 'me';
                 $('#control-buttons .me-button').css('background-color','#70A070');
                 $('#control-buttons .ooc-button').css('background-color','');
             }
-            console.log("two: "+type_force);
             updateChatPreview();
         });
 
