@@ -16,7 +16,10 @@ def home():
 @use_db
 def post(id):
     posts = json.loads(feed())
-    post = posts[id]
+    if id in posts:
+        post = posts[id]
+    else:
+        abort(404)
     return render_template(
         "blog/post.html",
         logged_in=g.user is not None,
