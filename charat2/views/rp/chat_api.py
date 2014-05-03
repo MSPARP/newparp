@@ -254,9 +254,9 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="%s kicked %s from the chat." % (
-                g.user_chat.name,
-                set_user_chat.name,
+            text="<span style\"color: #%s;\">%s</span> kicked <span style\"color: #%s;\">%s</span> from the chat." % (
+                g.user_chat.color, g.user_chat.name,
+                set_user_chat.color, set_user_chat.name,
             ),
         ))
         return "", 204
@@ -386,7 +386,9 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="%s removed the conversation topic." % g.user_chat.name,
+            text="<span style\"color: #%s;\">%s</span> removed the conversation topic." % (
+                g.user_chat.color, g.user_chat.name,
+            ),
         ))
     else:
         send_message(g.db, g.redis, Message(
@@ -394,7 +396,9 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="%s changed the topic to \"%s\"." % (g.user_chat.name, topic),
+            text="<span style\"color: #%s;\">%s</span> changed the topic to \"%s\"." % (
+                g.user_chat.color, g.user_chat.name, topic
+            ),
         ))
 
     return "", 204
@@ -440,7 +444,7 @@ def save():
     g.user_chat.replacements = json.dumps(replacements)
 
     # Send a message if name or acronym has changed.
-    if g.user_chat.name != old_name or g.user_chat.acronym != old_acronym:
+    if g.user_chat.name != old_name or g.user_chat.acronym != old_acronym or g.user_chat.color != old_color:
         if g.user_chat.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
@@ -449,9 +453,9 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.user_chat.name,
-                text="%s [%s] is now %s [%s]." % (
-                    old_name, old_acronym,
-                    g.user_chat.name, g.user_chat.acronym,
+                text="<span style\"color: #%s;\">%s [%s]</span> is now <span style\"color: #%s;\">%s [%s].</span>" % (
+                    old_color, old_name, old_acronym,
+                    g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
                 ),
             ))
 
@@ -476,8 +480,8 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="%s disconnected." % (
-                    g.user_chat.name,
+                text="<span style\"color: #%s;\">%s</span> disconnected." % (
+                    g.user_chat.color, g.user_chat.name,
                 ),
             ))
     return "", 204
