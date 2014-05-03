@@ -396,7 +396,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="[color=#%s]%s [%s][/color] changed the topic to \"%s.\"" % (
+            text="[color=#%s]%s [%s][/color] changed the topic to \"%s\"" % (
                 g.user_chat.color, g.user_chat.name, g.user_chat.acronym, topic,
             ),
         ))
