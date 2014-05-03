@@ -14,10 +14,10 @@ def home():
     )
 
 @use_db
-def view_post(post_id):
+def view_post(id):
     posts = json.loads(feed())
     if id in posts:
-        post = posts[post_id]
+        post = posts[id]
     else:
         abort(404)
     return render_template(
@@ -25,10 +25,6 @@ def view_post(post_id):
         logged_in=g.user is not None,
         post=post
     )
-    
-@use_db
-def view_title_post(id):
-    return id
 
 @use_db
 def feed():
