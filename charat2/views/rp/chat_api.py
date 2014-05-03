@@ -254,9 +254,9 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="[color=#%s]%s [%s][/color] kicked [color=#%s]%s [%s][/color] from the chat." % (
-                g.user_chat.color, g.user_chat.name,  g.user_chat.acronym,
-                set_user_chat.color, set_user_chat.name, set_user_chat.acroym,
+            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] kicked [color=#%s]%s [%s][/color] from the chat." % (
+                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+                set_user_chat.color, set_user_chat.name, set_user_chat.color, set_user_chat.acroym,
             ),
         ))
         return "", 204
@@ -386,8 +386,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="[color=#%s]%s [%s][/color] removed the conversation topic." % (
-                g.user_chat.color, g.user_chat.name,  g.user_chat.acronym,
+            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] removed the conversation topic." % (
+                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
             ),
         ))
     else:
@@ -396,8 +396,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="[color=#%s]%s [%s][/color] changed the topic to \"%s\"" % (
-                g.user_chat.color, g.user_chat.name, g.user_chat.acronym, topic,
+            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] changed the topic to \"%s\"" % (
+                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym, topic,
             ),
         ))
 
@@ -453,9 +453,9 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.user_chat.name,
-                text="[color=#%s]%s [%s][/color] is now [color=#%s]%s [%s][/color]." % (
-                    old_color, old_name, old_acronym,
-                    g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
+                text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color] [[color=#%s]%s[/color]]." % (
+                    old_color, old_name, old_color, old_acronym,
+                    g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
                 ),
             ))
 
@@ -480,8 +480,8 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="[color=#%s]%s [%s][/color] disconnected." % (
-                    g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
+                text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] disconnected." % (#
+                    g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
                 ),
             ))
     return "", 204
