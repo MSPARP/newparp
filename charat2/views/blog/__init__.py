@@ -14,10 +14,10 @@ def home():
     )
 
 @use_db
-def view_post(id):
+def view_post(post_id):
     posts = json.loads(feed())
     if id in posts:
-        post = posts[id]
+        post = posts[post_id]
     else:
         abort(404)
     return render_template(
