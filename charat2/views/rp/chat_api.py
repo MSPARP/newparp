@@ -254,7 +254,7 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="<span style\"color: #%s;\">%s</span> kicked <span style\"color: #%s;\">%s</span> from the chat." % (
+            text="<span style=\"color: #%s;\">%s</span> kicked <span style=\"color: #%s;\">%s</span> from the chat." % (
                 g.user_chat.color, g.user_chat.name,
                 set_user_chat.color, set_user_chat.name,
             ),
@@ -386,7 +386,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="<span style\"color: #%s;\">%s</span> removed the conversation topic." % (
+            text="<span style=\"color: #%s;\">%s</span> removed the conversation topic." % (
                 g.user_chat.color, g.user_chat.name,
             ),
         ))
@@ -396,7 +396,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="<span style\"color: #%s;\">%s</span> changed the topic to \"%s\"." % (
+            text="<span style=\"color: #%s;\">%s</span> changed the topic to \"%s\"." % (
                 g.user_chat.color, g.user_chat.name, topic
             ),
         ))
@@ -453,7 +453,7 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.user_chat.name,
-                text="<span style\"color: #%s;\">%s [%s]</span> is now <span style\"color: #%s;\">%s [%s].</span>" % (
+                text="<span style=\"color: #%s;\">%s [%s]</span> is now <span style=\"color: #%s;\">%s [%s].</span>" % (
                     old_color, old_name, old_acronym,
                     g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
                 ),
@@ -480,7 +480,7 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="<span style\"color: #%s;\">%s</span> disconnected." % (
+                text="<span style=\"color: #%s;\">%s</span> disconnected." % (
                     g.user_chat.color, g.user_chat.name,
                 ),
             ))
