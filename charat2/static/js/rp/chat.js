@@ -492,13 +492,29 @@ $(document).ready(function() {
         startChat();
 
         $('#control-buttons .ooc-button, #oocToggle input').click(function() {
-            if (ooc_on == false) {
+            if (ooc_on) {
+                ooc_on = false;
+                $('#oocToggle input').removeProp('checked');
+                $('#control-buttons .ooc-button').css('background-color','');
+            } else {
                 ooc_on = true;
                 $('#oocToggle input').prop('checked','checked');
                 $('#control-buttons .ooc-button').css('background-color','#70A070');
+            }
+            updateChatPreview();
+        });
+
+        $('#control-buttons .me-button').click(function() {
+            if (type_force == 'me') {
+                $('#control-buttons .me-button').css('background-color','');
+                if (ooc_on) {
+                    $('#control-buttons .ooc-button').css('background-color','#70A070');
+                } else {
+                    $('#control-buttons .ooc-button').css('background-color','');
+                }
             } else {
-                ooc_on = false;
-                $('#oocToggle input').removeProp('checked');
+                type_force = 'me';
+                $('#control-buttons .me-button').css('background-color','#70A070');
                 $('#control-buttons .ooc-button').css('background-color','');
             }
             updateChatPreview();
@@ -613,6 +629,7 @@ $(document).ready(function() {
                         type = type_force;
                     }
                     type_force = '';
+                    $('#control-buttons .me-button').css('background-color','');
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
