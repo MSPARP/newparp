@@ -251,7 +251,7 @@ function generateUserList(user_data) {
                 '<li class="mod2">Make Cute-Cute Mod</li>' +
                 '<li class="mod3">Make Little Mod</li>' +
                 '<li class="silent">Silence</li>' +
-                '<li class="unsilent">Unilence</li>' +
+                '<li class="unsilent">Unsilence</li>' +
                 '<li class="user">Remove Mod Status</li>' +
             '</span>' +
             '<span class="user_action">' +
