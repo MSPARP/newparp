@@ -254,7 +254,7 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="<span style=\"color: #%s;\">%s</span> kicked <span style=\"color: #%s;\">%s</span> from the chat." % (
+            text="[color=#%s]%s[/color] kicked [color=#%s]%s[/color] from the chat." % (
                 g.user_chat.color, g.user_chat.name,
                 set_user_chat.color, set_user_chat.name,
             ),
@@ -386,7 +386,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="<span style=\"color: #%s;\">%s</span> removed the conversation topic." % (
+            text="[color=#%s]%s[/color] removed the conversation topic." % (
                 g.user_chat.color, g.user_chat.name,
             ),
         ))
@@ -396,7 +396,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="<span style=\"color: #%s;\">%s</span> changed the topic to \"%s.\"" % (
+            text="[color=#%s]%s[/color] changed the topic to \"%s.\"" % (
                 g.user_chat.color, g.user_chat.name, topic
             ),
         ))
@@ -480,7 +480,7 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.user_chat.name,
-                text="<span style=\"color: #%s;\">%s</span> disconnected." % (
+                text="[color=#%s]%s[/color] disconnected." % (
                     g.user_chat.color, g.user_chat.name,
                 ),
             ))
