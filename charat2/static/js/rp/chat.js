@@ -505,8 +505,9 @@ $(document).ready(function() {
         });
 
         $('#control-buttons .me-button').click(function() {
-            console.log("one:"+type_force);
+            console.log("one: "+type_force);
             if (type_force == "me") {
+                console.log("test");
                 type_force == '';
                 $('#control-buttons .me-button').css('background-color','');
                 if (ooc_on) {
