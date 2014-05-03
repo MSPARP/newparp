@@ -396,7 +396,7 @@ def set_topic():
             user_id=g.user.id,
             name=g.user_chat.name,
             type="chat_meta",
-            text="<span style=\"color: #%s;\">%s</span> changed the topic to \"%s\"." % (
+            text="<span style=\"color: #%s;\">%s</span> changed the topic to \"%s.\"" % (
                 g.user_chat.color, g.user_chat.name, topic
             ),
         ))
@@ -453,7 +453,7 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.user_chat.name,
-                text="<span style=\"color: #%s;\">%s [%s]</span> is now <span style=\"color: #%s;\">%s [%s].</span>" % (
+                text="<span style=\"color: #%s;\">%s [%s]</span> is now <span style=\"color: #%s;\">%s [%s]</span>." % (
                     old_color, old_name, old_acronym,
                     g.user_chat.color, g.user_chat.name, g.user_chat.acronym,
                 ),
