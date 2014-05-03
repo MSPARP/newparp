@@ -52,7 +52,7 @@
                 <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
             </p>
             {% if message.type == 'me' %}
-            <p class="message" style="color: #000000;">{{message.user.name}} {{message.text}}</p>
+            <p class="message" style="color: #000000;">{{message.name}} {{message.text}}</p>
             {% else %}
             <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
             {% endif %}
