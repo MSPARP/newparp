@@ -18,7 +18,7 @@ def post(id):
     posts = json.loads(feed())
     post = posts[id]
     return render_template(
-        "blog/home.html",
+        "blog/post.html",
         logged_in=g.user is not None,
         post=post
     )
