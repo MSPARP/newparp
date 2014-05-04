@@ -69,7 +69,9 @@
         <div id="post-{{post.id}}" class="blog-post">
             <div class="inner-blog-post">
                 <div class="block"><header>{{post.title}}</header><subtitle>{{post.author}}</subtitle></div>
-                <div class="content">{{post.content[:100]}}</div>
+                <div class="content">
+                    {{post.content[:100]}}{% if len(post.content[:100]) != len(post.content) %}...{% endif %}
+                </div>
             </div>
         </div>
         {% endfor %}
