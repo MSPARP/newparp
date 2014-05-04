@@ -82,6 +82,9 @@ input[type="text"], input[type="password"] {
 
 .blog-post .block header {
     font-size: 24px;
+    line-height: 1.5em;
+    max-height: 3em;
+    overflow: hidden;
 }
 
 .blog-post .content {
