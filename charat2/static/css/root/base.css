@@ -74,11 +74,14 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post .block {
-    font-size: 24px;
     background-color: #63a37d;
     width: 80%;
     padding: 5px;
     margin-top: 10px;
+}
+
+.blog-post .block header {
+    font-size: 24px;
 }
 
 .blog-post .content {
@@ -86,7 +89,7 @@ input[type="text"], input[type="password"] {
 }
 
 .blog-post .content a:hover {
-    color: #2E5D3B;
+    color: #4e7d5b;
 }
 
 #main-block header {
