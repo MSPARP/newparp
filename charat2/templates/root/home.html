@@ -64,7 +64,7 @@
             </div>
         </div>
         
-        {% for key in sorted(posts) %}
+        {% for key in posts|dictsort %}
         {% set post = posts[key] %}
         <div id="post-{{post.id}}" class="blog-post">
             <div class="inner-blog-post">
