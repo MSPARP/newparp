@@ -210,7 +210,7 @@ function addLine(msg){
         var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
-            var message = $('<p>').addClass("message").html("<span style=\"#"+msg.color+";\">"+msg.name+"</span>"+" "+"[<span style=\"#"+msg.color+";\">"+msg.acronym+"</span>]"+" "+message).appendTo("#message"+msg.id);
+            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+" "+"[<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]"+" "+message).appendTo("#message"+msg.id);
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
