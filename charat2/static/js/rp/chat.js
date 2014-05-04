@@ -504,13 +504,13 @@ $(document).ready(function() {
                 $('#oocToggle input').removeProp('checked');
                 $('#control-buttons .ooc-button').css('background-color','');
             } else {
-                ooc_on = true;
-                $('#oocToggle input').prop('checked','checked');
-                $('#control-buttons .ooc-button').css('background-color','#70A070');
                 if (type_force == 'me') {
                     type_force = '';
                     $('#control-buttons .me-button').css('background-color','');
                 }
+                ooc_on = true;
+                $('#oocToggle input').prop('checked','checked');
+                $('#control-buttons .ooc-button').css('background-color','#70A070');
             }
             updateChatPreview();
         });
