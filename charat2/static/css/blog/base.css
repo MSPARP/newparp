@@ -66,13 +66,14 @@ input[type="text"], input[type="password"] {
 
 .posts {
     display: inline-block;
+    width: 100%;
+    max-width: 800px;
 }
 
 .blog-post {
     background-color: #daf5e6;
     color: #0e3d1b;
     width: 100%;
-    max-width: 800px;
     margin-bottom: 10px;
     text-align: left;
 }
