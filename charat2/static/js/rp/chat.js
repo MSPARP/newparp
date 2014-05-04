@@ -210,7 +210,7 @@ function addLine(msg){
         var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
-            var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(msg.name+" "+message).appendTo("#message"+msg.id);
+            var message = $('<p>').addClass("message").html("<span style=\""+msg.color+";\">"+msg.name+"</span>"+" "+"[<span style=\""+msg.color+";\">"+alias+"</span>]"+" "+message).appendTo("#message"+msg.id);
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
@@ -488,6 +488,7 @@ function previewToggle() {
 // CUSTOM ALERTS, NO MORE alert();
 
 // PUT LINKIFY INTO THE BBCODE FUNCTION AS WELL AS HTML TO TEXT
+// REWRITE DESKTOP NOTIFY
 
 $(document).ready(function() {
     if (document.cookie=="") {
