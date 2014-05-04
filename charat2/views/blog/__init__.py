@@ -57,6 +57,6 @@ def feed():
         "id" : 5,
         "title" : "New blog post",
         "author" : "Sho Tran",
-        "content" : "BUT LIKE, duuuude, look at this post, it's like all long and lasdjfasdjkalksdjfl;ajsdo;fj"
+        "content" : "BUT LIKE, duuuude, look at this post, it's like all long and lasdjfasdjkalksdjfl;ajsdo;fj... DID YOU LKNOAOSIDF EVERYTHING MWAHAHAHAHAHAHAHAHAHAHAHAHAHHAHA"
     }}
     return json.dumps(data, sort_keys=True)
