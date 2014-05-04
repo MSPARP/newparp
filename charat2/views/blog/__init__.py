@@ -20,7 +20,6 @@ def view_post(id,title_path=None):
         post = posts[id]
     else:
         abort(404)
-    title = post.title.lower()
     return render_template(
         "blog/post.html",
         logged_in=g.user is not None,
