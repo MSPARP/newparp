@@ -64,8 +64,8 @@
             </div>
         </div>
         
-        {% for post in posts|dictsort %}
-        {{post.title}}
+        {% for post in posts|sort %}
+        {{post}}
         {% endfor %}
 {% endblock %}
 
