@@ -52,5 +52,11 @@ def feed():
         "title" : "Test Bloggy Stuff",
         "author" : "Sho Tran",
         "content" : "lorem ipsum testing everything yyyyeee"
+    },
+    5 : {
+        "id" : 5,
+        "title" : "New blog post",
+        "author" : "Sho Tran",
+        "content" : "BUT LIKE, duuuude, look at this post, it's like all long and lasdjfasdjkalksdjfl;ajsdo;fj"
     }}
     return json.dumps(data, sort_keys=True)
