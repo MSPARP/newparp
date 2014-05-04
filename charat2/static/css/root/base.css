@@ -85,6 +85,10 @@ input[type="text"], input[type="password"] {
     padding: 5px;
 }
 
+.blog-post .content a:hover {
+    color: #2E5D3B;
+}
+
 #main-block header {
     font-size: 40px;
 }
