@@ -75,7 +75,7 @@
                     </div>
                 </a>
                 <div class="content">
-                    {{post.content[:100]}}{{"asdfasdfasdf"|length}}
+                    {{post.content[:100]}}{% if post.content[:100]|length != post.content|length %}...{% endif %}
                 </div>
             </div>
         </div>
