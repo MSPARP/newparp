@@ -19,14 +19,20 @@ def referer_or_home(requested=None):
 def login_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    referer = referer_or_home()
+    if request.args.get("referer"):
+        referer = request.args.get("referer")
+    else:
+        referer = referer_or_home()
     return render_template("root/login.html", log_in_error=request.args.get("log_in_error"), referer=referer)
 
 @use_db
 def register_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    referer = referer_or_home()
+    if request.args.get("referer"):
+        referer = request.args.get("referer")
+    else:
+        referer = referer_or_home()
     return render_template("root/register.html", register_error=request.args.get("register_error"), referer=referer)
 
 @use_db
