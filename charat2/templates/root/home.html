@@ -75,7 +75,8 @@
                     </div>
                 </a>
                 <div class="content">
-                    {{post.content[:100]}}{% if post.content[:100]|length != post.content|length %}... <a href="{{url_for("blog_home")}}post/{{post.id}}">[Read More]</a>{% endif %}
+                    {{post.content[:100]}}{% if post.content[:100]|length != post.content|length %}...{% endif %}
+                    <a href="{{url_for("blog_home")}}post/{{post.id}}">[More]</a>
                 </div>
             </div>
         </div>
