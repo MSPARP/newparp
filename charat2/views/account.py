@@ -32,39 +32,44 @@ def register_get():
 @use_db
 def login_post():
     # Check username, lowercase to make it case-insensitive.
+    referer = None
+    getreferer = ""
+    if "referer" in request.form:
+        referer = request.form["referer"]
+        getreferer = "&referer="+referer
     try:
         user = g.db.query(User).filter(
             User.username==request.form["username"].lower()
         ).one()
     except NoResultFound:
-        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect.")
+        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect."+getreferer)
     # Check password.
     if hashpw(
         request.form["password"].encode(),
         user.password.encode()
     )!=user.password:
-        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect.")
+        return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect."+getreferer)
     g.redis.set("session:" + g.session_id, user.id)
-    return redirect(referer_or_home(request.form["referer"]))
+    return redirect(referer_or_home(referer))
 
 @use_db
 def logout():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
-    return redirect(referer_or_home())
+    return redirect(referer_or_home(request.form["referer"]))
 
 @use_db
 def register():
     # Don't accept blank fields.
     if request.form["username"]=="" or request.form["password"]=="":
-        return redirect(referer_or_home()+"?register_error=Please enter a username and password.")
+        return redirect(referer_or_home()+"?register_error=Please enter a username and password."+getreferer)
     # Make sure the two passwords match.
     if request.form["password"]!=request.form["password_again"]:
-        return redirect(referer_or_home()+"?register_error=The two passwords didn't match.")
+        return redirect(referer_or_home()+"?register_error=The two passwords didn't match."+getreferer)
     # Check username against username_validator.
     username = request.form["username"].lower()[:50]
     if username_validator.match(username) is None:
-        return redirect(referer_or_home()+"?register_error=Usernames can only contain letters, numbers, hyphens and underscores.")
+        return redirect(referer_or_home()+"?register_error=Usernames can only contain letters, numbers, hyphens and underscores."+getreferer)
     # XXX DON'T ALLOW USERNAMES STARTING WITH GUEST_.
     # Make sure this username hasn't been taken before.
     # Also check against reserved usernames.
@@ -72,7 +77,7 @@ def register():
         User.username==username
     ).count()
     if existing_username==1 or username in reserved_usernames:
-        return redirect(referer_or_home()+"?register_error=The username "+username+" has already been taken.")
+        return redirect(referer_or_home()+"?register_error=The username "+username+" has already been taken."+getreferer)
     new_user = User(
         username=username,
         password=hashpw(request.form["password"].encode(), gensalt()),
@@ -81,5 +86,5 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    return redirect(referer_or_home())
+    return redirect(referer_or_home(request.form["referer"]))
 
