@@ -7,7 +7,7 @@ from charat2.model import User
 from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, reserved_usernames
 
-def referer_or_home():
+def referer_or_home(requested=None):
     if "Referer" in request.headers:
         r = urlparse(request.headers["Referer"])
         return r.scheme+"://"+r.netloc+r.path
@@ -17,13 +17,15 @@ def referer_or_home():
 def login_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    return render_template("root/login.html", log_in_error=request.args.get("log_in_error"))
+    referer = referer_or_home()
+    return render_template("root/login.html", log_in_error=request.args.get("log_in_error"), referer=referer)
 
 @use_db
 def register_get():
     if g.user is not None:
         return redirect(url_for("home"))
-    return render_template("root/register.html", register_error=request.args.get("register_error"))
+    referer = referer_or_home()
+    return render_template("root/register.html", register_error=request.args.get("register_error"), referer=referer)
 
 @use_db
 def login_post():
