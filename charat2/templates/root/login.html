@@ -30,6 +30,9 @@
                 <form action="{{url_for("login_post")}}" method="post">
                     <input id="logUsername" type="text" name="username" placeholder="Username">
                     <input id="logPassword" type="password" name="password" placeholder="Password">
+                    {% if referer is not None %}
+                    <input type="hidden" name="referer" value="{{referer}}" />
+                    {% endif %}
                     <button class="block-button" type="submit">Login</button>
                 </form>
             </div>
