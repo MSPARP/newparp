@@ -62,7 +62,7 @@ def login_post():
 def logout():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
-    return redirect(referer_or_home(request.form["referer"]))
+    return redirect(referer_or_home())
 
 @use_db
 def register():
