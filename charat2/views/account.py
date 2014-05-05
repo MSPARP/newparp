@@ -8,6 +8,8 @@ from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, reserved_usernames
 
 def referer_or_home(requested=None):
+    if requested:
+        return requested
     if "Referer" in request.headers:
         r = urlparse(request.headers["Referer"])
         return r.scheme+"://"+r.netloc+r.path
@@ -43,7 +45,7 @@ def login_post():
     )!=user.password:
         return redirect(referer_or_home()+"?log_in_error=The username or password you entered is incorrect.")
     g.redis.set("session:" + g.session_id, user.id)
-    return redirect(referer_or_home())
+    return redirect(referer_or_home(request.form["referer"]))
 
 @use_db
 def logout():
