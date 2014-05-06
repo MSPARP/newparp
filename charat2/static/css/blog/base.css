@@ -41,6 +41,11 @@ input[type="text"], input[type="password"] {
     text-align: center;
 }
 
+#blog-logo {
+    width: 57px;
+    height: 57px;
+}
+
 #header {
     position: relative;
     display: inline-block;
