@@ -500,9 +500,16 @@ $(document).ready(function() {
 
         $('#control-buttons .ooc-button, #oocToggle input').click(function() {
             if (ooc_on) {
+                if (type_force == 'me') {
+                    type_force = '';
+                    $('#control-buttons .me-button').css('background-color','');
+                    $('#oocToggle input').prop('checked','checked');
+                    $('#control-buttons .ooc-button').css('background-color','#70A070');
+                } else {
                 ooc_on = false;
-                $('#oocToggle input').removeProp('checked');
-                $('#control-buttons .ooc-button').css('background-color','');
+                    $('#oocToggle input').removeProp('checked');
+                    $('#control-buttons .ooc-button').css('background-color','');
+                }
             } else {
                 if (type_force == 'me') {
                     type_force = '';
