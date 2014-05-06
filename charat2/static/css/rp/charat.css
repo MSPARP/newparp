@@ -15,7 +15,6 @@
 /* Global*/
 
 * {
-    word-wrap: break-word;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -191,7 +190,6 @@ optgroup option {
 
 h1 {
     font-size: 14pt;
-    word-wrap: break-word;
     margin: 5px;
 }
 

@@ -1,6 +1,7 @@
 body {
     background-color: #2e5d3b;
     font-family: "helveticaneue", "helvetica neue", "helveticaneueroman", "helveticaneue-roman", "helvetica neue roman", 'texgyreherosregular', "helvetica", "tahoma", "geneva", "arial", sans-serif;
+    word-wrap: break-word;
 }
 
 a {
