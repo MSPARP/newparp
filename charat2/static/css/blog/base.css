@@ -57,11 +57,11 @@ input[type="text"], input[type="password"] {
 }
 
 #title {
+    color: #000000;
     margin: 0;
 }
 
 #menu {
-    color: #000000;
     font-size: 20px;
     margin-top: 20px;
     text-align: left;
