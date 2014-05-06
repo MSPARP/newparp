@@ -61,6 +61,7 @@ input[type="text"], input[type="password"] {
 }
 
 #menu {
+    color: #000000;
     font-size: 20px;
     margin-top: 20px;
     text-align: left;
