@@ -223,7 +223,7 @@ function addLine(msg){
         if (window_active == false) {
             missed_messages++;
             if (missed_messages !=0) {
-                document.title = missed_messages+" new - "+chat.title;
+                document.title = missed_messages+" new – "+chat.title;
             }
         }
         
@@ -398,9 +398,9 @@ function clearChat() {
     $('input[name="chat"]').val(chat.url);
     $('input, select, button').prop('disabled', 'disabled');
     setSidebar(null);
-    document.title = (chat['title'] || chat.url)+' - '+ORIGINAL_TITLE;
+    document.title = (chat['title'] || chat.url)+' – '+ORIGINAL_TITLE;
     if (chat.type=='unsaved' || chat.type=='saved') {
-        document.title = ORIGINAL_TITLE+' - '+chat.url;
+        document.title = ORIGINAL_TITLE+' – '+chat.url;
     }
     msgcont = 0;
 }
@@ -789,11 +789,11 @@ $(document).ready(function() {
             if (navigator.userAgent.indexOf('Chrome')!=-1) {
                 // You can't change document.title here in Chrome. #googlehatesyou
                 window.setTimeout(function() {
-                    document.title = chat.title+' - '+ORIGINAL_TITLE;
+                    document.title = chat.title+' – '+ORIGINAL_TITLE;
                     missed_messages = 0;
                 }, 200);
             } else {
-                document.title = chat.title+' - '+ORIGINAL_TITLE;
+                document.title = chat.title+' – '+ORIGINAL_TITLE;
                 missed_messages = 0;
             }
             window_active = true;
