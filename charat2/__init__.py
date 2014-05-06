@@ -71,6 +71,11 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", method
 # Blog subdomain (blog.charat.net)
 
 app.add_url_rule("/", "blog_home", blog.home, subdomain="blog",methods=("GET",))
+
+@app.route("/favicon.ico", subdomain="rp")
+def rp_favicon():
+    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/blog/favicon.ico", mimetype="image/vnd.microsoft.icon")
+
 app.add_url_rule("/post/<id>", "blog_post", blog.view_post, subdomain="blog",methods=("GET",))
 app.add_url_rule("/post/<id>/<post_title>", "blog_post", blog.view_post, subdomain="blog",methods=("GET",))
 app.add_url_rule("/feed.json", "blog_feed", blog.feed, subdomain="blog",methods=("GET",))
