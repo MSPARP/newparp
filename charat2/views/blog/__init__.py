@@ -24,7 +24,7 @@ def view_post(id,title_path=None):
     title_url = post["title"].lower()
     title_url = re.sub(r'\W+', '-', title_url)
     if title_path != title_url:
-        return url_for("blog_post", id=id, title_path=title_url)
+        return redirect(url_for("blog_post", id=id+"/"+title_url))
 
     return render_template(
         "blog/post.html",
