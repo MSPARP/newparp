@@ -80,23 +80,23 @@ body.menu #topbar #toptitle {
 }
 
 #topbar #topmenu {
-    background-color: #F6F6F6;
+    background-color: #f6f6f6;
     background-color: rgba(246,246,246,.95);
     position: relative;
     top: -6px;
 }
 
 #topbar #topmenu a, #topbar #topmenu div {
-    color: #B0E0B0;
+    color: #a0d0a0;
     cursor: pointer;
 }
 
 #topbar #topmenu a:hover, #topbar #topmenu div:hover {
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
 }
 
 #topmenu .topborder {
-    border-color: #B0E0B0;
+    border-color: #a0d0a0;
 }
 
 #topbar .left {
