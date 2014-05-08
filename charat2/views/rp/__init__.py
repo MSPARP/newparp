@@ -13,7 +13,6 @@ def home():
     return render_template("rp/home.html", logged_in=logged_in, base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
 
 @use_db
-@login_required
 def rooms():
     rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
