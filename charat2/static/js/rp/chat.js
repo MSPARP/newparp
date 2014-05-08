@@ -243,7 +243,7 @@ function generateUserList(user_data) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
             $('#textInput').css('color','#'+list_user.character.color);
-            $('#aliasOffset').text(list_user.character.name).css('color','#'+list_user.character.color);
+            $('#aliasOffset').text(list_user.character.acronym+": ").css('color','#'+list_user.character.color);
             $("#textInput").css('text-indent', $('#aliasOffset').width()+'px');
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
