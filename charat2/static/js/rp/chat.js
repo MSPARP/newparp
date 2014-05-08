@@ -399,9 +399,6 @@ function clearChat() {
     $('input, select, button').prop('disabled', 'disabled');
     setSidebar(null);
     document.title = (chat['title'] || chat.url)+' – '+ORIGINAL_TITLE;
-    if (chat.type=='unsaved' || chat.type=='saved') {
-        document.title = ORIGINAL_TITLE+' – '+chat.url;
-    }
     msgcont = 0;
 }
 
