@@ -479,6 +479,13 @@ body #userListButton {
     right: 0;
 }
 
+#aliasOffset {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    z-index: 1;
+}
+
 body > #save {
     display: none;
 }
