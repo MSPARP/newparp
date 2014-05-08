@@ -43,8 +43,12 @@ a.button {
     color: #FFFFFF;
     padding: 5px;
     margin-top: 5px;
-    width: 45%;
+    width: 110px;
     text-align: center;
+}
+
+a.button.chat {
+    width: 236px;
 }
 
 a.button:hover {
