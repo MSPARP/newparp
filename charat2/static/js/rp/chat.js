@@ -398,7 +398,7 @@ function clearChat() {
     $('input[name="chat"]').val(chat.url);
     $('input, select, button').prop('disabled', 'disabled');
     setSidebar(null);
-    document.title = (chat['title'] || chat.url)+' – '+ORIGINAL_TITLE;
+    document.title = (chat.title || chat.url)+' – '+ORIGINAL_TITLE;
     msgcont = 0;
 }
 
