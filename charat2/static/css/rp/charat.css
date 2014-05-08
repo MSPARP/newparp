@@ -236,7 +236,7 @@ label.quirk {
 #topbar {
     font-family: "Source Sans Pro B", Sans-Serif;
     font-size: 2em;
-    line-height: 1em;
+    line-height: 1.2em;
     text-align: center;
     background-color: #AACCAA;
     background-color: rgba(170, 204, 170, 0.8);
@@ -244,14 +244,14 @@ label.quirk {
     top: 0;
     left: 0;
     right: 0;
-    height: 1em;
+    height: 1.2em;
     z-index: 100;
 }
 
 #topbar #toptitle {
     background-color: #90B090;
     background-color: rgba(144, 174, 144, 0.8);
-    height: 1em;
+    height: 1.2em;
     max-width: 100%;
 }
 
