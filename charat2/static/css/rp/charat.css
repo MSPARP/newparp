@@ -22,7 +22,7 @@ body {
     font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
     background-attachment: fixed;
     word-wrap: break-word;
-    padding-top: 50px;
+    padding-top: 2.5em;
     background-color: #C0F0C0;
     margin: 0;
 }
