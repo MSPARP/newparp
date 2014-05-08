@@ -41,8 +41,10 @@ p:hover .timestamp {
 /* Top Bar */
 
 #topbar {
+    font-size: 35px;
     position: absolute;
     background-color: #FFFFFF;
+    height: 44px;
 }
 
 #topbar center {
