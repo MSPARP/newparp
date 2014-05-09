@@ -28,7 +28,7 @@
                 <span class="error">{{register_error}}</span>
                 {% endif %}
                 <form action="{{url_for("register")}}" method="post">
-                    <input id="regUsername" type="text" name="username" placeholder="Username">
+                    <input id="regUsername" type="text" name="username" placeholder="Username" autofocus>
                     <input id="regPassword" type="password" name="password" placeholder="Password">
                     <input id="regConfirm" type="password" name="password_again" placeholder="Confirm Pass">
                     {% if referer: %}<input type="hidden" name="referer" value="{{referer}}" />{% endif %}

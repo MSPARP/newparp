@@ -28,7 +28,7 @@
                 <span class="error">{{log_in_error}}</span>
                 {% endif %}
                 <form action="{{url_for("login_post")}}" method="post">
-                    <input id="logUsername" type="text" name="username" placeholder="Username">
+                    <input id="logUsername" type="text" name="username" placeholder="Username" autofocus>
                     <input id="logPassword" type="password" name="password" placeholder="Password">
                     {% if referer: %}<input type="hidden" name="referer" value="{{referer}}" />{% endif %}
                     <button class="block-button" type="submit">Login</button>
