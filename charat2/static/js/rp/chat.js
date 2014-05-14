@@ -500,7 +500,7 @@ function updateChatPreview(){
         $('#preview').html(bbEncode(aliasPreview + textPreview));
         sending_line = textPreview;
     } else {
-        $('#preview').html('&nbsp;');
+        $('#preview').html(aliasPreview);
     }
     $(CONVERSATION_CONTAINER).css('bottom',($('.controls').height()+20)+'px');
     if(at_bottom) {
