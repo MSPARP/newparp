@@ -245,7 +245,7 @@ function generateUserList(user_data) {
             $('#online').prop('class',list_user.meta.group);
             $('#textInput').css('color','#'+list_user.character.color);
             $('#aliasOffset').text(list_user.character.acronym+":").css('color','#'+list_user.character.color);
-            $("#textInput").css('text-indent', ($('#aliasOffset').width()+3)+'px');
+            $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
 
@@ -497,7 +497,7 @@ function updateChatPreview(){
     textPreview = jQuery.trim(textPreview);
     
     if (textPreview.length>0) {
-        $('#preview').text(aliasPreview + textPreview);
+        $('#preview').html(bbEncode(aliasPreview + textPreview));
         sending_line = textPreview;
     } else {
         $('#preview').html('&nbsp;');
