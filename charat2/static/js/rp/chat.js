@@ -442,6 +442,8 @@ function readCookie(name) {
 function updateChatPreview(){
     var at_bottom = atBottom(CONVERSATION_CONTAINER);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
+    $('#textInput').css('opacity','1');
+    $('#aliasOffset').css('opacity','1');
     $('#preview').css('color', '#'+user.character.color);
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
@@ -472,11 +474,8 @@ function updateChatPreview(){
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
-        $('#preview').css('opacity','0.5');
-    } else {
-        $('#textInput').css('opacity','1');
-        $('#aliasOffset').css('opacity','1');
-        $('#preview').css('opacity','1');
+        var c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(user.character.color);
+        $('#preview').css('color', 'rgba('+c[0]+','+c[1]+','+c[2]+', 0.5)');
     }
     
     if (command[0] == '/me' || type_force == 'me' || 
