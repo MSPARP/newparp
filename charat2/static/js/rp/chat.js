@@ -470,9 +470,16 @@ function updateChatPreview(){
         $('#preview').css('opacity','1');
     }
     
-    if (command[0] == '/me') {
+    if (command[0] == '/me' || type_force == 'me' || 
+            command[0] == '/ban' || command[0] == '/kick' ||
+            command[0] == '/set' || command[0] == '/topic' ||
+            command[0] == '/publicity' || command[0] == '/nsfw' ||
+            command[0] == '/autosilence') {
         $('#preview').css('color', '#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
+    }
+    
+    if (command[0] == '/me') {
         textPreview.replace(command[0]+' ','');
     }
     
