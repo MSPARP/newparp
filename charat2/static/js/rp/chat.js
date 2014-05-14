@@ -455,7 +455,7 @@ function updateChatPreview(){
             command[0] == '/set' || command[0] == '/topic' ||
             command[0] == '/publicity' || command[0] == '/nsfw' ||
             command[0] == '/autosilence' || command[0] == '/me') {
-        textPreview = textPreview.substring(command[0].length-1);
+        textPreview = textPreview.substring(command[0].length);
     }
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
@@ -488,7 +488,7 @@ function updateChatPreview(){
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
-        $('#aliasOffset').html("<span style='#"+user.character.color+"'>"+user.character.name+"</span> [<span style='#"+user.character.color+"'>"+user.character.acronym+"</span>]").css('color','#'+user.character.color);
+        $('#aliasOffset').html("<span style='#"+user.character.color+"'>"+user.character.name+"</span> [<span style='#"+user.character.color+"'>"+user.character.acronym+"</span>]").css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
     
