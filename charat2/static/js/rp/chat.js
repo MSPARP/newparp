@@ -445,6 +445,7 @@ function readCookie(name) {
 function updateChatPreview(){
     var at_bottom = atBottom(CONVERSATION_CONTAINER);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
+    $('#preview').css('color', '#'+user.character.color);
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
         textPreview = textPreview.substr(2);
@@ -470,6 +471,7 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/me') {
+        $('#preview').css('color', '#000000');
         aliasPreview = "[color="+user.character.color+"]"+user.character.name+"[/color] [[color="+user.character.color+"]"+user.character.acronym+"[/color]] ";
     }
     
