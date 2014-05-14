@@ -470,7 +470,7 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/me') {
-        aliasPreview = "[color="+user.character.color+"]"user.character.name+"[/color] [[color="+user.character.color+"]"+user.character.acronym+"[/color]] ";
+        aliasPreview = "[color="+user.character.color+"]"+user.character.name+"[/color] [[color="+user.character.color+"]"+user.character.acronym+"[/color]] ";
     }
     
     if (command[0] == '/ban') {
