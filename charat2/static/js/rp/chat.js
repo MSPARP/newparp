@@ -446,6 +446,18 @@ function updateChatPreview(){
     var at_bottom = atBottom(CONVERSATION_CONTAINER);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     $('#preview').css('color', '#'+user.character.color);
+    $('#textInput').css('color', '#'+user.character.color);
+    $('#aliasOffset').css('color', '#'+user.character.color);
+    
+    var command = $('#textInput').val().split(' ');
+    
+    if (command[0] == '/ic' || command[0] == '/ooc' ||
+            command[0] == '/ban' || command[0] == '/kick' ||
+            command[0] == '/set' || command[0] == '/topic' ||
+            command[0] == '/publicity' || command[0] == '/nsfw' ||
+            command[0] == '/autosilence' || command[0] == '/me') {
+        textPreview = textPreview.substring(command[0].length-1);
+    }
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
         textPreview = textPreview.substr(2);
@@ -454,8 +466,6 @@ function updateChatPreview(){
     }
     
     var aliasPreview = user.character.acronym+": ";
-
-    var command = $('#textInput').val().split(' ');
     
     if (!type_force && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
@@ -476,11 +486,9 @@ function updateChatPreview(){
             command[0] == '/publicity' || command[0] == '/nsfw' ||
             command[0] == '/autosilence') {
         $('#preview').css('color', '#000000');
+        $('#textInput').css('color','#000000');
+        $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
-    }
-    
-    if (command[0] == '/me') {
-        textPreview = textPreview.substring(2);
     }
     
     if (command[0] == '/ban') {
