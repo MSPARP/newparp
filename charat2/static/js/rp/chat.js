@@ -474,7 +474,7 @@ function updateChatPreview(){
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
-        var c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(user.character.color);
+        var c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec('#'+user.character.color);
         $('#preview').css('color', 'rgba('+c[0]+','+c[1]+','+c[2]+', 0.5)');
     }
     
