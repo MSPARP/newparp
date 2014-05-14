@@ -453,7 +453,7 @@ function updateChatPreview(){
 
     var command = $('#textInput').val().split(' ');
     
-    if (command[0] == '/ooc' || ooc_on) {
+    if (command[0] == '/ooc' || ooc_on || lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         $('#preview').css('opacity','0.5');
@@ -544,7 +544,7 @@ $(document).ready(function() {
                     type_force = '';
                     $('#control-buttons .me-button').css('background-color','');
                     $('#oocToggle input').prop('checked','checked');
-                    $('#control-buttons .ooc-button').css('background-color','#70A070');
+                    $('#control-buttons .ooc-button').css('background-color','#70a070');
                 } else {
                 ooc_on = false;
                     $('#oocToggle input').removeProp('checked');
@@ -609,13 +609,13 @@ $(document).ready(function() {
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     ooc_on = true;
-                    topbarSelect('#ooclet');
+                    $('#control-buttons .ooc-button').css('background-color','#70a070');
                     $('#oocToggle input').prop('checked','checked');
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
                     ooc_on = false;
-                    topbarDeselect('#ooclet');
+                    $('#control-buttons .ooc-button').css('background-color','');
                     $('#oocToggle input').removeAttr('checked');
                     $('#textInput').val('');
                     return false;
