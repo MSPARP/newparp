@@ -453,7 +453,7 @@ function updateChatPreview(){
 
     var command = $('#textInput').val().split(' ');
     
-    if (command[0] == '/ooc' || ooc_on || lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
+    if (command[0] == '/ooc' || ooc_on || textPreview.startsWith("((") || textPreview.endsWith("))") || textPreview.startsWith("[[") || textPreview.endsWith("]]") || textPreview.startsWith("{{") || textPreview.endsWith("}}")) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         $('#preview').css('opacity','0.5');
