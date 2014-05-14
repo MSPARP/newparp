@@ -80,6 +80,7 @@ var current_user_array = [];
 var user_list = {};
 
 var type_force = '';
+var sending_line = '';
 
 /* FUNCTIONS */
 
@@ -497,6 +498,7 @@ function updateChatPreview(){
     
     if (textPreview.length>0) {
         $('#preview').text(aliasPreview + textPreview);
+        sending_line = textPreview;
     } else {
         $('#preview').html('&nbsp;');
     }
@@ -673,14 +675,13 @@ $(document).ready(function() {
                         $('#preview').text(command.join(' '));
                         type_force = 'me';
                     }
-                    console.log(command);
                 }
                 
                 if ($('#textInput').val()!='') {
                     if (pingInterval) {
                         window.clearTimeout(pingInterval);
                     }
-                    var lineSend = $('#preview').text();
+                    var lineSend = sending_line;
                     var type = ooc_on ? "ooc" : "ic";
                     if (lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
                         type = "ooc";
