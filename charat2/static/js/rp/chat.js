@@ -480,7 +480,7 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/me') {
-        textPreview.replace(command[0]+' ','');
+        textPreview = textPreview.substring(2);
     }
     
     if (command[0] == '/ban') {
