@@ -473,6 +473,7 @@ function updateChatPreview(){
     if (command[0] == '/me') {
         $('#preview').css('color', '#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
+        textPreview.replace(command[0]+' ','');
     }
     
     if (command[0] == '/ban') {
