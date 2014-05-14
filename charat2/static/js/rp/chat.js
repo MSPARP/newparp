@@ -243,9 +243,6 @@ function generateUserList(user_data) {
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
-            $('#textInput').css('color','#'+list_user.character.color);
-            $('#aliasOffset').text(list_user.character.acronym+":").css('color','#'+list_user.character.color);
-            $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
         }
         $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
 
@@ -448,6 +445,8 @@ function updateChatPreview(){
     $('#preview').css('color', '#'+user.character.color);
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
+    $('#aliasOffset').text(user.character.acronym+":").css('color','#'+user.character.color);
+    $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     
     var command = $('#textInput').val().split(' ');
     
@@ -489,6 +488,8 @@ function updateChatPreview(){
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
+        $('#aliasOffset').text("<span style='#"+user.character.color+"'>"+user.character.name+"</span> [<span style='#"+user.character.color+"'>"+user.character.acronym+"</span>]").css('color','#'+user.character.color);
+        $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
     
     if (command[0] == '/ban') {
