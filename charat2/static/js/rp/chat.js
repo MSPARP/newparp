@@ -456,7 +456,7 @@ function updateChatPreview(){
 
     var command = $('#textInput').val().split(' ');
     
-    if (command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
+    if (!type_force && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
             textPreview.startsWith("[[") || textPreview.endsWith("]]") || 
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
@@ -470,7 +470,7 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/me') {
-        aliasPreview = user.character.name+" ["+user.character.acronym+"] ";
+        aliasPreview = "[color="+user.character.color+"]"user.character.name+"[/color] [[color="+user.character.color+"]"+user.character.acronym+"[/color]] ";
     }
     
     if (command[0] == '/ban') {
