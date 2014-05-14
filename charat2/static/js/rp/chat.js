@@ -450,10 +450,15 @@ function updateChatPreview(){
     } else {
         textPreview = applyQuirks(textPreview);
     }
+    
+    var aliasPreview = user.character.acronym+": ";
 
     var command = $('#textInput').val().split(' ');
     
-    if (command[0] == '/ooc' || ooc_on || textPreview.startsWith("((") || textPreview.endsWith("))") || textPreview.startsWith("[[") || textPreview.endsWith("]]") || textPreview.startsWith("{{") || textPreview.endsWith("}}")) {
+    if (command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
+            textPreview.startsWith("((") || textPreview.endsWith("))") || 
+            textPreview.startsWith("[[") || textPreview.endsWith("]]") || 
+            textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         $('#preview').css('opacity','0.5');
@@ -461,6 +466,10 @@ function updateChatPreview(){
         $('#textInput').css('opacity','1');
         $('#aliasOffset').css('opacity','1');
         $('#preview').css('opacity','1');
+    }
+    
+    if (command[0] == '/me') {
+        aliasPreview = user.character.name+" ["+user.character.acronym+"] ";
     }
     
     if (command[0] == '/ban') {
@@ -484,18 +493,10 @@ function updateChatPreview(){
         
     }
     
-    if (command[0] == '/ic') {
-        
-    }
-    
-    if (command[0] == '/me') {
-        
-    }
-    
     textPreview = jQuery.trim(textPreview);
     
     if (textPreview.length>0) {
-        $('#preview').text(textPreview);
+        $('#preview').text(aliasPreview + textPreview);
     } else {
         $('#preview').html('&nbsp;');
     }
