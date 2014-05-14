@@ -450,41 +450,46 @@ function updateChatPreview(){
     } else {
         textPreview = applyQuirks(textPreview);
     }
+
+    var command = $('#textInput').val().split(' ');
     
-    if ($('#textInput').val().charAt(0)=='/') {
-        var command = $('#textInput').val().split(' ');
-        if (command[0] == '/ban') {
-            
-        }
+    if (command[0] == '/ooc' || ooc_on) {
+        $('#textInput').css('opacity','0.5');
+        $('#aliasOffset').css('opacity','0.5');
+        $('#preview').css('opacity','0.5');
+    } else {
+        $('#textInput').css('opacity','1');
+        $('#aliasOffset').css('opacity','1');
+        $('#preview').css('opacity','1');
+    }
+    
+    if (command[0] == '/ban') {
         
-        if (command[0] == '/kick') {
-            
-        }
+    }
+    
+    if (command[0] == '/kick') {
         
-        if (command[0] == '/set') {
-            var groups = ['magical','cute','little','unsilence','silence'];
-            var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
-        }
+    }
+    
+    if (command[0] == '/set') {
+        var groups = ['magical','cute','little','unsilence','silence'];
+        var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
+    }
+    
+    if (command[0] == '/topic') {
         
-        if (command[0] == '/topic') {
-            
-        }
+    }
+    
+    if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
         
-        if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
-            
-        }
+    }
+    
+    if (command[0] == '/ic') {
         
-        if (command[0] == '/ooc') {
-            
-        }
+    }
+    
+    if (command[0] == '/me') {
         
-        if (command[0] == '/ic') {
-            
-        }
-        
-        if (command[0] == '/me') {
-            
-        }
     }
     
     textPreview = jQuery.trim(textPreview);
