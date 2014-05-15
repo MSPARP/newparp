@@ -266,8 +266,8 @@ function generateUserList(user_data) {
         $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
         if (list_user.meta.user_id != user.meta.user_id) {
             $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
-            user_list[list_user.meta.user_id] = {'username':list_user.meta.username, 'character':list_user.character.name, 'group':list_user.meta.group};
-            user_list[list_user.meta.username] = {'id':list_user.meta.user_id, 'character':list_user.character.name, 'group':list_user.meta.group};
+            user_list[list_user.meta.user_id] = list_user;
+            user_list[list_user.meta.username] = list_user;
         }
     }
     // test
@@ -492,7 +492,8 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/ban') {
-        
+        var action_user = user_list[command[1]];
+        textPreview = "banned [color=#"+user_list.character.color+"]"+user_list.character.name+"[/color] [[color=#"+user_list.character.color+"]"+user_list.character.acronym+"[/color]] ";
     }
     
     if (command[0] == '/kick') {
