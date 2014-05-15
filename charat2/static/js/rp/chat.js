@@ -494,7 +494,9 @@ function updateChatPreview(){
     if (command[0] == '/ban') {
         try {
             var action_user = user_list[command[1]];
-            textPreview = "banned [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat."+(command[2] ? "Reason: "+command[2] : "");
+            command.splice(0,2);
+            var reason = command.join(" ");
+            textPreview = "banned [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat."+(reason ? " Reason: "+reason : "");
         } catch(e) {
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
