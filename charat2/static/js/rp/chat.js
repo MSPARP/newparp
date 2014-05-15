@@ -504,7 +504,13 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/kick') {
-        
+        try {
+            var action_user = user_list[command[1]];
+            textPreview = "kicked [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat.";
+        } catch(e) {
+            aliasPreview = "";
+            textPreview = "[color=#EE0000]Error[/color]";
+        }
     }
     
     if (command[0] == '/set') {
@@ -513,10 +519,30 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/topic') {
-        
+        try {
+            command.splice(0,1);
+            var new_topic = command.join(" ");
+            textPreview = "changed the topic to \""+new_topic+"\"";
+        } catch(e) {
+            aliasPreview = "";
+            textPreview = "[color=#EE0000]Error[/color]";
+        }
     }
     
-    if (command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence') {
+    if (command[0] == '/nsfw' || command[0] == '/autosilence') {
+        try {
+            if (command[1] == 'on' || command[1] == 'off') {
+                textPreview = "switched "+command[0].substring(1)+" "+command[1];
+            } else {
+                throw "error";
+            }
+        } catch(e) {
+            aliasPreview = "";
+            textPreview = "[color=#EE0000]Error[/color]";
+        }
+    }
+    
+    if (command[0] == '/publicity') {
         
     }
     
