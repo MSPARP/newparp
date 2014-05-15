@@ -493,7 +493,7 @@ function updateChatPreview(){
     
     if (command[0] == '/ban') {
         var action_user = user_list[command[1]];
-        textPreview = "banned [color=#"+user_list.character.color+"]"+user_list.character.name+"[/color] [[color=#"+user_list.character.color+"]"+user_list.character.acronym+"[/color]] ";
+        textPreview = "banned [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] ";
     }
     
     if (command[0] == '/kick') {
