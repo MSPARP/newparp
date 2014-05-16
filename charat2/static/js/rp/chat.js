@@ -501,9 +501,7 @@ function updateChatPreview(){
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
         }
-    }
-    
-    if (command[0] == '/kick') {
+    } else if (command[0] == '/kick') {
         try {
             var action_user = user_list[command[1]];
             textPreview = "kicked [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat.";
@@ -511,9 +509,7 @@ function updateChatPreview(){
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
         }
-    }
-    
-    if (command[0] == '/set') {
+    } else if (command[0] == '/set') {
         var groups = ['magical','cute','little','unsilence','silence'];
         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
         try {
@@ -526,9 +522,7 @@ function updateChatPreview(){
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
         }
-    }
-    
-    if (command[0] == '/topic') {
+    } else if (command[0] == '/topic') {
         try {
             command.splice(0,1);
             var new_topic = command.join(" ");
@@ -537,9 +531,7 @@ function updateChatPreview(){
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
         }
-    }
-    
-    if (command[0] == '/nsfw' || command[0] == '/autosilence') {
+    } else if (command[0] == '/nsfw' || command[0] == '/autosilence') {
         try {
             if (command[1] == 'on' || command[1] == 'off') {
                 textPreview = "switched "+command[0].substring(1)+" "+command[1];
@@ -550,9 +542,7 @@ function updateChatPreview(){
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
         }
-    }
-    
-    if (command[0] == '/publicity') {
+    } else if (command[0] == '/publicity') {
         try {
             if (command[1] == 'listed') {
                 textPreview = "listed the chat. It's now listed on the public rooms page.";
