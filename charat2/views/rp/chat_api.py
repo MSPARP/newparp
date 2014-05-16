@@ -165,11 +165,9 @@ def set_group():
         return "", 204
 
     if request.form["group"] == "mod":
-        message = ("%s set %s to Magical Mod. They can now silence, kick and "
-                   "ban other users.")
+        message = ("%s set %s to Magical Mod. They can now silence, kick and ban other users.")
     elif request.form["group"] == "mod2":
-        message = ("%s set %s to Cute-Cute Mod. They can now silence and kick "
-                   "other users.")
+        message = ("%s set %s to Cute-Cute Mod. They can now silence and kick other users.")
     elif request.form["group"] == "mod3":
         message = ("%s set %s to Little Mod. They can now silence other users.")
     elif request.form["group"] == "user":
@@ -340,8 +338,7 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = ("%s listed the chat. It's now listed on the public"
-                " rooms page.")
+            message = ("%s listed the chat. It's now listed on the public rooms page.")
         elif g.chat.publicity == "unlisted":
             message = "%s unlisted the chat."
     else:

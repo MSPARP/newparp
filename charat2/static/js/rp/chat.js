@@ -516,6 +516,15 @@ function updateChatPreview(){
     if (command[0] == '/set') {
         var groups = ['magical','cute','little','unsilence','silence'];
         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
+        try {
+            if (groups.contains(command[2]))
+                var action_user = user_list[command[1]];
+                var group_set = GROUP_DESCRIPTIONS[group_map[command[2]]];
+                textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] to "+group_set.title+(group_set.description ? "They can now "+group_set.description : "");
+        } catch(e) {
+            aliasPreview = "";
+            textPreview = "[color=#EE0000]Error[/color]";
+        }
     }
     
     if (command[0] == '/topic') {
@@ -543,7 +552,18 @@ function updateChatPreview(){
     }
     
     if (command[0] == '/publicity') {
-        
+        try {
+            if (command[1] == 'listed') {
+                textPreview = "listed the chat. It's now listed on the public rooms page.";
+            } else if (command[1] == 'unlisted') {
+                textPreview = "unlisted the chat.";
+            } else {
+                throw "error";
+            }
+        } catch(e) {
+            aliasPreview = "";
+            textPreview = "[color=#EE0000]Error[/color]";
+        }
     }
     
     textPreview = jQuery.trim(textPreview);
