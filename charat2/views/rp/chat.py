@@ -1,6 +1,7 @@
 from flask import Flask, abort, g, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
+from webhelpers import paginate
 
 from charat2.helpers.auth import login_required
 from charat2.model import (
@@ -105,7 +106,7 @@ def chat(url):
 
 @use_db
 @login_required
-def log(url):
+def log(url, page=None):
 
     # PM chats aren't implemented yet so just 404 them for now.
     if url=="pm" or url.startswith("pm/"):
@@ -116,16 +117,32 @@ def log(url):
     except NoResultFound:
         abort(404)
 
-    # TODO PAGING
+    if page is None:
+        page = 1
 
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
-    ).order_by(Message.id).all()
+    ).order_by(Message.id).limit(100).offset((page-1)*100).all()
+
+    if len(messages) == 0:
+        abort(404)
+
+    message_count = g.db.query(func.count('*')).select_from(Message).filter(
+        Message.chat_id==chat.id,
+    ).scalar()
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=100,
+        item_count=message_count,
+        url=lambda page: url_for("log", url=chat.url, page=page),
+    )
 
     return render_template(
         "rp/log.html",
         url=url,
         chat=chat,
         messages=messages,
+        paginator=paginator,
     )
 
