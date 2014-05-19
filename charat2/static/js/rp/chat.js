@@ -277,6 +277,7 @@ function generateUserList(user_data) {
             if (user_data[$(this).text()]) {
                 in_list = true;
             }
+            console.log(user_data[$(this).text()]);
         }
         if (in_list) {
             $(this).parent().show();
