@@ -474,7 +474,7 @@ function updateChatPreview(){
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
-        $('#previewWrapper').css('opacity','0.5');
+        $('#preview').css('opacity','0.5');
     }
     
     if (command[0] == '/me' || type_force == 'me' || 
