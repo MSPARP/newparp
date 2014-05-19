@@ -279,9 +279,9 @@ function generateUserList(user_data) {
             }
         }
         if (in_list) {
-            $(this).parent().parent().show();
+            $(this).parent().show();
         } else {
-            $(this).parent().parent().hide();
+            $(this).parent().hide();
         }
     });
 }
