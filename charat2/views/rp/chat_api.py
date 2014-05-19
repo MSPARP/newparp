@@ -1,6 +1,4 @@
 import json
-import os
-import pika
 
 from flask import abort, g, jsonify, make_response, request
 from sqlalchemy import and_, func
@@ -49,37 +47,24 @@ def messages():
             message_dict["users"] = get_userlist(g.db, g.redis, g.chat)
         return jsonify(message_dict)
 
+    pubsub = g.redis.pubsub()
+    # Channel for general chat messages.
+    pubsub.subscribe("channel:%s" % g.chat_id)
+    # Channel for messages aimed specifically at you - kicks, bans etc.
+    pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
+
     # Get rid of the database connection here so we're not hanging onto it
     # while waiting for the redis message.
     db_commit()
     db_disconnect()
 
-    try:
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=os.environ['RABBIT_HOST']),
-        )
-        channel = connection.channel()
-        channel.exchange_declare(exchange="direct_logs", type="direct")
-        result = channel.queue_declare(exclusive=True)
-        queue_name = result.method.queue
-
-        channel.queue_bind(
-            exchange="charat2",
-            queue=queue_name,
-            routing_key="chat:%s" % g.chat_id,
-        )
-        for method_frame, properties, body in channel.consume(queue=queue_name):
-            break
-    finally:
-        channel.cancel()
-        channel.close()
-        connection.close()
-
-    # The pubsub channel sends us a JSON string, so we return that
-    # instead of using jsonify.
-    resp = make_response(body)
-    resp.headers["Content-type"] = "application/json"
-    return resp
+    for msg in pubsub.listen():
+        if msg["type"]=="message":
+            # The pubsub channel sends us a JSON string, so we return that
+            # instead of using jsonify.
+            resp = make_response(msg["data"])
+            resp.headers["Content-type"] = "application/json"
+            return resp
 
 @mark_alive
 def ping():
