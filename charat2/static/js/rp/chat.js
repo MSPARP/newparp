@@ -475,7 +475,7 @@ function updateChatPreview(){
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         var c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec('#'+user.character.color);
-        $('#preview').css('color', 'rgba('+c[0]+','+c[1]+','+c[2]+', 0.5)');
+        $('#preview').css('color', 'rgba('+parseInt(c[1],16)+','+parseInt(c[2],16)+','+parseInt(c[3],16)+', 0.5)');
     }
     
     if (command[0] == '/me' || type_force == 'me' || 
@@ -595,7 +595,6 @@ function previewToggle() {
 
 // CUSTOM ALERTS, NO MORE alert();
 
-// PUT LINKIFY INTO THE BBCODE FUNCTION AS WELL AS HTML TO TEXT
 // REWRITE DESKTOP NOTIFY
 
 $(document).ready(function() {
