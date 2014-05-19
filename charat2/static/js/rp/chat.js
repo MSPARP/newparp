@@ -274,7 +274,7 @@ function generateUserList(user_data) {
     $(USER_LIST_ID).each(function(){
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
-            if ($(this).prop('id').substring(4) == user_data[i].meta.user_id) {
+            if (parseInt($(this).prop('id').substring(4)) == user_data[i].meta.user_id) {
                 in_list = true;
             }
         }
