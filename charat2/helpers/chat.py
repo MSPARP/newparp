@@ -1,4 +1,5 @@
 import json
+import os
 import pika
 import time
 
@@ -92,7 +93,7 @@ def send_message(db, redis, message):
 
     try:
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters('localhost')
+            pika.ConnectionParameters(host=os.environ['RABBIT_HOST'])
         )
         channel = connection.channel()
         channel.exchange_declare(exchange="charat2", type="direct")

@@ -1,4 +1,5 @@
 import json
+import os
 import pika
 
 from flask import abort, g, jsonify, make_response, request
@@ -55,7 +56,7 @@ def messages():
 
     try:
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host="localhost"),
+            pika.ConnectionParameters(host=os.environ['RABBIT_HOST']),
         )
         channel = connection.channel()
         channel.exchange_declare(exchange="direct_logs", type="direct")
