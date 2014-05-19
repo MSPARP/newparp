@@ -270,7 +270,7 @@ function generateUserList(user_data) {
             user_list[list_user.meta.username] = list_user;
         }
     }
-    
+    /*
     $(USER_LIST_ID).each(function(){
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
@@ -284,7 +284,7 @@ function generateUserList(user_data) {
             $(this).hide();
         }
     });
-    // test
+    */
 }
 
 function userAction(user,action,reason) {
