@@ -271,17 +271,17 @@ function generateUserList(user_data) {
         }
     }
 
-    $(USER_LIST_ID).each(function(){
+    $(USER_LIST_ID+" .username").each(function(){
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
-            if (parseInt($(this).prop('id').substring(4)) == user_data[i].meta.user_id) {
+            if (user_data[$(this).text()]) {
                 in_list = true;
             }
         }
         if (in_list) {
-            $(this).show();
+            $(this).parent().parent().show();
         } else {
-            $(this).hide();
+            $(this).parent().parent().hide();
         }
     });
 }
