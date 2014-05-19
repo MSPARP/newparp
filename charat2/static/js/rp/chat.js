@@ -268,6 +268,10 @@ function generateUserList(user_data) {
             $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
             user_list[list_user.meta.user_id] = list_user;
             user_list[list_user.meta.username] = list_user;
+            
+            $('#user'+list_user.meta.user_id).on('click', function(e){
+               console.log('a'); 
+            });
         }
     }
 
