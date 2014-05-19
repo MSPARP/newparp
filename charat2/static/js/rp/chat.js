@@ -273,12 +273,10 @@ function generateUserList(user_data) {
 
     $(USER_LIST_ID+" .username").each(function(){
         var in_list = false;
-        console.log($(this).text());
         for (var i=0; i<user_data.length; i++) {
-            if (user_data[$(this).text()]) {
+            if ($(this).text() == user_data[i].meta.username) {
                 in_list = true;
             }
-            console.log(user_data[$(this).text()]);
         }
         if (in_list) {
             $(this).parent().show();
