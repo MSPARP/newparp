@@ -270,7 +270,7 @@ function generateUserList(user_data) {
             user_list[list_user.meta.username] = list_user;
             
             $('#user'+list_user.meta.user_id).on('click', function(e){
-               console.log('a'); 
+               $(this).find('.user_buttons').toggle();
             });
         }
     }
