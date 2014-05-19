@@ -273,6 +273,7 @@ function generateUserList(user_data) {
 
     $(USER_LIST_ID+" .username").each(function(){
         var in_list = false;
+        console.log($(this).text());
         for (var i=0; i<user_data.length; i++) {
             if (user_data[$(this).text()]) {
                 in_list = true;
