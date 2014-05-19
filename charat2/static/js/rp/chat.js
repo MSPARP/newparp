@@ -236,7 +236,6 @@ function addLine(msg){
 }
 
 function generateUserList(user_data) {
-    $(USER_LIST_ID).empty();
     for (var i=0; i<user_data.length; i++) {
         var list_user = user_data[i];
         var is_self = "";
@@ -244,32 +243,47 @@ function generateUserList(user_data) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
         }
-        $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
-
-        var user_buttons = '<span class="set">' +
-                '<li class="mod">Make Magical Mod</li>' +
-                '<li class="mod2">Make Cute-Cute Mod</li>' +
-                '<li class="mod3">Make Little Mod</li>' +
-                '<li class="silent">Silence</li>' +
-                '<li class="unsilent">Unsilence</li>' +
-                '<li class="user">Remove Mod Status</li>' +
-            '</span>' +
-            '<span class="user_action">' +
-                '<li class="kick">Kick</li>' +
-                '<li class="ban">Ban</li>' +
-            '</span>' +
-            '<span class="chat_action">' +
-                '<li class="block">Block</li>' +
-                '<li class="highlight">Highlight</li>' +
-            '</span>';
-
-        $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
-        if (list_user.meta.user_id != user.meta.user_id) {
+        
+        if ($('#user'+list_user.meta.user_id).length > 0) {
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
+    
+            var user_buttons = '<span class="set">' +
+                    '<li class="mod">Make Magical Mod</li>' +
+                    '<li class="mod2">Make Cute-Cute Mod</li>' +
+                    '<li class="mod3">Make Little Mod</li>' +
+                    '<li class="silent">Silence</li>' +
+                    '<li class="unsilent">Unsilence</li>' +
+                    '<li class="user">Remove Mod Status</li>' +
+                '</span>' +
+                '<span class="user_action">' +
+                    '<li class="kick">Kick</li>' +
+                    '<li class="ban">Ban</li>' +
+                '</span>' +
+                '<span class="chat_action">' +
+                    '<li class="block">Block</li>' +
+                    '<li class="highlight">Highlight</li>' +
+                '</span>';
+    
+            $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
             $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
             user_list[list_user.meta.user_id] = list_user;
             user_list[list_user.meta.username] = list_user;
         }
     }
+    
+    $(USER_LIST_ID).each(function(){
+        var in_list = false;
+        for (var i=0; i<user_data.length; i++) {
+            if ($(this).prop('id').substring(4) == user_data[i].meta.user_id) {
+                in_list = true;
+            }
+        }
+        if (in_list) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
     // test
 }
 
