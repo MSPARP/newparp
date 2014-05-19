@@ -269,7 +269,7 @@ function generateUserList(user_data) {
             user_list[list_user.meta.user_id] = list_user;
             user_list[list_user.meta.username] = list_user;
             
-            $(this).find('.user_buttons').hide();
+            $('.user_buttons').hide();
             $('#user'+list_user.meta.user_id).on('click', function() {
                 var buttons_shown = $(this).is(':visible');
                 $('.user_buttons').hide();
