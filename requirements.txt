@@ -14,3 +14,4 @@ gunicorn==18.0
 gevent==1.0
 Flask-Babel==0.9
 WebHelpers==1.3
+pika==0.9.13

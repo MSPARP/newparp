@@ -1,4 +1,6 @@
 import json
+import os
+import pika
 import time
 
 from flask import abort, g, request
@@ -88,7 +90,20 @@ def send_message(db, redis, message):
     # Reload chat metadata if necessary.
     if message.type == "chat_meta":
         redis_message["chat"] = message.chat.to_dict()
-    redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
+
+    try:
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=os.environ['RABBIT_HOST'])
+        )
+        channel = connection.channel()
+        channel.exchange_declare(exchange="charat2", type="direct")
+        channel.basic_publish(
+            exchange="charat2",
+            routing_key="chat:%s" % message.chat_id,
+            body=json.dumps(redis_message),
+        )
+    finally:
+        connection.close()
 
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
