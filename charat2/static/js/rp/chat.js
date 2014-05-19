@@ -270,8 +270,14 @@ function generateUserList(user_data) {
             user_list[list_user.meta.username] = list_user;
             
             $(this).find('.user_buttons').hide();
-            $('#user'+list_user.meta.user_id).on('click', function(e){
-               $(this).find('.user_buttons').toggle();
+            $('#user'+list_user.meta.user_id).on('click', function() {
+                var buttons_shown = $(this).is(':visible');
+                $('.user_buttons').hide();
+                if (buttons_shown) {
+                    $(this).find('.user_buttons').hide();
+                } else {
+                    $(this).find('.user_buttons').show();
+                }
             });
             
             if (user.meta.user_id == list_user.meta.user_id) {
@@ -280,7 +286,7 @@ function generateUserList(user_data) {
         }
     }
 
-    $(USER_LIST_ID+" .username").each(function(){
+    $(USER_LIST_ID+" .username").each(function() {
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
             if ($(this).text() == user_data[i].meta.username) {
