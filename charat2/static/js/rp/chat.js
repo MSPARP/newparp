@@ -291,6 +291,7 @@ function generateUserList(user_data) {
         } else {
             $(this).parent().hide();
         }
+        $(this).parent().find('.user_buttons').hide();
     });
 }
 
