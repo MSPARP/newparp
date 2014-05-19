@@ -244,7 +244,7 @@ function generateUserList(user_data) {
             $('#online').prop('class',list_user.meta.group);
         }
         
-        if ($('#user'+list_user.meta.user_id).length > 0) {
+        if ($('#user'+list_user.meta.user_id).length <= 0) {
             $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
     
             var user_buttons = '<span class="set">' +
@@ -270,7 +270,7 @@ function generateUserList(user_data) {
             user_list[list_user.meta.username] = list_user;
         }
     }
-    /*
+
     $(USER_LIST_ID).each(function(){
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
@@ -284,7 +284,6 @@ function generateUserList(user_data) {
             $(this).hide();
         }
     });
-    */
 }
 
 function userAction(user,action,reason) {
