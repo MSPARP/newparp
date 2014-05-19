@@ -444,6 +444,7 @@ function updateChatPreview(){
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     $('#textInput').css('opacity','1');
     $('#aliasOffset').css('opacity','1');
+    $('#preview').css('opacity','1');
     $('#preview').css('color', '#'+user.character.color);
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
