@@ -474,8 +474,7 @@ function updateChatPreview(){
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
-        var c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec('#'+user.character.color);
-        $('#preview').css('color', 'rgba('+parseInt(c[1],16)+','+parseInt(c[2],16)+','+parseInt(c[3],16)+', 0.5)');
+        $('#previewWrapper').css('opacity','0.5');
     }
     
     if (command[0] == '/me' || type_force == 'me' || 
