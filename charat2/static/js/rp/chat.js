@@ -279,10 +279,6 @@ function generateUserList(user_data) {
                     $(this).find('.user_buttons').show();
                 }
             });
-            
-            if (user.meta.user_id == list_user.meta.user_id) {
-                $('#user'+list_user.meta.user_id).addClass('self');
-            };
         }
     }
 

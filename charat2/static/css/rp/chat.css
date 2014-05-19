@@ -518,6 +518,11 @@ body > #save {
     font-weight: bold;
 }
 
+#userList span.self:after {
+    color: #444444;
+    content: " (you)";
+}
+
 .sidebar input[name="name"] {
     width: 90%;
 }
