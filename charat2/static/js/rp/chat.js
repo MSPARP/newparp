@@ -278,7 +278,6 @@ function generateUserList(user_data) {
                 } else {
                     $(this).find('.user_buttons').show();
                 }
-                console.log(buttons_shown);
             });
             
             if (user.meta.user_id == list_user.meta.user_id) {
