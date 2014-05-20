@@ -905,6 +905,10 @@ $(document).ready(function() {
                 $(MISSED_MESSAGE_COUNT_ID).html(0);
             }
         });
+        
+        $('#textInput').scroll(function() {
+            $('#aliasOffset').css('top', (5-$('#textInput').scrollTop())+'px');
+        });
 
         $('#extain').click(function(){
             $(MISSED_MESSAGE_COUNT_ID).html(0);
