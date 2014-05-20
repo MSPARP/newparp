@@ -13,6 +13,7 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
+    func,
     Column,
     ForeignKey,
     Boolean,
@@ -22,12 +23,13 @@ from sqlalchemy import (
     String,
     Unicode,
     UnicodeText,
+    UniqueConstraint,
 )
 
 engine = create_engine(
     os.environ['POSTGRES_URL'],
     convert_unicode=True,
-    pool_recycle=3600,
+    pool_recycle=3600,echo=True,
 )
 
 sm = sessionmaker(
@@ -85,7 +87,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
 
     # Username must be alphanumeric.
-    username = Column(String(50), unique=True)
+    username = Column(String(50))
 
     # Bcrypt hash.
     password = Column(String(60), nullable=False)
@@ -371,6 +373,9 @@ class Ban(Base):
 
     reason = Column(UnicodeText)
 
+
+# Index to make usernames case insensitively unique.
+Index("users_username", func.lower(User.username), unique=True)
 
 # Index to make generating the public chat list easier.
 # This is a partial index, a feature only supported by Postgres, so I don't

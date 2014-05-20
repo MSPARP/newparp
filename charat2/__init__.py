@@ -17,7 +17,7 @@ from flask.ext.babel import Babel, gettext
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
-
+app.debug=True
 babel = Babel(app)
 app.jinja_env.globals.update(gettext=gettext)
 

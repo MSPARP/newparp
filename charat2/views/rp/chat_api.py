@@ -131,7 +131,7 @@ def set_group():
     if "user_id" in request.form:
         user_condition = UserChat.user_id==request.form["user_id"]
     elif "username" in request.form:
-        user_condition = User.username==request.form["username"]
+        user_condition = func.lower(User.username)==request.form["username"].lower()
     else:
         abort(400)
     try:
@@ -213,7 +213,7 @@ def user_action():
     if "user_id" in request.form:
         user_condition = UserChat.user_id==request.form["user_id"]
     elif "username" in request.form:
-        user_condition = User.username==request.form["username"]
+        user_condition = func.lower(User.username)==request.form["username"].lower()
     else:
         abort(400)
     try:
