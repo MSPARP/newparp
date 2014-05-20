@@ -698,7 +698,7 @@ $(document).ready(function() {
         $('.controls').submit(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
-                $('#textInput').val();
+                console.log($('#textInput').val());
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
                     if (!ooc_on) {
                         $('.ooc-button').click();
