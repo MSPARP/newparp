@@ -697,21 +697,19 @@ $(document).ready(function() {
         
         $('.controls').submit(function() {
             $('#textInput').focus();
-            if (updateChatPreview()) {
-                console.log($('#textInput').val());
-                if (jQuery.trim($('#textInput').val())=='/ooc') {
-                    if (!ooc_on) {
-                        $('.ooc-button').click();
-                    }
-                    $('#textInput').val('');
-                    return false;
-                } else if (jQuery.trim($('#textInput').val())=='/ic') {
-                    if (ooc_on) {
-                        $('.ooc-button').click();
-                    }
-                    return false;
+            if (jQuery.trim($('#textInput').val())=='/ooc') {
+                if (!ooc_on) {
+                    $('.ooc-button').click();
                 }
-                
+                $('#textInput').val('');
+                return false;
+            } else if (jQuery.trim($('#textInput').val())=='/ic') {
+                if (ooc_on) {
+                    $('.ooc-button').click();
+                }
+                return false;
+            }
+            if (updateChatPreview()) {                
                 if ($('#textInput').val().charAt(0)=='/') {
                     var command = $('#textInput').val().split(' ');
                     if (command[0] == '/ban') {
