@@ -707,6 +707,7 @@ $(document).ready(function() {
                 if (ooc_on) {
                     $('.ooc-button').click();
                 }
+                $('#textInput').val('');
                 return false;
             }
             if (updateChatPreview()) {                
