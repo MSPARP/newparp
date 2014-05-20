@@ -699,16 +699,15 @@ $(document).ready(function() {
             $('#textInput').focus();
             if (updateChatPreview()) {
                 if (jQuery.trim($('#textInput').val())=='/ooc') {
-                    ooc_on = true;
-                    $('#control-buttons .ooc-button').css('background-color','#70a070');
-                    $('#oocToggle input').prop('checked','checked');
+                    if (!ooc_on) {
+                        $('.ooc-button').click();
+                    }
                     $('#textInput').val('');
                     return false;
                 } else if (jQuery.trim($('#textInput').val())=='/ic') {
-                    ooc_on = false;
-                    $('#control-buttons .ooc-button').css('background-color','');
-                    $('#oocToggle input').removeAttr('checked');
-                    $('#textInput').val('');
+                    if (ooc_on) {
+                        $('.ooc-button').click();
+                    }
                     return false;
                 }
                 
