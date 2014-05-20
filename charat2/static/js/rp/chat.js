@@ -463,8 +463,8 @@ function readCookie(name) {
     return null;
 }
 
-function updateChatPreview(){
-    $('#aliasOffset').css('top', (5-$('#textInput').scrollTop())+px);
+function updateChatPreview() {
+    $('#aliasOffset').css('top', (5-$('#textInput').scrollTop())+'px');
     var at_bottom = atBottom(CONVERSATION_CONTAINER);
     var textPreview = $('#textInput').val().replace(/\r\n|\r|\n/g,"[br]");
     $('#textInput').css('opacity','1');
