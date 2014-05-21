@@ -131,7 +131,7 @@ body.menu #topbar #toptitle {
 }
 
 #conversation {
-    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    font-family: Sans-Serif;
     font-weight: 400;
     position: absolute;
     top: 55px;
@@ -221,7 +221,7 @@ body.mobile .sidebarContain {
 }
 
 .card {
-    font-family: "Source Sans Pro A" sans-serif;
+    font-family: "Source Sans Pro A", Sans-Serif;
     font-weight: 400;
     background-color: #FFFFFF;
     color: #6A936B;
@@ -419,7 +419,7 @@ body.withSidebar.mobile .controls {
 
 #statusInput {
     color: #B0E0B0;
-    font-family: 'Source Sans Pro B', sans-serif;
+    font-family: 'Source Sans Pro B', Sans-Serif;
     font-size: 35px;
     background-color: transparent;
     height: 100%;
