@@ -241,7 +241,7 @@ function generateUserList(user_data) {
         var list_user = user_data[i];
         var is_self = "";
         var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
-        var user_title = MOD_GROUPS.indexOf(list_user.meta.group)>0 ? ':'+GROUP_DESCRIPTIONS[list_user.meta.group].title : '';
+        var user_title = (MOD_GROUPS.indexOf(list_user.meta.group)!=-1) ? ':'+GROUP_DESCRIPTIONS[list_user.meta.group].title : '';
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
@@ -545,7 +545,7 @@ function updateChatPreview() {
         var groups = ['magical','cute','little','unsilence','silence'];
         var group_map = {'magical':'mod', 'cute':'mod2', 'little':'mod3','unsilent':'user','silence':'silent'};
         try {
-            if (groups.indexOf(command[2]) > 0 && command[1]) {
+            if (groups.indexOf(command[2])!=-1 && command[1]) {
                 var action_user = user_list[command[1]];
                 var group_set = GROUP_DESCRIPTIONS[group_map[command[2]]];
                 textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] to "+group_set.title+"."+(group_set.description ? " They can now "+group_set.description+"." : "");
