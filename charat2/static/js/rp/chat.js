@@ -488,7 +488,7 @@ function updateChatPreview() {
     
     if ($('#textInput').val().substr(0,2)=='/ ') {
         textPreview = textPreview.substr(2);
-    } else if (command[0] != 'me' || command[0] != 'ooc' || !ooc_on || type_force != 'me') {
+    } else if (command[0] != '/me' || command[0] != '/ooc' || !ooc_on || type_force != 'me') {
         textPreview = applyQuirks(textPreview);
     }
     
