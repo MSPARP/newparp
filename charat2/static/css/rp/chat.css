@@ -143,7 +143,7 @@ body.menu #topbar #toptitle {
     -webkit-overflow-scrolling: touch;
 }
 
-#conversation p, #archiveConversation p, #online {
+#conversation p, #archiveConversation p, #users {
     margin-top: 5px;
     overflow: hidden;
 }
@@ -272,14 +272,14 @@ ul#metaOptions {
     list-style-type: none;
 }
 
-#online:empty:after, #idle:empty:after {
+#users:empty:after, #idle:empty:after {
     content: "(no-one)";
     display: block;
     padding: 2px 0;
     color: #999999;
 }
 
-#online li, #idle li {
+#users li, #idle li {
     cursor: pointer;
 }
 
@@ -571,43 +571,43 @@ body > #save {
 
 /* User List */
 
-#online .userCharacter.globalmod {
+#users .userCharacter.globalmod {
     text-decoration: underline;
 }
 
-#online .userCharacter.creator {
+#users .userCharacter.creator {
     font-weight: 900;
 }
 
-#online .userCharacter.mod, #online .userCharacter.mod2, #online .userCharacter.mod3 {
+#users .userCharacter.mod, #users .userCharacter.mod2, #users .userCharacter.mod3 {
     font-style: italic;
 }
 
-#online .userCharacter.silent {
+#users .userCharacter.silent {
     text-decoration: line-through;
 }
 
-#online .globalmod .username:after {
+#users .globalmod .username:after {
     content: " – Adoraglobal Mod";
 }
 
-#online .creator .username:after {
+#users .creator .username:after {
     content: " – Chat Creator";
 }
 
-#online .mod .username:after {
+#users .mod .username:after {
     content: " – Magical Mod";
 }
 
-#online .mod2 .username:after {
+#users .mod2 .username:after {
     content: " – Cute-Cute Mod";
 }
 
-#online .mod3 .username:after {
+#users .mod3 .username:after {
     content: " – Little Mod";
 }
 
-#online .self:after {
+#users .self:after {
     color: #444444;
     font-weight: 400;
     text-decoration: none;
@@ -615,16 +615,16 @@ body > #save {
 }
 
 /* User Buttons */
-#online.mod .set .mod,
-#online.mod2 .set .mod, #online.mod2 .set .mod2,
-#online.mod3 .set .mod, #online.mod3 .set .mod2, #online.mod3 .user_buttons .mod3,
-#online.user .set, #online.user .user_action,
-#online.silent .set, #online.silent .user_action {
+#users.mod .set .mod,
+#users.mod2 .set .mod, #users.mod2 .set .mod2,
+#users.mod3 .set .mod, #users.mod3 .set .mod2, #users.mod3 .user_buttons .mod3,
+#users.user .set, #users.user .user_action,
+#users.silent .set, #users.silent .user_action {
     display: none;
 }
 
-#online.mod3 .user_action .ban, #online.mod2 .user_action .ban,
-#online.mod3 .user_action .kick {
+#users.mod3 .user_action .ban, #users.mod2 .user_action .ban,
+#users.mod3 .user_action .kick {
     display: none;
 }
 
@@ -636,12 +636,12 @@ body > #save {
     display: none;
 }
 
-#online.mod .user_buttons.mod .kick, #online.mod .user_buttons.mod .ban,
-#online.mod .user_buttons.mod .user,
-#online.mod2 .user_buttons.mod .kick, #online.mod2 .user_buttons.mod2 .kick,
-#online.mod2 .user_buttons.mod .user, #online.mod2 .user_buttons.mod2 .user,
-#online.mod3 .user_buttons.mod .silent, #online.mod3 .user_buttons.mod2 .silent, #online.mod3 .user_buttons.mod3 .silent,
-#online.mod3 .user_buttons.mod .user, #online.mod3 .user_buttons.mod2 .user, #online.mod3 .user_buttons.mod3 .user {
+#users.mod .user_buttons.mod .kick, #users.mod .user_buttons.mod .ban,
+#users.mod .user_buttons.mod .user,
+#users.mod2 .user_buttons.mod .kick, #users.mod2 .user_buttons.mod2 .kick,
+#users.mod2 .user_buttons.mod .user, #users.mod2 .user_buttons.mod2 .user,
+#users.mod3 .user_buttons.mod .silent, #users.mod3 .user_buttons.mod2 .silent, #users.mod3 .user_buttons.mod3 .silent,
+#users.mod3 .user_buttons.mod .user, #users.mod3 .user_buttons.mod2 .user, #users.mod3 .user_buttons.mod3 .user {
     display: none;
 }
 
@@ -676,7 +676,7 @@ body.mobile .sidebarContain .card {
     right: 2px;
 }
 
-#online li .username {
+#users li .username {
     display: block;
     color: #000000;
     font-size: 11px;
