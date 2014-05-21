@@ -117,6 +117,7 @@ class User(Base):
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
@@ -244,6 +245,7 @@ class UserChat(Base):
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
@@ -263,6 +265,7 @@ class UserChat(Base):
             quirk_suffix=user.quirk_suffix,
             case=user.case,
             replacements=user.replacements,
+            regexes=user.regexes,
             confirm_disconnect=user.confirm_disconnect,
             show_system_messages=user.show_system_messages,
             show_description=user.show_description,
@@ -293,6 +296,7 @@ class UserChat(Base):
             ucd["character"]["quirk_suffix"] = self.quirk_suffix
             ucd["character"]["case"] = self.case
             ucd["character"]["replacements"] = json.loads(self.replacements)
+            ucd["character"]["regexes"] = json.loads(self.regexes)
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["show_system_messages"] = self.show_system_messages
             ucd["meta"]["show_description"] = self.show_description

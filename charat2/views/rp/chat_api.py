@@ -453,6 +453,17 @@ def save():
     # And encode as JSON.
     g.user_chat.replacements = json.dumps(replacements)
 
+    # XXX PUT LENGTH LIMIT ON REGEXES?
+    # Zip regexes.
+    regexes = zip(
+        request.form.getlist("quirk_from"),
+        request.form.getlist("quirk_to")
+    )
+    # Strip out any rows where from is blank or the same as to.
+    regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
+    # And encode as JSON.
+    g.user_chat.regexes = json.dumps(regexes)
+
     # Send a message if name or acronym has changed.
     if g.user_chat.name != old_name or g.user_chat.acronym != old_acronym or g.user_chat.color != old_color:
         if g.user_chat.group == "silent":
