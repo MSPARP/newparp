@@ -393,8 +393,6 @@ body.withSidebar.mobile .controls {
     width: 100%;
     height: 60px;
     border-bottom: solid 2px #696969;
-    overflow: hidden;
-    
 }
 
 #textInput-container {
