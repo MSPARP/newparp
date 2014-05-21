@@ -278,14 +278,24 @@ def user_action():
             reason=request.form.get("reason"),
         ))
         if request.form.get("reason") is not None:
-            ban_message = "%s banned %s from the chat. Reason: %s" % (
+            ban_message = (
+                "[color=#%s]%s[/color] banned "
+                "[color=#%s]%s[/color] from the chat. Reason: %s"
+            ) % (
+                g.user_chat.color,
                 g.user_chat.name,
+                set_user_chat.color,
                 set_user_chat.name,
                 request.form["reason"],
             )
         else:
-            ban_message = "%s banned %s from the chat." % (
+            ban_message = (
+                "[color=#%s]%s[/color] banned "
+                "[color=#%s]%s[/color] from the chat."
+            ) % (
+                g.user_chat.color,
                 g.user_chat.name,
+                set_user_chat.color,
                 set_user_chat.name,
             )
         g.redis.publish(
