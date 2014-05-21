@@ -272,7 +272,7 @@ ul#metaOptions {
     list-style-type: none;
 }
 
-#users:empty:after, #idle:empty:after {
+#users:empty:after {
     content: "(no-one)";
     display: block;
     padding: 2px 0;
