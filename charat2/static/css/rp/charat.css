@@ -19,7 +19,7 @@
 }
 
 body {
-    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    font-family: Sans-Serif;
     background-attachment: fixed;
     word-wrap: break-word;
     padding-top: 2.5em;
@@ -96,7 +96,7 @@ input[type="submit"]:hover, button:hover {
 }
 
 input, textarea, select {
-    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    font-family: Sans-Serif;
     font-size: 16px;
     background-color: #F8F8F8;
     padding-left: 2px;
@@ -125,7 +125,7 @@ input[type="checkbox"]:checked + .checkbox {
 }
 
 .select-bind {
-    font-family: "HelveticaNeue", "Helvetica Neue", "HelveticaNeueRoman", "HelveticaNeue-Roman", "Helvetica Neue Roman", 'TeXGyreHerosRegular', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; font-weight:400; font-stretch:normal;
+    font-family: Sans-Serif;
     position: relative;
     height: 25px;
     overflow: hidden;
