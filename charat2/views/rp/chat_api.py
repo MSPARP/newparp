@@ -252,9 +252,12 @@ def user_action():
             user_id=set_user.id,
             type="user_action",
             name=g.user_chat.name,
-            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] kicked [color=#%s]%s [%s][/color] from the chat." % (
+            text=(
+                "[color=#%s]%s[/color] [[color=#%s]%s[/color]] kicked "
+                "[color=#%s]%s[/color] [[color=#%s]%s[/color]] from the chat."
+            ) % (
                 g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
-                set_user_chat.color, set_user_chat.name, set_user_chat.color, set_user_chat.acroym,
+                set_user_chat.color, set_user_chat.name, set_user_chat.color, set_user_chat.acronym,
             )
         ))
         return "", 204
