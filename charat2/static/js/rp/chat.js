@@ -494,7 +494,7 @@ function updateChatPreview() {
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "[blank]: ";
     
-    if (!type_force && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
+    if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
             textPreview.startsWith("[[") || textPreview.endsWith("]]") || 
             textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
