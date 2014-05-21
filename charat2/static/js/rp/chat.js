@@ -21,7 +21,7 @@ var CHAT_FLAG_MAP = {
     'nsfw':true
 };
 
-var MOD_GROUPS = ['globalmod', 'mod', 'mod2', 'mod3'];
+var MOD_GROUPS = ['globalmod', 'creator', 'mod', 'mod2', 'mod3'];
 var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
 var GROUP_DESCRIPTIONS = {
     'globalmod': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
@@ -29,7 +29,7 @@ var GROUP_DESCRIPTIONS = {
     'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
     'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },
     'mod3': { title: 'Little Mod', description: 'Silence' },
-    'user': { title: '', description: '' },
+    'user': { title: 'User', description: '' },
     'silent': { title: 'Silenced', description: '' },
 };
 
@@ -240,14 +240,15 @@ function generateUserList(user_data) {
     for (var i=0; i<user_data.length; i++) {
         var list_user = user_data[i];
         var is_self = "";
-        var description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? '– '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
+        var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? '– '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
+        var user_title = MOD_GROUPS[list_user.meta.group] ? ':'+GROUP_DESCRIPTIONS[list_user.meta.group].title : '';
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
-            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username" title="'+description+'">'+list_user.meta.username+'</span></li>');
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username" title="'+user_description+'">'+list_user.meta.username+user_title+'</span></li>');
     
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
@@ -284,7 +285,7 @@ function generateUserList(user_data) {
         } else {
             $('#user'+list_user.meta.user_id+' .user_buttons').prop('class', 'user_buttons '+list_user.meta.group);
             $('#user'+list_user.meta.user_id+' .userCharacter').prop('class', 'userCharacter'+is_self+' '+list_user.meta.group).css('color','#'+list_user.character.color).text(list_user.character.name);
-            $('#user'+list_user.meta.user_id+' .username').prop('title', description);
+            $('#user'+list_user.meta.user_id+' .username').prop('title', description).text(list_user.meta.username+user_title);
         }
     }
 
