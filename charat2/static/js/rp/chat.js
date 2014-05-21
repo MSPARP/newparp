@@ -279,6 +279,9 @@ function generateUserList(user_data) {
                     $(this).find('.user_buttons').show();
                 }
             });
+        } else {
+            $('#user'+list_user.meta.user_id+' .user_buttons').prop('class', 'user_buttons '+list_user.meta.group);
+            $('#user'+list_user.meta.user_id+' .userCharacter').prop('class', 'userCharacter'+is_self+' '+list_user.meta.group).css('color','#'+list_user.character.color).text(list_user.character.name);
         }
     }
 
