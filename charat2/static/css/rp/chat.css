@@ -571,19 +571,19 @@ body > #save {
 
 /* User List */
 
-#users .userCharacter.globalmod {
+#users .globalmod .userCharacter {
     text-decoration: underline;
 }
 
-#users .userCharacter.creator {
+#users .creator .userCharacter {
     font-weight: 900;
 }
 
-#users .userCharacter.mod, #users .userCharacter.mod2, #users .userCharacter.mod3 {
+#users .mod .userCharacter, #users .mod2 .userCharacter, #users  .mod3.userCharacter {
     font-style: italic;
 }
 
-#users .userCharacter.silent {
+#users .silent .userCharacter {
     text-decoration: line-through;
 }
 
@@ -607,7 +607,7 @@ body > #save {
     content: " – Little Mod";
 }
 
-#users .self:after {
+#users .self .userCharacter:after {
     color: #444444;
     font-weight: 400;
     text-decoration: none;
@@ -617,7 +617,7 @@ body > #save {
 /* User Buttons */
 #users.mod .set .mod,
 #users.mod2 .set .mod, #users.mod2 .set .mod2,
-#users.mod3 .set .mod, #users.mod3 .set .mod2, #users.mod3 .user_buttons .mod3,
+#users.mod3 .set .mod, #users.mod3 .set .mod2, #users.mod3 .set .mod3,
 #users.user .set, #users.user .user_action,
 #users.silent .set, #users.silent .user_action {
     display: none;
