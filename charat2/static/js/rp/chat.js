@@ -239,7 +239,7 @@ function generateUserList(user_data) {
     for (var i=0; i<user_data.length; i++) {
         var list_user = user_data[i];
         var is_self = "";
-        var description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? '– 'GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
+        var description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? '– '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);

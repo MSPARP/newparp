@@ -515,12 +515,10 @@ body > #save {
     display: none;
 }
 
-#userList {
-    font-weight: bold;
-}
-
 #userList span.self:after {
     color: #444444;
+    font-weight: 400;
+    text-decoration: none;
     content: " (you)";
 }
 
