@@ -580,11 +580,19 @@ body > #save {
 
 /* User List */
 
-span.globalmod {
+#userList .userCharacter.globalmod {
     text-decoration: underline;
 }
 
-span.silent {
+#userList .userCharacter.creator {
+    font-weight: 900;
+}
+
+#userList .userCharacter.mod, #userList .userCharacter.mod2, #userList .userCharacter.mod3 {
+    text-decoration: italic;
+}
+
+#userList .userCharacter.silent {
     text-decoration: line-through;
 }
 
