@@ -241,14 +241,13 @@ function generateUserList(user_data) {
         var list_user = user_data[i];
         var is_self = "";
         var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
-        var user_title = (MOD_GROUPS.indexOf(list_user.meta.group)!=-1) ? ':'+GROUP_DESCRIPTIONS[list_user.meta.group].title : '';
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $('#online').prop('class',list_user.meta.group);
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
-            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+user_title+'</span></li>');
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
     
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
@@ -285,7 +284,6 @@ function generateUserList(user_data) {
         } else {
             $('#user'+list_user.meta.user_id+' .user_buttons').prop('class', 'user_buttons '+list_user.meta.group);
             $('#user'+list_user.meta.user_id+' .userCharacter').prop('class', 'userCharacter'+is_self+' '+list_user.meta.group).css('color','#'+list_user.character.color).prop('title', user_description).text(list_user.character.name);
-            $('#user'+list_user.meta.user_id+' .username').text(list_user.meta.username+user_title);
         }
     }
 
