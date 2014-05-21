@@ -587,23 +587,23 @@ body > #save {
     text-decoration: line-through;
 }
 
-#online .globalmod  .username:after {
+#online .globalmod .username:after {
     content: " – Adoraglobal Mod";
 }
 
-#online .creator  .username:after {
+#online .creator .username:after {
     content: " – Chat Creator";
 }
 
-#online .mod  .username:after {
+#online .mod .username:after {
     content: " – Magical Mod";
 }
 
-#online .mod2  .username:after {
+#online .mod2 .username:after {
     content: " – Cute-Cute Mod";
 }
 
-#online .mod3  .username:after {
+#online .mod3 .username:after {
     content: " – Little Mod";
 }
 
