@@ -515,13 +515,6 @@ body > #save {
     display: none;
 }
 
-#userList span.self:after {
-    color: #444444;
-    font-weight: 400;
-    text-decoration: none;
-    content: " (you)";
-}
-
 .sidebar input[name="name"] {
     width: 90%;
 }
@@ -578,20 +571,47 @@ body > #save {
 
 /* User List */
 
-#userList .userCharacter.globalmod {
+#online .userCharacter.globalmod {
     text-decoration: underline;
 }
 
-#userList .userCharacter.creator {
+#online .userCharacter.creator {
     font-weight: 900;
 }
 
-#userList .userCharacter.mod, #userList .userCharacter.mod2, #userList .userCharacter.mod3 {
-    text-decoration: italic;
+#online .userCharacter.mod, #online .userCharacter.mod2, #online .userCharacter.mod3 {
+    font-style: italic;
 }
 
-#userList .userCharacter.silent {
+#online .userCharacter.silent {
     text-decoration: line-through;
+}
+
+#online .globalmod  .username:after {
+    content: " – Adoraglobal Mod";
+}
+
+#online .creator  .username:after {
+    content: " – Chat Creator";
+}
+
+#online .mod  .username:after {
+    content: " – Magical Mod";
+}
+
+#online .mod2  .username:after {
+    content: " – Cute-Cute Mod";
+}
+
+#online .mod3  .username:after {
+    content: " – Little Mod";
+}
+
+#online .self:after {
+    color: #444444;
+    font-weight: 400;
+    text-decoration: none;
+    content: " (you)";
 }
 
 /* User Buttons */
@@ -656,7 +676,7 @@ body.mobile .sidebarContain .card {
     right: 2px;
 }
 
-#userList li .username {
+#online li .username {
     display: block;
     color: #000000;
     font-size: 11px;
