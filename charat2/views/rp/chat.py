@@ -47,6 +47,10 @@ def create_chat():
 @login_required
 def chat(url):
 
+    # Force lower case.
+    if url != url.lower():
+        return redirect(url_for("chat", url=url.lower()))
+
     # PM chats aren't implemented yet so just 404 them for now.
     if url=="pm" or url.startswith("pm/"):
         abort(404)
