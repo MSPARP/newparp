@@ -240,7 +240,7 @@ function generateUserList(user_data) {
     for (var i=0; i<user_data.length; i++) {
         var list_user = user_data[i];
         var is_self = "";
-        var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? '– '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
+        var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
         var user_title = MOD_GROUPS[list_user.meta.group] ? ':'+GROUP_DESCRIPTIONS[list_user.meta.group].title : '';
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
