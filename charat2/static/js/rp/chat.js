@@ -25,6 +25,7 @@ var MOD_GROUPS = ['globalmod', 'mod', 'mod2', 'mod3'];
 var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
 var GROUP_DESCRIPTIONS = {
     'globalmod': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
+    'creator': { title: 'Chat Creator', description: 'Silence, Kick, Ban, Cannot be demodded' },
     'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
     'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },
     'mod3': { title: 'Little Mod', description: 'Silence' },
