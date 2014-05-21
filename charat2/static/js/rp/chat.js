@@ -248,7 +248,7 @@ function generateUserList(user_data) {
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
-            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';">'+list_user.character.name+'</span><span class="username" title="'+user_description+'">'+list_user.meta.username+user_title+'</span></li>');
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+'"><span class="userCharacter'+is_self+' '+list_user.meta.group+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+user_title+'</span></li>');
     
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
@@ -284,8 +284,8 @@ function generateUserList(user_data) {
             });
         } else {
             $('#user'+list_user.meta.user_id+' .user_buttons').prop('class', 'user_buttons '+list_user.meta.group);
-            $('#user'+list_user.meta.user_id+' .userCharacter').prop('class', 'userCharacter'+is_self+' '+list_user.meta.group).css('color','#'+list_user.character.color).text(list_user.character.name);
-            $('#user'+list_user.meta.user_id+' .username').prop('title', description).text(list_user.meta.username+user_title);
+            $('#user'+list_user.meta.user_id+' .userCharacter').prop('class', 'userCharacter'+is_self+' '+list_user.meta.group).css('color','#'+list_user.character.color).prop('title', user_description).text(list_user.character.name);
+            $('#user'+list_user.meta.user_id+' .username').text(list_user.meta.username+user_title);
         }
     }
 
