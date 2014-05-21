@@ -571,43 +571,43 @@ body > #save {
 
 /* User List */
 
-#users .globalmod .userCharacter {
+#users li.globalmod .userCharacter {
     text-decoration: underline;
 }
 
-#users .creator .userCharacter {
+#users li.creator .userCharacter {
     font-weight: 900;
 }
 
-#users .mod .userCharacter, #users .mod2 .userCharacter, #users  .mod3.userCharacter {
+#users li.mod .userCharacter, #users li.mod2 .userCharacter, #users  li.mod3 .userCharacter {
     font-style: italic;
 }
 
-#users .silent .userCharacter {
+#users li.silent .userCharacter {
     text-decoration: line-through;
 }
 
-#users .globalmod .username:after {
+#users li.globalmod .username:after {
     content: " – Adoraglobal Mod";
 }
 
-#users .creator .username:after {
+#users li.creator .username:after {
     content: " – Chat Creator";
 }
 
-#users .mod .username:after {
+#users li.mod .username:after {
     content: " – Magical Mod";
 }
 
-#users .mod2 .username:after {
+#users li.mod2 .username:after {
     content: " – Cute-Cute Mod";
 }
 
-#users .mod3 .username:after {
+#users li.mod3 .username:after {
     content: " – Little Mod";
 }
 
-#users .self .userCharacter:after {
+#users li.self .userCharacter:after {
     color: #444444;
     font-weight: 400;
     text-decoration: none;
