@@ -571,18 +571,6 @@ body > #save {
 
 /* User List */
 
-#users li.globalmod .userCharacter {
-    text-decoration: underline;
-}
-
-#users li.creator .userCharacter {
-    font-weight: 900;
-}
-
-#users li.mod .userCharacter, #users li.mod2 .userCharacter, #users  li.mod3 .userCharacter {
-    font-style: italic;
-}
-
 #users li.silent .userCharacter {
     text-decoration: line-through;
 }
@@ -628,20 +616,20 @@ body > #save {
     display: none;
 }
 
-.user_buttons.mod .mod, .user_buttons.mod .unsilent,
-.user_buttons.mod2 .mod2, .user_buttons.mod2 .unsilent,
-.user_buttons.mod3 .mod3, .user_buttons.mod3 .unsilent,
-.user_buttons.user .user, .user_buttons.user .unsilent,
-.user_buttons.silent .silent, .user_buttons.silent .user {
+li.mod .mod, li.mod .unsilent,
+li.mod2 .mod2, li.mod2 .unsilent,
+li.mod3 .mod3, li.mod3 .unsilent,
+li.user .user, li.user .unsilent,
+li.silent .silent, li.silent .user {
     display: none;
 }
 
-#users.mod .user_buttons.mod .kick, #users.mod .user_buttons.mod .ban,
-#users.mod .user_buttons.mod .user,
-#users.mod2 .user_buttons.mod .kick, #users.mod2 .user_buttons.mod2 .kick,
-#users.mod2 .user_buttons.mod .user, #users.mod2 .user_buttons.mod2 .user,
-#users.mod3 .user_buttons.mod .silent, #users.mod3 .user_buttons.mod2 .silent, #users.mod3 .user_buttons.mod3 .silent,
-#users.mod3 .user_buttons.mod .user, #users.mod3 .user_buttons.mod2 .user, #users.mod3 .user_buttons.mod3 .user {
+#users.mod li.mod .kick, #users.mod li.mod .ban,
+#users.mod li.mod .user,
+#users.mod2 li.mod .kick, #users.mod2 li.mod2 .kick,
+#users.mod2 li.mod .user, #users.mod2 li.mod2 .user,
+#users.mod3 li.mod .silent, #users.mod3 li.mod2 .silent, #users.mod3 li.mod3 .silent,
+#users.mod3 li.mod .user, #users.mod3 li.mod2 .user, #users.mod3 li.mod3 .user {
     display: none;
 }
 

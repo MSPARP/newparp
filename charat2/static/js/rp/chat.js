@@ -266,7 +266,7 @@ function generateUserList(user_data) {
                     '<li class="highlight">Highlight</li>' +
                 '</span>';
     
-            $('#user'+list_user.meta.user_id).append('<ul class="user_buttons '+list_user.meta.group+'"></ul>');
+            $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"></ul>');
             $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
             user_list[list_user.meta.user_id] = list_user;
             user_list[list_user.meta.username] = list_user;
@@ -283,7 +283,6 @@ function generateUserList(user_data) {
             });
         } else {
             $('#user'+list_user.meta.user_id).prop('class',list_user.meta.username+' '+list_user.meta.group+is_self);
-            $('#user'+list_user.meta.user_id+' .user_buttons').prop('class', 'user_buttons '+list_user.meta.group);
             $('#user'+list_user.meta.user_id+' .userCharacter').css('color','#'+list_user.character.color).prop('title', user_description).text(list_user.character.name);
         }
     }
