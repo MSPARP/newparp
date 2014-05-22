@@ -18,6 +18,7 @@ from charat2.model import (
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
 
+
 @use_db
 @login_required
 def create_chat():
@@ -44,6 +45,7 @@ def create_chat():
         creator_id=g.user.id,
     ))
     return redirect(url_for("chat", url=lower_url))
+
 
 @use_db
 @login_required
@@ -144,18 +146,51 @@ def chat(url):
         logged_in=logged_in
     )
 
+
 @use_db
 @login_required
 def log(url, page=None):
 
-    # PM chats aren't implemented yet so just 404 them for now.
-    if url=="pm" or url.startswith("pm/"):
+    # Do some special URL stuff for PM chats.
+    if url == "pm":
+
         abort(404)
 
-    try:
-        chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
-    except NoResultFound:
-        abort(404)
+    elif url.startswith("pm/"):
+
+        username = url[3:]
+        if username == "":
+            abort(404)
+
+        try:
+            pm_user = g.db.query(User).filter(
+                func.lower(User.username) == username.lower()
+            ).one()
+        except NoResultFound:
+            abort(404)
+
+        # You can't PM yourself.
+        if pm_user == g.user:
+            abort(404)
+
+        if pm_user.username != username:
+            return redirect(url_for("log", url="pm/"+pm_user.username))
+
+        # PM
+        pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
+        try:
+            chat = g.db.query(PMChat).filter(
+                PMChat.url==pm_url,
+            ).one()
+        except NoResultFound:
+            abort(404)
+
+    else:
+
+        try:
+            chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
+        except NoResultFound:
+            abort(404)
 
     if page is None:
         page = 1
