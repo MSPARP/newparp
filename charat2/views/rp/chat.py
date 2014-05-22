@@ -137,6 +137,7 @@ def chat(url):
 
     return render_template(
         "rp/chat.html",
+        url=url,
         chat=chat,
         user_chat=user_chat,
         user_chat_dict=user_chat.to_dict(include_options=True),
@@ -210,7 +211,7 @@ def log(url, page=None):
         page=page,
         items_per_page=100,
         item_count=message_count,
-        url=lambda page: url_for("log", url=chat.url, page=page),
+        url=lambda page: url_for("log", url=url, page=page),
     )
 
     return render_template(
