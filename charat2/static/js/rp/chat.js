@@ -382,6 +382,7 @@ function messageParse(data) {
 
         if (typeof data.chat.topic!='undefined') {
             $('#topic').html(bbEncode(data.chat.topic));
+            chat.topic = data.chat.topic;
         } else {
             $('#topic').text('');
         }
@@ -797,6 +798,10 @@ $(document).ready(function() {
             }
             $('#textInput').val('');
             return false;
+        });
+        
+        $('#topicButton').on('click', function() {
+            $('#textInput').val('/topic '+chat.topic);
         });
 
         $('#textInput').change(updateChatPreview).keyup(updateChatPreview).change();
