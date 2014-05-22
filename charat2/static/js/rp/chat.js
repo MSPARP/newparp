@@ -808,6 +808,9 @@ $(document).ready(function() {
         $('#topicButton').on('click', function() {
             $('#textInput').val('/topic '+chat_topic);
             updateChatPreview();
+            if ($('body.mobile').length>0) {
+                $('#topbar .userList').click();
+            }
         });
 
         $('#textInput').change(updateChatPreview).keyup(updateChatPreview).change();
