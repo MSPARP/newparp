@@ -270,6 +270,11 @@ body.mobile .sidebarContain {
     margin-bottom: 5px;
 }
 
+#userList.creator #topicButton, #userList.mod #topicButton,
+#userList.mod2 #topicButton, #userList.mod3 #topicButton {
+    display: inline-block;
+}
+
 ul#metaOptions {
     margin: 0;
     padding: 0;
