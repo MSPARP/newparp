@@ -264,6 +264,7 @@ function generateUserList(user_data) {
                 '<span class="chat_action">' +
                     '<li class="block">Block</li>' +
                     '<li class="highlight">Highlight</li>' +
+                    '<li class="pm"><a href="/pm/'+list_user.meta.username+'" target="_blank">Private Message</a></li>' +
                 '</span>';
     
             $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"></ul>');
