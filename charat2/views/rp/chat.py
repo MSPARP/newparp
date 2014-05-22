@@ -138,7 +138,13 @@ def chat(url):
     chat = chat.to_dict()
 
     if url.startswith("pm/"):
-        chat['title'] = "Private Messaging"
+        try:
+            pm_user = g.db.query(User).filter(
+                func.lower(User.username) == username.lower()
+            ).one()
+            chat['title'] = "Private Messaging "+pm_user.username
+        except NoResultFound:
+            abort(404)
 
     return render_template(
         "rp/chat.html",
