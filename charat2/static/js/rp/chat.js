@@ -46,6 +46,8 @@ var window_active;
 
 var missed_messages = 0;
 
+var chat_topic = chat.topic;
+
 var chat_state = 'chat';
 var user_state = 'online';
 
@@ -382,10 +384,10 @@ function messageParse(data) {
         
         if (typeof data.chat.topic!='undefined') {
             $('#topic').html(bbEncode(data.chat.topic));
-            chat.topic = data.chat.topic;
+            chat_topic = data.chat.topic;
         } else {
             $('#topic').text('');
-            chat.topic = '';
+            chat_topic = '';
         }
         
         console.log(chat);
@@ -804,7 +806,7 @@ $(document).ready(function() {
         });
         
         $('#topicButton').on('click', function() {
-            $('#textInput').val('/topic '+chat.topic);
+            $('#textInput').val('/topic '+chat_topic);
             updateChatPreview();
         });
 
