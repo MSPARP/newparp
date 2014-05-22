@@ -251,6 +251,7 @@ body.mobile .sidebarContain {
 
 #topic {
     padding: 0;
+    padding-bottom: 5px;
     word-wrap: break-word;
 }
 
