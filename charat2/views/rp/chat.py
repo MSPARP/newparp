@@ -11,6 +11,8 @@ from charat2.model import (
     Chat,
     GroupChat,
     Message,
+    PMChat,
+    User,
     UserChat,
 )
 from charat2.model.connections import use_db
@@ -47,27 +49,61 @@ def create_chat():
 @login_required
 def chat(url):
 
-    # Force lower case.
-    if url != url.lower():
-        return redirect(url_for("chat", url=url.lower()))
+    # Do some special URL stuff for PM chats.
+    if url == "pm":
 
-    # PM chats aren't implemented yet so just 404 them for now.
-    if url=="pm" or url.startswith("pm/"):
         abort(404)
 
-    try:
-        chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
-    except NoResultFound:
-        abort(404)
+    elif url.startswith("pm/"):
 
-    # Redirect them to the oubliette if they're banned.
-    if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-        Ban.chat_id==chat.id,
-        Ban.user_id==g.user.id,
-    )).scalar() != 0:
-        if chat.url != "theoubliette":
-            return redirect(url_for("chat", url="theoubliette"))
-        abort(403)
+        username = url[3:]
+        if username == "":
+            abort(404)
+
+        try:
+            pm_user = g.db.query(User).filter(
+                func.lower(User.username) == username.lower()
+            ).one()
+        except NoResultFound:
+            abort(404)
+
+        # You can't PM yourself.
+        if pm_user == g.user:
+            abort(404)
+
+        if pm_user.username != username:
+            return redirect(url_for("chat", url="pm/"+pm_user.username))
+
+        # PM
+        pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
+        try:
+            chat = g.db.query(PMChat).filter(
+                PMChat.url==pm_url,
+            ).one()
+        except NoResultFound:
+            chat = PMChat(url=pm_url)
+            g.db.add(chat)
+            g.db.flush()
+
+    else:
+
+        # Force lower case.
+        if url != url.lower():
+            return redirect(url_for("chat", url=url.lower()))
+
+        try:
+            chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
+        except NoResultFound:
+            abort(404)
+
+        # Redirect them to the oubliette if they're banned.
+        if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+            Ban.chat_id==chat.id,
+            Ban.user_id==g.user.id,
+        )).scalar() != 0:
+            if chat.url != "theoubliette":
+                return redirect(url_for("chat", url="theoubliette"))
+            abort(403)
 
     # Get or create UserChat.
     try:
