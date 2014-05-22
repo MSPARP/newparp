@@ -380,7 +380,6 @@ function messageParse(data) {
             }
         }
         
-        console.log(chat.topic);
         if (typeof data.chat.topic!='undefined') {
             $('#topic').html(bbEncode(data.chat.topic));
             chat.topic = data.chat.topic;
@@ -388,7 +387,8 @@ function messageParse(data) {
             $('#topic').text('');
             chat.topic = '';
         }
-        console.log(chat.topic);
+        
+        console.log(chat);
 
         if (user.meta.group == 'mod' || user.meta.group == 'admin') {
             $('.inPass').hide();
