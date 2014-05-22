@@ -134,11 +134,16 @@ def chat(url):
     logged_in = False
     if g.user is not None:
         logged_in = True
+        
+    chat = chat.to_dict()
+
+    if url.startswith("pm/"):
+        chat.title = pm_user.username
 
     return render_template(
         "rp/chat.html",
         url=url,
-        chat=chat.to_dict(),
+        chat=chat,
         user_chat=user_chat,
         user_chat_dict=user_chat.to_dict(include_options=True),
         messages=messages,
