@@ -54,9 +54,9 @@ def rp_favicon():
 app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
-app.add_url_rule("/<url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
-app.add_url_rule("/<url>/log", "log", chat.log, subdomain="rp", methods=("GET",))
-app.add_url_rule("/<url>/log/<int:page>", "log", chat.log, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<path:url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<path:url>/log", "log", chat.log, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<path:url>/log/<int:page>", "log", chat.log, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, subdomain="rp", methods=("post",))

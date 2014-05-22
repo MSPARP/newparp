@@ -286,7 +286,10 @@ class UserChat(Base):
                 # Needs joinedload whenever we're getting these.
                 "group": (
                     "admin" if self.user.group=="admin"
-                    else "creator" if self.chat.creator==self.user
+                    else "creator" if (
+                        self.chat.type=="group" and
+                        self.chat.creator==self.user
+                    )
                     else self.group
                 ),
             },
