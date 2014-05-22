@@ -645,6 +645,14 @@ li.silent .silent, li.silent .user {
     display: none;
 }
 
+#users .user_buttons li {
+    color: #507050;
+}
+
+#users .user_buttons li:hover {
+    color: #6a936b;
+}
+
 /* Moderation */
 
 .metaOptions, .modPowers #metaResults, #metaResults li {
