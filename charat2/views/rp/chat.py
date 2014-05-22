@@ -138,7 +138,7 @@ def chat(url):
     chat = chat.to_dict()
 
     if url.startswith("pm/"):
-        chat.title = pm_user.username
+        chat['title'] = "Private Messaging"
 
     return render_template(
         "rp/chat.html",
