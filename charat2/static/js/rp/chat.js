@@ -244,6 +244,7 @@ function generateUserList(user_data) {
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             $(USER_LIST_ID).prop('class',list_user.meta.group);
+            $("#userList").prop('class',list_user.meta.group);
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {

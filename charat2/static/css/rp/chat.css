@@ -250,7 +250,7 @@ body.mobile .sidebarContain {
 }
 
 #topic {
-    padding: 0 5px 5px;
+    padding: 0;
     word-wrap: break-word;
 }
 
@@ -263,6 +263,10 @@ body.mobile .sidebarContain {
     content: "(empty)";
     padding: 2px 0;
     color: #999999;
+}
+
+#topicButton {
+    margin-bottom: 5px;
 }
 
 ul#metaOptions {
