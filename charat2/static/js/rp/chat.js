@@ -951,4 +951,23 @@ $(document).ready(function() {
                 document.title = chat.title+' – '+ORIGINAL_TITLE;
                 missed_messages = 0;
             }
-            window_active = true
+            window_active = true;
+        });
+        
+        window.onbeforeunload = function (e) {
+            if (confirm_disconnect == true) {
+                if (chat_state=='chat') {
+                    if (typeof e!="undefined") {
+                        e.preventDefault();
+                    }
+                    return 'Are you sure you want to leave? Your chat is still running.';
+                }
+            }
+        }
+        
+        $(window).unload(function() {
+            $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
+        });
+    }
+});
+
