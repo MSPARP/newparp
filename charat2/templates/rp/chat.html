@@ -1,7 +1,6 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} – Charat RP{% endblock %}
 {% block header %}
-
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="cache-control" content="no-cache" />
 <meta http-equiv="expires" content="0" />
@@ -12,7 +11,7 @@
 <script src="{{url_for("static", filename="js/rp/quirks.js")}}" defer></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
-    var chat = {{chat.to_dict()|tojson|safe}};
+    var chat = {{chat|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
 <script src="{{url_for("static", filename="js/rp/chat.js")}}" defer></script>
