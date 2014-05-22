@@ -665,7 +665,7 @@ body > #save {
     display: none;
 }
 
-#users .user_button {
+#users .user_buttons {
     margin-left: 20px;
 }
 
@@ -704,57 +704,4 @@ body.mobile .sidebar {
 }
 
 body.mobile .sidebarContain .card {
-    position: relative;
-    right: 2px;
-}
-
-#users li .username {
-    display: block;
-    color: #000000;
-    font-size: 11px;
-}
-
-/* Archive */
-
-.pager {
-    padding: 2px 5px;
-}
-
-#archiveConversation {
-    margin: 5px 0;
-    padding: 2px 0;
-}
-
-/* Center */
-
-.centerHorizontal {
-    display: inline;
-    position: absolute;
-    left: 50%;
-}
-
-.centerVertical {
-    display: inline;
-    position: absolute;
-    top: 50%;
-}
-
-/* BBCode */
-
-.padded {
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.spoil {
-    border: dashed;
-    border-width: 1px;
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-.spoiler {
-    opacity: 0;
-    cursor: pointer;
-}
-
+    
