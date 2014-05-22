@@ -379,7 +379,8 @@ function messageParse(data) {
                 $('#'+CHAT_FLAGS[i]+'Result').hide();
             }
         }
-
+        
+        console.log(chat.topic);
         if (typeof data.chat.topic!='undefined') {
             $('#topic').html(bbEncode(data.chat.topic));
             chat.topic = data.chat.topic;
