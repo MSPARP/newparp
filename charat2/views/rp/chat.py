@@ -142,7 +142,7 @@ def chat(url):
             pm_user = g.db.query(User).filter(
                 func.lower(User.username) == username.lower()
             ).one()
-            chat['title'] = "Private Messaging "+pm_user.username
+            chat['title'] = "Messaging "+pm_user.username
         except NoResultFound:
             abort(404)
 
