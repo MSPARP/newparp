@@ -86,6 +86,7 @@ def chat(url):
             chat = PMChat(url=pm_url)
             g.db.add(chat)
             g.db.flush()
+        chat.title = "Private Messaging "+pm_user
 
     else:
 
