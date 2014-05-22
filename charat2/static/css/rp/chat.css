@@ -654,6 +654,10 @@ body > #save {
     display: none;
 }
 
+#users .user_button {
+    margin-left: 20px;
+}
+
 #users .user_buttons li {
     color: #507050;
 }
