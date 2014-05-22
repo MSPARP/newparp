@@ -571,6 +571,18 @@ body > #save {
 
 /* User List */
 
+#users li.globalmod .userCharacter {
+    text-decoration: underline;
+}
+
+#users li.creator .userCharacter {
+    font-weight: 900;
+}
+
+#users li.mod .userCharacter, #users li.mod2 .userCharacter, #users  li.mod3 .userCharacter {
+    font-style: italic;
+}
+
 #users li.silent .userCharacter {
     text-decoration: line-through;
 }
