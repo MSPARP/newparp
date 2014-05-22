@@ -628,11 +628,19 @@ body > #save {
     display: none;
 }
 
-li.mod .mod, li.mod .unsilent,
-li.mod2 .mod2, li.mod2 .unsilent,
-li.mod3 .mod3, li.mod3 .unsilent,
-li.user .user, li.user .unsilent,
-li.silent .silent, li.silent .user {
+#users li.creator .set, #users li.globalmod .set {
+    display: none;
+}
+
+#users li.self .set .pm {
+    display: none;
+}
+
+#users li.mod .mod, #users li.mod .unsilent,
+#users li.mod2 .mod2, #users li.mod2 .unsilent,
+#users li.mod3 .mod3, #users  li.mod3 .unsilent,
+#users li.user .user, #users li.user .unsilent,
+#users li.silent .silent, #users li.silent .user {
     display: none;
 }
 
