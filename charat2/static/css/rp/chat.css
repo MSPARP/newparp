@@ -628,11 +628,12 @@ body > #save {
     display: none;
 }
 
-#users li.creator .set, #users li.globalmod .set {
+#users li.creator .set, #users li.globalmod .set,
+#users li.creator .user_action, #users li.globalmod .user_action {
     display: none;
 }
 
-#users li.self .set .pm {
+#users li.self .user_buttons .pm {
     display: none;
 }
 
