@@ -385,7 +385,9 @@ function messageParse(data) {
             chat.topic = data.chat.topic;
         } else {
             $('#topic').text('');
+            chat.topic = '';
         }
+        console.log(chat.topic);
 
         if (user.meta.group == 'mod' || user.meta.group == 'admin') {
             $('.inPass').hide();
@@ -802,6 +804,7 @@ $(document).ready(function() {
         
         $('#topicButton').on('click', function() {
             $('#textInput').val('/topic '+chat.topic);
+            updateChatPreview();
         });
 
         $('#textInput').change(updateChatPreview).keyup(updateChatPreview).change();
