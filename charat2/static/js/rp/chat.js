@@ -21,10 +21,10 @@ var CHAT_FLAG_MAP = {
     'nsfw':true
 };
 
-var MOD_GROUPS = ['globalmod', 'creator', 'mod', 'mod2', 'mod3'];
-var GROUP_RANKS = { 'globalmod': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
+var MOD_GROUPS = ['admin', 'creator', 'mod', 'mod2', 'mod3'];
+var GROUP_RANKS = { 'admin': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
 var GROUP_DESCRIPTIONS = {
-    'globalmod': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
+    'admin': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
     'creator': { title: 'Chat Creator', description: 'Silence, Kick, Ban, Cannot be demodded' },
     'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
     'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },
@@ -384,7 +384,7 @@ function messageParse(data) {
             $('#topic').text('');
         }
 
-        if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
+        if (user.meta.group == 'mod' || user.meta.group == 'admin') {
             $('.inPass').hide();
             $('.editPass').show();
         } else {
@@ -401,7 +401,7 @@ function messageParse(data) {
     if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
 
     }
-    if (user.meta.group == 'mod' || user.meta.group == 'globalmod') {
+    if (user.meta.group == 'mod' || user.meta.group == 'admin') {
         $('.inPass').hide();
         $('.editPass').show();
         $('.opmod input').removeAttr('disabled');

@@ -571,7 +571,7 @@ body > #save {
 
 /* User List */
 
-#users li.globalmod .userCharacter {
+#users li.admin .userCharacter {
     text-decoration: underline;
 }
 
@@ -587,7 +587,7 @@ body > #save {
     text-decoration: line-through;
 }
 
-#users li.globalmod .username:after {
+#users li.admin .username:after {
     content: " – Adoraglobal Mod";
 }
 
