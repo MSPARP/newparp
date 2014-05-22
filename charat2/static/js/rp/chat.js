@@ -229,7 +229,7 @@ function addLine(msg){
             if (missed_messages !=0) {
                 document.title = missed_messages+"! "+chat.title;
             }
-        }// a
+        }
         
         if (window_active == false && desktop_notifications == true) {
             show(chat.url,htmlEncode(bbRemove(msg.text)));
