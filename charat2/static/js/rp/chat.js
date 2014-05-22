@@ -225,7 +225,7 @@ function addLine(msg){
         if (window_active == false) {
             missed_messages++;
             if (missed_messages !=0) {
-                document.title = missed_messages+" new messages – "+chat.title;
+                document.title = missed_messages+"! – "+chat.title;
             }
         }
         
