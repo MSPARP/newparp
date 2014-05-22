@@ -87,6 +87,10 @@ def chat(url):
             g.db.add(chat)
             g.db.flush()
 
+        # Override title with the other person's username.
+        chat_dict = chat.to_dict()
+        chat_dict['title'] = "Messaging "+pm_user.username
+
     else:
 
         # Force lower case.
@@ -106,6 +110,8 @@ def chat(url):
             if chat.url != "theoubliette":
                 return redirect(url_for("chat", url="theoubliette"))
             abort(403)
+
+        chat_dict = chat.to_dict()
 
     # Get or create UserChat.
     try:
@@ -134,22 +140,11 @@ def chat(url):
     logged_in = False
     if g.user is not None:
         logged_in = True
-        
-    chat = chat.to_dict()
-
-    if url.startswith("pm/"):
-        try:
-            pm_user = g.db.query(User).filter(
-                func.lower(User.username) == username.lower()
-            ).one()
-            chat['title'] = "Messaging "+pm_user.username
-        except NoResultFound:
-            abort(404)
 
     return render_template(
         "rp/chat.html",
         url=url,
-        chat=chat,
+        chat=chat_dict,
         user_chat=user_chat,
         user_chat_dict=user_chat.to_dict(include_options=True),
         messages=messages,
