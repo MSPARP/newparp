@@ -76,8 +76,8 @@
                 <button type="button" id="topicButton" class="metaOptions">Set topic</button>
                 <ul id="metaResults">
                     <div class="bar"></div>
+                    <li id="publicityResult" style="display:list-item;">This chat is {{chat.publicity}}.</li>
                     <li id="autosilenceResult" {% if chat.autosilence == true %} style="display:list-item;" {% endif %} >New users are auto-silenced.</li>
-                    <li id="publicityResult" {% if chat.publicity == 'listed' %} style="display:list-item;" {% endif %} >This chat is public.</li>
                     <li id="nsfwResult" {% if chat.nsfw == true %} style="display:list-item;" {% endif %} >This chat is not safe for work.</li>
                 </ul>
             </div>
