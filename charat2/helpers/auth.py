@@ -1,11 +1,11 @@
-from flask import abort, g
+from flask import abort, g, redirect, url_for
 from functools import wraps
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            abort(403)
+            return redirect(url_for('login_get'))
         return f(*args, **kwargs)
     return decorated_function
 
