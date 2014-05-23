@@ -885,10 +885,11 @@ $(document).ready(function() {
         });
         
         $('#metaOptions input').click(function() {
-            var data = {'chat_id': chat['id'], 'meta_change': ''}
-            // Convert to integer then string.
-            data[this.id] = +this.checked+'';
-            $.post(POST_URL, data);
+            if (this.checked == true){
+                setFlag(this.id, 'on');
+            } else {
+                setFlag(this.id, 'off');
+            }
         });
         
         // NEW TOPIC CHANGE FUNCTION
