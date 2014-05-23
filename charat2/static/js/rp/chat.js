@@ -24,7 +24,7 @@ var CHAT_FLAG_MAP = {
 var MOD_GROUPS = ['admin', 'creator', 'mod', 'mod2', 'mod3'];
 var GROUP_RANKS = { 'admin': 6, 'mod': 5, 'mod2': 4, 'mod3': 3, 'user': 2, 'silent': 1 };
 var GROUP_DESCRIPTIONS = {
-    'admin': { title: 'Adoraglobal Mod', description: 'Charat Staff' },
+    'admin': { title: 'Adorable Admin', description: 'Charat Staff' },
     'creator': { title: 'Chat Creator', description: 'Silence, Kick, Ban, Cannot be demodded' },
     'mod': { title: 'Magical Mod', description: 'Silence, Kick and Ban' },
     'mod2': { title: 'Cute-Cute Mod', description: 'Silence and Kick' },

@@ -599,7 +599,7 @@ body > #save {
 }
 
 #users li.admin .username:after {
-    content: " – Adoraglobal Mod";
+    content: " – Adorable Admin";
 }
 
 #users li.creator .username:after {
@@ -639,8 +639,8 @@ body > #save {
     display: none;
 }
 
-#users li.creator .set, #users li.globalmod .set,
-#users li.creator .user_action, #users li.globalmod .user_action {
+#users li.creator .set, #users li.admin .set,
+#users li.creator .user_action, #users li.admin .user_action {
     display: none;
 }
 
