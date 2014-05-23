@@ -885,10 +885,18 @@ $(document).ready(function() {
         });
         
         $('#metaOptions input').click(function() {
-            if (this.checked == true){
-                setFlag(this.id, 'on');
+            if (this.id != 'public') {
+                if (this.checked == true){
+                    setFlag(this.id, 'on');
+                } else {
+                    setFlag(this.id, 'off');
+                }
             } else {
-                setFlag(this.id, 'off');
+                if (this.checked == true){
+                    setFlag('publicity', 'listed');
+                } else {
+                    setFlag('publicity', 'unlisted');
+                }
             }
         });
         
