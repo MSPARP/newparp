@@ -373,13 +373,17 @@ function messageParse(data) {
         var chat = data.chat;
         
         for (i=0; i<CHAT_FLAGS.length; i++) {
-            if (data.chat[CHAT_FLAGS[i]] == CHAT_FLAG_MAP[CHAT_FLAGS[i]]) {
+            if (data.chat[CHAT_FLAGS[i]]) {
                 $('#'+CHAT_FLAGS[i]).prop('checked', 'checked');
                 $('#'+CHAT_FLAGS[i]+'Result').show();
             } else {
                 $('#'+CHAT_FLAGS[i]).removeAttr('checked');
                 $('#'+CHAT_FLAGS[i]+'Result').hide();
             }
+        }
+        
+        if (data.chat.publicity) {
+            $('#publicityResult').text('This chat is '+data.chat.publicity+'.');
         }
         
         if (typeof data.chat.topic!='undefined') {
