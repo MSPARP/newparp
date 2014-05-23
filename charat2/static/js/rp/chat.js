@@ -353,7 +353,7 @@ function messageParse(data) {
             addLine({ counter: -1, color: '000000', text: 'You have been kicked from this chat. Please think long and hard about your behaviour before rejoining.' });
         } else if (data.exit=='ban') {
 			clearChat();
-            window.location.replace('/chat/theoubliette');
+            window.location.replace('/theoubliette');
         }
         return true;
     }
