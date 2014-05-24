@@ -10,7 +10,7 @@ def home():
     logged_in = False
     if g.user is not None:
         logged_in = True
-    return render_template("rp/home.html", logged_in=logged_in, g=g(), base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
+    return render_template("rp/home.html", logged_in=logged_in, user=g.user, base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
 
 @use_db
 def rooms():
