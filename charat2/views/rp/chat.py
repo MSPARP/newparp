@@ -194,7 +194,7 @@ def log(url, page=None):
             
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
-        chat_dict['title'] = "Messaging "+pm_user.username
+        chat_dict['title'] = "Log With "+pm_user.username
 
     else:
 
