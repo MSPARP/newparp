@@ -191,6 +191,10 @@ def log(url, page=None):
             ).one()
         except NoResultFound:
             abort(404)
+            
+        # Override title with the other person's username.
+        chat_dict = chat.to_dict()
+        chat_dict['title'] = "Messaging "+pm_user.username
 
     else:
 
