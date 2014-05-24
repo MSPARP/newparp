@@ -203,9 +203,6 @@ def log(url, page=None):
         except NoResultFound:
             abort(404)
 
-    if page is None:
-        page = 1
-
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
     ).order_by(Message.id).limit(100).offset((page-1)*100).all()
@@ -216,6 +213,10 @@ def log(url, page=None):
     message_count = g.db.query(func.count('*')).select_from(Message).filter(
         Message.chat_id==chat.id,
     ).scalar()
+    
+    if page is None:
+        page = message_count/100-1
+    
     paginator = paginate.Page(
         [],
         page=page,
