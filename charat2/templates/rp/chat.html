@@ -84,9 +84,9 @@
             <div class="card metaOptions stoptions">
                 <h1 class="titi">CHAT SETTINGS</h1>
                 <ul id="metaOptions">
-                    <li style="display:none;"><label><input type="checkbox" id="public" autocomplete="off"><div class="checkbox"></div>Public Chat</label></li>
-                    <li><label><input type="checkbox" id="autosilence" autocomplete="off"><div class="checkbox"></div>Autosilence</label></li>
-                    <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div>NSFW</label></li>
+                    <li style="display:none;"><label><input type="checkbox" id="public" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Public Chat</div></label></li>
+                    <li><label><input type="checkbox" id="autosilence" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Autosilence</div></label></li>
+                    <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">NSFW</div></label></li>
                 </ul>
            </div>
         {% endif %}
@@ -159,15 +159,15 @@
         <div class="card">
             <h1 class="titi">OPTIONS</h1>
             <div class="stoptions">
-                <label id="confirmCloseToggle"><input type="checkbox" autocomplete="off" checked><div class="checkbox"></div>Confirm Window Close</label>
-                <label id="oocToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div>Out Of Character</label>
-                <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox" autocomplete="off"></div>Show BBCode Colors (Refresh)</label>
+                <label id="confirmCloseToggle"><input type="checkbox" autocomplete="off" checked><div class="checkbox"></div><div class="checkbox-text">Confirm Window Close</div></label>
+                <label id="oocToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Out Of Character</div></label>
+                <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox" autocomplete="off"></div><div class="checkbox-text">BBCode</div></label>
                 <div id="notificationHead" data-ng-app>
                     <div id="notificationController" class="notificationLevel" ng-class="getClassName()" data-ng-click="requestPermissions()" data-ng-controller="NotificationCenter">
-                        <label><input type="checkbox" class="deskset" name="deskset" autocomplete="off"><div class="checkbox"></div>Desktop Notifications</label>
+                        <label><input type="checkbox" class="deskset" name="deskset" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Desktop Notifications</div></label>
                     </div>
                </div>
-               <label id="previewToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div>Show Preview</label>
+               <label id="previewToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Show Preview</div></label>
            </div>
         </div>
         

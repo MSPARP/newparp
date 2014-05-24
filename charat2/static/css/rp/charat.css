@@ -124,6 +124,12 @@ input[type="checkbox"]:checked + .checkbox {
     background-color: #92B792;
 }
 
+input[type="checkbox"]:checked + .checkbox + .checkbox-text {
+    position: relative;
+    display: inline-block;
+    top: -2px;
+}
+
 .select-bind {
     font-family: Sans-Serif;
     position: relative;
