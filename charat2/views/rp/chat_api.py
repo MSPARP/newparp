@@ -43,8 +43,8 @@ def messages():
     messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
     if len(messages) != 0 or g.joining:
         message_dict = { "messages": [json.loads(_) for _ in messages] }
-        if g.joining:
-            message_dict["users"] = get_userlist(g.db, g.redis, g.chat)
+        #if g.joining:
+        message_dict["users"] = get_userlist(g.db, g.redis, g.chat)
         return jsonify(message_dict)
 
     pubsub = g.redis.pubsub()
