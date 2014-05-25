@@ -208,7 +208,7 @@ def log(url, page=None):
     ).scalar()
     
     if page is None:
-        page = 1
+        page = message_count/100
     
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
