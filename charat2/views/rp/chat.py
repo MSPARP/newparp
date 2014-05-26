@@ -233,3 +233,26 @@ def log(url, page=None):
         paginator=paginator,
     )
 
+
+@use_db
+def users(url):
+
+    try:
+        chat = g.db.query(GroupChat).filter(
+            GroupChat.url==url,
+        ).one()
+    except NoResultFound:
+        abort(404)
+
+    users = g.db.query(UserChat, User).join(
+        User, UserChat.user_id==User.id,
+    ).filter(and_(
+        UserChat.chat_id==chat.id,
+    )).order_by(User.username).all()
+
+    return render_template(
+        "rp/chat_users.html",
+        chat=chat,
+        users=users,
+    )
+

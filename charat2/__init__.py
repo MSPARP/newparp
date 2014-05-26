@@ -57,6 +57,7 @@ app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp"
 app.add_url_rule("/<path:url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
 app.add_url_rule("/<path:url>/log", "log", chat.log, subdomain="rp", methods=("GET",))
 app.add_url_rule("/<path:url>/log/<int:page>", "log", chat.log, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<path:url>/users", "chat_users", chat.users, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/meta", "meta", chat_api.meta, subdomain="rp", methods=("POST",))
