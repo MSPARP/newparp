@@ -367,7 +367,7 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = ("[color=#%s]%s[/color] [[color=#%s]%s[/color]] listed the chat. It's now listed on the public rooms page.")
+            message = "[color=#%s]%s[/color] [[color=#%s]%s[/color]] listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
             message = "[color=#%s]%s[/color] [[color=#%s]%s[/color]] unlisted the chat."
     else:
