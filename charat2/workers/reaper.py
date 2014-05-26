@@ -40,7 +40,9 @@ if __name__ == "__main__":
                     name=dead_user_chat.name,
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON
-                    text="%s's connection timed out." % dead_user_chat.name,
+                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]]'s connection timed out." % (
+                        dead_user_chat.color, dead_user_chat.name, dead_user_chat.color, dead_user_chat.acronym,
+                    ),
                 ))
             print current_time, "Reaping ", dead
         db.commit()
