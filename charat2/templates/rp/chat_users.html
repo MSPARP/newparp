@@ -11,7 +11,7 @@
 {% for user_chat, user in users: %}
     <tr>
       <td>{{user.username}}</td>
-      <td>{{user_chat.name}}{% if user_chat.acronym != "": %} [{{user_chat.acronym}}]{% endif %}</td>
+      <td><span style="color: #{{user_chat.color}}">{{user_chat.name}}</span>{% if user_chat.acronym != "": %} [<span style="color: #{{user_chat.color}}">{{user_chat.acronym}}</span>]{% endif %}</td>
 {% if user.group == "admin": %}
       <td>Adorable Admin</td>
 {% elif chat.creator == user: %}
