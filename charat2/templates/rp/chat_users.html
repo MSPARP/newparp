@@ -15,7 +15,7 @@
 {% if user.group == "admin": %}
       <td>Adorable Admin</td>
 {% elif chat.creator == user: %}
-      <td>{{user_chat.group}}</td>
+      <td>Chat Creator</td>
 {% else: %}
       <td>{{user_chat.group}}</td>
 {% endif %}
