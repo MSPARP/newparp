@@ -619,6 +619,7 @@ body > #save {
 }
 
 #users li.self .userCharacter:after {
+    display: inline-block;
     color: #444444;
     font-weight: 400;
     text-decoration: none;
