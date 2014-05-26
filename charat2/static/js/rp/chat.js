@@ -156,7 +156,6 @@ function startChat() {
         setSidebar(current_sidebar);
     }
     getMeta(true);
-    getMeta();
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
     goBottom(CONVERSATION_CONTAINER);
@@ -356,8 +355,11 @@ function getMessages() {
 
 function getMeta(first_join) {
     first_join = (typeof first_join === "undefined") ? false : first_join;
-    console.log(first_join);
-    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    if (first_join) {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum, 'joining': true};
+    } else {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    }
     $.post(CHAT_META, messageData, function(data) {
         messageParse(data);
     }, "json").complete(function() {
@@ -385,10 +387,12 @@ function messageParse(data) {
         }
         return true;
     }
-    var messages = data.messages;
-    for (var i=0; i<messages.length; i++) {
-        addLine(messages[i]);
-        latestNum = Math.max(latestNum, messages[i]['id']);
+    if (typeof data.messages!="undefined") {
+        var messages = data.messages;
+        for (var i=0; i<messages.length; i++) {
+            addLine(messages[i]);
+            latestNum = Math.max(latestNum, messages[i]['id']);
+        }
     }
     if (typeof data.counter!="undefined") {
         user.meta.counter = data.counter;
