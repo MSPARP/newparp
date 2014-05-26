@@ -87,8 +87,8 @@ def send_message(db, redis, message):
         send_userlist(db, redis, message.chat)
     # Reload chat metadata if necessary.
     elif message.type == "chat_meta":
-		redis.publish("channel:%s:meta" % chat.id, json.dumps({
-		    "chat": message.chat.to_dict()
+		redis.publish("channel:%s:meta" % message.chat.id, json.dumps({
+		    "chat": message.chat.to_dict(),
 		}))
 
 	# And send the message.
@@ -99,7 +99,7 @@ def send_message(db, redis, message):
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
     redis.publish("channel:%s:meta" % chat.id, json.dumps({
-        "users": get_userlist(db, redis, chat)
+        "users": get_userlist(db, redis, chat),
     }))
 
 def disconnect(redis, chat_id, user_id):
