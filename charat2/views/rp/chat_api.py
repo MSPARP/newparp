@@ -43,20 +43,36 @@ def messages():
     messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
     if len(messages) != 0 or g.joining:
         message_dict = { "messages": [json.loads(_) for _ in messages] }
-        if g.joining:
-            message_dict["users"] = get_userlist(g.db, g.redis, g.chat)
         return jsonify(message_dict)
 
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
-    pubsub.subscribe("channel:%s" % g.chat_id)
+    pubsub.subscribe("channel:%s:messages" % g.chat_id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
     pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 
-    # Get rid of the database connection here so we're not hanging onto it
-    # while waiting for the redis message.
-    db_commit()
-    db_disconnect()
+    for msg in pubsub.listen():
+        if msg["type"]=="message":
+            # The pubsub channel sends us a JSON string, so we return that
+            # instead of using jsonify.
+            resp = make_response(msg["data"])
+            resp.headers["Content-type"] = "application/json"
+            return resp
+
+@mark_alive
+def meta():
+
+    if "joining" in request.form or g.joining:
+        db_connect()
+        get_user_chat()
+        return jsonify({
+            "users": get_userlist(g.db, g.redis, g.chat),
+            "chat": g.chat.to_dict(),
+        })
+
+    pubsub = g.redis.pubsub()
+    # Channel for user list updates.
+    pubsub.subscribe("channel:%s:meta" % g.chat_id)
 
     for msg in pubsub.listen():
         if msg["type"]=="message":
