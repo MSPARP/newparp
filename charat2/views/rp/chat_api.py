@@ -353,7 +353,7 @@ def set_flag():
         if new_value == getattr(g.chat, request.form["flag"]):
             return "", 204
         setattr(g.chat, request.form["flag"], new_value)
-        message = "%%s switched %s %s." % (
+        message = "[color=#%%s]%%s[/color] [[color=#%%s]%%s[/color]] switched %s %s." % (
             request.form["flag"], request.form["value"],
         )
 
@@ -369,7 +369,7 @@ def set_flag():
         if g.chat.publicity == "listed":
             message = ("%s listed the chat. It's now listed on the public rooms page.")
         elif g.chat.publicity == "unlisted":
-            message = "%s unlisted the chat."
+            message = "[color=#%s]%s[/color] [[color=#%s]%s[/color]] unlisted the chat."
     else:
         abort(400)
 
@@ -377,7 +377,9 @@ def set_flag():
         chat_id=g.chat.id,
         user_id=g.user.id,
         type="chat_meta",
-        text=message % g.user_chat.name,
+        text=message % (
+            g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+        ),
     ))
 
     return "", 204
