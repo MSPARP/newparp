@@ -13,6 +13,7 @@ var SAVE_URL = '/chat_api/save';
 var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
 var CHAT_QUIT = '/chat_api/quit';
+var CHAT_META = '/chat_api/meta';
 
 var CHAT_FLAGS = ['autosilence','publicity','nsfw'];
 var CHAT_FLAG_MAP = {
@@ -154,7 +155,8 @@ function startChat() {
     } else {
         setSidebar(current_sidebar);
     }
-    //getMeta();
+    getMeta(true);
+    getMeta();
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
     goBottom(CONVERSATION_CONTAINER);
@@ -335,6 +337,32 @@ function getMessages() {
             window.setTimeout(getMessages, 50);
         } else {
             // Disconnected methods
+        }
+    });
+}
+
+function getMessages() {
+    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    $.post(CHAT_MESSAGES, messageData, function(data) {
+        messageParse(data);
+    }, "json").complete(function() {
+        if (chat_state=='chat') {
+            window.setTimeout(getMessages, 50);
+        } else {
+            // Disconnected methods
+        }
+    });
+}
+
+function getMeta(first_join) {
+    first_join = (typeof first_join === "undefined") ? false : first_join;
+    console.log(first_join);
+    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    $.post(CHAT_META, messageData, function(data) {
+        messageParse(data);
+    }, "json").complete(function() {
+        if (chat_state=='chat') {
+            window.setTimeout(getMeta, 50);
         }
     });
 }
@@ -979,7 +1007,7 @@ $(document).ready(function() {
         }
         
         $(window).unload(function() {
-            $.ajax('/chat_api/quit', {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
+            $.ajax(CHAT_QUIT, {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
         });
     }
 });
