@@ -393,6 +393,9 @@ function messageParse(data) {
             addLine(messages[i]);
             latestNum = Math.max(latestNum, messages[i]['id']);
         }
+        if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
+
+        }
     }
     if (typeof data.counter!="undefined") {
         user.meta.counter = data.counter;
@@ -441,9 +444,6 @@ function messageParse(data) {
         } else {
             //Changed
         }
-    }
-    if (messages.length>0 && typeof hidden!="undefined" && document[hidden]==true) {
-
     }
     if (user.meta.group == 'mod' || user.meta.group == 'admin') {
         $('.inPass').hide();
