@@ -541,7 +541,11 @@ function updateChatPreview() {
     if ($('#textInput').val().substr(0,2)=='/ ') {
         textPreview = textPreview.substr(2);
     } else if (command[0] != '/me' || command[0] != '/ooc' || !ooc_on || type_force != 'me') {
-        textPreview = applyQuirks(textPreview,user.character);
+        try {
+            textPreview = applyQuirks(textPreview,user.character);
+        } catch(e) {
+            console.log('a');
+        }
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "[blank]: ";
