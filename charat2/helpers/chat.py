@@ -1,6 +1,7 @@
 import json
 import time
 
+from datetime import datetime
 from flask import abort, g, request
 from functools import wraps
 from sqlalchemy import and_, func
@@ -67,6 +68,8 @@ def send_message(db, redis, message):
 
     db.add(message)
     db.flush()
+
+    message.chat.last_message = message.posted
 
     message_dict = message.to_dict()
 
