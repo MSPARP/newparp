@@ -86,6 +86,7 @@ function applyQuirks(text,pattern) {
                     if (RegExp(regexStrings[reg],'g').test($1)) {
                         var insert_text = regex[regexStrings[reg]];
                         insert_text.replace(/\$1/g,original_text);
+                        console.log(insert_text);
                         return insert_text;
                     }
                 }
