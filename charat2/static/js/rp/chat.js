@@ -219,7 +219,7 @@ function addLine(msg){
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
-        
+
         if (at_bottom) {
             goBottom(CONVERSATION_CONTAINER);
             at_bottom = false;
@@ -474,6 +474,8 @@ function clearChat() {
 }
 
 function setSidebar(sidebar) {
+    var at_bottom = atBottom(CONVERSATION_CONTAINER);
+    
     $('.sidebar').hide();
     topbarDeselect('#topbar .right span');
     current_sidebar = sidebar;
@@ -485,7 +487,10 @@ function setSidebar(sidebar) {
         $(document.body).removeClass('withSidebar');
     }
 
-    // if the sidebar changed, check bottom and go to bottom if at bottom
+    if (at_bottom) {
+        goBottom(CONVERSATION_CONTAINER);
+        at_bottom = false;
+    }
 }
 
 function closeSettings() {
