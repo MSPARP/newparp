@@ -151,6 +151,22 @@
                 <br />
                 <a href="#" id="clearReplacements">-Clear replacements</a>
             </div>
+            
+            <div class="titi">REGEX REPLACEMENTS</div>
+            <div class="replacementContainer">
+                <ul id="regexList">
+                    {% if user_chat_dict.character.regexes.length!=0 %}
+                        {% for replacement in user_chat_dict.character.regexes %}
+                            <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li><input type="text" name="quirk_from" size="4"> to <input type="text" name="quirk_to" size="4"> <a href="#" class="deleteReplacement">x</a></li>
+                    {% endif %}
+                </ul>
+                <a href="#" id="addReplacement">+Add another replacement</a>
+                <br />
+                <a href="#" id="clearReplacements">-Clear replacements</a>
+            </div>
             <button class="big" type="submit">Apply</button>
         </div>
 
