@@ -1,7 +1,7 @@
-function applyQuirks(text) {
+function applyQuirks(text,pattern) {
 
     // Case
-    switch (user.character['case']) {
+    switch (pattern['case']) {
         case "lower":
             text = text.toLowerCase();
             break;
@@ -33,8 +33,8 @@ function applyQuirks(text) {
 
     // Replacements
     var replace = {};
-    for (i=0; i<user.character.replacements.length; i++) {
-        var replacement = user.character.replacements[i];
+    for (i=0; i<pattern.replacements.length; i++) {
+        var replacement = pattern.replacements[i];
         replace[replacement[0]] = replacement[1];
     }
 
@@ -55,13 +55,13 @@ function applyQuirks(text) {
     }
 
     // Prefix
-    if (user.character.quirk_prefix) {
-        text = user.character.quirk_prefix+' '+text;
+    if (pattern.quirk_prefix) {
+        text = pattern.quirk_prefix+' '+text;
     }
     
     // Suffix
-    if (user.character.quirk_suffix) {
-        text = text+' '+user.character.quirk_suffix;
+    if (pattern.quirk_suffix) {
+        text = text+' '+pattern.quirk_suffix;
     }
 
     return text
