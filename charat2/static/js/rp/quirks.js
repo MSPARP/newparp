@@ -66,8 +66,8 @@ function applyQuirks(text,pattern) {
                 return replace[$1]
             } else {
                 for (var reg in regexStrings) {
-                    if (RegExp(reg,'g').test($1)) {
-                        return regex[reg]
+                    if (RegExp(regexStrings[reg],'g').test($1)) {
+                        return regex[regexStrings[reg]];
                     }
                 }
             }
