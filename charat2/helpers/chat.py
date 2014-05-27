@@ -41,6 +41,8 @@ def mark_alive(f):
             # Get UserChat if we haven't got it already.
             if not hasattr(g, "user_chat"):
                 get_user_chat()
+            # Update their last_online.
+            g.user_chat.last_online = datetime.now()
             # Add them to the online list.
             g.redis.sadd("chat:%s:online" % g.chat.id, g.user.id)
             # Send join message. Or not, if they're silent.
