@@ -356,7 +356,7 @@ ul#metaOptions {
     width: 70px;
 }
 
-.replacementList {
+#replacementList, #regexList {
     margin-bottom: 5px;
 }
 
@@ -372,7 +372,7 @@ input[name='quirk_to'] {
     color: #000000;
 }
 
-a#addReplacement, a#clearReplacements {
+a#addReplacement, a#clearReplacements, a#addRegex, a#clearRegexes {
     font-size: 14px;
 }
 
