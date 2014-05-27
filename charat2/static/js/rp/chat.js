@@ -543,9 +543,7 @@ function updateChatPreview() {
     } else if (command[0] != '/me' || command[0] != '/ooc' || !ooc_on || type_force != 'me') {
         try {
             textPreview = applyQuirks(textPreview,user.character);
-        } catch(e) {
-            console.log('a');
-        }
+        } catch(e) {}
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "[blank]: ";
