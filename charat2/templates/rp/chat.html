@@ -139,7 +139,7 @@
             <div class="titi">REPLACEMENTS</div>
             <div class="replacementContainer">
                 <ul id="replacementList">
-                    {% if user_chat.character.replacements|length!=0 %}
+                    {% if user_chat_dict.replacements|length!=0 %}
                         {% for replacement in user_chat_dict.replacements %}
                             <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
                         {% endfor %}
