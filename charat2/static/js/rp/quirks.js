@@ -62,7 +62,15 @@ function applyQuirks(text,pattern) {
         var regexStrings = Object.keys(regex);
         var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
         text = text.replace(reg_from, function($1) {
-            return replace[$1] ? replace[$1] : regex[$1];
+            if (replace[$1]) {
+                return replace[$1]
+            } else {
+                for (var reg in regexStrings) {
+                    if (RegExp(reg,'g').test($1)) {
+                        return regex[reg]
+                    }
+                }
+            }
         });
     }
 
