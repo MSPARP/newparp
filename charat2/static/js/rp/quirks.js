@@ -59,7 +59,11 @@ function applyQuirks(text,pattern) {
         for (i=0;i<replacementStrings.length;i++) {
             replacementStrings[i] = replacementStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
-        var reg_from = new RegExp(replacementStrings.join("|"), "g");
+        var regexStrings = Object.keys(regex);
+        for (i=0;i<regexStrings.length;i++) {
+            regexStrings[i] = regexStrings[i].replace(/[\|]/g, "\\$&");
+        }
+        var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
         text = text.replace(reg_from, function($1) {
             return replace[$1];
         });
