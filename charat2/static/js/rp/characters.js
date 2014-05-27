@@ -19,6 +19,7 @@ function addReplacement(e, from, to) {
 
 function clearReplacements(e) {
 	$('#replacementList').empty();
+    addReplacement();
 	return false;
 }
 
@@ -36,6 +37,7 @@ function addRegex(e, from, to) {
 
 function clearRegexes(e) {
 	$('#regexList').empty();
+    addRegex();
 	return false;
 }
 
