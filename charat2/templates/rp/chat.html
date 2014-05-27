@@ -4,9 +4,9 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<link rel="stylesheet" href="{{url_for("static", filename="css/rp/chat.css")}}" defer>
-<script src="{{url_for("static", filename="js/rp/characters.js")}}" defer></script>
-<script src="{{url_for("static", filename="js/rp/quirks.js")}}" defer></script>
+<link rel="stylesheet" href="{{url_for('static', filename='css/rp/chat.css')}}" defer>
+<script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
+<script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
 <script type="text/javascript">
     var user = {{user_chat_dict|tojson|safe}};
     var chat = {{chat|tojson|safe}};
@@ -22,7 +22,7 @@
         <div id="topmenu">
             <a id="goHome" href="{{url_for('home')}}">Home</a>
             <div class="topborder"></div>
-            <a id="goHome" href="{{url_for("rp_home")}}">RP Home</a>
+            <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
             <div class="topborder"></div>
             <a id="goUser" href="">Guide</a>
             <div class="topborder"></div>
