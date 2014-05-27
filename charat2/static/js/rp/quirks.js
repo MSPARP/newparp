@@ -55,26 +55,37 @@ function applyQuirks(text,pattern) {
     }
     
     if (!empty) {
-        for (i=0;i<Object.keys(replace).length;i++) {
-            Object.keys(replace)[i] = Object.keys(replace)[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        try {
+            var replacementStrings = Object.keys(replace);
+        } catch(e) {
+            var replacementStrings = [];
         }
-        if (Object.keys(replace).length!=0 && Object.keys(regex).length!=0) {
-            var reg_from = new RegExp(Object.keys(replace).join("|")+"|"+Object.keys(regex).join("|"), "g");
-        } else if (Object.keys(replace).length!=0 && Object.keys(regex).length==0) {
-            var reg_from = new RegExp(Object.keys(replace).join("|")), "g");
-        } else if (Object.keys(replace).length==0 && Object.keys(regex).length!=0) {
-            var reg_from = new RegExp(Object.keys(regex).join("|"), "g");
-        } else {
-            var reg_from = new RegExp("", "g");
+        for (i=0;i<replacementStrings.length;i++) {
+            replacementStrings[i] = replacementStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
+        try {
+            var regexStrings = Object.keys(regex);
+        } catch(e) {
+            var regexStrings = [];
+        }
+        var reg_from = new RegExp("", "g");
+        try {
+            if (replacementStrings.length!=0 && regexStrings.length!=0) {
+                var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
+            } else if (replacementStrings.length!=0 && regexStrings.length==0) {
+                var reg_from = new RegExp(replacementStrings.join("|")), "g");
+            } else if (replacementStrings.length==0 && regexStrings.length!=0) {
+                var reg_from = new RegExp(regexStrings.join("|"), "g");
+            }
+        } catch(e) {}
         text = text.replace(reg_from, function($1) {
             if (replace[$1]) {
                 return replace[$1]
             } else {
-                for (var reg in Object.keys(regex)) {
+                for (var reg in regexStrings) {
                     var original_text = $1;
-                    if (RegExp(Object.keys(regex)[reg],'g').test($1)) {
-                        var insert_text = regex[Object.keys(regex)[reg]];
+                    if (RegExp(regexStrings[reg],'g').test($1)) {
+                        var insert_text = regex[regexStrings[reg]];
                         insert_text.replace(/\$1/g,original_text);
                         return insert_text;
                     }
