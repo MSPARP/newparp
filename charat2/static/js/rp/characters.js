@@ -22,11 +22,32 @@ function clearReplacements(e) {
 	return false;
 }
 
+function addRegex(e, from, to) {
+	newItem = $('<li><input type="text" name="quirk_from" size="4"> to <input type="text" name="quirk_to" size="4"> <a href="#" class="deleteRegex">x</a></li>');
+	if (from && to) {
+		var inputs = $(newItem).find('input');
+		inputs[0].value = from;
+		inputs[1].value = to;
+	}
+	$(newItem).find('.deleteRegex').click(deleteReplacement);
+	$(newItem).appendTo('#regexList');
+	return false;
+}
+
+function clearRegexes(e) {
+	$('#regexList').empty();
+	return false;
+}
+
 $(document).ready(function() {
 
 	$('.deleteReplacement').click(deleteReplacement);
 	$('#addReplacement').click(addReplacement);
 	$('#clearReplacements').click(clearReplacements);
+    
+	$('.deleteRegex').click(deleteReplacement);
+	$('#addRegex').click(addRegex);
+	$('#clearRegexes').click(clearRegexes);
 
 	$('select[name="character"]').change(function() {
 		if (characters[this.value]) {
