@@ -139,7 +139,7 @@
             <div class="titi">REPLACEMENTS</div>
             <div class="replacementContainer">
                 <ul id="replacementList">
-                    {% if user_chat_dict.character.replacements.length!=0 %}
+                    {% if user_chat_dict.character.replacements|length!=0 %}
                         {% for replacement in user_chat_dict.character.replacements %}
                             <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
                         {% endfor %}
@@ -155,7 +155,7 @@
             <div class="titi">REGEX REPLACEMENTS</div>
             <div class="replacementContainer">
                 <ul id="regexList">
-                    {% if user_chat_dict.character.regexes.length!=0 %}
+                    {% if user_chat_dict.character.regexes|length!=0 %}
                         {% for replacement in user_chat_dict.character.regexes %}
                             <li><input type="text" name="regex_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="regex_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteRegex">x</a></li>
                         {% endfor %}
