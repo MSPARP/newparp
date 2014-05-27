@@ -910,6 +910,14 @@ $(document).ready(function() {
                             user.character.replacements.push([replacementsFrom[i].value, replacementsTo[i].value])
                         }
                     }
+                    user.character.regexes = [];
+                    var regexesFrom = $('#settings').find('input[name="regex_from"]');
+                    var regexesTo = $('#settings').find('input[name="regex_to"]');
+                    for (i=0; i<regexesFrom.length; i++) {
+                        if (regexesFrom[i].value!="" && regexesFrom[i].value!=regexesTo[i].value) {
+                            user.character.regexes.push([regexesFrom[i].value, regexesTo[i].value])
+                        }
+                    }
                     closeSettings();
                 });
             }
