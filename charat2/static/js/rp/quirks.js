@@ -76,6 +76,7 @@ function applyQuirks(text,pattern) {
                     }
                 }
             }
+            return "";
         });
     }
 
