@@ -61,9 +61,16 @@ function applyQuirks(text,pattern) {
         }
         var regexStrings = Object.keys(regex);
         console.log(replacementStrings.join("|")+"|"+regexStrings.join("|"));
-        var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
+        if (replacementStrings.length!=0 && regexStrings.length!=0) {
+            var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
+        } else if (replacementStrings.length!=0 && regexStrings.length==0) {
+            var reg_from = new RegExp(replacementStrings.join("|")), "g");
+        } else if (replacementStrings.length==0 && regexStrings.length!=0) {
+            var reg_from = new RegExp(regexStrings.join("|"), "g");
+        } else {
+            var reg_from = new RegExp("", "g");
+        }
         text = text.replace(reg_from, function($1) {
-            console.log($1);
             if (replace[$1]) {
                 return replace[$1]
             } else {
