@@ -55,11 +55,19 @@ function applyQuirks(text,pattern) {
     }
     
     if (!empty) {
-        var replacementStrings = Object.keys(replace);
+        try {
+            var replacementStrings = Object.keys(replace);
+        } catch(e) {
+            var replacementStrings = [];
+        }
         for (i=0;i<replacementStrings.length;i++) {
             replacementStrings[i] = replacementStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
-        var regexStrings = Object.keys(regex);
+        try {
+            var regexStrings = Object.keys(regex);
+        } catch(e) {
+            var regexStrings = [];
+        }
         console.log(replacementStrings.join("|")+"|"+regexStrings.join("|"));
         if (replacementStrings.length!=0 && regexStrings.length!=0) {
             var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
