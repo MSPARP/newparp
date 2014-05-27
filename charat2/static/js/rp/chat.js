@@ -428,8 +428,6 @@ function messageParse(data) {
             $('#topic').text('');
             chat_topic = '';
         }
-        
-        console.log(chat);
 
         if (user.meta.group == 'mod' || user.meta.group == 'admin') {
             $('.inPass').hide();
