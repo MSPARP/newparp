@@ -68,16 +68,15 @@ function applyQuirks(text,pattern) {
         } catch(e) {
             var regexStrings = [];
         }
-        var reg_from = new RegExp("", "g");
-        try {
-            if (replacementStrings.length!=0 && regexStrings.length!=0) {
-                var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
-            } else if (replacementStrings.length!=0 && regexStrings.length==0) {
-                var reg_from = new RegExp(replacementStrings.join("|")), "g");
-            } else if (replacementStrings.length==0 && regexStrings.length!=0) {
-                var reg_from = new RegExp(regexStrings.join("|"), "g");
-            }
-        } catch(e) {}
+        if (replacementStrings.length!=0 && regexStrings.length!=0) {
+            var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
+        } else if (replacementStrings.length!=0 && regexStrings.length==0) {
+            var reg_from = new RegExp(replacementStrings.join("|"), "g");
+        } else if (replacementStrings.length==0 && regexStrings.length!=0) {
+            var reg_from = new RegExp(regexStrings.join("|"), "g");
+        } else {
+            var reg_from = new RegExp("", "g");
+        }
         text = text.replace(reg_from, function($1) {
             if (replace[$1]) {
                 return replace[$1]
