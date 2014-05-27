@@ -64,7 +64,7 @@ function applyQuirks(text,pattern) {
         console.log(replacementStrings.join("|")+"|"+regexStrings.join("|"));
         var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
         text = text.replace(reg_from, function($1) {
-            return replace[$1];
+            return replace[$1] ? replace[$1] : regex[$1];
         });
     }
 
