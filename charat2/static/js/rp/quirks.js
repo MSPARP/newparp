@@ -70,6 +70,7 @@ function applyQuirks(text,pattern) {
                     if (RegExp(regexStrings[reg],'g').test($1)) {
                         var replaced_text = regex[regexStrings[reg]];
                         replaced_text.replace(/\$1/g,original_text);
+                        console.log(regexStrings[reg]);
                         return regex[regexStrings[reg]];
                     }
                 }
