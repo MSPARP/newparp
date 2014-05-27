@@ -60,6 +60,7 @@ function applyQuirks(text,pattern) {
             replacementStrings[i] = replacementStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
         var regexStrings = Object.keys(regex);
+        console.log(replacementStrings.join("|")+"|"+regexStrings.join("|"));
         var reg_from = new RegExp(replacementStrings.join("|")+"|"+regexStrings.join("|"), "g");
         text = text.replace(reg_from, function($1) {
             return replace[$1];
