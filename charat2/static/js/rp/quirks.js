@@ -37,18 +37,29 @@ function applyQuirks(text,pattern) {
         var replacement = pattern.replacements[i];
         replace[replacement[0]] = replacement[1];
     }
+    
+    var regex = {};
+    for (i=0; i<pattern.regexes.length; i++) {
+        var re = pattern.regexes[i];
+        replace[re[0]] = re[1];
+    }
 
     var empty = true;
     for(var key in replace) {
         empty = false;
         break;
     }
+    for(var key in regex) {
+        empty = false;
+        break;
+    }
+    
     if (!empty) {
-        regexStrings = Object.keys(replace);
-        for (i=0;i<regexStrings.length;i++) {
-            regexStrings[i] = regexStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        var replacementStrings = Object.keys(replace);
+        for (i=0;i<replacementStrings.length;i++) {
+            replacementStrings[i] = replacementStrings[i].replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
-        var reg_from = new RegExp(regexStrings.join("|"), "g");
+        var reg_from = new RegExp(replacementStrings.join("|"), "g");
         text = text.replace(reg_from, function($1) {
             return replace[$1];
         });
