@@ -41,7 +41,7 @@ function applyQuirks(text,pattern) {
     var regex = {};
     for (i=0; i<pattern.regexes.length; i++) {
         var re = pattern.regexes[i];
-        replace[re[0]] = re[1];
+        regex[re[0]] = re[1];
     }
 
     var empty = true;
