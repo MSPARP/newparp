@@ -147,11 +147,12 @@ input[type="checkbox"]:checked + .checkbox {
 
 .select-bind .arrow {
     position: absolute;
+    background-color: #92B792;
+    color: #EEEEEE;
+    font-size: 20px;
+    height: 30px;
     top: 0;
     right: 0;
-    color: #EEEEEE;
-    background-color: #92B792;
-    font-size: 20px;
     z-index: 1;
     pointer-events: none;
 }
