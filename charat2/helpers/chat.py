@@ -71,6 +71,15 @@ def send_message(db, redis, message):
 
     message.chat.last_message = message.posted
 
+    # Update last_online field for everyone who is online.
+    online_user_ids = redis.smembers("chat:%s:online" % message.chat.id)
+    if len(online_user_ids) != 0:
+        db.query(UserChat).filter(and_(
+            UserChat.user_id.in_(online_user_ids),
+            UserChat.chat_id == message.chat.id,
+        )).update({ "last_online": message.posted }, synchronize_session=False)
+
+
     message_dict = message.to_dict()
 
     # Cache before sending.
