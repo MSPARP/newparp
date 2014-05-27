@@ -360,11 +360,11 @@ ul#metaOptions {
     margin-bottom: 5px;
 }
 
-input[name='quirk_from'] {
+input[name='quirk_from'], input[name='regex_from'] {
     margin-right: 15px;
 }
 
-input[name='quirk_to'] {
+input[name='quirk_to'], input[name='regex_to'] {
     margin-left: 15px;
 }
 
