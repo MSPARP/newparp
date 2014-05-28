@@ -1,4 +1,15 @@
+{% block pager %}
+{% if paginator.page_count!=1 %}
+<div class="pager">
+{{paginator.pager(format='~5~')}}
+</div>
+{% endif %}
+{% endblock %}
+
 <h2>Your chats</h2>
+
+{{ self.pager() }}
+
 <ul>
 {% for user_chat, chat, pm_user_chat in chats: %}
   <li><a href="{% if chat.type == "pm": %}{{url_for("chat", url="pm/"+pm_user_chat.user.username)}}{% else: %}{{url_for("chat", url=chat.url)}}{% endif %}">
@@ -13,3 +24,5 @@
   </a></li>
 {% endfor %}
 </ul>
+
+{{ self.pager() }}
