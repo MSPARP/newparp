@@ -32,4 +32,9 @@ function desktopNotification(title,text,icon) {
             notification.close();
         } catch(e) {}
     };
+    window.addEventListener("focus", function(event) {
+        try {
+            notification.close();
+        } catch(e) {}
+    }, false);
 }
