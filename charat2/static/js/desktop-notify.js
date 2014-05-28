@@ -28,6 +28,6 @@ function desktopNotification(title,text,icon) {
             } catch(e) {}
         }, false);
     } catch(e) {
-        
+        console.log(e);
     }
 }
