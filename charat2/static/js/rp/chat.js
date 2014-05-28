@@ -225,14 +225,14 @@ function addLine(msg){
             at_bottom = false;
         }
         
-        if (window_active == false) {
+        if (!window_active) {
             missed_messages++;
             if (missed_messages !=0) {
                 document.title = missed_messages+"! "+chat.title;
             }
         }
-        
-        if (window_active == false && desktop_notifications == true) {
+        console.log(window_active);
+        if (!window_active && desktop_notifications == true) {
             try {
                 desktopNotification(chat.title,bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-iphone.png');
             }catch(e){}
