@@ -12,7 +12,6 @@ var guid = (function() {
 
 function desktopNotification(title,text,icon) {
     var notification = new Notification(title, {
-        dir: "auto",
         body: text,
         icon: icon,
         tag: guid()
