@@ -232,7 +232,7 @@ function addLine(msg){
 
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+' ['+alias+']'+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
