@@ -231,7 +231,6 @@ function addLine(msg){
         }
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                console.log(msg.type);
                 desktopNotification(chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+' ['+alias+']'+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
