@@ -754,10 +754,8 @@ $(document).ready(function() {
         
         $('#notifications .deskset').on('click', function(){
             if (this.checked) {
-                $('#notifications .deskset').removeProp('checked');
                 desktop_notifications = false;
             } else {
-                $('#notifications .deskset').prop('checked', 'checked');
                 desktop_notifications = true;
             }
         });
