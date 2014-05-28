@@ -682,8 +682,25 @@ $(document).ready(function() {
     } else {
         
         if (Notification.permission) {
-            $('#notifications').prop('class',Notification.permission);
+            $('#notifications').prop('class', Notification.permission);
         }
+        
+        if (desktop_notifications) {
+            $('#notifications .deskset').prop('checked', 'checked');
+        } else {
+            $('#notifications .deskset').removeProp('checked');
+        }
+        
+        $('#notifications').on('click', function(){
+            if (Notification.permission != 'granted') {
+                Notification.requestPermission(function(e){
+                    $('#notifications').prop('class', e);
+                    if (e == 'granted') {
+                        $('#notifications .deskset').prop('checked', 'checked');
+                    }
+                });
+            }
+        });
         
         /* START UP */
         startChat();
