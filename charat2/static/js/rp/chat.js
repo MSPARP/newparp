@@ -748,12 +748,7 @@ $(document).ready(function() {
         });
         
         $('#notifications .deskset').on('click', function(){
-            if (this.checked) {
-                desktop_notifications = false;
-            } else {
-                desktop_notifications = true;
-            }
-            console.log(this.checked);
+            desktop_notifications = this.checked;
         });
         
         $('#topbar .right span').click(function() {
