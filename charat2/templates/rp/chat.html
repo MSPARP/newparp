@@ -1,9 +1,6 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} – Charat RP{% endblock %}
 {% block header %}
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
 <link rel="stylesheet" href="{{url_for('static', filename='css/rp/chat.css')}}" defer>
 <script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
 <script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
@@ -177,7 +174,7 @@
                 <label id="oocToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Out Of Character</div></label>
                 <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox" autocomplete="off"></div><div class="checkbox-text">BBCode</div></label>
                 <div id="notificationHead" data-ng-app>
-                    <div id="notificationController" class="notificationLevel" ng-class="getClassName()" data-ng-click="requestPermissions()" data-ng-controller="NotificationCenter">
+                    <div id="notifications">
                         <label><input type="checkbox" class="deskset" name="deskset" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Desktop Notifications</div></label>
                     </div>
                </div>

@@ -680,7 +680,11 @@ $(document).ready(function() {
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
-
+        
+        if (Notification.permission) {
+            $('#notifications').prop('class',Notification.permission);
+        }
+        
         /* START UP */
         startChat();
 

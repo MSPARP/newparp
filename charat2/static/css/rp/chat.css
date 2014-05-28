@@ -552,23 +552,23 @@ body > #save {
     padding: 0;
 }
 
-#notificationController {
+#notifications {
     cursor: pointer;
 }
 
-#notificationController.default label, #notificationController.denied label {
+#notifications.default label, #notifications.denied label {
     pointer-events: none;
 }
 
-#notificationController.default .checkbox, #notificationController.denied .checkbox {
+#notifications.default .checkbox, #notifications.denied .checkbox {
     border-color: #D56063;
 }
 
-#notificationController.default input[type="checkbox"]:checked .checkbox, #notificationController.denied input[type="checkbox"]:checked .checkbox {
+#notifications.default input[type="checkbox"]:checked .checkbox, #notifications.denied input[type="checkbox"]:checked .checkbox {
     background-color: #D56063;
 }
 
-#notificationController.default, #notificationController.denied {
+#notifications.default, #notifications.denied {
     color: #D56063;
 }
 
