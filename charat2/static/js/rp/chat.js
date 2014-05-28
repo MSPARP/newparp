@@ -231,7 +231,9 @@ function addLine(msg){
         }
 
         if (!document.hasFocus() && desktop_notifications == true) {
-            desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+            if (msg.type == 'ic' || msg.type = 'ooc' || msg.type == 'me') {
+                desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+            }
         }
         shownotif = 0;
     }
