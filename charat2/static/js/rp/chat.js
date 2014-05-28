@@ -229,7 +229,8 @@ function addLine(msg){
                 document.title = missed_messages+"! "+chat.title;
             }
         }
-
+        console.log('Focus: '+document.hasFocus().toString());
+        console.log('desktop_notifications: '+desktop_notifications);
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
                 console.log(msg.type);
