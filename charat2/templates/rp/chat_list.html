@@ -1,0 +1,15 @@
+<h2>Your chats</h2>
+<ul>
+{% for user_chat, chat, pm_user_chat in chats: %}
+  <li><a href="{% if chat.type == "pm": %}{{url_for("chat", url="pm/"+pm_user_chat.user.username)}}{% else: %}{{url_for("chat", url=chat.url)}}{% endif %}">
+{% if chat.type == "pm": %}
+    Messaging {{pm_user_chat.user.username}}
+{% elif chat.type == "group": %}
+    {{chat.title}}
+{% else: %}
+    {{chat.url}}
+{% endif %}
+{% if chat.last_message > user_chat.last_online: %}    (unread){% endif %}
+  </a></li>
+{% endfor %}
+</ul>
