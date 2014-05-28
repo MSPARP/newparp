@@ -681,9 +681,9 @@ $(document).ready(function() {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
         
-        if (Notification) {
+        try {
             $('#notifications').prop('class', Notification.permission);
-        }
+        } catch (e) {}
         
         if (desktop_notifications) {
             $('#notifications .deskset').prop('checked', 'checked');
@@ -736,15 +736,17 @@ $(document).ready(function() {
         });
 
         $('#notifications').on('click', function(){
-            if (Notification.permission != 'granted') {
-                Notification.requestPermission(function(e){
-                    $('#notifications').prop('class', e);
-                    if (e == 'granted') {
-                        $('#notifications .deskset').prop('checked', 'checked');
-                        desktop_notifications = true;
-                    }
-                });
-            }
+            try {
+                if (Notification.permission != 'granted') {
+                    Notification.requestPermission(function(e){
+                        $('#notifications').prop('class', e);
+                        if (e == 'granted') {
+                            $('#notifications .deskset').prop('checked', 'checked');
+                            desktop_notifications = true;
+                        }
+                    });
+                }
+            } catch(e) {}
         });
         
         $('#notifications .deskset').on('click', function(){
