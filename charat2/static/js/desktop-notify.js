@@ -1,5 +1,6 @@
 function desktopNotification(title,text,icon) {
     try {
+        console.log(text);
         var notification = new Notification(title, {
             body: text,
             icon: icon
