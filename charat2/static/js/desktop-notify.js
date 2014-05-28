@@ -29,3 +29,4 @@ function desktopNotification(title,text,icon) {
     } catch(e) {
     }
 }
+
