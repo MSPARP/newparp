@@ -233,7 +233,9 @@ function addLine(msg){
         }
         
         if (window_active == false && desktop_notifications == true) {
-            show(chat.url,htmlEncode(bbRemove(msg.text)));
+            try {
+                desktopNotification(chat.title,bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-iphone.png');
+            }catch(e){}
         }
         shownotif = 0;
     }
