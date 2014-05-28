@@ -754,10 +754,10 @@ $(document).ready(function() {
         
         $('#notifications .deskset').on('click', function(){
             if (this.checked) {
-                this.removeProp('checked');
+                $('#notifications .deskset').removeProp('checked');
                 desktop_notifications = false;
             } else {
-                this.prop('checked', 'checked');
+                $('#notifications .deskset').prop('checked', 'checked');
                 desktop_notifications = true;
             }
         });
