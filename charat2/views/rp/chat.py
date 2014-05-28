@@ -86,6 +86,9 @@ def chat(url):
             chat = PMChat(url=pm_url)
             g.db.add(chat)
             g.db.flush()
+            # Create UserChat for the other user.
+            pm_user_chat = UserChat.from_user(pm_user, chat_id=chat.id)
+            g.db.add(pm_user_chat)
 
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
