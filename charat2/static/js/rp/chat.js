@@ -683,7 +683,9 @@ $(document).ready(function() {
         
         try {
             $('#notifications').prop('class', Notification.permission);
-        } catch (e) {}
+        } catch (e) {
+            $('#notifications').prop('class', 'denied');
+        }
         
         if (desktop_notifications) {
             $('#notifications .deskset').prop('checked', 'checked');
