@@ -752,7 +752,7 @@ $(document).ready(function() {
         });
         
         $('#notifications .deskset').on('click', function(){
-            desktop_notifications = this.is(':checked');
+            desktop_notifications = $('#notifications .deskset').is(':checked');
         });
         
         $('#topbar .right span').click(function() {
