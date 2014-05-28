@@ -229,8 +229,6 @@ function addLine(msg){
                 document.title = missed_messages+"! "+chat.title;
             }
         }
-        console.log('Focus: '+document.hasFocus().toString());
-        console.log('desktop_notifications: '+desktop_notifications);
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
                 console.log(msg.type);
@@ -754,7 +752,7 @@ $(document).ready(function() {
         });
         
         $('#notifications .deskset').on('click', function(){
-            desktop_notifications = this.checked;
+            desktop_notifications = this.is(':checked');
         });
         
         $('#topbar .right span').click(function() {
@@ -963,13 +961,13 @@ $(document).ready(function() {
         
         $('#metaOptions input').click(function() {
             if (this.id != 'public') {
-                if (this.checked == true){
+                if (this.is(':checked') == true){
                     setFlag(this.id, 'on');
                 } else {
                     setFlag(this.id, 'off');
                 }
             } else {
-                if (this.checked == true){
+                if (this.is(':checked') == true){
                     setFlag('publicity', 'listed');
                 } else {
                     setFlag('publicity', 'unlisted');

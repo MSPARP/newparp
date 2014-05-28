@@ -1,6 +1,5 @@
 function desktopNotification(title,text,icon) {
     try {
-        console.log(text);
         var notification = new Notification(title, {
             body: text,
             icon: icon
@@ -28,6 +27,5 @@ function desktopNotification(title,text,icon) {
             } catch(e) {}
         }, false);
     } catch(e) {
-        console.log(e);
     }
 }
