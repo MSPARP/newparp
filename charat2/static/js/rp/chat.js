@@ -232,9 +232,7 @@ function addLine(msg){
 
         if (!document.hasFocus() && desktop_notifications == true) {
             console.log('test');
-            try {
-                desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
-            }catch(e){}
+            desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
         }
         shownotif = 0;
     }
