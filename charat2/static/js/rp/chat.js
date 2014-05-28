@@ -43,8 +43,6 @@ var USER_LIST_ID = '#users';
 
 /* VARIABLES */
 
-var window_active;
-
 var missed_messages = 0;
 
 var chat_topic = chat.topic;
@@ -225,21 +223,18 @@ function addLine(msg){
             at_bottom = false;
         }
         
-        if (!window_active) {
+        if (!document.hasFocus()) {
             missed_messages++;
             if (missed_messages !=0) {
                 document.title = missed_messages+"! "+chat.title;
             }
         }
 
-        if (!window_active && desktop_notifications == true) {
+        if (!document.hasFocus() && desktop_notifications == true) {
             try {
                 desktopNotification(chat.title,bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-iphone.png');
             }catch(e){}
-        }
-        console.log(window_active);
-        console.log(desktop_notifications);
-        
+        }        
         shownotif = 0;
     }
 }
@@ -1028,10 +1023,6 @@ $(document).ready(function() {
             $(MISSED_MESSAGE_COUNT_ID).html(0);
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         });
-        
-        $(window).blur(function(e) {
-            window_active = false;
-        });
 
         $(window).focus(function(e) {
             if (navigator.userAgent.indexOf('Chrome')!=-1) {
@@ -1044,7 +1035,6 @@ $(document).ready(function() {
                 document.title = chat.title+' – '+ORIGINAL_TITLE;
                 missed_messages = 0;
             }
-            window_active = true;
         });
         
         window.onbeforeunload = function (e) {
