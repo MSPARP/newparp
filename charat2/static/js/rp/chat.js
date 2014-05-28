@@ -757,7 +757,7 @@ $(document).ready(function() {
                 this.prop('checked', 'checked');
                 desktop_notifications = true;
             }
-        }
+        });
         
         $('#topbar .right span').click(function() {
             if ($(this).prop('class') == current_sidebar) {
