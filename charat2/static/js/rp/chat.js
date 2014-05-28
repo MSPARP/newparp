@@ -694,7 +694,7 @@ $(document).ready(function() {
         /* START UP */
         startChat();
 
-        $('#control-buttons .ooc-button, #oocToggle input').click(function() {
+        $('#control-buttons .ooc-button, #oocToggle input').on('click', function() {
             if (ooc_on) {
                 if (type_force == 'me') {
                     type_force = '';
@@ -718,7 +718,7 @@ $(document).ready(function() {
             updateChatPreview();
         });
 
-        $('#control-buttons .me-button').click(function() {
+        $('#control-buttons .me-button').on('click', function() {
             if (type_force == "me") {
                 type_force = '';
                 $('#control-buttons .me-button').css('background-color','');
@@ -753,6 +753,7 @@ $(document).ready(function() {
             } else {
                 desktop_notifications = true;
             }
+            console.log(this.checked);
         });
         
         $('#topbar .right span').click(function() {
