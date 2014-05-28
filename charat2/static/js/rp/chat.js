@@ -231,7 +231,7 @@ function addLine(msg){
                 document.title = missed_messages+"! "+chat.title;
             }
         }
-        console.log(window_active);
+
         if (!window_active && desktop_notifications == true) {
             try {
                 desktopNotification(chat.title,bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-iphone.png');
@@ -693,17 +693,6 @@ $(document).ready(function() {
             $('#notifications .deskset').removeProp('checked');
         }
         
-        $('#notifications').on('click', function(){
-            if (Notification.permission != 'granted') {
-                Notification.requestPermission(function(e){
-                    $('#notifications').prop('class', e);
-                    if (e == 'granted') {
-                        $('#notifications .deskset').prop('checked', 'checked');
-                    }
-                });
-            }
-        });
-        
         /* START UP */
         startChat();
 
@@ -748,6 +737,28 @@ $(document).ready(function() {
             updateChatPreview();
         });
 
+        $('#notifications').on('click', function(){
+            if (Notification.permission != 'granted') {
+                Notification.requestPermission(function(e){
+                    $('#notifications').prop('class', e);
+                    if (e == 'granted') {
+                        $('#notifications .deskset').prop('checked', 'checked');
+                        desktop_notifications = true;
+                    }
+                });
+            }
+        });
+        
+        $('#notifications .deskset').on('click', function(){
+            if (this.checked) {
+                this.removeProp('checked');
+                desktop_notifications = false;
+            } else {
+                this.prop('checked', 'checked');
+                desktop_notifications = true;
+            }
+        }
+        
         $('#topbar .right span').click(function() {
             if ($(this).prop('class') == current_sidebar) {
                 current_sidebar = null;
