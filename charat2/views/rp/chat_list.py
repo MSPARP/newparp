@@ -19,6 +19,7 @@ chat_classes = {
     "group": GroupChat,
     "1-on-1": OneOnOneChat,
     "pm": PMChat,
+    "unread": AnyChat,
 }
 
 @use_db
@@ -30,7 +31,7 @@ def chat_list(type=None, page=1):
     except KeyError:
         abort(404)
 
-    if type in (None, "pm"):
+    if type in (None, "pm", "unread"):
 
         # Join opposing UserChat on PM chats so we know who the other person is.
         PMUserChat = aliased(UserChat)
@@ -45,6 +46,8 @@ def chat_list(type=None, page=1):
 
         if type == "pm":
             chats = chats.filter(ChatClass.type == "pm")
+        elif type == "unread":
+            chats = chats.filter(ChatClass.last_message > UserChat.last_online)
 
     else:
 
@@ -64,7 +67,11 @@ def chat_list(type=None, page=1):
     chat_count = g.db.query(func.count('*')).select_from(UserChat).filter(
         UserChat.user_id==g.user.id,
     )
-    if type is not None:
+    if type == "unread":
+        chat_count = chat_count.join(ChatClass).filter(
+            ChatClass.last_message > UserChat.last_online,
+        )
+    elif type is not None:
         chat_count = chat_count.join(ChatClass).filter(ChatClass.type == type)
     chat_count = chat_count.scalar()
 
