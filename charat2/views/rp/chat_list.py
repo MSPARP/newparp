@@ -1,8 +1,9 @@
-from flask import abort, g, render_template, url_for
+from flask import abort, g, jsonify, render_template, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm import aliased, joinedload
 from webhelpers import paginate
 
+from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
 from charat2.model import (
     case_options,
@@ -22,9 +23,10 @@ chat_classes = {
     "unread": AnyChat,
 }
 
+@alt_formats(set(["json"]))
 @use_db
 @login_required
-def chat_list(type=None, page=1):
+def chat_list(fmt=None, type=None, page=1):
 
     try:
         ChatClass = chat_classes[type]
@@ -75,6 +77,24 @@ def chat_list(type=None, page=1):
         chat_count = chat_count.join(ChatClass).filter(ChatClass.type == type)
     chat_count = chat_count.scalar()
 
+    chat_dicts = []
+    for c in chats:
+        cd = c[1].to_dict()
+        if c[1].type == "pm":
+            cd["title"] = "Messaging "+c[2].user.username
+            cd["url"] = "pm/"+c[2].user.username
+        elif c[1].type != "group":
+            cd["title"] = cd["url"]
+        cd["unread"] = c[1].last_message > c[0].last_online
+        chat_dicts.append(cd)
+
+    if fmt == "json":
+
+        return jsonify({
+            "chat_count": chat_count,
+            "chats": chat_dicts,
+        })
+
     paginator = paginate.Page(
         [],
         page=page,
@@ -86,7 +106,7 @@ def chat_list(type=None, page=1):
     return render_template(
         "rp/chat_list.html",
         type=type,
-        chats=chats,
+        chats=chat_dicts,
         paginator=paginator,
     )
 
