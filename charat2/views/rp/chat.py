@@ -1,8 +1,10 @@
-from flask import Flask, abort, g, redirect, render_template, request, url_for
+from flask import Flask, abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 from webhelpers import paginate
 
+from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
 from charat2.model import (
     case_options,
@@ -47,9 +49,10 @@ def create_chat():
     return redirect(url_for("chat", url=lower_url))
 
 
+@alt_formats(set(["json"]))
 @use_db
 @login_required
-def chat(url):
+def chat(url, fmt=None):
 
     # Do some special URL stuff for PM chats.
     if url == "pm":
@@ -93,6 +96,7 @@ def chat(url):
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
         chat_dict['title'] = "Messaging "+pm_user.username
+        chat_dict['url'] = url
 
     else:
 
@@ -135,11 +139,24 @@ def chat(url):
     # Show the last 50 messages.
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
-    ).order_by(Message.posted.desc()).limit(50).all()
+    ).options(joinedload(Message.user)).order_by(
+        Message.posted.desc(),
+    ).limit(50).all()
     messages.reverse()
 
     latest_num = messages[-1].id if len(messages) > 0 else 0
-    
+
+    if fmt == "json":
+
+        return jsonify({
+            "chat": chat_dict,
+            "user_chat": user_chat.to_dict(include_options=True),
+            "messages": [
+                _.to_dict() for _ in messages
+            ],
+            "latest_num": latest_num,
+        })
+
     logged_in = False
     if g.user is not None:
         logged_in = True
@@ -153,7 +170,7 @@ def chat(url):
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
-        logged_in=logged_in
+        logged_in=logged_in,
     )
 
 
