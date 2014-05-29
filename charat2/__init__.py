@@ -72,6 +72,7 @@ app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp"
 # 2.3. Rooms
 
 app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
+app.add_url_rule("/rooms.<fmt>", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
 # 2.4. Chats
 
