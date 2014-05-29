@@ -73,6 +73,8 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", method
 
 app.add_url_rule("/chats", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
 app.add_url_rule("/chats/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats/<type>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats/<type>/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
 
 # Blog subdomain (blog.charat.net)
 

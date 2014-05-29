@@ -8,19 +8,26 @@
 
 <h2>Your chats</h2>
 
+<ul>
+  <li><a href="{{url_for("chat_list")}}">All chats</a></li>
+  <li><a href="{{url_for("chat_list", type="1-on-1")}}">1-on-1 chats</a></li>
+  <li><a href="{{url_for("chat_list", type="group")}}">Group chats</a></li>
+  <li><a href="{{url_for("chat_list", type="pm")}}">PM chats</a></li>
+</ul>
+
 {{ self.pager() }}
 
 <ul>
-{% for user_chat, chat, pm_user_chat in chats: %}
-  <li><a href="{% if chat.type == "pm": %}{{url_for("chat", url="pm/"+pm_user_chat.user.username)}}{% else: %}{{url_for("chat", url=chat.url)}}{% endif %}">
-{% if chat.type == "pm": %}
-    Messaging {{pm_user_chat.user.username}}
-{% elif chat.type == "group": %}
-    {{chat.title}}
+{% for c in chats: %}
+  <li><a href="{% if c[1].type == "pm": %}{{url_for("chat", url="pm/"+c[2].user.username)}}{% else: %}{{url_for("chat", url=c[1].url)}}{% endif %}">
+{% if c[1].type == "pm": %}
+    Messaging {{c[2].user.username}}
+{% elif c[1].type == "group": %}
+    {{c[1].title}}
 {% else: %}
-    {{chat.url}}
+    {{c[1].url}}
 {% endif %}
-{% if chat.last_message > user_chat.last_online: %}    (unread){% endif %}
+{% if c[1].last_message > c[0].last_online: %}    (unread){% endif %}
   </a></li>
 {% endfor %}
 </ul>
