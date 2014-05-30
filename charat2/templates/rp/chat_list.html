@@ -67,8 +67,9 @@
         </div>
 
         {% for chat in chats: %}
-        <div class="card">
-            <a href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+        <div class="card chat">
+            <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+            <div class="topic">{{chat.topic}}</div>
         </div>
         {% endfor %}
     </div>
