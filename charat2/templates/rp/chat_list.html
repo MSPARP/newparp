@@ -58,7 +58,7 @@
                     {% else if type == None: %}
                         <div class="chat-types"><a href="{{url_for('chat_list')}}">All chats</a></div>
                     {% else %}
-                        <div class="chat-types"><a href="{{url_for('chat_list', type=type)}}">{{key|capitalize}} chats</a></div>
+                        <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}} chats</a></div>
                     {% endif %}
                 {% endif %}
             {% endfor %}
