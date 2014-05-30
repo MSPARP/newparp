@@ -12,15 +12,15 @@
     <div id="toptitle">Charat RP</div>
     <div id="topmenu">
         <div class="topborder"></div>
-        <a id="goHome" href="{{url_for("home")}}">Home</a>
+        <a id="goHome" href="{{url_for('home')}}">Home</a>
         <div class="topborder"></div>
-        <a id="goHome" href="{{url_for("rp_home")}}">RP Home</a>
+        <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+        <div class="topborder"></div>
+        <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
         <div class="topborder"></div>
         <a id="goUser" href="">Guide</a>
         <div class="topborder"></div>
         <a id="goUser" href="">Settings</a>
-        <div class="topborder"></div>
-        <a id="goPresets" href="">Chat</a>
         <div class="topborder"></div>
         {% if logged_in %}
         <a class="logout" href="{{url_for("logout")}}">Logout</a>
@@ -38,7 +38,7 @@
             <p>Welcome to Charat RP. Here you can search for people to roleplay with. Whether it be group chats, a random person or a person with a prompt, I hope that you will enjoy your stay here!</p>
             <center>
                 <a class="button" href="">Guide</a>
-                <a class="button" href="{{url_for('rp_rooms')}}">Rooms</a>
+                <a class="button" href="{{url_for('chat_list')}}">Chats</a>
                 {% if logged_in %}
                 <a class="button" href="">Settings</a>
                 <a class="button" href="{{url_for('logout')}}">Logout</a>

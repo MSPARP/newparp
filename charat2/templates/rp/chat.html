@@ -15,17 +15,17 @@
 
 <div id="topbar">
     <center>
-       <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /></div>
+       <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /><div id="unread-notifier">0!</div></div>
         <div id="topmenu">
             <a id="goHome" href="{{url_for('home')}}">Home</a>
             <div class="topborder"></div>
             <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
             <div class="topborder"></div>
+            <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+            <div class="topborder"></div>
             <a id="goUser" href="">Guide</a>
             <div class="topborder"></div>
             <a id="goUser" href="">Settings</a>
-            <div class="topborder"></div>
-            <a id="goPresets" href="">Chat</a>
             <div class="topborder"></div>
             {% if logged_in %}
             <a class="logout" href="{{url_for('logout')}}">Logout</a>

@@ -266,6 +266,16 @@ label.quirk {
     background-color: #80A080;
 }
 
+#topbar #unread-notifier {
+    position: absolute;
+    display: inline-block;
+    font-family: sans-serif;
+    color: #444;
+    font-size: 20px;
+    bottom: -12px;
+    right: -3px;
+}
+
 #topbar #topmenu {
     background-color: #90B090;
     background-color: rgba(144, 174, 144, 0.9);

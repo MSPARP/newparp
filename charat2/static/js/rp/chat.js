@@ -229,10 +229,9 @@ function addLine(msg){
                 document.title = missed_messages+"! "+chat.title;
             }
         }
-
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(chat.title,alias+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+' ['+(msg.acronym?msg.acronym:'')+']'+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
@@ -681,8 +680,10 @@ $(document).ready(function() {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
         
-        if (Notification) {
+        try {
             $('#notifications').prop('class', Notification.permission);
+        } catch (e) {
+            $('#notifications').prop('class', 'denied');
         }
         
         if (desktop_notifications) {
@@ -736,19 +737,21 @@ $(document).ready(function() {
         });
 
         $('#notifications').on('click', function(){
-            if (Notification.permission != 'granted') {
-                Notification.requestPermission(function(e){
-                    $('#notifications').prop('class', e);
-                    if (e == 'granted') {
-                        $('#notifications .deskset').prop('checked', 'checked');
-                        desktop_notifications = true;
-                    }
-                });
-            }
+            try {
+                if (Notification.permission != 'granted') {
+                    Notification.requestPermission(function(e){
+                        $('#notifications').prop('class', e);
+                        if (e == 'granted') {
+                            $('#notifications .deskset').prop('checked', 'checked');
+                            desktop_notifications = true;
+                        }
+                    });
+                }
+            } catch(e) {}
         });
         
         $('#notifications .deskset').on('click', function(){
-            desktop_notifications = this.checked;
+            desktop_notifications = $('#notifications .deskset').is(':checked');
         });
         
         $('#topbar .right span').click(function() {
@@ -957,13 +960,13 @@ $(document).ready(function() {
         
         $('#metaOptions input').click(function() {
             if (this.id != 'public') {
-                if (this.checked == true){
+                if (this.is(':checked') == true){
                     setFlag(this.id, 'on');
                 } else {
                     setFlag(this.id, 'off');
                 }
             } else {
-                if (this.checked == true){
+                if (this.is(':checked') == true){
                     setFlag('publicity', 'listed');
                 } else {
                     setFlag('publicity', 'unlisted');
