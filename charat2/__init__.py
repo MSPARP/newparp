@@ -29,7 +29,7 @@ app.after_request(db_commit)
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
-# Root domain (charat.net)
+# 1. Root domain (charat.net)
 
 app.add_url_rule("/", "home", root.home, methods=("GET",))
 
@@ -43,7 +43,7 @@ app.add_url_rule("/login", "login_post", account.login_post, methods=("POST",))
 app.add_url_rule("/logout", "logout", account.logout)
 app.add_url_rule("/register", "register", account.register, methods=("POST",))
 
-# RP subdomain (rp.charat.net)
+# 2. RP subdomain (rp.charat.net)
 
 app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 
@@ -51,13 +51,44 @@ app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
 def rp_favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/rp/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
+# 2.1. Chats list
+
+app.add_url_rule("/chats", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats.<fmt>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+
+app.add_url_rule("/chats/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats/<int:page>.<fmt>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+
+app.add_url_rule("/chats/<type>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats/<type>.<fmt>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+
+app.add_url_rule("/chats/<type>/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/chats/<type>/<int:page>.<fmt>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
+
+# 2.2. Creating chats
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
+
+# 2.3. Rooms
+
+app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
+app.add_url_rule("/rooms.<fmt>", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
+
+# 2.4. Chats
+
 app.add_url_rule("/<path:url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
+app.add_url_rule("/<path:url>.<fmt>", "chat", chat.chat, subdomain="rp", methods=("GET",))
+
+# Push the previous rules to the bottom so it doesn't catch /chats.json, /rooms.json etc.
+app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
+app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
+
 app.add_url_rule("/<path:url>/log", "log", chat.log, subdomain="rp", methods=("GET",))
 app.add_url_rule("/<path:url>/log/<int:page>", "log", chat.log, subdomain="rp", methods=("GET",))
+
 app.add_url_rule("/<path:url>/users", "chat_users", chat.users, subdomain="rp", methods=("GET",))
+
+# 2.5. Chat API
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/meta", "meta", chat_api.meta, subdomain="rp", methods=("POST",))
@@ -71,12 +102,7 @@ app.add_url_rule("/chat_api/save", "save", chat_api.save, subdomain="rp", method
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/chats", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
-app.add_url_rule("/chats/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
-app.add_url_rule("/chats/<type>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
-app.add_url_rule("/chats/<type>/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
-
-# Blog subdomain (blog.charat.net)
+# 3. Blog subdomain (blog.charat.net)
 
 app.add_url_rule("/", "blog_home", blog.home, subdomain="blog",methods=("GET",))
 
@@ -87,4 +113,6 @@ def blog_favicon():
 app.add_url_rule("/post/<post_id>", "blog_post", blog.view_post, subdomain="blog", methods=("GET",))
 app.add_url_rule("/post/<post_id>/<post_title>", "blog_post", blog.view_post, subdomain="blog", methods=("GET",))
 app.add_url_rule("/feed.json", "blog_feed", blog.feed, subdomain="blog", methods=("GET",))
+
+# XXX dear fucking lord we need traversal
 

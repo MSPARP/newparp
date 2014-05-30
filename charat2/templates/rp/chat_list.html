@@ -39,17 +39,8 @@
 {{ self.pager() }}
 
 <ul>
-{% for c in chats: %}
-  <li><a href="{% if c[1].type == "pm": %}{{url_for("chat", url="pm/"+c[2].user.username)}}{% else: %}{{url_for("chat", url=c[1].url)}}{% endif %}">
-{% if c[1].type == "pm": %}
-    Messaging {{c[2].user.username}}
-{% elif c[1].type == "group": %}
-    {{c[1].title}}
-{% else: %}
-    {{c[1].url}}
-{% endif %}
-{% if c[1].last_message > c[0].last_online: %}    (unread){% endif %}
-  </a></li>
+{% for chat in chats: %}
+  <li><a href="{{url_for("chat", url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a></li>
 {% endfor %}
 </ul>
 
