@@ -167,12 +167,12 @@ function startChat() {
     } else {
         setSidebar(current_sidebar);
     }
-    unreadNotifications();
     getMeta(true);
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
     goBottom(CONVERSATION_CONTAINER);
     updateChatPreview();
+    unreadNotifications();
 }
 
 function atBottom(element) {
