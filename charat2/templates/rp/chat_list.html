@@ -43,7 +43,7 @@
             {% endif %}
             {% endblock %}
             
-            {% for key in chat_classes|sort: %}
+            {% for key in chat_classes: %}
                 {% if type == key: %}
                     {% if key == 'pm': %}
                         <div class="chat-types">Private chats</div>
