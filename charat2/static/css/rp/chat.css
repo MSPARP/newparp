@@ -162,11 +162,11 @@ span:last-child p.message {
     padding-bottom: 5px !important;
 }
 
-.ooc {
+.ooc .info, .ooc .message {
     opacity: .5;
 }
 
-.ooc:hover {
+.ooc .info:hover, .ooc .message:hover {
     opacity: 1;
 }
 
