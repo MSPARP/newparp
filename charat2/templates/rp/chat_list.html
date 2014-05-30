@@ -33,7 +33,7 @@
 <div class="body">
     <!-- Put in some noscript things -->
     <div id="chat-options" class="section">
-        <div class="titli">CHAT</div>
+        <div class="titli">{% if type is None: %}CHATS{% else %}{{type|capitalize}{% endif %}</div>
         <div class="card">
             {% block pager %}
             {% if paginator.page_count!=1 %}
@@ -44,7 +44,7 @@
             {% endblock %}
 
             <ul>
-            {% if type == None: %}
+            {% if type is None: %}
             <li>All chats</li>
             {% else: %}
             <li><a href="{{url_for('chat_list')}}">All chats</a></li>
