@@ -125,6 +125,18 @@ function isChecked(id) {
     }
 }
 
+function unreadNotifications() {
+    $.getJSON('/chats/unread.json', function(data) {
+        if (data.total!=0) {
+            $('#unread-notifier').show().text(data.total+'!');
+        } else {
+            $('#unread-notifier').hide();
+        }
+    }).complete(function() {
+        window.setTimeout(unreadNotifications, 40000);
+    });
+}
+
 function startChat() {
     $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
     if (!$(document.body).hasClass('mobile')) {
@@ -153,6 +165,7 @@ function startChat() {
     } else {
         setSidebar(current_sidebar);
     }
+    unreadNotifications();
     getMeta(true);
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);

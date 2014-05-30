@@ -42,31 +42,7 @@ function heightAdjust() {
     }
 }
 
-function unreadNotifications() {
-    $.getJSON('/chats/unread.json', function(data) {
-        if (data.total!=0) {
-            $('#unread-notifier').show().text(data.total+'!');
-        } else {
-            $('#unread-notifier').hide();
-        }
-    }).complete(function() {
-        if (logged_in) {
-            window.setTimeout(unreadNotifications, 40000);
-        }
-    });
-}
-
 $(document).ready(function() {
-    try {
-        logged_in;
-    } catch(e) {
-        var logged_in = false;
-    }
-
-    if (logged_in) {
-        unreadNotifications();
-    }
-
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
 
