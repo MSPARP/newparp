@@ -43,7 +43,6 @@ function heightAdjust() {
 }
 
 function unreadNotifications() {
-    console.log('a');
     $.post('/chats/unread.json', function(data) {
         if (data.total!=0) {
             $('#unread-notifier').show().text(data.total+'!');
