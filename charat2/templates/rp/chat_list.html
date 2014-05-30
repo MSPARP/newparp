@@ -34,6 +34,7 @@
     <!-- Put in some noscript things -->
     <div id="chat-options" class="section">
         <div class="titli">CHAT</div>
+        <div class="card">
             {% block pager %}
             {% if paginator.page_count!=1 %}
             <div class="pager">
@@ -81,7 +82,6 @@
             </ul>
 
             {{ self.pager() }}
-        <div id="choices" class="card">
         </div>
     </div>
 </div>
