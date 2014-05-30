@@ -42,51 +42,31 @@
             </div>
             {% endif %}
             {% endblock %}
-
-            <ul>
-            {% if type == None: %}
-            <li>All chats</li>
-            {% else: %}
-            <li><a href="{{url_for('chat_list')}}">All chats</a></li>
-            {% endif %}
-            {% if type == "1-on-1": %}
-            <li>1-on-1 chats</li>
-            {% else: %}
-            <li><a href="{{url_for('chat_list', type='1-on-1')}}">1-on-1 chats</a></li>
-            {% endif %}
-            {% if type == "group": %}
-            <li>Group chats</li>
-            {% else: %}
-            <li><a href="{{url_for('chat_list', type='group')}}">Group chats</a></li>
-            {% endif %}
-            {% if type == "pm": %}
-            <li>PM chats</li>
-            {% else: %}
-            <li><a href="{{url_for('chat_list', type='pm')}}">PM chats</a></li>
-            {% endif %}
-            {% if type == "unread": %}
-            <li>Unread chats</li>
-            {% else: %}
-            <li><a href="{{url_for('chat_list', type='unread')}}">Unread chats</a></li>
-            {% endif %}
-            </ul>
             
             {% for key in chat_classes: %}
-            {% if type==key: %}
-            {{type}}
-            {% endif %}
+                {% if type==key: %}
+                    {% if type=='pm': %}
+                        <div class="chat-types">Private chats</div>
+                    {% else %}
+                        <div class="chat-types">{{type|capitalize}} chats</div>
+                    {% endif %}
+                {% else %}
+                    {% if type=='pm': %}
+                        <div class="chat-types">Private chats</div>
+                    {% else %}
+                        <div class="chat-types"><a href="{{url_for('chat_list', type=type)}}">{{type|capitalize}} chats</a></div>
+                    {% endif %}
+                {% endif %}
             {% endfor %}
-
-            {{ self.pager() }}
-
-            <ul>
-            {% for chat in chats: %}
-              <li><a href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a></li>
-            {% endfor %}
-            </ul>
 
             {{ self.pager() }}
         </div>
+
+        {% for chat in chats: %}
+        <div>
+            <a href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
