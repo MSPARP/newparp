@@ -1,47 +1,88 @@
-{% block pager %}
-{% if paginator.page_count!=1 %}
-<div class="pager">
-{{paginator.pager(format='~5~')}}
-</div>
-{% endif %}
+{% extends "rp/base.html" %}
+
+{% block header %}
+<script>var logged_in={{'true' if logged_in else 'false'}};</script>
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/rp/home.css")}}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/rp/front.css")}}" />
 {% endblock %}
 
-<h2>Your chats</h2>
+{% block content %}
 
-<ul>
-{% if type == None: %}
-  <li>All chats</li>
-{% else: %}
-  <li><a href="{{url_for("chat_list")}}">All chats</a></li>
-{% endif %}
-{% if type == "1-on-1": %}
-  <li>1-on-1 chats</li>
-{% else: %}
-  <li><a href="{{url_for("chat_list", type="1-on-1")}}">1-on-1 chats</a></li>
-{% endif %}
-{% if type == "group": %}
-  <li>Group chats</li>
-{% else: %}
-  <li><a href="{{url_for("chat_list", type="group")}}">Group chats</a></li>
-{% endif %}
-{% if type == "pm": %}
-  <li>PM chats</li>
-{% else: %}
-  <li><a href="{{url_for("chat_list", type="pm")}}">PM chats</a></li>
-{% endif %}
-{% if type == "unread": %}
-  <li>Unread chats</li>
-{% else: %}
-  <li><a href="{{url_for("chat_list", type="unread")}}">Unread chats</a></li>
-{% endif %}
-</ul>
+<div id="topbar">
+    <div id="toptitle">Charat RP</div>
+    <div id="topmenu">
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('home')}}">Home</a>
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+        <div class="topborder"></div>
+        <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Guide</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Settings</a>
+        <div class="topborder"></div>
+        {% if logged_in %}
+        <a class="logout" href="{{url_for("logout")}}">Logout</a>
+        {% else %}
+        <a class="login" href="">Login</a>
+        {% endif %}
+    </div>
+</div>
 
-{{ self.pager() }}
+<div class="body">
+    <!-- Put in some noscript things -->
+    <div id="chat-options" class="section">
+        <div class="titli">CHAT</div>
+            {% block pager %}
+            {% if paginator.page_count!=1 %}
+            <div class="pager">
+            {{paginator.pager(format='~5~')}}
+            </div>
+            {% endif %}
+            {% endblock %}
 
-<ul>
-{% for chat in chats: %}
-  <li><a href="{{url_for("chat", url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a></li>
-{% endfor %}
-</ul>
+            <h2>Your chats</h2>
 
-{{ self.pager() }}
+            <ul>
+            {% if type == None: %}
+              <li>All chats</li>
+            {% else: %}
+              <li><a href="{{url_for("chat_list")}}">All chats</a></li>
+            {% endif %}
+            {% if type == "1-on-1": %}
+              <li>1-on-1 chats</li>
+            {% else: %}
+              <li><a href="{{url_for("chat_list", type="1-on-1")}}">1-on-1 chats</a></li>
+            {% endif %}
+            {% if type == "group": %}
+              <li>Group chats</li>
+            {% else: %}
+              <li><a href="{{url_for("chat_list", type="group")}}">Group chats</a></li>
+            {% endif %}
+            {% if type == "pm": %}
+              <li>PM chats</li>
+            {% else: %}
+              <li><a href="{{url_for("chat_list", type="pm")}}">PM chats</a></li>
+            {% endif %}
+            {% if type == "unread": %}
+              <li>Unread chats</li>
+            {% else: %}
+              <li><a href="{{url_for("chat_list", type="unread")}}">Unread chats</a></li>
+            {% endif %}
+            </ul>
+
+            {{ self.pager() }}
+
+            <ul>
+            {% for chat in chats: %}
+              <li><a href="{{url_for("chat", url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a></li>
+            {% endfor %}
+            </ul>
+
+            {{ self.pager() }}
+        <div id="choices" class="card">
+        </div>
+    </div>
+</div>
+{% endblock %}
