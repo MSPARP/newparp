@@ -5,7 +5,7 @@
 <script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
 <script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
 <script type="text/javascript">
-    var logged_in = {{logged_in}};
+    var logged_in = {{'true' if logged_in else 'false'}};
     var user = {{user_chat_dict|tojson|safe}};
     var chat = {{chat|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
