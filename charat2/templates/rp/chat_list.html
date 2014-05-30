@@ -48,13 +48,13 @@
                     {% if type=='pm': %}
                         <div class="chat-types">Private chats</div>
                     {% else %}
-                        <div class="chat-types">{{type|capitalize}} chats</div>
+                        <div class="chat-types">{{key|capitalize}} chats</div>
                     {% endif %}
                 {% else %}
                     {% if type=='pm': %}
                         <div class="chat-types">Private chats</div>
                     {% else %}
-                        <div class="chat-types"><a href="{{url_for('chat_list', type=type)}}">{{type|capitalize}} chats</a></div>
+                        <div class="chat-types"><a href="{{url_for('chat_list', type=type)}}">{{key|capitalize}} chats</a></div>
                     {% endif %}
                 {% endif %}
             {% endfor %}
