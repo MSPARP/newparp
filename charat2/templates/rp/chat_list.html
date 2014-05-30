@@ -63,7 +63,7 @@
         </div>
 
         {% for chat in chats: %}
-        <div>
+        <div class="card">
             <a href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
         </div>
         {% endfor %}
