@@ -166,7 +166,7 @@ span:last-child p.message {
     opacity: .5;
 }
 
-.ooc .info:hover, .ooc .message:hover {
+.ooc:hover .info, .ooc:hover .message {
     opacity: 1;
 }
 
