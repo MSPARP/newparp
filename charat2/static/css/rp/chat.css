@@ -79,6 +79,16 @@ body.menu #topbar #toptitle {
     top: 8px;
 }
 
+#topbar #unread-notifier {
+    display: none;
+    position: absolute;
+    font-family: sans-serif;
+    color: #444;
+    font-size: 20px;
+    bottom: -12px;
+    left: 40px;
+}
+
 #topbar #topmenu {
     background-color: #f6f6f6;
     background-color: rgba(246,246,246,.95);
