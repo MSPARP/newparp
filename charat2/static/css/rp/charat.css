@@ -267,13 +267,12 @@ label.quirk {
 }
 
 #topbar #unread-notifier {
-    position: relative;
+    position: absolute;
     display: inline-block;
     font-family: sans-serif;
     color: #444;
     font-size: 20px;
-    top: 8px;
-    left: 5px;
+    bottom: -12px;
 }
 
 #topbar #topmenu {
