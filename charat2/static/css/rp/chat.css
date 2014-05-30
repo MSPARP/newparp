@@ -170,14 +170,6 @@ span:last-child p.message {
     opacity: 1;
 }
 
-.ooc * {
-    opacity: .5;
-}
-
-.ooc:hover * {
-    opacity: 1;
-}
-
 .info {
     position: relative;
     top: 4px;

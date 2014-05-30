@@ -33,7 +33,7 @@
 <div class="body">
     <!-- Put in some noscript things -->
     <div id="chat-options" class="section">
-        <div class="titli">CHAT</div>
+        <div class="titli">{{chat.url|toUpper}}</div>
         <div class="card">
             {% block pager %}
             {% if paginator.page_count!=1 %}
@@ -42,8 +42,6 @@
             </div>
             {% endif %}
             {% endblock %}
-
-            <h2>Your chats</h2>
 
             <ul>
             {% if type == None: %}
