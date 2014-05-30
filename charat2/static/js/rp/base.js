@@ -43,13 +43,13 @@ function heightAdjust() {
 }
 
 function unreadNotifications() {
-    $.post('/chats/unread.json', function(data) {
+    $.getJSON('/chats/unread.json', function(data) {
         if (data.total!=0) {
             $('#unread-notifier').show().text(data.total+'!');
         } else {
             $('#unread-notifier').hide();
         }
-    }, "json").complete(function() {
+    }).complete(function() {
         if (logged_in) {
             window.setTimeout(unreadNotifications, 60000);
         }
@@ -57,7 +57,9 @@ function unreadNotifications() {
 }
 
 $(document).ready(function() {
-    unreadNotifications();
+    if (logged_in) {
+        unreadNotifications();
+    }
 
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
