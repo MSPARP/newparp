@@ -91,7 +91,7 @@ def chat_list(fmt=None, type=None, page=1):
     if fmt == "json":
 
         return jsonify({
-            "chat_count": chat_count,
+            "total": chat_count,
             "chats": chat_dicts,
         })
 
