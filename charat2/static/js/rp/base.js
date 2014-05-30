@@ -42,6 +42,20 @@ function heightAdjust() {
     }
 }
 
+function unreadNotifications() {
+    $.post('/chats/unread.json', function(data) {
+        if (data.total!=0) {
+            $('#unread-notifier').show().text(data.total+'!');
+        } else {
+            $('#unread-notifier').hide();
+        }
+    }, "json").complete(function() {
+        if (logged_in) {
+            window.setTimeout(unreadNotifications, 60000);
+        }
+    });
+}
+
 $(document).ready(function() {
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
