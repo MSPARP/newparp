@@ -70,6 +70,12 @@
             <li><a href="{{url_for('chat_list', type='unread')}}">Unread chats</a></li>
             {% endif %}
             </ul>
+            
+            {% for key in chat_classes: %}
+            {% if type==key: %}
+            {{type}}
+            {% endif %}
+            {% endfor %}
 
             {{ self.pager() }}
 
