@@ -43,11 +43,11 @@
             {% endif %}
             {% endblock %}
             
-            {% for key in chat_classes: %}
+            {% for key in chat_classes|sort: %}
                 {% if type == key: %}
                     {% if key == 'pm': %}
                         <div class="chat-types">Private chats</div>
-                    {% else if type == None: %}
+                    {% elif type == None: %}
                         <div class="chat-types">All chats</div>
                     {% else %}
                         <div class="chat-types">{{key|capitalize}} chats</div>
@@ -55,7 +55,7 @@
                 {% else %}
                     {% if type=='pm': %}
                         <div class="chat-types"><a href="{{url_for('chat_list', type='pm')}}">Private chats</a></div>
-                    {% else if type == None: %}
+                    {% elif type == None: %}
                         <div class="chat-types"><a href="{{url_for('chat_list')}}">All chats</a></div>
                     {% else %}
                         <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}} chats</a></div>
