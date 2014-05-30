@@ -23,7 +23,7 @@
         <a id="goUser" href="">Settings</a>
         <div class="topborder"></div>
         {% if logged_in %}
-        <a class="logout" href="{{url_for("logout")}}">Logout</a>
+        <a class="logout" href="{{url_for('logout')}}">Logout</a>
         {% else %}
         <a class="login" href="">Login</a>
         {% endif %}
@@ -58,7 +58,7 @@
             {% if register_error: %}
             <p class="error">{{register_error}}</p>
             {% endif %}
-            <form action="{{url_for("register")}}" method="post">
+            <form action="{{url_for('register')}}" method="post">
                 <div class="left">
                     <label>Username: </label><br />
                     <label>Password: </label><br />
@@ -77,7 +77,7 @@
             {% if log_in_error: %}
             <p class="error">{{log_in_error}}</p>
             {% endif %}
-            <form action="{{url_for("login_post")}}" method="post">
+            <form action="{{url_for('login_post')}}" method="post">
                 <div class="left">
                     <label>Username: </label><br />
                     <label>Password: </label>
