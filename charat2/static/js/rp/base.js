@@ -51,12 +51,18 @@ function unreadNotifications() {
         }
     }).complete(function() {
         if (logged_in) {
-            window.setTimeout(unreadNotifications, 60000);
+            window.setTimeout(unreadNotifications, 40000);
         }
     });
 }
 
 $(document).ready(function() {
+    try {
+        logged_in;
+    } catch(e) {
+        var logged_in = false;
+    }
+
     if (logged_in) {
         unreadNotifications();
     }
