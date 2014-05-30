@@ -267,8 +267,8 @@ label.quirk {
 }
 
 #topbar #unread-notifier {
+    display: none;
     position: absolute;
-    display: inline-block;
     font-family: sans-serif;
     color: #444;
     font-size: 20px;
