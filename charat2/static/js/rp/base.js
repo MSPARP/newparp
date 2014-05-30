@@ -57,6 +57,8 @@ function unreadNotifications() {
 }
 
 $(document).ready(function() {
+    unreadNotifications();
+
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
 
