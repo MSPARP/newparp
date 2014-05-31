@@ -127,6 +127,10 @@ body.menu #topbar #toptitle {
     transition: color .5s;
 }
 
+#goChats.unread {
+    background-color: #fff873;
+}
+
 /* Chat layout */
 
 #conversation, .card {
