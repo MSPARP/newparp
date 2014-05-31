@@ -33,7 +33,7 @@
 
 <div class="body">
     <!-- Put in some noscript things -->
-    <div id="chat-options" class="section">
+    <div id="chat-pages" class="section">
         <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
         <div class="section">
             <div class="card">
@@ -68,7 +68,7 @@
                 {{ self.pager() }}
             </div>
         </div>
-        <div id="">
+        <div id="under-page">
             <div class="section">
                 {% for i in range(0,chats|length,3): %}
                 {% set chat = chats[i] %}
@@ -84,7 +84,7 @@
                 {% set chat = chats[i] %}
                 <div class="card chat">
                     <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                    <p class="users-online">{{chat.online}} online</p>
+                    {% if chat.online != 0: %}<p class="users-online">{{chat.online}} online</p>{% endif %}
                     {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
                 </div>
                 {% endfor %}
@@ -94,7 +94,7 @@
                 {% set chat = chats[i] %}
                 <div class="card chat">
                     <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                    <p class="users-online">{{chat.online}} online</p>
+                    {% if chat.online != 0: %}<p class="users-online">{{chat.online}} online</p>{% endif %}
                     {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
                 </div>
                 {% endfor %}
@@ -103,3 +103,4 @@
     </div>
 </div>
 {% endblock %}
+
