@@ -92,7 +92,8 @@
             {% set chat = chats[i][0] %}
             {% set users_online = chats[i][1] %}
             <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>({{users_online}} online)
+                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+                <p class="usersonline">({{users_online}} online)</p>
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
@@ -102,7 +103,8 @@
             {% set chat = chats[i][0] %}
             {% set users_online = chats[i][1] %}
             <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>({{users_online}} online)
+                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+                <p class="usersonline">({{users_online}} online)</p>
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
@@ -112,7 +114,8 @@
             {% set chat = chats[i][0] %}
             {% set users_online = chats[i][1] %}
             <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>({{users_online}} online)
+                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+                <p class="usersonline">({{users_online}} online)</p>
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
