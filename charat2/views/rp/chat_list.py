@@ -86,9 +86,8 @@ def chat_list(fmt=None, type=None, page=1):
         elif c[1].type != "group":
             cd["title"] = cd["url"]
         cd["unread"] = c[1].last_message > c[0].last_online
+        cd["online"] = g.redis.scard("chat:%s:online" % cd.id)
         chat_dicts.append(cd)
-
-    chat_dicts = [(chat, g.redis.scard("chat:%s:online" % chat['id'])) for chat in chat_dicts]
 
     if fmt == "json":
 
