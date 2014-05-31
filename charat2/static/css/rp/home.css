@@ -113,7 +113,7 @@ body.mobile .section {
     max-width: 310px;
 }
 
-#usersonline {
+.usersonline {
     margin-bottom: 5px;
     text-align: center;
 }
