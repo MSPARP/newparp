@@ -6,6 +6,10 @@
     max-width: 940px;
 }
 
+body.nobile #chat-pages {
+    max-width: 310px;
+}
+
 #pages .card {
     text-align: center;
 }
