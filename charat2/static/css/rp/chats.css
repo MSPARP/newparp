@@ -6,7 +6,7 @@
     max-width: 940px;
 }
 
-body.nobile #chat-pages {
+body.nobile #chat-pages, body.mobile #chat-pages {
     max-width: 310px;
 }
 

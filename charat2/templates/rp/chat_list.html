@@ -36,7 +36,7 @@
     <div id="chat-pages" class="section">
         <div id="page-div">
             <div id="your-pages" class="section">
-                <div class="titli">Your Chats</div>
+                <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
                 <div class="card">
                     {% block pager %}
                     {% if paginator.page_count!=1 %}
@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div id="new-pages" class="section">
-                <div class="titli">New Chats</div>
+                <div class="titli">NEW CHATS</div>
                 <div class="card">
                     <div class="chat-types"><a href="{{url_for('rp_rooms')}}">Rooms</a></div>
                     <div class="chat-types"><a href="">Random</a></div>
