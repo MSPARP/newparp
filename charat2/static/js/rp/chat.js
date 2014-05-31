@@ -70,7 +70,7 @@ if (typeof document.hidden !== "undefined") {
 var ooc_on = false; // USER META ADD
 var preview_show = false; // USER META ADD
 var confirm_disconnect = user.meta.confirm_disconnect;
-var desktop_notifications = user.meta.desktop_notifications;
+var desktop_notifications = true; //user.meta.desktop_notifications;
 var show_bbcode = user.meta.show_bbcode;
 var show_bbcode_color = true; // USER META ADD
 var show_description = user.meta.show_description;
