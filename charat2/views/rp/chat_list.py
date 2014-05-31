@@ -63,7 +63,7 @@ def chat_list(fmt=None, type=None, page=1):
         ChatClass.last_message.desc(),
     ).offset((page-1)*50).limit(50).all()
 
-    chats = [(_, g.redis.scard("chat:%s:online" % _.chat_id)) for _ in chats]
+    #chats = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in chats]
 
     if len(chats) == 0 and page != 1:
         abort(404)
