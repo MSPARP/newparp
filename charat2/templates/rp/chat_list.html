@@ -92,7 +92,7 @@
             {% set chat = chats[i] %}
             <div class="card chat">
                 <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">{{chat.online}} online</p>
+                {% if chat.online != 0: %}<p class="users-online">{{chat.online}} online</p>{% endif %}
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
@@ -102,7 +102,7 @@
             {% set chat = chats[i] %}
             <div class="card chat">
                 <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">{{chat.online}} online</p>
+                <p class="users-online">{{chat.online}} online</p>
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
@@ -112,7 +112,7 @@
             {% set chat = chats[i] %}
             <div class="card chat">
                 <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">{{chat.online}} online</p>
+                <p class="users-online">{{chat.online}} online</p>
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
