@@ -6,7 +6,7 @@
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/rp/front.css")}}" />
 <style>
 .section .section {
-    width: inherit;
+    margin: 0;
 }
 
 .card .chat-types {
@@ -52,6 +52,7 @@
 
 <div class="body">
     <!-- Put in some noscript things -->
+    <div id="chat-options" class="section">
         <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
         <div class="section">
             <div class="card">
@@ -111,5 +112,6 @@
             </div>
             {% endfor %}
         </div>
+    </div>
 </div>
 {% endblock %}
