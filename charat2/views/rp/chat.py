@@ -155,7 +155,7 @@ def chat(url, fmt=None):
                 _.to_dict() for _ in messages
             ],
             "latest_num": latest_num,
-            "online": g.redis.scard("chat:%s:online" % chat["id"]),
+            "online": chat.id,
         })
 
     logged_in = False
