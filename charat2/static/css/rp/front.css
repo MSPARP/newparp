@@ -3,10 +3,6 @@
     max-width: 310px;
 }
 
-body.mobile  .section {
-    width: inherit;
-}
-
 .section .char_search {
     text-align: center;
 }
