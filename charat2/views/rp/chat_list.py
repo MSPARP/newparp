@@ -63,8 +63,6 @@ def chat_list(fmt=None, type=None, page=1):
         ChatClass.last_message.desc(),
     ).offset((page-1)*50).limit(50).all()
 
-    chats = [(chat, g.redis.scard("chat:%s:online" % chat['id'])) for chat in chats]
-
     if len(chats) == 0 and page != 1:
         abort(404)
 
@@ -89,6 +87,8 @@ def chat_list(fmt=None, type=None, page=1):
             cd["title"] = cd["url"]
         cd["unread"] = c[1].last_message > c[0].last_online
         chat_dicts.append(cd)
+
+    chat_dicts = [(chat, g.redis.scard("chat:%s:online" % chat['id'])) for chat in chats]
 
     if fmt == "json":
 
