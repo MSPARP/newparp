@@ -88,7 +88,7 @@ def chat_list(fmt=None, type=None, page=1):
         cd["unread"] = c[1].last_message > c[0].last_online
         chat_dicts.append(cd)
 
-    chat_dicts = [(chat, g.redis.scard("chat:%s:online" % chat['id'])) for chat in chats]
+    chat_dicts = [(chat, g.redis.scard("chat:%s:online" % chat['id'])) for chat in chat_dicts]
 
     if fmt == "json":
 
