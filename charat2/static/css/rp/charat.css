@@ -302,8 +302,8 @@ body.menu #topbar #topmenu {
     display: block;
 }
 
-a#goSupport {
-    padding-bottom: 5px;
+#goChats.unread {
+    background-color: #fcff99;
 }
 
 /* Chat */
