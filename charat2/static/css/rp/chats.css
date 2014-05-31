@@ -19,6 +19,10 @@
     display: inline-block;
 }
 
+body.nobile #under-page .section, body.mobile #under-page .section {
+    display: block;
+}
+
 .card.chat a.title {
     display: block;
     font-size: 20px;
