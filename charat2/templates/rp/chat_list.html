@@ -62,19 +62,19 @@
             {% for key in chat_classes|sort: %}
                 {% if type == key: %}
                     {% if key == 'pm': %}
-                        <div class="chat-types">Private chats</div>
+                        <div class="chat-types">Private</div>
                     {% elif key == None: %}
-                        <div class="chat-types">All chats</div>
+                        <div class="chat-types">All</div>
                     {% else %}
-                        <div class="chat-types">{{key|capitalize}} chats</div>
+                        <div class="chat-types">{{key|capitalize}}</div>
                     {% endif %}
                 {% else %}
                     {% if key == 'pm': %}
-                        <div class="chat-types"><a href="{{url_for('chat_list', type='pm')}}">Private chats</a></div>
+                        <div class="chat-types"><a href="{{url_for('chat_list', type='pm')}}">Private</a></div>
                     {% elif key == None: %}
-                        <div class="chat-types"><a href="{{url_for('chat_list')}}">All chats</a></div>
+                        <div class="chat-types"><a href="{{url_for('chat_list')}}">All</a></div>
                     {% else %}
-                        <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}} chats</a></div>
+                        <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}}</a></div>
                     {% endif %}
                 {% endif %}
             {% endfor %}
