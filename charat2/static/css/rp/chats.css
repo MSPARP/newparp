@@ -6,6 +6,10 @@
     max-width: 940px;
 }
 
+#page {
+    text-align: center;
+}
+
 .card .chat-types {
     display: inline-block;
     font-size: 16px;

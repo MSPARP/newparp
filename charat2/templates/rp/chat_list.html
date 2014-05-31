@@ -35,7 +35,7 @@
     <!-- Put in some noscript things -->
     <div id="chat-pages" class="section">
         <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
-        <div class="section">
+        <div id="pages" class="section">
             <div class="card">
                 {% block pager %}
                 {% if paginator.page_count!=1 %}
