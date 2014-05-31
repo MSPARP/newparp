@@ -34,38 +34,47 @@
 <div class="body">
     <!-- Put in some noscript things -->
     <div id="chat-pages" class="section">
-        <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
-        <div id="pages" class="section">
-            <div class="card">
-                {% block pager %}
-                {% if paginator.page_count!=1 %}
-                <div class="pager">
-                {{paginator.pager(format='~5~')}}
-                </div>
-                {% endif %}
-                {% endblock %}
-                
-                {% for key in chat_classes|sort: %}
-                    {% if type == key: %}
-                        {% if key == 'pm': %}
-                            <div class="chat-types">Private</div>
-                        {% elif key == None: %}
-                            <div class="chat-types">All</div>
-                        {% else %}
-                            <div class="chat-types">{{key|capitalize}}</div>
-                        {% endif %}
-                    {% else %}
-                        {% if key == 'pm': %}
-                            <div class="chat-types"><a href="{{url_for('chat_list', type='pm')}}">Private</a></div>
-                        {% elif key == None: %}
-                            <div class="chat-types"><a href="{{url_for('chat_list')}}">All</a></div>
-                        {% else %}
-                            <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}}</a></div>
-                        {% endif %}
+        <div id="page-div">
+            <div id="your-pages" class="section">
+                <div class="titli">Your Chats</div>
+                <div class="card">
+                    {% block pager %}
+                    {% if paginator.page_count!=1 %}
+                    <div class="pager">
+                    {{paginator.pager(format='~5~')}}
+                    </div>
                     {% endif %}
-                {% endfor %}
-    
-                {{ self.pager() }}
+                    {% endblock %}
+                    
+                    {% for key in chat_classes|sort: %}
+                        {% if type == key: %}
+                            {% if key == 'pm': %}
+                                <div class="chat-types">Private</div>
+                            {% elif key == None: %}
+                                <div class="chat-types">All</div>
+                            {% else %}
+                                <div class="chat-types">{{key|capitalize}}</div>
+                            {% endif %}
+                        {% else %}
+                            {% if key == 'pm': %}
+                                <div class="chat-types"><a href="{{url_for('chat_list', type='pm')}}">Private</a></div>
+                            {% elif key == None: %}
+                                <div class="chat-types"><a href="{{url_for('chat_list')}}">All</a></div>
+                            {% else %}
+                                <div class="chat-types"><a href="{{url_for('chat_list', type=key)}}">{{key|capitalize}}</a></div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ self.pager() }}
+                </div>
+            </div>
+            <div id="new-pages" class="section">
+                <div class="titli">New Chats</div>
+                <div class="card">
+                    <div class="chat-types"><a href="{{url_for('rp_rooms')}}">Rooms</a></div>
+                    <div class="chat-types"><a href="">Random</a></div>
+                    <div class="chat-types"><a href="">Request</a></div>
+                </div>
             </div>
         </div>
         <div id="under-page">
