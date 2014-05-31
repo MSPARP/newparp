@@ -86,6 +86,8 @@
     
                 {{ self.pager() }}
             </div>
+        </div>
+        <div class="section">
             {% for i in range(0,chats|length,3): %}
             {% set chat = chats[i] %}
             <div class="card chat">
