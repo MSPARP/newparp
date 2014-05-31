@@ -132,7 +132,7 @@ function unreadNotifications() {
             $('#goChats').addClass('unread').text('--Chats--');
         } else {
             $('#unread-notifier').hide();
-            $('#goChats')removeClass('unread').text('Chats');
+            $('#goChats').removeClass('unread').text('Chats');
         }
     }).complete(function() {
         window.setTimeout(unreadNotifications, 40000);
