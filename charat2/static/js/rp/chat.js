@@ -129,7 +129,7 @@ function unreadNotifications() {
     $.getJSON('/chats/unread.json', function(data) {
         if (data.total!=0) {
             $('#unread-notifier').show().text(data.total+'!');
-            $('#goChats').text('Chats!');
+            $('#goChats').text('--Chats--');
         } else {
             $('#unread-notifier').hide();
             $('#goChats').text('Chats');
