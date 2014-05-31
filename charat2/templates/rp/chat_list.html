@@ -52,7 +52,7 @@
 
 <div class="body">
     <!-- Put in some noscript things -->
-    <div id="chat-options" class="section">{{test}}
+    <div id="chat-options" class="section">
         <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
         <div class="section">
             <div class="card">
@@ -88,6 +88,7 @@
             </div>
         </div>
         <div class="section">
+            {{chats}}
             {% for i in range(0,chats|length,3): %}
             {% set chat = chats[i][0] %}
             {% set users_online = chats[i][1] %}

@@ -110,7 +110,6 @@ def chat_list(fmt=None, type=None, page=1):
         type=type,
         chats=chat_dicts,
         paginator=paginator,
-        chat_classes=chat_classes,
-        test=g.redis.scard("chat:%s:online" % chat['id']))
+        chat_classes=chat_classes
     )
 
