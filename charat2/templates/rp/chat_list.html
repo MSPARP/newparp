@@ -89,9 +89,10 @@
         </div>
         <div class="section">
             {% for i in range(0,chats|length,3): %}
-            {% set chat = chats[i] %}
+            {% set chat = chats[i][0] %}
+            {% set users_online = chats[i][1] %}
             <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
+                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>({{users_online}} online)
                 {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
             </div>
             {% endfor %}
