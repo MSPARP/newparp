@@ -87,37 +87,7 @@
                 {{ self.pager() }}
             </div>
         </div>
-        <div class="section">
-            {{chats}}
-            {% for i in range(0,chats|length,3): %}
-            {% set chat = chats[i] %}
-            <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">({{chat.online}} online)</p>
-                {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        <div class="section">
-            {% for i in range(1,chats|length,3): %}
-            {% set chat = chats[i] %}
-            <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">({{chat.online}} online)</p>
-                {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        <div class="section">
-            {% for i in range(2,chats|length,3): %}
-            {% set chat = chats[i] %}
-            <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                <p class="usersonline">({{chat.online}} online)</p>
-                {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
-            </div>
-            {% endfor %}
-        </div>
+
     </div>
 </div>
 {% endblock %}
