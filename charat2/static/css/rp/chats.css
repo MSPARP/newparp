@@ -3,7 +3,7 @@
 }
 
 #chat-pages {
-    
+    max-width: 940px;
 }
 
 .card .chat-types {
@@ -11,8 +11,8 @@
     font-size: 16px;
 }
 
-#under-page {
-    
+#under-page .section {
+    display: inline-block;
 }
 
 .card.chat a.title {
