@@ -85,10 +85,7 @@
     
             {% for i in chats|length: %}
             {% set chat = chats[i] %}
-            <div class="card chat">
-                <a id="chat-{{chat.url}}" class="title" href="{{url_for('chat', url=chat.url)}}">{{chat.title}}{% if chat.unread: %} (unread){% endif %}</a>
-                {% if chat.type == 'group' %}<div class="topic">{{chat.topic}}</div>{% endif %}
-            </div>
+
             {% set i+=3 %}
             {% endfor %}
         </div>
