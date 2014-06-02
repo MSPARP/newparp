@@ -134,5 +134,5 @@ $(function(){
 $(window).resize(function () {
     screenCheck();
     chatsUpdate();
-    setTimeout(unreadNotifications, 10000);
+    setTimeout(unreadNotifications, 1000);
 });
