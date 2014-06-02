@@ -133,6 +133,6 @@ $(function(){
 
 $(window).resize(function () {
     screenCheck();
-    chatsUpdate();
     unreadNotifications();
+    chatsUpdate();
 });
