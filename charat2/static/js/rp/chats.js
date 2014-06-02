@@ -2,7 +2,13 @@ var ORIGINAL_TITLE = document.title;
 var current_mode;
 
 function unreadNotifications() {
-    $.getJSON('/chats/unread.json', function(data) {
+    var chats_url;
+    if (type=="None") {
+        chats_url = '/chats.json';
+    } else {
+        chats_url = '/chats/'+type+'.json';
+    }
+    $.getJSON(chats_url, function(data) {
         chats = data;
         chatsUpdate(true);
     }).complete(function() {
