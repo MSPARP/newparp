@@ -126,7 +126,7 @@ function chatsUpdate(first) {
         $('#column-3').remove();
     }
     if ($('#under-page').is(':empty')) {
-        $('#under-page').text('<div></div>');
+        $('#under-page').html('<div></div>');
     }
     current_mode = mode;
 }
