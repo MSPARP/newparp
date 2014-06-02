@@ -17,6 +17,7 @@ function chatsUpdate(first) {
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
+                console.log(chat);
             }
         } else if ($('body.nobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
