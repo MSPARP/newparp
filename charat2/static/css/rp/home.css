@@ -110,7 +110,7 @@ label {
 }
 
 body.mobile .section {
-    max-width: 310px;
+    margin: 0;
 }
 
 
