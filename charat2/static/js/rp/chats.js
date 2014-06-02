@@ -11,8 +11,8 @@ function chatsUpdate(first) {
         $('#under-page').empty();
         if ($('body.mobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
-            for(chat in chats) {
-                console.log(chat);
+            for(i in chats) {
+                chat = chats[i];
                 $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 if (chat.type == 'group') {
