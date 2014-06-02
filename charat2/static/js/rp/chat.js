@@ -129,10 +129,10 @@ function unreadNotifications() {
     $.getJSON('/chats/unread.json', function(data) {
         if (data.total!=0) {
             $('#unread-notifier').show().text(data.total+'!');
-            $('#goChats').addClass('unread');
+            $('#goChats').prop('href', '/chats/unread').addClass('unread');
         } else {
             $('#unread-notifier').hide();
-            $('#goChats').removeClass('unread');
+            $('#goChats').prop('href', '/chats').removeClass('unread');
         }
     }).complete(function() {
         window.setTimeout(unreadNotifications, 40000);
