@@ -1,6 +1,6 @@
 var current_mode;
 
-chatsUpdate(first) {
+function chatsUpdate(first) {
     $('#under-page').empty();
     
     if ($('body').class()) {
