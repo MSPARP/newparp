@@ -13,7 +13,7 @@ function chatsUpdate(first) {
         if ($('body.mobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
             for(chat in chats) {
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-1');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -24,7 +24,7 @@ function chatsUpdate(first) {
             $('<div>').addClass('section').prop('id', 'column-2').appendTo('#under-page');
             for (var i=0; i<chats.length; i+=2) {
                 chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-1');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -32,7 +32,7 @@ function chatsUpdate(first) {
             }
             for (var i=1; i<chats.length; i+=2) {
                 chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-2');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-2');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).append('#column-2');
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -44,7 +44,7 @@ function chatsUpdate(first) {
             $('<div>').addClass('section').prop('id', 'column-3').appendTo('#under-page');
             for (var i=0; i<chats.length; i+=3) {
                 chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-1');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -52,7 +52,7 @@ function chatsUpdate(first) {
             }
             for (var i=1; i<chats.length; i+=3) {
                 chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-2');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-2');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -60,7 +60,7 @@ function chatsUpdate(first) {
             }
             for (var i=2; i<chats.length; i+=3) {
                 chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url).appendTo('#column-3');
+                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-3');
                 $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.url+(chat.unread ? ' '+chat.url : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 if (chat.type == 'group') {
                     $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
