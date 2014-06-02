@@ -10,7 +10,7 @@ function chatsUpdate(first) {
     }
     
     if (current_mode == mode || first) {
-        if ($('body.mobile').length>0) 
+        if ($('body.mobile').length>0) {
             $('</div>').class('section').prop('id', 'column-1').appendTo('#under-page');
             for(chat in chats) {
                 $('</div>').addClass('card chat').prop('chat-'+chat.url).appendTo('#column-1');
