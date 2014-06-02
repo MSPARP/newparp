@@ -555,7 +555,7 @@ function updateChatPreview() {
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        textPreview = textPreview.substr(2);
+        textPreview = textPreview.substr(1);
     } else {
         textPreview = applyQuirks(textPreview,user.character);
     }
