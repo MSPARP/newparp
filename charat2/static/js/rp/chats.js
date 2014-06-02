@@ -74,8 +74,10 @@ function chatsUpdate(first) {
 }
 
 $(function(){
+    screenCheck();
+
     if ($('body').addClass()) {
-        current_mode = $('body').addClass();
+        current_mode = $('body').prop('class');
     } else {
         current_mode = 'none';
     }
