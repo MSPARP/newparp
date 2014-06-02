@@ -223,7 +223,7 @@ body.mobile .sidebarContain {
 }
 
 .card {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: sans-serif;
     font-weight: 400;
     background-color: #FFFFFF;
     color: #6A936B;
