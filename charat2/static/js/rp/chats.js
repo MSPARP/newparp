@@ -82,3 +82,8 @@ $(function(){
     
     chatsUpdate(true);
 });
+
+$(window).resize(function () {
+    screenCheck();
+    chatsUpdate();
+});
