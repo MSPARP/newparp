@@ -172,7 +172,6 @@ function startChat() {
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
     goBottom(CONVERSATION_CONTAINER);
     updateChatPreview();
-    unreadNotifications();
 }
 
 function atBottom(element) {
@@ -379,6 +378,9 @@ function getMeta(first_join) {
     }, "json").complete(function() {
         if (chat_state=='chat') {
             window.setTimeout(getMeta, 50);
+        }
+        if (first_join) {
+            unreadNotifications();
         }
     });
 }
@@ -688,7 +690,7 @@ function previewToggle() {
 
 // REWRITE DESKTOP NOTIFY
 
-$(document).ready(function() {
+$(function(){
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
