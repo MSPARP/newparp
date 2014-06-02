@@ -1,6 +1,6 @@
 var current_mode;
 
-chatsUpdate() {
+chatsUpdate(first) {
     $('#under-page').empty();
     
     if ($('body').class()) {
@@ -9,7 +9,7 @@ chatsUpdate() {
         mode = 'none';
     }
     
-    if (current_mode == mode) {
+    if (current_mode == mode || first) {
         if ($('body.mobile').length>0) 
             $('</div>').class('section').prop('id', 'column-1').appendTo('#under-page');
             for(chat in chats) {
@@ -78,5 +78,5 @@ $(function(){
         current_mode = 'none';
     }
     
-    chatsUpdate();
+    chatsUpdate(true);
 });
