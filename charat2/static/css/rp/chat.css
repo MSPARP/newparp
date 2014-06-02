@@ -5,7 +5,7 @@ body {
 }
 
 #conversation, #previewWrapper, .pager, #archiveConversation {
-    background-color: #f5f5f5;
+    background-color: #fafafa;
 }
 
 a#logAnchor {
@@ -43,7 +43,7 @@ p:hover .timestamp {
 #topbar {
     font-size: 35px;
     position: absolute;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     height: 44px;
 }
 
@@ -102,7 +102,7 @@ body.menu #topbar #toptitle {
 }
 
 #topbar #topmenu a:hover, #topbar #topmenu div:hover {
-    background-color: #f5f5f5;
+    background-color: #fafafa;
 }
 
 #topmenu .topborder {
@@ -225,7 +225,7 @@ body.mobile .sidebarContain {
 .card {
     font-family: sans-serif;
     font-weight: 400;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     color: #6A936B;
     margin-bottom: 15px;
     padding: 10px;
@@ -298,7 +298,7 @@ ul#metaOptions {
 
 #settings .card {
     font-size: 20px;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     border-bottom: solid 2px #696969;
     text-align: left;
 }
@@ -403,7 +403,7 @@ body.withSidebar.mobile .controls {
 
 #control-container {
     position: relative;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     width: 100%;
     height: 60px;
     border-bottom: solid 2px #696969;
@@ -420,7 +420,7 @@ body.withSidebar.mobile .controls {
 
 #textInput {
     font-size: 16px;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
     display: block;
     height: 55px;
     width: 100%;
@@ -575,7 +575,7 @@ body > #save {
 }
 
 .sidebar label button a {
-    color: #f5f5f5;
+    color: #fafafa;
     text-decoration: none;
 }
 
