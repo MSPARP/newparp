@@ -93,7 +93,7 @@ body.menu #topbar #toptitle {
     background-color: #f6f6f6;
     background-color: rgba(246,246,246,.95);
     position: relative;
-    top: -6px;
+    top: -4px;
 }
 
 #topbar #topmenu a, #topbar #topmenu div {

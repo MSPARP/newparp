@@ -296,6 +296,10 @@ body.menu #topbar #topmenu {
     background-color: #f4f5ae;
 }
 
+#topmenu .logout {
+    padding-bottom: 5px;
+}
+
 /* Chat */
 
 .stoptions label {
