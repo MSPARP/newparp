@@ -90,6 +90,10 @@ input, textarea, select {
     margin-bottom: 5px;
 }
 
+textarea {
+    font-family: sans-serif;
+}
+
 input:hover, textarea:hover {
     background-color: #FFFFFF;
 }
