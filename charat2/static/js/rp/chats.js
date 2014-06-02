@@ -115,6 +115,19 @@ function chatsUpdate(first) {
             }
         }
     }
+    
+    if ($('#column-1').is(':empty')) {
+        $('#column-1').remove();
+    }
+    if ($('#column-2').is(':empty')) {
+        $('#column-2').remove();
+    }
+    if ($('#column-3').is(':empty')) {
+        $('#column-3').remove();
+    }
+    if ($('#under-page').is(':empty')) {
+        $('#under-page').text(' ');
+    }
     current_mode = mode;
 }
 
