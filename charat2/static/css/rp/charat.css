@@ -26,7 +26,7 @@ a.button {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     display: inline-block;
     background-color: #69926A;
-    color: #FFFFFF;
+    color: #eeeeee;
     padding: 5px;
     margin-top: 5px;
     width: 110px;
@@ -69,7 +69,7 @@ input[type="text"], input[type="submit"], input[type="password"], textarea {
 input[type="submit"], button {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     background-color: #69926A;
-    color: #FFFFFF;
+    color: #eeeeee;
     border: 0;
     padding: 5px;
     width: auto;
@@ -95,7 +95,7 @@ textarea {
 }
 
 input:hover, textarea:hover {
-    background-color: #FFFFFF;
+    background-color: #eeeeee;
 }
 
 input[type="checkbox"] {
@@ -132,7 +132,7 @@ input[type="checkbox"]:checked + .checkbox {
 }
 
 .select-bind:hover {
-    background-color: #FFFFFF;
+    background-color: #eeeeee;
 }
 
 .select-bind .arrow {
@@ -148,7 +148,7 @@ input[type="checkbox"]:checked + .checkbox {
 }
 
 .select-bind:hover > .arrow {
-    color: #FFFFFF;
+    color: #eeeeee;
 }
 
 .select-bind select {
