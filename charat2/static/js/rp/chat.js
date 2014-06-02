@@ -106,7 +106,7 @@ function getTimestamp(seconds_from_epoch) {
 
 function topbarSelect(selector) {
     $(selector).css({
-        'color' : '#C0F0C0',
+        'color' : '#a0d6a0',
     });
 }
 
