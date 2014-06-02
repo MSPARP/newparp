@@ -47,7 +47,7 @@ div.body {
 }
 
 .titli {
-    font-family: "Source Sans Pro A", Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 25px;
     color: #638764;
     text-align: center;
@@ -76,7 +76,7 @@ div.body {
 }
 
 .card .titi {
-    font-family: "Source Sans Pro B", Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 25px;
     color: #6A936B;
     text-align: center;
@@ -84,7 +84,7 @@ div.body {
 }
 
 label {
-    font-family: "Source Sans Pro B", Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     height: 30px;
     margin-bottom: 6px;
 }

@@ -1,17 +1,3 @@
-@font-face {
-  font-family: 'Source Sans Pro A';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
-}
-
-@font-face {
-  font-family: 'Source Sans Pro B';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGNbE_oMaV8t2eFeISPpzbdE.woff) format('woff');
-}
-
 /* Global*/
 
 * {
@@ -37,7 +23,7 @@ a:hover {
 }
 
 a.button {
-    font-family: 'Source Sans Pro B', Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     display: inline-block;
     background-color: #69926A;
     color: #FFFFFF;
@@ -81,7 +67,7 @@ input[type="text"], input[type="submit"], input[type="password"], textarea {
 }
 
 input[type="submit"], button {
-    font-family: 'Source Sans Pro B', Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     background-color: #69926A;
     color: #FFFFFF;
     border: 0;
@@ -96,7 +82,7 @@ input[type="submit"]:hover, button:hover {
 }
 
 input, textarea, select {
-    font-family: Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 16px;
     background-color: #F8F8F8;
     padding-left: 2px;
@@ -241,7 +227,7 @@ label.quirk {
 /* Top Bar */
 
 #topbar {
-    font-family: "Source Sans Pro B", Sans-Serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 2em;
     line-height: 1.2em;
     text-align: center;
