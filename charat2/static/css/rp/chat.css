@@ -174,9 +174,8 @@ span:last-child p.message {
     position: relative;
     top: 4px;
     font-size: 10px;
-    color: #aaaaaa;
-    border-top: solid;
-    border-top-width: 1px;
+    color: #aaa;
+    border-top: solid 1px #eee;
     padding: 0;
     margin: 0;
     margin-left: 5px;
