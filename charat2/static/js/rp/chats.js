@@ -1,15 +1,14 @@
 var current_mode;
 
-function chatsUpdate(first) {
-    $('#under-page').empty();
-    
-    if ($('body').addClass()) {
-        mode = $('body').addClass();
+function chatsUpdate(first) {    
+    if ($('body').prop('class')) {
+        mode = $('body').prop('class');
     } else {
         mode = 'none';
     }
     
     if (current_mode == mode || first) {
+        $('#under-page').empty();
         if ($('body.mobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
             for(chat in chats) {
@@ -74,7 +73,7 @@ function chatsUpdate(first) {
 $(function(){
     screenCheck();
 
-    if ($('body').addClass()) {
+    if ($('body').prop('class')) {
         current_mode = $('body').prop('class');
     } else {
         current_mode = 'none';
