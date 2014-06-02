@@ -23,7 +23,7 @@ a:hover {
 }
 
 a.button {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     display: inline-block;
     background-color: #69926A;
     color: #FFFFFF;
@@ -67,7 +67,7 @@ input[type="text"], input[type="submit"], input[type="password"], textarea {
 }
 
 input[type="submit"], button {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     background-color: #69926A;
     color: #FFFFFF;
     border: 0;
@@ -82,7 +82,7 @@ input[type="submit"]:hover, button:hover {
 }
 
 input, textarea, select {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 16px;
     background-color: #F8F8F8;
     padding-left: 2px;
@@ -231,7 +231,7 @@ label.quirk {
 /* Top Bar */
 
 #topbar {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 2em;
     line-height: 1.2em;
     text-align: center;

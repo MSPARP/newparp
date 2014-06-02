@@ -223,7 +223,7 @@ body.mobile .sidebarContain {
 }
 
 .card {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-weight: 400;
     background-color: #FFFFFF;
     color: #6A936B;
@@ -308,7 +308,7 @@ ul#metaOptions {
 }
 
 .card .titi {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-weight: 100;
     font-size: 25px;
     color: #6A936B;
@@ -433,7 +433,7 @@ body.withSidebar.mobile .controls {
 
 #statusInput {
     color: #B0E0B0;
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-size: 35px;
     background-color: transparent;
     height: 100%;
@@ -462,7 +462,7 @@ body #userListButton {
 }
 
 #control-buttons button {
-    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "HelveticaNeue-UltraLight","Helvetica Neue UltraLight","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     padding: 0;
     height: 30px;
 }
