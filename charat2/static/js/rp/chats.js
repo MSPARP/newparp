@@ -3,8 +3,8 @@ var current_mode;
 function chatsUpdate(first) {
     $('#under-page').empty();
     
-    if ($('body').class()) {
-        mode = $('body').class();
+    if ($('body').addClass()) {
+        mode = $('body').addClass();
     } else {
         mode = 'none';
     }
@@ -20,8 +20,8 @@ function chatsUpdate(first) {
                 }
             }
         } else if ($('body.nobile').length>0) {
-            $('</div>').class('section').prop('id', 'column-1').appendTo('#under-page');
-            $('</div>').class('section').prop('id', 'column-2').appendTo('#under-page');
+            $('</div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
+            $('</div>').addClass('section').prop('id', 'column-2').appendTo('#under-page');
             for (var i=0; i<chats.length; i+=2) {
                 chat = chats[i];
                 $('</div>').addClass('card chat').prop('chat-'+chat.url).appendTo('#column-1');
@@ -39,9 +39,9 @@ function chatsUpdate(first) {
                 }
             }
         } else {
-            $('</div>').class('section').prop('id', 'column-1').appendTo('#under-page');
-            $('</div>').class('section').prop('id', 'column-2').appendTo('#under-page');
-            $('</div>').class('section').prop('id', 'column-3').appendTo('#under-page');
+            $('</div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
+            $('</div>').addClass('section').prop('id', 'column-2').appendTo('#under-page');
+            $('</div>').addClass('section').prop('id', 'column-3').appendTo('#under-page');
             for (var i=0; i<chats.length; i+=3) {
                 chat = chats[i];
                 $('</div>').addClass('card chat').prop('chat-'+chat.url).appendTo('#column-1');
@@ -72,8 +72,8 @@ function chatsUpdate(first) {
 }
 
 $(function(){
-    if ($('body').class()) {
-        current_mode = $('body').class();
+    if ($('body').addClass()) {
+        current_mode = $('body').addClass();
     } else {
         current_mode = 'none';
     }
