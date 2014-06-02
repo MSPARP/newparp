@@ -9,7 +9,11 @@
     max-width: 940px;
 }
 
-body.nobile #chat-pages, body.mobile #chat-pages {
+body.nobile #chat-pages {
+    max-width: 620px;
+}
+
+body.mobile #chat-pages {
     max-width: 310px;
 }
 
@@ -24,10 +28,6 @@ body.nobile #chat-pages, body.mobile #chat-pages {
 
 #under-page .section {
     display: inline-block;
-}
-
-body.nobile #under-page .section, body.mobile #under-page .section {
-    display: block;
 }
 
 .card.chat a.title {
