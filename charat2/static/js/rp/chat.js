@@ -552,12 +552,10 @@ function updateChatPreview() {
         textPreview = textPreview.substring(command[0].length);
     }
     
-    if ($('#textInput').val().substr(0,2)=='/ ') {
+    if ($('#textInput').val().substr(0,1)=='/') {
         textPreview = textPreview.substr(2);
-    } else if (command[0] != '/me' || command[0] != '/ooc' || !ooc_on || type_force != 'me') {
-        try {
-            textPreview = applyQuirks(textPreview,user.character);
-        } catch(e) {}
+    } else {
+        textPreview = applyQuirks(textPreview,user.character);
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "[blank]: ";
