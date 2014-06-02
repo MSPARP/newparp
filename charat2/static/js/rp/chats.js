@@ -25,7 +25,7 @@ function chatsUpdate(first) {
         }
     }
     if (unread_chats > 0) {
-        document.title = unread_chats+" unread – "+ORIGINAL_TITLE;
+        document.title = unread_chats+" unread - "+ORIGINAL_TITLE;
     } else {
         document.title = ORIGINAL_TITLE;
     }
