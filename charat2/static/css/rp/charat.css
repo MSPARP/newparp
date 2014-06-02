@@ -296,7 +296,7 @@ body.menu #topbar #topmenu {
     background-color: #f4f5ae;
 }
 
-#topmenu .logout {
+#topmenu .logout, #topmenu .login {
     padding-bottom: 5px;
 }
 
