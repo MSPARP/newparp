@@ -37,6 +37,8 @@ body.mobile #chat-pages {
 }
 
 .users-online {
+    font-size: 16px;
+    margin-top: 5px;
     margin-bottom: 5px;
     text-align: center;
 }
