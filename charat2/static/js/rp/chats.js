@@ -129,10 +129,10 @@ $(function(){
     }
     
     chatsUpdate(true);
+    setTimeout(unreadNotifications, 10000)
 });
 
 $(window).resize(function () {
     screenCheck();
-    unreadNotifications();
     chatsUpdate();
 });
