@@ -5,6 +5,7 @@
 var logged_in={{'true' if logged_in else 'false'}};
 var chats = {{chats|tojson|safe}};
 </script>
+<script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/front.css')}}" />
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/chats.css')}}" />
