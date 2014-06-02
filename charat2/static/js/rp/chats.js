@@ -1,10 +1,33 @@
+var ORIGINAL_TITLE = document.title;
 var current_mode;
 
-function chatsUpdate(first) {    
+function unreadNotifications() {
+    $.getJSON('/chats/unread.json', function(data) {
+        chats = data;
+        chatsUpdate(true);
+    }).complete(function() {
+        window.setTimeout(unreadNotifications, 10000);
+    });
+}
+
+function chatsUpdate(first) {
     if ($('body').prop('class')) {
         mode = $('body').prop('class');
     } else {
         mode = 'none';
+    }
+    
+    unread_chats = 0;
+    for (i in chats) {
+        chat = chats[i];
+        if (chat.unread) {
+            unread_chats++;
+        }
+    }
+    if (unread_chats > 0) {
+        document.title = unread_chats+" unread – "+ORIGINAL_TITLE;
+    } else {
+        document.title = ORIGINAL_TITLE;
     }
     
     if (current_mode == mode || first) {
