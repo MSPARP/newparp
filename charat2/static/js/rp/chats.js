@@ -10,8 +10,6 @@ function chatsUpdate(first) {
     }
     
     if (current_mode == mode || first) {
-        console.log('mobile: '+$('body.mobile').length);
-        console.log('nobile: '+$('body.nobile').length);
         if ($('body.mobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
             for(chat in chats) {
