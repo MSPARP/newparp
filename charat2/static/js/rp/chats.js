@@ -116,14 +116,14 @@ function chatsUpdate(first) {
         }
     }
     
-    if ($('column-1').is(':empty')) {
-        $('column-1').delete();
+    if ($('#column-1').is(':empty')) {
+        $('#column-1').delete();
     }
-    if ($('column-2').is(':empty')) {
-        $('column-2').delete();
+    if ($('#column-2').is(':empty')) {
+        $('#column-2').delete();
     }
-    if ($('column-3').is(':empty')) {
-        $('column-3').delete();
+    if ($('#column-3').is(':empty')) {
+        $('#column-3').delete();
     }
     
     current_mode = mode;
