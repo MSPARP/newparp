@@ -2,7 +2,6 @@ var ORIGINAL_TITLE = document.title;
 var current_mode;
 
 function unreadNotifications() {
-    console.log('1');
     var chats_url;
     if (type=="None") {
         chats_url = '/chats.json';
