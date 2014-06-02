@@ -41,7 +41,7 @@ var type = "{{type}}";
     <div id="chat-pages" class="section">
         <div id="page-div">
             <div id="your-pages" class="section">
-                <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
+                <div class="titli">YOUR CHATS</div>
                 <div class="card">
                     {% block pager %}
                     {% if paginator.page_count!=1 %}
@@ -82,6 +82,7 @@ var type = "{{type}}";
                 </div>
             </div>
         </div>
+        <div class="titli">{% if type == None: %}CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
         <div id="under-page"></div>
     </div>
 </div>
