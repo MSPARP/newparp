@@ -236,7 +236,7 @@ body.mobile .sidebarContain {
     width: 100%;
     margin-top: 10px;
     margin-bottom: 0;
-    padding-bottom: 8px;
+    padding-top: 0;
 }
 
 .stoptions button {
