@@ -118,6 +118,7 @@ input[type="text"], input[type="password"] {
 
 button.block-button, a.block-button {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-weight: 400;
     background-color: #8ecdab;
     color: #0e3d1b;
     font-size: 18px;
@@ -135,6 +136,7 @@ button.block-button, a.block-button {
 
 a.block-button {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
+    font-weight: 400;
     display: inline-block;
     background-color: #8ecdab;
     color: #0e3d1b;
