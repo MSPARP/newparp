@@ -12,6 +12,14 @@ var type = "{{type}}";
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/chats.css')}}" />
 {% endblock %}
 
+{% block pager %}
+{% if paginator.page_count!=1 %}
+<div class="pager">
+{{paginator.pager(format='~5~')}}
+</div>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 
 <div id="topbar">
@@ -43,13 +51,6 @@ var type = "{{type}}";
             <div id="your-pages" class="section">
                 <div class="titli">YOUR CHATS</div>
                 <div class="card">
-                    {% block pager %}
-                    {% if paginator.page_count!=1 %}
-                    <div class="pager">
-                    {{paginator.pager(format='~5~')}}
-                    </div>
-                    {% endif %}
-                    {% endblock %}
                     
                     {% for key in chat_classes|sort: %}
                         {% if type == key: %}

@@ -9,7 +9,7 @@ from charat2.model import (
     case_options,
     AnyChat,
     GroupChat,
-    OneOnOneChat,
+    SearchedChat,
     PMChat,
     ChatUser,
 )
@@ -18,8 +18,8 @@ from charat2.model.connections import use_db
 chat_classes = {
     None: AnyChat,
     "group": GroupChat,
-    "1-on-1": OneOnOneChat,
     "pm": PMChat,
+    "searched": SearchedChat,
     "unread": AnyChat,
 }
 

@@ -138,16 +138,16 @@ class Chat(Base):
     # 101 characters to fit 50 characters in each half.
     url = Column(String(101), unique=True)
 
-    # 1-on-1 chats allow anyone to enter and have randomly generated URLs.
     # Group chats allow people to enter in accordance with the publicity
     # options in the group_chats table, and can have any URL.
     # PM chats only allow two people to enter and have urls of the form
     # `pm/<user id 1>/<user id 2>`, with the 2 user IDs in alphabetical
     # order.
+    # Searched chats allow anyone to enter and have randomly generated URLs.
     type = Column(Enum(
-        u"1-on-1",
         u"group",
         u"pm",
+        u"searched",
         name=u"chats_type",
     ), nullable=False, default=u"group")
 
@@ -162,10 +162,6 @@ class Chat(Base):
             "id": self.id,
             "type": self.type,
         }
-
-
-class OneOnOneChat(Chat):
-    __mapper_args__ = { "polymorphic_identity": "1-on-1" }
 
 
 class GroupChat(Chat):
@@ -211,7 +207,11 @@ class PMChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "pm" }
 
 
-AnyChat = with_polymorphic(Chat, [OneOnOneChat, GroupChat, PMChat])
+class SearchedChat(Chat):
+    __mapper_args__ = { "polymorphic_identity": "searched" }
+
+
+AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, SearchedChat])
 
 
 class ChatUser(Base):
