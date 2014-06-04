@@ -7,7 +7,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
-from charat2.model import sm, AnyChat, User, UserChat
+from charat2.model import sm, AnyChat, User, ChatUser
 
 redis_pool = ConnectionPool(
     host=os.environ['REDIS_HOST'],
@@ -46,7 +46,7 @@ def redis_disconnect(response):
 
 # Connection function and decorators for connecting to the database.
 # The first decorator just fetches the User object and is for general stuff.
-# The second fetches the User, UserChat and Chat objects and is used by the
+# The second fetches the User, ChatUser and Chat objects and is used by the
 # chat-related views.
 # (also the second is in a function by itself so it can be called by
 # mark_alive too)
@@ -68,17 +68,17 @@ def use_db(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def get_user_chat():
+def get_chat_user():
     try:
-        g.user_chat, g.user, g.chat = g.db.query(
-            UserChat, User, AnyChat,
+        g.chat_user, g.user, g.chat = g.db.query(
+            ChatUser, User, AnyChat,
         ).join(
-            User, UserChat.user_id==User.id,
+            User, ChatUser.user_id==User.id,
         ).join(
-            AnyChat, UserChat.chat_id==AnyChat.id,
+            AnyChat, ChatUser.chat_id==AnyChat.id,
         ).filter(and_(
-            UserChat.user_id==g.user_id,
-            UserChat.chat_id==int(request.form["chat_id"]),
+            ChatUser.user_id==g.user_id,
+            ChatUser.chat_id==int(request.form["chat_id"]),
         )).one()
     except NoResultFound:
         abort(400)
@@ -87,7 +87,7 @@ def use_db_chat(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         db_connect()
-        get_user_chat()
+        get_chat_user()
         return f(*args, **kwargs)
     return decorated_function
 

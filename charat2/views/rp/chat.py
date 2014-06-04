@@ -15,7 +15,7 @@ from charat2.model import (
     Message,
     PMChat,
     User,
-    UserChat,
+    ChatUser,
 )
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
@@ -89,9 +89,9 @@ def chat(url, fmt=None):
             chat = PMChat(url=pm_url)
             g.db.add(chat)
             g.db.flush()
-            # Create UserChat for the other user.
-            pm_user_chat = UserChat.from_user(pm_user, chat_id=chat.id)
-            g.db.add(pm_user_chat)
+            # Create ChatUser for the other user.
+            pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id)
+            g.db.add(pm_chat_user)
 
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
@@ -120,20 +120,20 @@ def chat(url, fmt=None):
 
         chat_dict = chat.to_dict()
 
-    # Get or create UserChat.
+    # Get or create ChatUser.
     try:
-        user_chat = g.db.query(UserChat).filter(and_(
-            UserChat.user_id==g.user.id,
-            UserChat.chat_id==chat.id,
+        chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.user_id==g.user.id,
+            ChatUser.chat_id==chat.id,
         )).one()
     except NoResultFound:
-        user_chat = UserChat.from_user(g.user, chat_id=chat.id)
+        chat_user = ChatUser.from_user(g.user, chat_id=chat.id)
         if (
             chat.type == "group" and chat.autosilence
             and g.user.group != "admin" and g.user != chat.creator
         ):
-            user_chat.group = "silent"
-        g.db.add(user_chat)
+            chat_user.group = "silent"
+        g.db.add(chat_user)
         g.db.flush()
 
     # Show the last 50 messages.
@@ -150,7 +150,7 @@ def chat(url, fmt=None):
 
         return jsonify({
             "chat": chat_dict,
-            "user_chat": user_chat.to_dict(include_options=True),
+            "chat_user": chat_user.to_dict(include_options=True),
             "messages": [
                 _.to_dict() for _ in messages
             ],
@@ -165,8 +165,8 @@ def chat(url, fmt=None):
         "rp/chat.html",
         url=url,
         chat=chat_dict,
-        user_chat=user_chat,
-        user_chat_dict=user_chat.to_dict(include_options=True),
+        chat_user=chat_user,
+        chat_user_dict=chat_user.to_dict(include_options=True),
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
@@ -264,10 +264,10 @@ def users(url):
     except NoResultFound:
         abort(404)
 
-    users = g.db.query(UserChat, User).join(
-        User, UserChat.user_id==User.id,
+    users = g.db.query(ChatUser, User).join(
+        User, ChatUser.user_id==User.id,
     ).filter(and_(
-        UserChat.chat_id==chat.id,
+        ChatUser.chat_id==chat.id,
     )).order_by(User.username).all()
 
     return render_template(

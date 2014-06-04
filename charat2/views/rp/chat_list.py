@@ -11,7 +11,7 @@ from charat2.model import (
     GroupChat,
     OneOnOneChat,
     PMChat,
-    UserChat,
+    ChatUser,
 )
 from charat2.model.connections import use_db
 
@@ -35,30 +35,30 @@ def chat_list(fmt=None, type=None, page=1):
 
     if type in (None, "pm", "unread"):
 
-        # Join opposing UserChat on PM chats so we know who the other person is.
-        PMUserChat = aliased(UserChat)
-        chats = g.db.query(UserChat, ChatClass, PMUserChat).join(ChatClass).outerjoin(
-            PMUserChat,
+        # Join opposing ChatUser on PM chats so we know who the other person is.
+        PMChatUser = aliased(ChatUser)
+        chats = g.db.query(ChatUser, ChatClass, PMChatUser).join(ChatClass).outerjoin(
+            PMChatUser,
             and_(
                 ChatClass.type == "pm",
-                PMUserChat.chat_id == ChatClass.id,
-                PMUserChat.user_id != g.user.id,
+                PMChatUser.chat_id == ChatClass.id,
+                PMChatUser.user_id != g.user.id,
             ),
-        ).options(joinedload(PMUserChat.user))
+        ).options(joinedload(PMChatUser.user))
 
         if type == "pm":
             chats = chats.filter(ChatClass.type == "pm")
         elif type == "unread":
-            chats = chats.filter(ChatClass.last_message > UserChat.last_online)
+            chats = chats.filter(ChatClass.last_message > ChatUser.last_online)
 
     else:
 
-        chats = g.db.query(UserChat, ChatClass).join(ChatClass).filter(
+        chats = g.db.query(ChatUser, ChatClass).join(ChatClass).filter(
             ChatClass.type == type,
         )
 
     chats = chats.filter(
-        UserChat.user_id == g.user.id,
+        ChatUser.user_id == g.user.id,
     ).order_by(
         ChatClass.last_message.desc(),
     ).offset((page-1)*50).limit(50).all()
@@ -66,12 +66,12 @@ def chat_list(fmt=None, type=None, page=1):
     if len(chats) == 0 and page != 1:
         abort(404)
 
-    chat_count = g.db.query(func.count('*')).select_from(UserChat).filter(
-        UserChat.user_id==g.user.id,
+    chat_count = g.db.query(func.count('*')).select_from(ChatUser).filter(
+        ChatUser.user_id==g.user.id,
     )
     if type == "unread":
         chat_count = chat_count.join(ChatClass).filter(
-            ChatClass.last_message > UserChat.last_online,
+            ChatClass.last_message > ChatUser.last_online,
         )
     elif type is not None:
         chat_count = chat_count.join(ChatClass).filter(ChatClass.type == type)

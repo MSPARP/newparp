@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import disconnect, send_message, send_userlist
-from charat2.model import sm, Message, UserChat
+from charat2.model import sm, Message, ChatUser
 from charat2.model.connections import redis_pool
 
 db = sm()
@@ -24,24 +24,24 @@ if __name__ == "__main__":
             if not disconnected:
                 continue
             try:
-                dead_user_chat = db.query(UserChat).filter(and_(
-                    UserChat.user_id==user_id,
-                    UserChat.chat_id==chat_id,
-                )).options(joinedload(UserChat.chat)).one()
+                dead_chat_user = db.query(ChatUser).filter(and_(
+                    ChatUser.user_id==user_id,
+                    ChatUser.chat_id==chat_id,
+                )).options(joinedload(ChatUser.chat)).one()
             except NoResultFound:
                 pass
-            if dead_user_chat.group == "silent":
-                send_userlist(db, redis, dead_user_chat.chat)
+            if dead_chat_user.group == "silent":
+                send_userlist(db, redis, dead_chat_user.chat)
             else:
                 send_message(db, redis, Message(
                     chat_id=chat_id,
-                    user_id=dead_user_chat.user_id,
+                    user_id=dead_chat_user.user_id,
                     type="timeout",
-                    name=dead_user_chat.name,
+                    name=dead_chat_user.name,
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON
                     text="[color=#%s]%s[/color] [[color=#%s]%s[/color]]'s connection timed out." % (
-                        dead_user_chat.color, dead_user_chat.name, dead_user_chat.color, dead_user_chat.acronym,
+                        dead_chat_user.color, dead_chat_user.name, dead_chat_user.color, dead_chat_user.acronym,
                     ),
                 ))
             print current_time, "Reaping ", dead

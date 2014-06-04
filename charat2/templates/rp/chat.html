@@ -6,7 +6,7 @@
 <script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
 <script type="text/javascript">
     var logged_in = {{'true' if logged_in else 'false'}};
-    var user = {{user_chat_dict|tojson|safe}};
+    var user = {{chat_user_dict|tojson|safe}};
     var chat = {{chat|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
 </script>
@@ -93,7 +93,7 @@
         </div>
         <div id="onlineContainer" class="card">
             <h1 class="titi">USERS</h1>
-            <ul id="users" class="{{user_chat.group}}"></ul>
+            <ul id="users" class="{{chat_user.group}}"></ul>
         </div>
     </div>
 </div>
@@ -108,9 +108,9 @@
                 <label>Color:</label>
             </div>
             <div class="right">
-                <input id="usingname" type="text" name="name" value="{{user_chat.name}}" maxlength="50" /><br />
-                <input id="ailin" type="text" name="acronym" value="{{user_chat.acronym}}" maxlength="15" /><br />
-                <input id="coln" type="text" name="color" value="{{user_chat.color}}" maxlength="6" />
+                <input id="usingname" type="text" name="name" value="{{chat_user.name}}" maxlength="50" /><br />
+                <input id="ailin" type="text" name="acronym" value="{{chat_user.acronym}}" maxlength="15" /><br />
+                <input id="coln" type="text" name="color" value="{{chat_user.color}}" maxlength="6" />
             </div>
             <button class="big" type="submit">Apply</button>
         </div>
@@ -123,12 +123,12 @@
                 <label>Case: </label>
             </div>
             <div class="right">
-                <input id="prei" type="text" name="quirk_prefix" value="{{user_chat.quirk_prefix}}" /><br />
-                <input id="sufi" type="text" name="quirk_suffix" value="{{user_chat.quirk_suffix}}" /><br />
+                <input id="prei" type="text" name="quirk_prefix" value="{{chat_user.quirk_prefix}}" /><br />
+                <input id="sufi" type="text" name="quirk_suffix" value="{{chat_user.quirk_suffix}}" /><br />
                 <div class="select-bind"><div class="arrow">▼</div>
                     <select id="casing" name="case">
                         {% for value, name in case_options.items(): %}
-                        <option value="{{value}}"{% if value==user_chat.case %} selected="selected"{% endif %}>{{name}}</option>
+                        <option value="{{value}}"{% if value==chat_user.case %} selected="selected"{% endif %}>{{name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -137,8 +137,8 @@
             <div class="titi">REPLACEMENTS</div>
             <div class="replacementContainer">
                 <ul id="replacementList">
-                    {% if user_chat_dict.character.replacements|length!=0 %}
-                        {% for replacement in user_chat_dict.character.replacements %}
+                    {% if chat_user_dict.character.replacements|length!=0 %}
+                        {% for replacement in chat_user_dict.character.replacements %}
                             <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
                         {% endfor %}
                     {% else %}
@@ -153,8 +153,8 @@
             <div class="titi">REGEX REPLACEMENTS</div>
             <div class="replacementContainer">
                 <ul id="regexList">
-                    {% if user_chat_dict.character.regexes|length!=0 %}
-                        {% for replacement in user_chat_dict.character.regexes %}
+                    {% if chat_user_dict.character.regexes|length!=0 %}
+                        {% for replacement in chat_user_dict.character.regexes %}
                             <li><input type="text" name="regex_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="regex_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteRegex">x</a></li>
                         {% endfor %}
                     {% else %}
@@ -198,7 +198,7 @@
 <form class="controls">
     <div id="previewWrapper"><div id="preview"></div></div>
     <div id="control-container">
-        <div id="textInput-container"><textarea id="textInput" name="textInput" style="color: #{{user_chat.color}};"></textarea></div>
+        <div id="textInput-container"><textarea id="textInput" name="textInput" style="color: #{{chat_user.color}};"></textarea></div>
         <div id="control-buttons">
             <button class="send-button" type="submit">Send</button>
             <button class="ooc-button" type="button">ooc</button>

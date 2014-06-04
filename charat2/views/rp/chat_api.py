@@ -20,10 +20,10 @@ from charat2.model import (
     Ban,
     Message,
     User,
-    UserChat,
+    ChatUser,
 )
 from charat2.model.connections import (
-    get_user_chat,
+    get_chat_user,
     use_db_chat,
     db_connect,
     db_commit,
@@ -64,7 +64,7 @@ def meta():
 
     if "joining" in request.form or g.joining:
         db_connect()
-        get_user_chat()
+        get_chat_user()
         return jsonify({
             "users": get_userlist(g.db, g.redis, g.chat),
             "chat": g.chat.to_dict(),
@@ -91,7 +91,7 @@ def ping():
 def send():
 
     if (
-        g.user_chat.group == "silent"
+        g.chat_user.group == "silent"
         and g.chat.creator != g.user
         and g.user.group != "admin"
     ):
@@ -113,9 +113,9 @@ def send():
         chat_id=g.chat.id,
         user_id=g.user.id,
         type=message_type,
-        color=g.user_chat.color,
-        acronym=g.user_chat.acronym,
-        name=g.user_chat.name,
+        color=g.chat_user.color,
+        acronym=g.chat_user.acronym,
+        name=g.chat_user.name,
         text=text,
     ))
 
@@ -137,47 +137,47 @@ def set_group():
     # If we're not a mod, creator or site admin, don't even bother looking up
     # the other user.
     if (
-        group_ranks[g.user_chat.group] == 0
+        group_ranks[g.chat_user.group] == 0
         and g.chat.creator != g.user
         and g.user.group != "admin"
     ):
         abort(403)
 
-    # Fetch the UserChat we're trying to change.
+    # Fetch the ChatUser we're trying to change.
     if "user_id" in request.form:
-        user_condition = UserChat.user_id==request.form["user_id"]
+        user_condition = ChatUser.user_id==request.form["user_id"]
     elif "username" in request.form:
         user_condition = func.lower(User.username)==request.form["username"].lower()
     else:
         abort(400)
     try:
-        set_user_chat, set_user = g.db.query(UserChat, User).join(
-            User, UserChat.user_id==User.id,
+        set_chat_user, set_user = g.db.query(ChatUser, User).join(
+            User, ChatUser.user_id==User.id,
         ).filter(and_(
             user_condition,
-            UserChat.chat_id==g.chat.id,
+            ChatUser.chat_id==g.chat.id,
         )).one()
     except NoResultFound:
         abort(404)
 
     # If they're the creator or a site admin, don't allow the change.
-    if set_user_chat.user==g.chat.creator or set_user_chat.user.group=="admin":
+    if set_chat_user.user==g.chat.creator or set_chat_user.user.group=="admin":
         abort(403)
 
     # Creator and admin can do anything, so only do the following checks if
     # we're not.
     if g.chat.creator != g.user and g.user.group != "admin":
         # If the other user's group is above our own, don't allow the change.
-        if group_ranks[set_user_chat.group] > group_ranks[g.user_chat.group]:
+        if group_ranks[set_chat_user.group] > group_ranks[g.chat_user.group]:
             abort(403)
         # If the group we're trying to set them to is above our own, don't allow
         # the change.
-        if group_ranks[request.form["group"]] > group_ranks[g.user_chat.group]:
+        if group_ranks[request.form["group"]] > group_ranks[g.chat_user.group]:
             abort(403)
 
     # If we're changing them to their current group, just send a 204 without
     # actually doing anything.
-    if request.form["group"] == set_user_chat.group:
+    if request.form["group"] == set_chat_user.group:
         return "", 204
 
     if request.form["group"] == "mod":
@@ -187,23 +187,23 @@ def set_group():
     elif request.form["group"] == "mod3":
         message = ("%s set %s to Little Mod. They can now silence other users.")
     elif request.form["group"] == "user":
-        if set_user_chat.group == "silent":
+        if set_chat_user.group == "silent":
             message = ("%s unsilenced %s.")
         else:
             message = ("%s removed moderator status from %s.")
     elif request.form["group"] == "silent":
         message = ("%s silenced %s.")
 
-    set_user_chat.group = request.form["group"]
+    set_chat_user.group = request.form["group"]
 
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
-        user_id=set_user_chat.user_id,
-        name=set_user_chat.name,
+        user_id=set_chat_user.user_id,
+        name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.user_chat.name,
-            set_user_chat.name
+            g.chat_user.name,
+            set_chat_user.name
         ),
     ))
 
@@ -219,25 +219,25 @@ def user_action():
 
     # Make sure we're allowed to perform this action.
     if (
-        group_ranks[g.user_chat.group] < action_ranks[request.form["action"]]
+        group_ranks[g.chat_user.group] < action_ranks[request.form["action"]]
         and g.chat.creator != g.user
         and g.user.group != "admin"
     ):
         abort(403)
 
-    # Fetch the UserChat we're trying to act upon.
+    # Fetch the ChatUser we're trying to act upon.
     if "user_id" in request.form:
-        user_condition = UserChat.user_id==request.form["user_id"]
+        user_condition = ChatUser.user_id==request.form["user_id"]
     elif "username" in request.form:
         user_condition = func.lower(User.username)==request.form["username"].lower()
     else:
         abort(400)
     try:
-        set_user_chat, set_user = g.db.query(UserChat, User).join(
-            User, UserChat.user_id==User.id,
+        set_chat_user, set_user = g.db.query(ChatUser, User).join(
+            User, ChatUser.user_id==User.id,
         ).filter(and_(
             user_condition,
-            UserChat.chat_id==g.chat.id,
+            ChatUser.chat_id==g.chat.id,
         )).one()
     except NoResultFound:
         abort(404)
@@ -248,7 +248,7 @@ def user_action():
 
     # If they're above us and we're not creator or admin, don't allow it.
     if (
-        group_ranks[set_user_chat.group] > group_ranks[g.user_chat.group]
+        group_ranks[set_chat_user.group] > group_ranks[g.chat_user.group]
         and g.chat.creator != g.user and g.user.group != "admin"
     ):
         abort(403)
@@ -267,13 +267,13 @@ def user_action():
             chat_id=g.chat.id,
             user_id=set_user.id,
             type="user_action",
-            name=g.user_chat.name,
+            name=g.chat_user.name,
             text=(
                 "[color=#%s]%s[/color] [[color=#%s]%s[/color]] kicked "
                 "[color=#%s]%s[/color] [[color=#%s]%s[/color]] from the chat."
             ) % (
-                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
-                set_user_chat.color, set_user_chat.name, set_user_chat.color, set_user_chat.acronym,
+                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
+                set_chat_user.color, set_chat_user.name, set_chat_user.color, set_chat_user.acronym,
             )
         ))
         return "", 204
@@ -289,8 +289,8 @@ def user_action():
             user_id=set_user.id,
             chat_id=g.chat.id,
             creator_id=g.user.id,
-            name=set_user_chat.name,
-            acronym=set_user_chat.acronym,
+            name=set_chat_user.name,
+            acronym=set_chat_user.acronym,
             reason=request.form.get("reason"),
         ))
         if request.form.get("reason") is not None:
@@ -298,10 +298,10 @@ def user_action():
                 "[color=#%s]%s[/color] banned "
                 "[color=#%s]%s[/color] from the chat. Reason: %s"
             ) % (
-                g.user_chat.color,
-                g.user_chat.name,
-                set_user_chat.color,
-                set_user_chat.name,
+                g.chat_user.color,
+                g.chat_user.name,
+                set_chat_user.color,
+                set_chat_user.name,
                 request.form["reason"],
             )
         else:
@@ -309,10 +309,10 @@ def user_action():
                 "[color=#%s]%s[/color] banned "
                 "[color=#%s]%s[/color] from the chat."
             ) % (
-                g.user_chat.color,
-                g.user_chat.name,
-                set_user_chat.color,
-                set_user_chat.name,
+                g.chat_user.color,
+                g.chat_user.name,
+                set_chat_user.color,
+                set_chat_user.name,
             )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
@@ -323,7 +323,7 @@ def user_action():
             chat_id=g.chat.id,
             user_id=set_user.id,
             type="user_action",
-            name=g.user_chat.name,
+            name=g.chat_user.name,
             text=ban_message,
         ))
         return "", 204
@@ -338,7 +338,7 @@ def set_flag():
 
     # Make sure we're a mod, creator, or admin.
     if (
-        group_ranks[g.user_chat.group] < 1
+        group_ranks[g.chat_user.group] < 1
         and g.chat.creator != g.user
         and g.user.group != "admin"
     ):
@@ -378,7 +378,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (
-            g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+            g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
         ),
     ))
 
@@ -391,7 +391,7 @@ def set_topic():
 
     # Make sure we're allowed to set the topic.
     if (
-        group_ranks[g.user_chat.group] < action_ranks["set_topic"]
+        group_ranks[g.chat_user.group] < action_ranks["set_topic"]
         and g.chat.creator != g.user
         and g.user.group != "admin"
     ):
@@ -412,20 +412,20 @@ def set_topic():
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=g.user.id,
-            name=g.user_chat.name,
+            name=g.chat_user.name,
             type="chat_meta",
             text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] removed the conversation topic." % (
-                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
             ),
         ))
     else:
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=g.user.id,
-            name=g.user_chat.name,
+            name=g.chat_user.name,
             type="chat_meta",
             text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] changed the topic to \"%s\"" % (
-                g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym, topic,
+                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym, topic,
             ),
         ))
 
@@ -436,9 +436,9 @@ def set_topic():
 def save():
 
     # Remember old values so we can check if they've changed later.
-    old_name = g.user_chat.name
-    old_acronym = g.user_chat.acronym
-    old_color = g.user_chat.color
+    old_name = g.chat_user.name
+    old_acronym = g.chat_user.acronym
+    old_color = g.chat_user.color
 
     # Don't allow a blank name.
     if request.form["name"] == "":
@@ -447,18 +447,18 @@ def save():
     # Validate color.
     if not color_validator.match(request.form["color"]):
         abort(400)
-    g.user_chat.color = request.form["color"]
+    g.chat_user.color = request.form["color"]
 
     # Validate case.
     if request.form["case"] not in case_options:
         abort(400)
-    g.user_chat.case = request.form["case"]
+    g.chat_user.case = request.form["case"]
 
     # There are length limits on the front end so just silently truncate these.
-    g.user_chat.name = request.form["name"][:50]
-    g.user_chat.acronym = request.form["acronym"][:15]
-    g.user_chat.quirk_prefix = request.form["quirk_prefix"][:50]
-    g.user_chat.quirk_suffix = request.form["quirk_suffix"][:50]
+    g.chat_user.name = request.form["name"][:50]
+    g.chat_user.acronym = request.form["acronym"][:15]
+    g.chat_user.quirk_prefix = request.form["quirk_prefix"][:50]
+    g.chat_user.quirk_suffix = request.form["quirk_suffix"][:50]
 
     # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
     # Zip replacements.
@@ -469,7 +469,7 @@ def save():
     # Strip out any rows where from is blank or the same as to.
     replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
     # And encode as JSON.
-    g.user_chat.replacements = json.dumps(replacements)
+    g.chat_user.replacements = json.dumps(replacements)
 
     # XXX PUT LENGTH LIMIT ON REGEXES?
     # Zip regexes.
@@ -480,21 +480,21 @@ def save():
     # Strip out any rows where from is blank or the same as to.
     regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
     # And encode as JSON.
-    g.user_chat.regexes = json.dumps(regexes)
+    g.chat_user.regexes = json.dumps(regexes)
 
     # Send a message if name or acronym has changed.
-    if g.user_chat.name != old_name or g.user_chat.acronym != old_acronym or g.user_chat.color != old_color:
-        if g.user_chat.group == "silent":
+    if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym or g.chat_user.color != old_color:
+        if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
-                name=g.user_chat.name,
+                name=g.chat_user.name,
                 text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color] [[color=#%s]%s[/color]]." % (
                     old_color, old_name, old_color, old_acronym,
-                    g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+                    g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
                 ),
             ))
 
@@ -510,17 +510,17 @@ def quit():
         abort(400)
     if disconnect(g.redis, g.chat_id, g.user_id):
         db_connect()
-        get_user_chat()
-        if g.user_chat.group == "silent":
+        get_chat_user()
+        if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="disconnect",
-                name=g.user_chat.name,
+                name=g.chat_user.name,
                 text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] disconnected." % (
-                    g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+                    g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
                 ),
             ))
     return "", 204

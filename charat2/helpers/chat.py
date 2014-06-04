@@ -7,8 +7,8 @@ from functools import wraps
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
-from charat2.model import AnyChat, Ban, Message, UserChat
-from charat2.model.connections import db_connect, get_user_chat
+from charat2.model import AnyChat, Ban, Message, ChatUser
+from charat2.model.connections import db_connect, get_chat_user
 
 def group_chat_only(f):
     @wraps(f)
@@ -38,24 +38,24 @@ def mark_alive(f):
                 Ban.user_id==g.user_id,
             )).scalar() != 0:
                 abort(403)
-            # Get UserChat if we haven't got it already.
-            if not hasattr(g, "user_chat"):
-                get_user_chat()
+            # Get ChatUser if we haven't got it already.
+            if not hasattr(g, "chat_user"):
+                get_chat_user()
             # Update their last_online.
-            g.user_chat.last_online = datetime.now()
+            g.chat_user.last_online = datetime.now()
             # Add them to the online list.
             g.redis.sadd("chat:%s:online" % g.chat.id, g.user.id)
             # Send join message. Or not, if they're silent.
-            if g.user_chat.group == "silent":
+            if g.chat_user.group == "silent":
                 send_userlist(g.db, g.redis, g.chat)
             else:
                 send_message(g.db, g.redis, Message(
                     chat_id=g.chat.id,
                     user_id=g.user.id,
                     type="join",
-                    name=g.user_chat.name,
+                    name=g.chat_user.name,
                     text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] joined chat." % (
-                        g.user_chat.color, g.user_chat.name, g.user_chat.color, g.user_chat.acronym,
+                        g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
                     ),
                 ))
         g.redis.zadd(
@@ -78,9 +78,9 @@ def send_message(db, redis, message):
         # Update last_online field for everyone who is online.
         online_user_ids = redis.smembers("chat:%s:online" % message.chat.id)
         if len(online_user_ids) != 0:
-            db.query(UserChat).filter(and_(
-                UserChat.user_id.in_(online_user_ids),
-                UserChat.chat_id == message.chat.id,
+            db.query(ChatUser).filter(and_(
+                ChatUser.user_id.in_(online_user_ids),
+                ChatUser.chat_id == message.chat.id,
             )).update({ "last_online": message.posted }, synchronize_session=False)
 
     message_dict = message.to_dict()
@@ -133,9 +133,9 @@ def get_userlist(db, redis, chat):
         return []
     return [
         _.to_dict() for _ in
-        db.query(UserChat).filter(and_(
-            UserChat.user_id.in_(online_user_ids),
-            UserChat.chat_id == chat.id,
-        )).options(joinedload(UserChat.user))
+        db.query(ChatUser).filter(and_(
+            ChatUser.user_id.in_(online_user_ids),
+            ChatUser.chat_id == chat.id,
+        )).options(joinedload(ChatUser.user))
     ]
 

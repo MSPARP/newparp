@@ -103,7 +103,7 @@ class User(Base):
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
 
-    # Global character data. This is copied whenever a UserChat is created.
+    # Global character data. This is copied whenever a ChatUser is created.
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
@@ -214,12 +214,12 @@ class PMChat(Chat):
 AnyChat = with_polymorphic(Chat, [OneOnOneChat, GroupChat, PMChat])
 
 
-class UserChat(Base):
+class ChatUser(Base):
 
-    __tablename__ = "user_chats"
+    __tablename__ = "chat_users"
 
-    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
     last_online = Column(DateTime(), nullable=False, default=now)
 
@@ -230,7 +230,7 @@ class UserChat(Base):
         u"mod3",
         u"silent",
         u"user",
-        name=u"user_chats_group",
+        name=u"chat_users_group",
     ), nullable=False, default=u"user")
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
@@ -255,7 +255,7 @@ class UserChat(Base):
 
     @classmethod
     def from_user(cls, user, **kwargs):
-        # Create a UserChat using a User to determine the default values.
+        # Create a ChatUser using a User to determine the default values.
         return cls(
             user_id=user.id,
             name=user.name,
@@ -393,6 +393,9 @@ Index(
     postgresql_where=GroupChat.publicity==u"listed",
 )
 
+# Index for your chats list.
+Index("chat_users_user_id_chat_id", ChatUser.user_id, ChatUser.chat_id)
+
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)
 
@@ -404,8 +407,8 @@ GroupChat.parent = relation(
     primaryjoin=GroupChat.parent_id==Chat.id,
 )
 
-UserChat.user = relation(User, backref='chats')
-UserChat.chat = relation(Chat, backref='users')
+ChatUser.user = relation(User, backref='chats')
+ChatUser.chat = relation(Chat, backref='users')
 
 Message.chat = relation(Chat)
 Message.user = relation(User)
