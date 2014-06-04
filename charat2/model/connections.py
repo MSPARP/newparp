@@ -1,6 +1,6 @@
 import os
 
-from flask import g, request
+from flask import abort, g, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
 from sqlalchemy import and_
