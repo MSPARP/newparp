@@ -541,7 +541,7 @@ function updateChatPreview() {
     $('#preview').css('color', '#'+user.character.color);
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
-    $('#aliasOffset').text(user.character.acronym+":").css('color','#'+user.character.color);
+    $('#aliasOffset').text(user.character.acronym?user.character.acronym+":":"    ").css('color','#'+user.character.color);
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
     var command = $('#textInput').val().split(' ');
@@ -571,11 +571,7 @@ function updateChatPreview() {
         $('#preview').css('opacity','0.5');
     }
     
-    if (command[0] == '/me' || type_force == 'me' || 
-            command[0] == '/ban' || command[0] == '/kick' ||
-            command[0] == '/set' || command[0] == '/topic' ||
-            command[0] == '/publicity' || command[0] == '/nsfw' ||
-            command[0] == '/autosilence') {
+    if ($('#textInput').val().substr(0,1)=='/' && command[0] != '/ic' && command[0] != '/ooc') {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
