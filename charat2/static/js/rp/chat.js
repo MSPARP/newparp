@@ -541,7 +541,12 @@ function updateChatPreview() {
     $('#preview').css('color', '#'+user.character.color);
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
-    $('#aliasOffset').text(user.character.acronym?user.character.acronym+":":"    ").css('color','#'+user.character.color);
+    $('#aliasOffset').css('color','#'+user.character.color);
+    if (user.character.acronym) {
+        $('#aliasOffset').text(user.character.acronym+":");
+    } else {
+        $('#aliasOffset').html("&nbsp;&nbsp&nbsp&nbsp");
+    }
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
     var command = $('#textInput').val().split(' ');
