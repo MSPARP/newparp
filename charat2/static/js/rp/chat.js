@@ -609,7 +609,7 @@ function updateChatPreview() {
             if (groups.indexOf(command[2])!=-1 && command[1]) {
                 var action_user = user_list[command[1]];
                 var group_set = GROUP_DESCRIPTIONS[group_map[command[2]]];
-                textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] to "+group_set.title+"."+(group_set.description ? " They can now "+group_set.description+"." : "");
+                textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color]"+(action_user.character.acronym?" [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]]": "")+" to "+group_set.title+"."+(group_set.description ? " They can now "+group_set.description+"." : "");
             } else {
                 throw "error";
             }
