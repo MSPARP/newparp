@@ -560,7 +560,7 @@ function updateChatPreview() {
         textPreview = applyQuirks(textPreview,user.character);
     }
     
-    var aliasPreview = user.character.acronym ? user.character.acronym+": " : "";
+    var aliasPreview = user.character.acronym ? user.character.acronym+": " : " ";
     
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
@@ -579,7 +579,7 @@ function updateChatPreview() {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
-        aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
+        aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
         $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":"")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
