@@ -245,7 +245,7 @@ function addLine(msg){
         }
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+' ['+(msg.acronym?msg.acronym:'')+']'+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(msg.name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+(msg.acronym ? ' ['+msg.acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
@@ -560,7 +560,7 @@ function updateChatPreview() {
         textPreview = applyQuirks(textPreview,user.character);
     }
     
-    var aliasPreview = user.character.acronym ? user.character.acronym+": " : "[blank]: ";
+    var aliasPreview = user.character.acronym ? user.character.acronym+": " : "";
     
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
@@ -580,7 +580,7 @@ function updateChatPreview() {
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] [[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ";
-        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span> [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]").css('color','#000000');
+        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":"")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
     
