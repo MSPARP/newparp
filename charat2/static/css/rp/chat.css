@@ -499,6 +499,11 @@ body #userListButton {
     left: 5px;
     top: 5px;
     z-index: 1;
+    cursor: pointer;
+}
+
+#aliasOffset:hover {
+    background-color: #f0f0db;
 }
 
 body > #save {
