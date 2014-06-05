@@ -580,7 +580,7 @@ function updateChatPreview() {
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
-        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":"")).css('color','#000000');
+        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":" ")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
     
