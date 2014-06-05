@@ -545,7 +545,7 @@ function updateChatPreview() {
     if (user.character.acronym) {
         $('#aliasOffset').text(user.character.acronym+":");
     } else {
-        $('#aliasOffset').html("&nbsp;&nbsp&nbsp&nbsp");
+        $('#aliasOffset').html("&nbsp;&nbsp&nbsp&nbsp&nbsp;&nbsp&nbsp&nbsp");
     }
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
@@ -565,7 +565,7 @@ function updateChatPreview() {
         textPreview = applyQuirks(textPreview,user.character);
     }
     
-    var aliasPreview = user.character.acronym ? user.character.acronym+": " : " ";
+    var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
     
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
             textPreview.startsWith("((") || textPreview.endsWith("))") || 
