@@ -796,7 +796,9 @@ $(function(){
         }
         
         $('.controls').submit(function() {
+            $('#textInput').blur();
             $('#textInput').focus();
+            
             if (jQuery.trim($('#textInput').val())=='/ooc') {
                 if (!ooc_on) {
                     $('.ooc-button').click();
