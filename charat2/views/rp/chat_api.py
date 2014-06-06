@@ -367,13 +367,9 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = ("[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" listed the chat. It's now listed on the public rooms page.") % (
-                g.chat_user.color, g.chat_user.name,
-            )
+            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
-            message = ("[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" unlisted the chat.") % (
-                g.chat_user.color, g.chat_user.name,
-            )
+            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" unlisted the chat."
     else:
         abort(400)
 
