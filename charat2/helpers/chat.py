@@ -54,8 +54,8 @@ def mark_alive(f):
                     user_id=g.user.id,
                     type="join",
                     name=g.chat_user.name,
-                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] joined chat." % (
-                        g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
+                    text=("[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" joined.") % (
+                        g.chat_user.color, g.chat_user.name,
                     ),
                 ))
         g.redis.zadd(

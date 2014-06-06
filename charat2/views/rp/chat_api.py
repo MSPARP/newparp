@@ -353,7 +353,7 @@ def set_flag():
         if new_value == getattr(g.chat, request.form["flag"]):
             return "", 204
         setattr(g.chat, request.form["flag"], new_value)
-        message = "[color=#%%s]%%s[/color] [[color=#%%s]%%s[/color]] switched %s %s." % (
+        message = ("[color=#%%s]%%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" switched %s %s.") % (
             request.form["flag"], request.form["value"],
         )
 
@@ -367,9 +367,9 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = "[color=#%s]%s[/color] [[color=#%s]%s[/color]] listed the chat. It's now listed on the public rooms page."
+            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
-            message = "[color=#%s]%s[/color] [[color=#%s]%s[/color]] unlisted the chat."
+            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" unlisted the chat."
     else:
         abort(400)
 
@@ -378,7 +378,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (
-            g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
+            g.chat_user.color, g.chat_user.name,
         ),
     ))
 
@@ -519,7 +519,7 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.chat_user.name,
-                text="[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym)>0 else "")+" disconnected." % (
+                text=("[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" disconnected.") % (
                     g.chat_user.color, g.chat_user.name,
                 ),
             ))
