@@ -265,7 +265,7 @@ function generateUserList(user_data) {
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
             $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+' '+list_user.meta.group+is_self+'"><span class="userCharacter'+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
-    
+
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
                     '<li class="mod2">Make Cute-Cute Mod</li>' +
@@ -283,12 +283,12 @@ function generateUserList(user_data) {
                     '<li class="highlight">Highlight</li>' +
                     '<li class="pm"><a href="/pm/'+list_user.meta.username+'" target="_blank">Private Message</a></li>' +
                 '</span>';
-    
+
             $('#user'+list_user.meta.user_id).append('<ul class="user_buttons"></ul>');
             $('#user'+list_user.meta.user_id+' .user_buttons').append(user_buttons);
             user_list[list_user.meta.user_id] = list_user;
             user_list[list_user.meta.username] = list_user;
-            
+
             $('.user_buttons').hide();
             $('#user'+list_user.meta.user_id).on('click', function() {
                 var buttons_shown = $(this).find('.user_buttons').is(':visible');
@@ -303,6 +303,26 @@ function generateUserList(user_data) {
             $('#user'+list_user.meta.user_id).prop('class',list_user.meta.username+' '+list_user.meta.group+is_self);
             $('#user'+list_user.meta.user_id+' .userCharacter').css('color','#'+list_user.character.color).prop('title', user_description).text(list_user.character.name);
         }
+        
+        $('#user'+list_user.meta.user_id+' .set li').unbind('click');
+        $('#user'+list_user.meta.user_id+' .user_action li').unbind('click');
+        
+        $('#user'+list_user.meta.user_id+' .set li').bind('click', function() {
+            var set_group = $(this).attr('class');
+            if (set_group == 'unsilent') {
+                set_group = 'user';
+            }
+            setGroup(list_user.meta.username, set_group);
+        });
+        
+        $('#user'+list_user.meta.user_id+' .user_action li').bind('click', function() {
+            if ($(this).attr('class') != 'ban') {
+                userAction(list_user.meta.username, $(this).attr('class'));
+            } else {
+                $('#textInput').val('/ban '+list_user.meta.username+' <reason>');
+            }
+        });
+        
     }
 
     $(USER_LIST_ID+" .username").each(function() {
@@ -1003,23 +1023,6 @@ $(function(){
             }
             topicHidden = !topicHidden;
             return false;
-        });
-        
-        /* User Action Settings */
-        $(document).on('click', '.user_buttons .set li', function() {
-            var set_group = $(this).attr('class');
-            if (set_group == 'unsilent') {
-                set_group = 'user';
-            }
-            setGroup($(this).parent().parent().parent().attr('class'),set_group);
-        });
-        
-        $(document).on('click', '.user_buttons .user_action li', function() {
-            if ($(this).attr('class') != 'ban') {
-                userAction($(this).parent().parent().parent().attr('class'),$(this).attr('class'));
-            } else {
-                $('#textInput').val('/ban '+$(this).parent().parent().parent().attr('class')+' <reason>');
-            }
         });
 
         $(CONVERSATION_CONTAINER).scroll(function(){
