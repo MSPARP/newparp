@@ -314,7 +314,7 @@ function generateUserList(user_data) {
             if (set_group == 'unsilent') {
                 set_group = 'user';
             }
-            setGroup($(this).parent().parent().parent().prop('id').substring(5), set_group);
+            setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username, set_group);
         });
         
         $('#user'+list_user.meta.user_id+' .user_action li').bind('click', function() {
