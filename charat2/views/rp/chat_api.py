@@ -246,9 +246,9 @@ def user_action():
     if set_user==g.chat.creator or set_user.group=="admin":
         abort(403)
 
-    # If they're above us and we're not creator or admin, don't allow it.
+    # If they're above us or equal too us and we're not creator or admin, don't allow it.
     if (
-        group_ranks[set_chat_user.group] > group_ranks[g.chat_user.group]
+        group_ranks[set_chat_user.group] >= group_ranks[g.chat_user.group]
         and g.chat.creator != g.user and g.user.group != "admin"
     ):
         abort(403)
@@ -492,7 +492,7 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color] [[color=#"+g.chat_user.color+"]%s[/color]]." % (
+                text=("[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color] [[color=#"+g.chat_user.color+"]%s[/color]].") % (
                     old_color, old_name, old_color, old_acronym,
                     g.chat_user.color, g.chat_user.name, g.chat_user.acronym,
                 ),
