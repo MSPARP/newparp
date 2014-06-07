@@ -304,12 +304,10 @@ function generateUserList(user_data) {
             $('#user'+list_user.meta.user_id+' .userCharacter').css('color','#'+list_user.character.color).prop('title', user_description).text(list_user.character.name);
         }
         
-        $('#user'+list_user.meta.user_id+' .set li').unbind('click');
-        $('#user'+list_user.meta.user_id+' .user_action li').unbind('click');
+        $('#user'+list_user.meta.user_id+' .set li').off('click');
+        $('#user'+list_user.meta.user_id+' .user_action li').off('click');
         
-        
-        
-        $('#user'+list_user.meta.user_id+' .set li').bind('click', function() {
+        $('#user'+list_user.meta.user_id+' .set li').on('click', function() {
             var set_group = $(this).attr('class');
             if (set_group == 'unsilent') {
                 set_group = 'user';
@@ -317,7 +315,7 @@ function generateUserList(user_data) {
             setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username, set_group);
         });
         
-        $('#user'+list_user.meta.user_id+' .user_action li').bind('click', function() {
+        $('#user'+list_user.meta.user_id+' .user_action li').on('click', function() {
             if ($(this).attr('class') != 'ban') {
                 userAction(list_user.meta.username, $(this).attr('class'));
             } else {
