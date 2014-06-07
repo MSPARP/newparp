@@ -312,15 +312,14 @@ function generateUserList(user_data) {
             if (set_group == 'unsilent') {
                 set_group = 'user';
             }
-            console.log($(this).parent().parent().parent().prop('id').substring(5));
-            setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username, set_group);
+            setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, set_group);
         });
         
         $('#user'+list_user.meta.user_id+' .user_action li').on('click', function() {
             if ($(this).attr('class') != 'ban') {
-                userAction(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username, $(this).attr('class'));
+                userAction(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, $(this).attr('class'));
             } else {
-                $('#textInput').val('/ban '+user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username+' <reason>');
+                $('#textInput').val('/ban '+user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username+' <reason>');
             }
         });
         
