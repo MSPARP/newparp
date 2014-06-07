@@ -312,7 +312,7 @@ function generateUserList(user_data) {
             if (set_group == 'unsilent') {
                 set_group = 'user';
             }
-            console.log(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username);
+            console.log($(this).parent().parent().parent().prop('id').substring(5));
             setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(5)].meta.username, set_group);
         });
         
