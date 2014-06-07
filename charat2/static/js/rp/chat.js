@@ -307,13 +307,14 @@ function generateUserList(user_data) {
         $('#user'+list_user.meta.user_id+' .set li').unbind('click');
         $('#user'+list_user.meta.user_id+' .user_action li').unbind('click');
         
-        console.log(list_user.meta.user_id+": "+list_user.meta.username);
+        
         
         $('#user'+list_user.meta.user_id+' .set li').bind('click', function() {
             var set_group = $(this).attr('class');
             if (set_group == 'unsilent') {
                 set_group = 'user';
             }
+            console.log(list_user.meta.username+": "+set_group);
             setGroup(list_user.meta.username, set_group);
         });
         
