@@ -6,8 +6,7 @@ function desktopNotification(title,text,icon) {
         });
         notification.onclick = function() {
             try {
-                window.blur();
-                setTimeout(window.focus, 0);
+                $(window).focus();
                 notification.close();
             } catch(e) {}
         };
@@ -26,7 +25,6 @@ function desktopNotification(title,text,icon) {
                 notification.close();
             } catch(e) {}
         }, false);
-    } catch(e) {
-    }
+    } catch(e) {}
 }
 
