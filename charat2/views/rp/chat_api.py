@@ -269,11 +269,11 @@ def user_action():
             type="user_action",
             name=g.chat_user.name,
             text=(
-                "[color=#%s]%s[/color] [[color=#%s]%s[/color]] kicked "
-                "[color=#%s]%s[/color] [[color=#%s]%s[/color]] from the chat."
+                "[color=#%s]%s[/color] kicked "
+                "[color=#%s]%s[/color] from the chat."
             ) % (
-                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
-                set_chat_user.color, set_chat_user.name, set_chat_user.color, set_chat_user.acronym,
+                g.chat_user.color, g.user.username,
+                set_chat_user.color, set_user.username,
             )
         ))
         return "", 204
@@ -299,9 +299,9 @@ def user_action():
                 "[color=#%s]%s[/color] from the chat. Reason: %s"
             ) % (
                 g.chat_user.color,
-                g.chat_user.name,
+                g.user.username,
                 set_chat_user.color,
-                set_chat_user.name,
+                set_user.username,
                 request.form["reason"],
             )
         else:
@@ -310,9 +310,9 @@ def user_action():
                 "[color=#%s]%s[/color] from the chat."
             ) % (
                 g.chat_user.color,
-                g.chat_user.name,
+                g.user.username,
                 set_chat_user.color,
-                set_chat_user.name,
+                set_user.username,
             )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
@@ -367,9 +367,9 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = "[color=#%s]%s[/color]%s listed the chat. It's now listed on the public rooms page."
+            message = "[color=#%s]%s[/color] listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
-            message = "[color=#%s]%s[/color]%s unlisted the chat."
+            message = "[color=#%s]%s[/color] unlisted the chat."
     else:
         abort(400)
 
@@ -378,7 +378,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (
-            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
+            g.chat_user.color, g.user.username,
         ),
     ))
 
@@ -414,8 +414,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color]%s removed the conversation topic." % (
-                g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
+            text="[color=#%s]%s[/color] removed the conversation topic." % (
+                g.chat_user.color, g.user.username,
             ),
         ))
     else:
@@ -424,8 +424,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color]%s changed the topic to \"%s\"" % (
-                g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "", topic,
+            text="[color=#%s]%s[/color] changed the topic to \"%s\"" % (
+                g.chat_user.color, g.user.username, topic,
             ),
         ))
 

@@ -40,7 +40,7 @@ if __name__ == "__main__":
                     name=dead_chat_user.name,
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON
-                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]]'s connection timed out." % (
+                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] lost connection." % (
                         dead_chat_user.color, dead_chat_user.name, dead_chat_user.color, dead_chat_user.acronym,
                     ),
                 ))
