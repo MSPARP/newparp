@@ -597,6 +597,8 @@ function updateChatPreview() {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         $('#preview').css('opacity','0.5');
+        $('#aliasOffset').text(user.meta.username+":");
+        aliasPreview = user.meta.username+": ";
     }
     
     if ($('#textInput').val().substr(0,1)=='/' && command[0] != '/ic' && command[0] != '/ooc') {
