@@ -27,7 +27,7 @@ if __name__ == "__main__":
                 dead_chat_user = db.query(ChatUser).filter(and_(
                     ChatUser.user_id==user_id,
                     ChatUser.chat_id==chat_id,
-                )).options(joinedload(ChatUser.chat)).one()
+                )).options(joinedload(ChatUser.chat), joinedload(ChatUser.user)).one()
             except NoResultFound:
                 pass
             if dead_chat_user.group == "silent":
