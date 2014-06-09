@@ -24,9 +24,8 @@ if __name__ == "__main__":
             if not disconnected:
                 continue
             try:
-                dead_chat_user = db.query(ChatUser).filter(and_(
-                    ChatUser.user_id==user_id,
-                    ChatUser.chat_id==chat_id,
+                dead_chat_user, dead_user = g.db.query(ChatUser, User).filter(and_(
+                    User, ChatUser.user_id==user_id,
                 )).options(joinedload(ChatUser.chat)).one()
             except NoResultFound:
                 pass
@@ -40,8 +39,8 @@ if __name__ == "__main__":
                     name=dead_chat_user.name,
                     # omg i've been waiting so long to get rid of that FUCKING
                     # SEMI COLON
-                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] lost connection." % (
-                        dead_chat_user.color, dead_chat_user.name, dead_chat_user.color, dead_chat_user.acronym,
+                    text="[color=#%s]%s[/color] lost connection." % (
+                        dead_chat_user.color, dead_chat_user.name,
                     ),
                 ))
             print current_time, "Reaping ", dead
