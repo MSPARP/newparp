@@ -202,8 +202,8 @@ def set_group():
         name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.chat_user.color, g.chat_user.name,
-            set_chat_user.color, set_chat_user.name,
+            g.chat_user.color, g.chat_user.username,
+            set_chat_user.color, set_chat_user.username,
         ),
     ))
 
