@@ -181,18 +181,18 @@ def set_group():
         return "", 204
 
     if request.form["group"] == "mod":
-        message = ("%s set %s to Magical Mod. They can now silence, kick and ban other users.")
+        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Magical Mod. They can now silence, kick and ban other users.")
     elif request.form["group"] == "mod2":
-        message = ("%s set %s to Cute-Cute Mod. They can now silence and kick other users.")
+        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Cute-Cute Mod. They can now silence and kick other users.")
     elif request.form["group"] == "mod3":
-        message = ("%s set %s to Little Mod. They can now silence other users.")
+        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Little Mod. They can now silence other users.")
     elif request.form["group"] == "user":
         if set_chat_user.group == "silent":
-            message = ("%s unsilenced %s.")
+            message = ("[color=#%s]%s[/color]%s unsilenced [color=#%s]%s[/color]%s.")
         else:
-            message = ("%s removed moderator status from %s.")
+            message = ("[color=#%s]%s[/color]%s removed moderator status from [color=#%s]%s[/color]%s.")
     elif request.form["group"] == "silent":
-        message = ("%s silenced %s.")
+        message = ("[color=#%s]%s[/color]%s silenced [color=#%s]%s[/color]%s.")
 
     set_chat_user.group = request.form["group"]
 
@@ -202,8 +202,8 @@ def set_group():
         name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.chat_user.name,
-            set_chat_user.name
+            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
+            set_chat_user.color, set_chat_user.name, " [[color=#"+set_chat_user.color+"]"+set_chat_user.acronym+"[/color]]" if len(set_chat_user.acronym) > 0 else "",
         ),
     ))
 
@@ -378,7 +378,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (
-            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else ""
+            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
         ),
     ))
 
@@ -414,8 +414,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] removed the conversation topic." % (
-                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym,
+            text="[color=#%s]%s[/color]%s removed the conversation topic." % (
+                g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
             ),
         ))
     else:
@@ -424,8 +424,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] changed the topic to \"%s\"" % (
-                g.chat_user.color, g.chat_user.name, g.chat_user.color, g.chat_user.acronym, topic,
+            text="[color=#%s]%s[/color]%s changed the topic to \"%s\"" % (
+                g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "", topic,
             ),
         ))
 
