@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import disconnect, send_message, send_userlist
-from charat2.model import sm, Message, ChatUser
+from charat2.model import sm, Message, ChatUser, User
 from charat2.model.connections import redis_pool
 
 db = sm()
