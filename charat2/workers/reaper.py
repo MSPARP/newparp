@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import disconnect, send_message, send_userlist
-from charat2.model import sm, Message, ChatUser, User
+from charat2.model import sm, Message, ChatUser
 from charat2.model.connections import redis_pool
 
 db = sm()
@@ -24,8 +24,8 @@ if __name__ == "__main__":
             if not disconnected:
                 continue
             try:
-                dead_chat_user = db.query(User, ChatUser).filter(and_(
-                    g.user.id,
+                dead_chat_user = db.query(ChatUser).filter(and_(
+                    ChatUser.user_id==user_id,
                     ChatUser.chat_id==chat_id,
                 )).options(joinedload(ChatUser.chat)).one()
             except NoResultFound:
@@ -38,10 +38,8 @@ if __name__ == "__main__":
                     user_id=dead_chat_user.user_id,
                     type="timeout",
                     name=dead_chat_user.name,
-                    # omg i've been waiting so long to get rid of that FUCKING
-                    # SEMI COLON
-                    text="[color=#%s]%s[/color] [[color=#%s]%s[/color]] lost connection." % (
-                        dead_chat_user.color, dead_chat_user.name,
+                    text="[color=#%s]%s[/color] lost connection." % (
+                        dead_chat_user.color, dead_chat_user.user.username,
                     ),
                 ))
             print current_time, "Reaping ", dead
