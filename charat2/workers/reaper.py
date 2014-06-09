@@ -24,7 +24,7 @@ if __name__ == "__main__":
             if not disconnected:
                 continue
             try:
-                dead_chat_user, dead_user = g.db.query(ChatUser, User).filter(and_(
+                dead_chat_user, dead_user = db.query(ChatUser, User).filter(and_(
                     User, ChatUser.user_id==user_id,
                 )).options(joinedload(ChatUser.chat)).one()
             except NoResultFound:
