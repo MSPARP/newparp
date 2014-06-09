@@ -181,18 +181,18 @@ def set_group():
         return "", 204
 
     if request.form["group"] == "mod":
-        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Magical Mod. They can now silence, kick and ban other users.")
+        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Magical Mod. They can now silence, kick and ban other users.")
     elif request.form["group"] == "mod2":
-        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Cute-Cute Mod. They can now silence and kick other users.")
+        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Cute-Cute Mod. They can now silence and kick other users.")
     elif request.form["group"] == "mod3":
-        message = ("[color=#%s]%s[/color]%s set [color=#%s]%s[/color]%s to Little Mod. They can now silence other users.")
+        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Little Mod. They can now silence other users.")
     elif request.form["group"] == "user":
         if set_chat_user.group == "silent":
-            message = ("[color=#%s]%s[/color]%s unsilenced [color=#%s]%s[/color]%s.")
+            message = ("[color=#%s]%s[/color] unsilenced [color=#%s]%s[/color].")
         else:
-            message = ("[color=#%s]%s[/color]%s removed moderator status from [color=#%s]%s[/color]%s.")
+            message = ("[color=#%s]%s[/color] removed moderator status from [color=#%s]%s[/color].")
     elif request.form["group"] == "silent":
-        message = ("[color=#%s]%s[/color]%s silenced [color=#%s]%s[/color]%s.")
+        message = ("[color=#%s]%s[/color] silenced [color=#%s]%s[/color].")
 
     set_chat_user.group = request.form["group"]
 
@@ -202,8 +202,8 @@ def set_group():
         name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
-            set_chat_user.color, set_chat_user.name, " [[color=#"+set_chat_user.color+"]"+set_chat_user.acronym+"[/color]]" if len(set_chat_user.acronym) > 0 else "",
+            g.chat_user.color, g.chat_user.name,
+            set_chat_user.color, set_chat_user.name,
         ),
     ))
 
