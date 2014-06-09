@@ -353,7 +353,7 @@ def set_flag():
         if new_value == getattr(g.chat, request.form["flag"]):
             return "", 204
         setattr(g.chat, request.form["flag"], new_value)
-        message = ("[color=#%%s]%%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" switched %s %s.") % (
+        message = ("[color=#%%s]%%s[/color]%%s switched %s %s.") % (
             request.form["flag"], request.form["value"],
         )
 
@@ -367,9 +367,9 @@ def set_flag():
             return "", 204
         g.chat.publicity = request.form["value"]
         if g.chat.publicity == "listed":
-            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" listed the chat. It's now listed on the public rooms page."
+            message = "[color=#%s]%s[/color]%s listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
-            message = "[color=#%s]%s[/color]"+((" [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]") if len(g.chat_user.acronym) > 0 else "")+" unlisted the chat."
+            message = "[color=#%s]%s[/color]%s unlisted the chat."
     else:
         abort(400)
 
@@ -378,7 +378,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (
-            g.chat_user.color, g.chat_user.name,
+            g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else ""
         ),
     ))
 
@@ -492,9 +492,9 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color] [[color=#"+g.chat_user.color+"]%s[/color]].") % (
-                    old_color, old_name, old_color, old_acronym,
-                    g.chat_user.color, g.chat_user.name, g.chat_user.acronym,
+                text=("[color=#%s]%s[/color] [[color=#%s]%s[/color]] is now [color=#%s]%s[/color]%s.") % (
+                    old_color, old_name, " [[color=#"+old_color+"]"+old_acronym+"[/color]]" if len(old_acronym) > 0 else "",
+                    g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
                 ),
             ))
 
