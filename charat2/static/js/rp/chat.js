@@ -599,6 +599,7 @@ function updateChatPreview() {
         $('#preview').css('opacity','0.5');
         $('#aliasOffset').text(user.meta.username+":");
         aliasPreview = user.meta.username+": ";
+        $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
     if ($('#textInput').val().substr(0,1)=='/' && command[0] != '/ic' && command[0] != '/ooc') {
