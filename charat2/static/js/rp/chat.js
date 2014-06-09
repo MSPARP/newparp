@@ -838,7 +838,7 @@ $(function(){
                         user = command[1];
                         command.splice(0,2);
                         reason = command.join(" ");
-                        userAction(command[1], 'ban', reason);
+                        userAction(user, 'ban', reason);
                         $('#textInput').val('');
                     }
                     
