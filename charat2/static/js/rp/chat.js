@@ -206,6 +206,9 @@ function addLine(msg){
         if (msg.acronym) {
             alias = msg.acronym+": ";
         }
+        if (msg.type == 'ooc') {
+            alias = msg.user.username+": ";
+        }
     
         if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
             $(CONVERSATION_CONTAINER+' p:last').hide();
