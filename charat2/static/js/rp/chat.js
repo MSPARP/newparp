@@ -203,12 +203,8 @@ function addLine(msg){
         }
     
         var alias = "";
-        if (msg.type = 'ooc') {
-            alias = msg.user.username+": ";
-        } else {
-            if (msg.acronym) {
-                alias = msg.acronym+": ";
-            }
+        if (msg.acronym) {
+            alias = msg.acronym+": ";
         }
     
         if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
