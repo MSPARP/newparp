@@ -835,6 +835,7 @@ $(function(){
                 if ($('#textInput').val().charAt(0)=='/') {
                     var command = $('#textInput').val().split(' ');
                     if (command[0] == '/ban') {
+                        user = command[1];
                         command.splice(0,2);
                         reason = command.join(" ");
                         userAction(command[1], 'ban', reason);
