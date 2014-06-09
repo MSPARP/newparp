@@ -5,10 +5,8 @@ function desktopNotification(title,text,icon) {
             icon: icon
         });
         notification.onclick = function() {
-            try {
-                $(window).focus();
-                notification.close();
-            } catch(e) {}
+            $(window).focus();
+            notification.close();
         };
         setTimeout(function(){
             try {
