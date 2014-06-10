@@ -2,9 +2,7 @@
 {% block title%}Chat Rooms – Charat RP{% endblock %}
 {% block header %}
 <script>
-var logged_in={{'true' if logged_in else 'false'}};
-var chats = {{chats|tojson|safe}};
-var type = "{{type}}";
+var chats = {{rooms|tojson|safe}};
 </script>
 <script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
@@ -36,11 +34,6 @@ var type = "{{type}}";
         <div class="topborder"></div>
         <a id="goUser" href="">Settings</a>
         <div class="topborder"></div>
-        {% if logged_in %}
-        <a class="logout" href="{{url_for('logout')}}">Logout</a>
-        {% else %}
-        <a class="login" href="">Login</a>
-        {% endif %}
     </div>
 </div>
 
@@ -67,7 +60,7 @@ var type = "{{type}}";
                 </div>
             </div>
         </div>
-        <div class="titli">{% if type == None: %}ALL CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
+        <div class="titli">Rooms</div>
         <div id="under-page"></div>
     </div>
 </div>
