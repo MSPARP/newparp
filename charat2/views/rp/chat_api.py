@@ -353,7 +353,7 @@ def set_flag():
         if new_value == getattr(g.chat, request.form["flag"]):
             return "", 204
         setattr(g.chat, request.form["flag"], new_value)
-        message = ("[color=#%%s]%%s[/color]%%s switched %s %s.") % (
+        message = ("[color=#%%s]%%s[/color] switched %s %s.") % (
             request.form["flag"], request.form["value"],
         )
 
