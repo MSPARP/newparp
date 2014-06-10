@@ -9,9 +9,8 @@
 <ul>
 {% for room, users_online in rooms: %}
   <li>
-    <h3><a href="{{url_for("chat", url=room.url)}}">{{room.url}}</a> ({{users_online}} online)</h3>
+    <h3><a href="{{url_for("chat", url=room.url)}}">{{room.url}}</a> ({{room.online}} online)</h3>
     <p>{{room.topic}}</p>
   </li>
 {% endfor %}
 </ul>
-{{rooms}}
