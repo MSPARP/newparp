@@ -1005,11 +1005,11 @@ $(function(){
         });
         
         $('#metaOptions input').click(function() {
-            if ($(this).id != 'public') {
+            if ($(this).prop('id') != 'public') {
                 if ($(this).is(':checked') == true){
-                    setFlag($(this).id, 'on');
+                    setFlag($(this).prop('id'), 'on');
                 } else {
-                    setFlag($(this).id, 'off');
+                    setFlag($(this).prop('id'), 'off');
                 }
             } else {
                 if ($(this).is(':checked') == true){
