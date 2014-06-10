@@ -7,7 +7,7 @@
 </form>
 <h2>Listed rooms</h2>
 <ul>
-{% for room, users_online in rooms: %}
+{% for room in rooms: %}
   <li>
     <h3><a href="{{url_for("chat", url=room.url)}}">{{room.url}}</a> ({{room.online}} online)</h3>
     <p>{{room.topic}}</p>
