@@ -46,7 +46,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
         } else if ($('body.nobile').length>0) {
@@ -60,7 +60,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
             for (var i=1; i<chats.length; i+=2) {
@@ -71,7 +71,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
         } else {
@@ -86,7 +86,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
             for (var i=1; i<chats.length; i+=3) {
@@ -97,7 +97,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
             for (var i=2; i<chats.length; i+=3) {
@@ -108,7 +108,7 @@ function chatsUpdate(first) {
                     $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
                 }
                 if (chat.type == 'group') {
-                    $('<div>').addClass('topic').text(chat.topic).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+                    $('<div>').addClass('topic').text(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
                 }
             }
         }
