@@ -20,18 +20,17 @@ def rooms(fmt=None):
     rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
-
+    chat_dicts = []
+    for chat, online in rooms:
+        cd = chat.to_dict()
+        cd["online"] = online
+        chat_dicts.append(cd)
     if fmt == "json":
-        chat_dicts = []
-        for chat, online in rooms:
-            cd = chat.to_dict()
-            cd["online"] = online
-            chat_dicts.append(cd)
         return jsonify({
             "chats": chat_dicts,
         })
 
-    return render_template("rp/rooms.html", rooms=rooms)
+    return render_template("rp/rooms.html", rooms=chat_dicts)
 
 @use_db
 def logout():
