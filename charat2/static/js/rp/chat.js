@@ -135,7 +135,7 @@ function unreadNotifications() {
             $('#goChats').prop('href', '/chats').removeClass('unread');
         }
     }).complete(function() {
-        window.setTimeout(unreadNotifications, 40000);
+        window.setTimeout(unreadNotifications, 10000);
     });
 }
 
