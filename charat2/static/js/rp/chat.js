@@ -1005,14 +1005,14 @@ $(function(){
         });
         
         $('#metaOptions input').click(function() {
-            if (this.id != 'public') {
-                if (this.is(':checked') == true){
-                    setFlag(this.id, 'on');
+            if ($(this).id != 'public') {
+                if ($(this).is(':checked') == true){
+                    setFlag($(this).id, 'on');
                 } else {
-                    setFlag(this.id, 'off');
+                    setFlag($(this).id, 'off');
                 }
             } else {
-                if (this.is(':checked') == true){
+                if ($(this).is(':checked') == true){
                     setFlag('publicity', 'listed');
                 } else {
                     setFlag('publicity', 'unlisted');
