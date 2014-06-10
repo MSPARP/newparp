@@ -16,7 +16,10 @@ def home():
 @alt_formats(set(["json"]))
 @use_db
 def rooms(fmt=None):
-
+    logged_in = False
+    if g.user is not None:
+        logged_in = True
+    
     rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
@@ -30,7 +33,7 @@ def rooms(fmt=None):
             "chats": chat_dicts,
         })
 
-    return render_template("rp/rooms.html", rooms=chat_dicts)
+    return render_template("rp/rooms.html", rooms=chat_dicts, logged_in=logged_in)
 
 @use_db
 def logout():

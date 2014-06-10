@@ -2,9 +2,8 @@
 {% block title%}{% if type == None: %}Your{% else %}{{type|capitalize}}{% endif %} Chats – Charat RP{% endblock %}
 {% block header %}
 <script>
-var logged_in={{'true' if logged_in else 'false'}};
+var logged_in = {{'true' if logged_in else 'false'}};
 var chats = {{chats|tojson|safe}};
-var type = "{{type}}";
 </script>
 <script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
 <link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
