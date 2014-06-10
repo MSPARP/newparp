@@ -2,14 +2,12 @@ var ORIGINAL_TITLE = document.title;
 var current_mode;
 
 function unreadNotifications() {
-    var chats_url;
-    if (type=="None") {
-        chats_url = '/chats.json';
-    } else {
-        chats_url = '/chats/'+type+'.json';
+    var chats_url = document.URL+".json";
+    if (document.URL.substring(document.URL.length-1) == '/') {
+        chats_url = document.URL.substring(0,document.URL.length-1)+".json";
     }
     $.getJSON(chats_url, function(data) {
-        chats = data.chats;
+        var chats = data.chats;
         chatsUpdate(true);
     }).complete(function() {
         window.setTimeout(unreadNotifications, 10000);
