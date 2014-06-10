@@ -1,5 +1,5 @@
 {% extends "rp/base.html" %}
-{% block title%}{% if type == None: %}Your{% elif type == 'pm %}Private Message{% else %}{{type|capitalize}}{% endif %} Chats – Charat RP{% endblock %}
+{% block title%}{% if type == None: %}Your{% elif type == 'pm' %}Private Message{% else %}{{type|capitalize}}{% endif %} Chats – Charat RP{% endblock %}
 {% block header %}
 <script>
 var logged_in = {{'true' if logged_in else 'false'}};
