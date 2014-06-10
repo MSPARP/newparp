@@ -1,16 +1,75 @@
-<h2>Create a chat</h2>
-{% if create_chat_error: %}
-<p class="error">{{create_chat_error}}</p>
+{% extends "rp/base.html" %}
+{% block title%}Chat Rooms – Charat RP{% endblock %}
+{% block header %}
+<script>
+var logged_in={{'true' if logged_in else 'false'}};
+var chats = {{chats|tojson|safe}};
+var type = "{{type}}";
+</script>
+<script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/front.css')}}" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/chats.css')}}" />
+{% endblock %}
+
+{% block pager %}
+{% if paginator.page_count!=1 %}
+<div class="pager">
+{{paginator.pager(format='~5~')}}
+</div>
 {% endif %}
-<form action="{{url_for("create_chat")}}" method="post">
-  <p><input type="text" name="url" maxlength="50"><button type="submit">Create Room</button></p>
-</form>
-<h2>Listed rooms</h2>
-<ul>
-{% for room, users_online in rooms: %}
-  <li>
-    <h3><a href="{{url_for("chat", url=room.url)}}">{{room.url}}</a> ({{users_online}} online)</h3>
-    <p>{{room.topic}}</p>
-  </li>
-{% endfor %}
-</ul>
+{% endblock %}
+
+{% block content %}
+
+<div id="topbar">
+    <div id="toptitle">Charat RP</div>
+    <div id="topmenu">
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('home')}}">Home</a>
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+        <div class="topborder"></div>
+        <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Guide</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Settings</a>
+        <div class="topborder"></div>
+        {% if logged_in %}
+        <a class="logout" href="{{url_for('logout')}}">Logout</a>
+        {% else %}
+        <a class="login" href="">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="body">
+    <!-- Put in some noscript things -->
+    <div id="chat-pages" class="section">
+        <div id="page-div">
+            <div id="your-pages" class="section">
+                <div class="titli">YOUR CHATS</div>
+                <div class="card">
+                    <div class="chat-types">All</div>
+                    <div class="chat-types"><a href="/chats/group">Group</a></div>
+                    <div class="chat-types"><a href="/chats/pm">Private</a></div>
+                    <div class="chat-types"><a href="/chats/searched">Searched</a></div>
+                    <div class="chat-types"><a href="/chats/unread">Unread</a></div>
+                </div>
+            </div>
+            <div id="new-pages" class="section">
+                <div class="titli">NEW CHATS</div>
+                <div class="card">
+                    <div class="chat-types">Rooms</div>
+                    <div class="chat-types"><a href="">Random</a></div>
+                    <div class="chat-types"><a href="">Request</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="titli">{% if type == None: %}ALL CHATS{% else %}{{type|upper}} CHATS{% endif %}</div>
+        <div id="under-page"></div>
+    </div>
+</div>
+{% endblock %}
+
