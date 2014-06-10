@@ -492,8 +492,8 @@ def save():
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("[color=#%s]%s[/color]%s is now [color=#%s]%s[/color]%s.") % (
-                    old_color, old_name, " [[color=#"+old_color+"]"+old_acronym+"[/color]]" if len(old_acronym) > 0 else "",
+                text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
+                    g.user.username,
                     g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
                 ),
             ))
