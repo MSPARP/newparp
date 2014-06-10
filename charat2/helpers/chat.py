@@ -45,14 +45,14 @@ def mark_alive(f):
             g.chat_user.last_online = datetime.now()
             # Add them to the online list.
             g.redis.sadd("chat:%s:online" % g.chat.id, g.user.id)
-            # Send connection message. Or not, if they're silent.
+            # Send join message. Or not, if they're silent.
             if g.chat_user.group == "silent":
                 send_userlist(g.db, g.redis, g.chat)
             else:
                 send_message(g.db, g.redis, Message(
                     chat_id=g.chat.id,
                     user_id=g.user.id,
-                    type="connect",
+                    type="join",
                     name=g.chat_user.name,
                     text=("[color=#%s]%s[/color] connected.") % (
                         g.chat_user.color, g.user.username,
