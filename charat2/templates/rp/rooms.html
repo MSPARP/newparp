@@ -42,7 +42,11 @@ var chats = {{rooms|tojson|safe}};
             <div id="your-pages" class="section">
                 <div class="titli">YOUR CHATS</div>
                 <div class="card">
-                    // CARD
+                    <div class="chat-types">All</div>
+                    <div class="chat-types"><a href="/chats/group">Group</a></div>
+                    <div class="chat-types"><a href="/chats/pm">Private</a></div>
+                    <div class="chat-types"><a href="/chats/searched">Searched</a></div>
+                    <div class="chat-types"><a href="/chats/unread">Unread</a></div>
                 </div>
             </div>
             <div id="new-pages" class="section">
@@ -54,7 +58,7 @@ var chats = {{rooms|tojson|safe}};
                 </div>
             </div>
         </div>
-        <div class="titli">Chat Rooms</div>
+        <div class="titli">CHAT ROOMS</div>
         <div id="under-page"></div>
     </div>
 </div>
