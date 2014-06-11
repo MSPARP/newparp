@@ -1022,9 +1022,9 @@ $(function(){
 
         $('#hide-topic').click(function() {
             if (show_topic) {
-                $('#topic').show();
-            } else {
                 $('#topic').hide();
+            } else {
+                $('#topic').show();
             }
             show_topic = !show_topic;
             return false;
