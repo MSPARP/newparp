@@ -1041,9 +1041,25 @@ $(function(){
             setSidebar('chatList');
         });
 
+        $('#chatListAdd').on('click', function() {
+            $.getJSON('/chats.json', function(data){
+                $('#chatPick .list').empty();
+                for (i in data.chats) {
+                    chatData = data.chats[i];
+                    $('<div>').prop('id', chatData.url).addClass('card').appendTo('#chatPick .list');
+                    $('<h1>').addClass('titi').text(chatData.title).appnedTo('#'+chatData.url);
+                }
+            });
+            setSidebar('chatPick');
+        });
+
+        $('#chatPick .selection').on('click', function() {
+            addChat($(this).prop('id'));
+        });
+
         $('#chatListCancel').on('click', function() {
             setSidebar('userList');
-        })
+        });
 
         $('#hide-topic').click(function() {
             if (show_topic) {
