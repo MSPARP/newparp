@@ -1046,16 +1046,15 @@ $(function(){
                 console.log(data);
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
-                    chatData = data.chats[i];
-                    $('<div>').prop('id', chatData.url).addClass('card').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url);
+                    var chatData = data.chats[i];
+                    $('<div>').prop('id', chatData.id).addClass('card selection').appendTo('#chatPick .list');
+                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.id);
+                    $('#'+chatData.id).on('click', function() {
+                        console.log(chatData.title);
+                    });
                 }
             });
             setSidebar('chatPick');
-        });
-
-        $('#chatPick .selection').on('click', function() {
-            addChat($(this).prop('id'));
         });
 
         $('.chatListCancel').on('click', function() {
