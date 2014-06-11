@@ -719,7 +719,7 @@ body > #save {
     cursor: pointer;
 }
 
-#chatListAdd .titi, #chatListCancel .titi {
+#chatListAdd .titi, .chatListCancel .titi {
     margin-bottom: 5px;
 }
 

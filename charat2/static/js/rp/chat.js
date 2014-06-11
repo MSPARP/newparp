@@ -1057,7 +1057,7 @@ $(function(){
             addChat($(this).prop('id'));
         });
 
-        $('#chatListCancel').on('click', function() {
+        $('.chatListCancel').on('click', function() {
             setSidebar('userList');
         });
 
