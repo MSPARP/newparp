@@ -719,6 +719,10 @@ body > #save {
     cursor: pointer;
 }
 
+#chatListAdd .titi {
+    margin-bottom: 0;
+}
+
 /* Mobile */
 
 body.mobile .sidebar {
