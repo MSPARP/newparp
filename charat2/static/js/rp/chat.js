@@ -1051,10 +1051,11 @@ $(function(){
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
-                    $('<div>').prop('id', chatData.id).addClass('card selection').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.id);
-                    $('#'+chatData.id).off('click');
-                    $('#'+chatData.id).on('click', function() {
+                    var chatID = chatData.id;
+                    $('<div>').prop('id', chatID).addClass('card selection').appendTo('#chatPick .list');
+                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatID);
+                    $('#'+chatID).off('click');
+                    $('#'+chatID).on('click', function() {
                         addChatUrl($(this).prop(id));
                     });
                 }
