@@ -73,7 +73,7 @@ var confirm_disconnect = user.meta.confirm_disconnect;
 var desktop_notifications = true; //user.meta.desktop_notifications;
 var show_bbcode = user.meta.show_bbcode;
 var show_bbcode_color = true; // USER META ADD
-var show_description = user.meta.show_description;
+var show_topic = true; //user.meta.show_description;
 // Show and Hide different message types
 var show_system_messages = user.meta.show_system_messages;
 var show_all_info = true; // USER META ADD
@@ -1021,14 +1021,12 @@ $(function(){
         // NEW TOPIC CHANGE FUNCTION
 
         $('.hidedesc').click(function() {
-            if (topicHidden) {
-                topichide = 0;
+            if (show_topic) {
                 $('#topic').show();
             } else {
-                topichide = 1;
                 $('#topic').hide();
             }
-            topicHidden = !topicHidden;
+            show_topic = !show_topic;
             return false;
         });
 

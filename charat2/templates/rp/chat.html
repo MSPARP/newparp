@@ -67,7 +67,7 @@
     <div class="sidebarContain">
         {% if chat.type=='group' %}
             <div id="groupMeta" class="card">
-                <h1 class="titi hidedesc">{{chat.title}}</h1>
+                <h1 id="chat-title" class="titi">{{chat.title}}</h1>
                 <p id="topic">{{chat.topic}}</p>
                 <button type="button" id="topicButton" class="metaOptions">Set topic</button>
                 <ul id="metaResults">

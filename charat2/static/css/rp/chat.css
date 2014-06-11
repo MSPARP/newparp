@@ -534,16 +534,16 @@ body > #save {
     display: none;
 }
 
+#chat-title, #hide-topic {
+    cursor: pointer;
+}
+
 .sidebar input[name="name"] {
     width: 90%;
 }
 
 .sidebar input[name="acronym"] {
     margin-bottom: 4px;
-}
-
-.sidebar .hidedesc {
-    cursor: pointer;
 }
 
 .sidebar .select-bind {
