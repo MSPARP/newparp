@@ -1050,7 +1050,7 @@ $(function(){
                     $('<div>').prop('id', chatData.id).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.id);
                     $('#'+chatData.id).on('click', function() {
-                        console.log(chatData.title);
+                        addChat(chatData.url);
                     });
                 }
             });
