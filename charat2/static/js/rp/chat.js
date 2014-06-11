@@ -1047,7 +1047,7 @@ $(function(){
                 for (i in data.chats) {
                     chatData = data.chats[i];
                     $('<div>').prop('id', chatData.url).addClass('card').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appnedTo('#'+chatData.url);
+                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url);
                 }
             });
             setSidebar('chatPick');
