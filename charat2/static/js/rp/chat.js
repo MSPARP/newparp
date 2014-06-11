@@ -157,6 +157,7 @@ function addChatData(data) {
 
 function addChatUrl(url) {
     var chatData = getChatData(url);
+    console.log(chatData);
     chats[chatData.id] = chatData;
 }
 
@@ -1047,7 +1048,6 @@ $(function(){
 
         $('#chatListAdd').on('click', function() {
             $.getJSON('/chats.json', function(data){
-                console.log(data);
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
