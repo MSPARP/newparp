@@ -1022,8 +1022,10 @@ $(function(){
 
         $('#hide-topic').click(function() {
             if (show_topic) {
+                $('#topic .text').text('Show Topic');
                 $('#topic').hide();
             } else {
+                $('#topic .text').text('Hide Topic');
                 $('#topic').show();
             }
             show_topic = !show_topic;
