@@ -704,21 +704,8 @@ body > #save {
 
 /* Moderation */
 
-.metaOptions, .modPowers #metaResults, #metaResults li {
-    display: none;
-}
-
-.modPowers .metaOptions {
-    display: block;
-}
-
 #metaOptions label {
     width: 100%;
-}
-
-#userList.admin .metaOptions, #userList.creator .metaOptions, #userList.mod .metaOptions,
-#userList.mod2 .metaOptions, #userList.mod3 .metaOptions {
-    display: block;
 }
 
 /* Mobile */
