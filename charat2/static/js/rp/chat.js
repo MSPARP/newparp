@@ -45,7 +45,7 @@ var USER_LIST_ID = '#users';
 
 var chats = {};
 
-chats[chat.url] = chat;
+chats[chat.id] = chat;
 
 var missed_messages = 0;
 
@@ -143,15 +143,20 @@ function unreadNotifications() {
     });
 }
 
+// Chat List Management
 function getChatData(url) {
     $.getJSON('/'+url+'.json', function(data) {
         chatData = data.chat;
-        chats[chatData.url] = chatData;
+        return chatData;
     });
 }
 
+function addChat(url) {
+    var chatData = getChatData(url);
+    chats[chatData.id] = chatData;
+}
+
 function startChat() {
-    getChatData('theoubliette');
     $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
     if (!$(document.body).hasClass('mobile')) {
         $("#textInput").focus();
