@@ -147,6 +147,7 @@ function unreadNotifications() {
 function getChatData(url) {
     $.getJSON('/'+url+'.json', function(data) {
         chatData = data.chat;
+        console.log(chatData);
         return chatData;
     });
 }
