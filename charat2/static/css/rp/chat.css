@@ -708,12 +708,12 @@ body > #save {
     width: 100%;
 }
 
-.metaOptions li input {
+.metaOptions li label {
     pointer-events: none;
 }
 
-#userList.admin .metaOptions li input, #userList.creator .metaOptions li input, #userList.mod .metaOptions li input,
-#userList.mod2 .metaOptions li input, #userList.mod3 .metaOptions li input {
+#userList.admin .metaOptions li label, #userList.creator .metaOptions li label, #userList.mod .metaOptions li label,
+#userList.mod2 .metaOptions li label, #userList.mod3 .metaOptions li label {
     pointer-events: auto;
 }
 
