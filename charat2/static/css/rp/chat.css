@@ -713,6 +713,12 @@ body > #save {
     pointer-events: auto;
 }
 
+/* Chat List */
+
+#chatListAdd {
+    cursor: pointer;
+}
+
 /* Mobile */
 
 body.mobile .sidebar {

@@ -1018,7 +1018,11 @@ $(function(){
             }
         });
         
-        // NEW TOPIC CHANGE FUNCTION
+        // Clicking the title induces a chat-change function
+
+        $('#chat-title').on('click', function() {
+            setSidebar('chatList');
+        });
 
         $('#hide-topic').click(function() {
             if (show_topic) {
