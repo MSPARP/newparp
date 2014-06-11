@@ -1024,6 +1024,10 @@ $(function(){
             setSidebar('chatList');
         });
 
+        $('#chatListCancel').on('click', function() {
+            setSidebar('userList');
+        })
+
         $('#hide-topic').click(function() {
             if (show_topic) {
                 $('#topic .text').text('Show Topic');
