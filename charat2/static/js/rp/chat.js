@@ -43,6 +43,10 @@ var USER_LIST_ID = '#users';
 
 /* VARIABLES */
 
+var chats;
+
+chats[chat.url] = chat;
+
 var missed_messages = 0;
 
 var chat_topic = chat.topic;
@@ -139,7 +143,15 @@ function unreadNotifications() {
     });
 }
 
+function getChatData(url) {
+    $.getJSON('/'+url+'.json', function(data) {
+        chatData = data.chat;
+        chats[chatData.url] = chatData;
+    });
+}
+
 function startChat() {
+    getChatData('theoubliette');
     $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
     if (!$(document.body).hasClass('mobile')) {
         $("#textInput").focus();
