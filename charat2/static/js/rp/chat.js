@@ -602,7 +602,7 @@ function updateChatPreview() {
         $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
-    if ($('#textInput').val().substr(0,1)=='/' && command[0] != '/ic' && command[0] != '/ooc') {
+    if (($('#textInput').val().substr(0,1)=='/' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
@@ -679,7 +679,7 @@ function updateChatPreview() {
         }
     }
     
-    textPreview = jQuery.trim(textPreview);
+    textPreview = $.trim(textPreview);
     
     if (textPreview.length>0) {
         $('#preview').html(bbEncode(aliasPreview + textPreview));
@@ -822,13 +822,13 @@ $(function(){
         $('.controls').submit(function() {
             $('#textInput').blur();
             $('#textInput').focus();
-            if (jQuery.trim($('#textInput').val())=='/ooc') {
+            if ($.trim($('#textInput').val())=='/ooc') {
                 if (!ooc_on) {
                     $('.ooc-button').click();
                 }
                 $('#textInput').val('');
                 return false;
-            } else if (jQuery.trim($('#textInput').val())=='/ic') {
+            } else if ($.trim($('#textInput').val())=='/ic') {
                 if (ooc_on) {
                     $('.ooc-button').click();
                 }
@@ -963,7 +963,7 @@ $(function(){
             // Trim everything first
             formInputs = $('#settings').find('input, select');
             for (i=0; i<formInputs.length; i++) {
-                formInputs[i].value = jQuery.trim(formInputs[i].value)
+                formInputs[i].value = $.trim(formInputs[i].value)
             }
             if ($('input[name="name"]').val()=="") {
                 alert("You can't chat with a blank name!");
