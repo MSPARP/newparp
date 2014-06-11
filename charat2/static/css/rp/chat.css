@@ -708,6 +708,15 @@ body > #save {
     width: 100%;
 }
 
+.metaOptions li input {
+    pointer-events: none;
+}
+
+#userList.admin .metaOptions li input, #userList.creator .metaOptions li input, #userList.mod .metaOptions li input,
+#userList.mod2 .metaOptions li input, #userList.mod3 .metaOptions li input {
+    pointer-events: auto;
+}
+
 /* Mobile */
 
 body.mobile .sidebar {
