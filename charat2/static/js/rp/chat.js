@@ -1043,6 +1043,7 @@ $(function(){
 
         $('#chatListAdd').on('click', function() {
             $.getJSON('/chats.json', function(data){
+                console.log(data);
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     chatData = data.chats[i];
