@@ -74,11 +74,6 @@
                     <div class="line-behind"></div>
                     <div class="text">Hide Topic</div>
                 </div>
-                <ul id="metaResults">
-                    <li id="publicityResult" style="display:list-item;">This chat is {{chat.publicity}}.</li>
-                    <li id="autosilenceResult" {% if chat.autosilence == true %} style="display:list-item;" {% endif %} >New users are auto-silenced.</li>
-                    <li id="nsfwResult" {% if chat.nsfw == true %} style="display:list-item;" {% endif %} >This chat is not safe for work.</li>
-                </ul>
             </div>
             <div class="card metaOptions stoptions">
                 <h1 class="titi">CHAT SETTINGS</h1>
@@ -86,6 +81,11 @@
                     <li style="display:none;"><label><input type="checkbox" id="public" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Public Chat</div></label></li>
                     <li><label><input type="checkbox" id="autosilence" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Autosilence</div></label></li>
                     <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">NSFW</div></label></li>
+                </ul>
+                <ul id="metaResults">
+                    <li id="publicityResult" style="display:list-item;">This chat is {{chat.publicity}}.</li>
+                    <li id="autosilenceResult" {% if chat.autosilence == true %} style="display:list-item;" {% endif %} >New users are auto-silenced.</li>
+                    <li id="nsfwResult" {% if chat.nsfw == true %} style="display:list-item;" {% endif %} >This chat is not safe for work.</li>
                 </ul>
            </div>
         {% endif %}

@@ -538,10 +538,6 @@ body > #save {
     cursor: pointer;
 }
 
-#hide-topic {
-    margin-bottom: 5px;
-}
-
 #hide-topic .text {
     position: relative;
     color: #999;
