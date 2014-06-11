@@ -538,6 +538,16 @@ body > #save {
     cursor: pointer;
 }
 
+#hide-topic .text {
+    background-color: inherit;
+}
+
+#hide-topic .line-behind {
+    position: relative;
+    top: 12px;
+    border-bottom: solid 1px #DDDDDD;
+}
+
 .sidebar input[name="name"] {
     width: 90%;
 }

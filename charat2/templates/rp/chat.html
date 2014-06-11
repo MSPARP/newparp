@@ -70,8 +70,11 @@
                 <h1 id="chat-title" class="titi">{{chat.title}}</h1>
                 <p id="topic">{{chat.topic}}</p>
                 <button type="button" id="topicButton" class="metaOptions">Set topic</button>
+                <div id="hide-topic" class="line-behind-wrapper">
+                    <div class="text">Hide Topic</div>
+                    <div class="line-through"></div>
+                </div>
                 <ul id="metaResults">
-                    <div class="bar"></div>
                     <li id="publicityResult" style="display:list-item;">This chat is {{chat.publicity}}.</li>
                     <li id="autosilenceResult" {% if chat.autosilence == true %} style="display:list-item;" {% endif %} >New users are auto-silenced.</li>
                     <li id="nsfwResult" {% if chat.nsfw == true %} style="display:list-item;" {% endif %} >This chat is not safe for work.</li>
