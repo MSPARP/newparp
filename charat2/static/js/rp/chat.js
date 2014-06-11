@@ -1029,7 +1029,6 @@ $(function(){
                 $('#topic').show();
             }
             show_topic = !show_topic;
-            return false;
         });
 
         $(CONVERSATION_CONTAINER).scroll(function(){

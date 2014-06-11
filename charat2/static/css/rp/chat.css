@@ -226,7 +226,7 @@ body.mobile .sidebarContain {
     font-weight: 400;
     background-color: #fffffb;
     color: #6A936B;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     padding: 10px;
 }
 
@@ -598,10 +598,6 @@ body > #save {
 .sidebar label button a {
     color: #fffffb;
     text-decoration: none;
-}
-
-#sharing {
-    margin-bottom: 20px;
 }
 
 /* User List */
