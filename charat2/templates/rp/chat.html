@@ -83,6 +83,10 @@
                     <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">NSFW</div></label></li>
                 </ul>
            </div>
+        {% else %}
+            <div class="card">
+                <h1 id="chat-title" class="titi">{{chat.title}}</h1>
+            </div>
         {% endif %}
         <div class="card">
             <h1 class="titi">CHAT</h1>
@@ -192,6 +196,14 @@
         </div>
     </div>
 </form>
+
+<div id="chatList" class="sidebar">
+    <div class="sidebarContain">
+        <div class="card">
+            <h1 id="chat-title" class="titi">{{chat.title}}</h1>
+        </div>
+    </div>
+</div>
 
 <form class="controls">
     <div id="previewWrapper"><div id="preview"></div></div>
