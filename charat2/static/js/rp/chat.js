@@ -43,7 +43,7 @@ var USER_LIST_ID = '#users';
 
 /* VARIABLES */
 
-var chats;
+var chats = {};
 
 chats[chat.url] = chat;
 
