@@ -151,7 +151,11 @@ function getChatData(url) {
     });
 }
 
-function addChat(url) {
+function addChatData(data) {
+    chats[data.id] = data;
+}
+
+function addChatUrl(url) {
     var chatData = getChatData(url);
     chats[chatData.id] = chatData;
 }
@@ -1050,7 +1054,7 @@ $(function(){
                     $('<div>').prop('id', chatData.id).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.id);
                     $('#'+chatData.id).on('click', function() {
-                        addChat(chatData.url);
+                        addChatData(chatData);
                     });
                 }
             });
