@@ -1054,13 +1054,13 @@ $(function(){
                     var chatID = chatData.id;
                     $('<div>').prop('id', chatID).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatID);
-                    $('#'+chatID).off('click');
-                    $('#'+chatID).on('click', function() {
-                        addChatUrl($(this).prop(id));
-                    });
                 }
             });
             setSidebar('chatPick');
+        });
+
+        $('#chatPick .selection').on('click', function() {
+            addChatUrl($(this).prop(id));
         });
 
         $('.chatListCancel').on('click', function() {
