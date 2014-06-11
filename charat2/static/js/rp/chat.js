@@ -1052,7 +1052,7 @@ $(function(){
                 for (i in data.chats) {
                     var chatData = data.chats[i];
                     $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\\\/"));
+                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
                 }
             });
             setSidebar('chatPick');
