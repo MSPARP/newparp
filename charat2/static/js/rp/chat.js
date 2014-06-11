@@ -1020,7 +1020,7 @@ $(function(){
         
         // NEW TOPIC CHANGE FUNCTION
 
-        $('.hidedesc').click(function() {
+        $('#hide-topic').click(function() {
             if (show_topic) {
                 $('#topic').show();
             } else {
