@@ -23,7 +23,7 @@ a#logAnchor {
 
 .bar {
     display: block;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px #dddddd;
     width: 100%;
     margin-bottom: 8px;
 }
@@ -398,7 +398,7 @@ body.withSidebar.mobile .controls {
     display: none;
     padding: 5px;
     overflow: hidden;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px #dddddd;
 }
 
 #control-container {
@@ -539,13 +539,19 @@ body > #save {
 }
 
 #hide-topic .text {
-    background-color: inherit;
+    position: relative;
+    color: #dddddd;
+    background-color: #fffffb;
+    text-align: center;
+    width: 100px;
+    margin: auto;
+    z-index: 1;
 }
 
 #hide-topic .line-behind {
     position: relative;
     top: 12px;
-    border-bottom: solid 1px #DDDDDD;
+    border-bottom: solid 1px #dddddd;
 }
 
 .sidebar input[name="name"] {
