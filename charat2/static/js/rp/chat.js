@@ -145,11 +145,12 @@ function unreadNotifications() {
 
 // Chat List Management
 function getChatData(url) {
+    var chatGetData;
     $.getJSON('/'+url+'.json', function(data) {
         chatData = data.chat;
-        console.log(chatData);
-        return chatData;
+        chatGetData = chatData;
     });
+    return chatGetData;
 }
 
 function addChatData(data) {
