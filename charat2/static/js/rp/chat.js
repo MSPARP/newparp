@@ -1047,7 +1047,7 @@ $(function (){
                     var chatData = data.chats[i];
                     $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
-                    $('#'+chatData.url.replace(/\//g, "\\\\/")).on('click', function () {
+                    $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
                         addChatUrl($(this).prop('id'));
                     });
                 }
