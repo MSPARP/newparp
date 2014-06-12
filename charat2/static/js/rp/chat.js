@@ -43,9 +43,7 @@ var USER_LIST_ID = '#users';
 
 /* VARIABLES */
 
-var chats = {};
-
-chats[chat.id] = chat;
+var chats = [chat.url];
 
 var missed_messages = 0;
 
@@ -144,18 +142,25 @@ function unreadNotifications() {
 }
 
 // Chat List Management
-function addChatUrl(url) {
+function addChat(url) {
+    chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        chatData = data.chat;
-        chats[chatData.id] = chatData;
-        $('<div>').prop('id', chatData.url).html('<h1>'+$('<div>').text(chatData.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
+        $('<div>').prop('id', data.chat.url).html('<h1>'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
     });
 }
 
-function addChatData(data) {
-    chats[data.id] = data;
-    $('<div>').prop('id', data.url).html('<h1>'+$('<div>').text(data.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
+function switchChat(url) {
+    $.getJSON('/'+url+'.json', function (data) {
+        chat = data.chat;
+        latestNum = data.latest_num;
+        $('#convo').empty();
+        messageParse(data.messages);
+        //change character data
+        //change meta option data
+    });
 }
+
+// Initialize Chat Page
 
 function startChat() {
     $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
@@ -1050,7 +1055,7 @@ $(function (){
                     $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
                     $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
-                        addChatUrl($(this).prop('id'));
+                        addChat($(this).prop('id'));
                         setSidebar('chatList');
                     });
                 }
