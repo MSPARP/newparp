@@ -151,16 +151,14 @@ function addChat(url) {
 
 function switchChat(url) {
     $('#convo').empty();
-    window.clearTimeout(metaTimeout);
-    window.clearTimeout(messageTimeout);
+    chat_state = 'inactive';
     $.getJSON('/'+url+'.json', function (data) {
         chat = data.chat;
         latestNum = data.latest_num;
         messageParse(data.messages);
-        getMeta(true);
-        getMessages();
         //change character data
         //change meta option data
+        chat_state = 'chat';
     });
 }
 
