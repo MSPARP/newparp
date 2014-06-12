@@ -151,8 +151,8 @@ function addChat(url) {
 
 function switchChat(url) {
     $('#convo').empty();
-    clearTimeout(metaTimeout);
-    clearTimeout(messageTimeout);
+    window.clearTimeout(metaTimeout);
+    window.clearTimeout(messageTimeout);
     $.getJSON('/'+url+'.json', function (data) {
         chat = data.chat;
         latestNum = data.latest_num;
