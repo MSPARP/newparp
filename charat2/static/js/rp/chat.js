@@ -175,7 +175,7 @@ function startChat() {
     var den = $(CONVERSATION_CONTAINER).prop("scrollHeight");
     $(window).resize(function (e) {
         var lon = den-crom;
-        if (lon <= 50){
+        if (lon <= 50) {
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         }
     });
@@ -398,7 +398,7 @@ function getMessages() {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
-            messageTimeout = setTimeout(getMessages, 50);
+            messageTimeout = window.setTimeout(getMessages, 50);
         } else {
             // Disconnected methods
         }
@@ -418,7 +418,7 @@ function getMeta(first_join) {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
-            metaTimeout = setTimeout(getMeta, 50);
+            metaTimeout = window.setTimeout(getMeta, 50);
         }
         if (first_join) {
             unreadNotifications();
