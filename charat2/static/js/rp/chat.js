@@ -1056,6 +1056,10 @@ $(function(){
             console.log('test');
         });
 
+        $('#chatPick .selection').on('click', function() {
+            console.log('test');
+        });
+
         $('.chatListCancel').on('click', function() {
             setSidebar('userList');
         });
