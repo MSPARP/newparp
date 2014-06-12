@@ -151,14 +151,16 @@ function addChat(url) {
 
 function switchChat(url) {
     $('#convo').empty();
-    chat_state = 'inactive';
+    messageAjax.abort();
+    metaAjax.abort();
     $.getJSON('/'+url+'.json', function (data) {
         chat = data.chat;
         latestNum = data.latest_num;
         messageParse(data.messages);
+        getMeta(true);
+        getMessages();
         //change character data
         //change meta option data
-        chat_state = 'chat';
     });
 }
 
@@ -388,11 +390,11 @@ function setFlag(flag,val) {
     $.post(SET_FLAG_URL,actionData);
 }
 
-var messageTimeout = null;
+var messageAjax = null;
 
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    $.post(CHAT_MESSAGES, messageData, function (data) {
+    messageAjax = $.post(CHAT_MESSAGES, messageData, function (data) {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
@@ -403,7 +405,7 @@ function getMessages() {
     });
 }
 
-var metaTimeout = null;
+var metaAjax = null;
 
 function getMeta(first_join) {
     first_join = (typeof first_join === "undefined") ? false : first_join;
@@ -412,7 +414,7 @@ function getMeta(first_join) {
     } else {
         var messageData = {'chat_id': chat['id'], 'after': latestNum};
     }
-    $.post(CHAT_META, messageData, function (data) {
+    metaAjax = $.post(CHAT_META, messageData, function (data) {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
