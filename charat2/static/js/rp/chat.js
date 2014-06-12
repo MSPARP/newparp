@@ -1049,6 +1049,7 @@ $(function (){
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
                     $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
                         addChatUrl($(this).prop('id'));
+                        setSidebar('chatList');
                     });
                 }
             });
