@@ -1053,6 +1053,7 @@ $(function(){
         });
 
         $('#chatPick .selection').on('click', function() {
+            console.log($(this).prop('id'));
             addChatUrl($(this).prop('id'));
         });
 
