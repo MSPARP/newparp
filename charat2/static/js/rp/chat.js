@@ -130,7 +130,7 @@ function isChecked(id) {
 }
 
 function unreadNotifications() {
-    $.getJSON('/chats/unread.json', function(data) {
+    $.getJSON('/chats/unread.json', function (data) {
         if (data.total!=0) {
             $('#unread-notifier').show().text(data.total+'!');
             $('#goChats').prop('href', '/chats/unread').addClass('unread');
@@ -138,14 +138,14 @@ function unreadNotifications() {
             $('#unread-notifier').hide();
             $('#goChats').prop('href', '/chats').removeClass('unread');
         }
-    }).complete(function() {
+    }).complete(function () {
         window.setTimeout(unreadNotifications, 10000);
     });
 }
 
 // Chat List Management
 function addChatUrl(url) {
-    $.getJSON('/'+url+'.json', function(data) {
+    $.getJSON('/'+url+'.json', function (data) {
         chatData = data.chat;
         chats[chatData.id] = chatData;
     });
@@ -162,7 +162,7 @@ function startChat() {
     }
     var crom = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
     var den = $(CONVERSATION_CONTAINER).prop("scrollHeight");
-    $(window).resize(function(e) {
+    $(window).resize(function (e) {
         var lon = den-crom;
         if (lon <= 50){
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
@@ -309,7 +309,7 @@ function generateUserList(user_data) {
             user_list[list_user.meta.username] = list_user;
 
             $('.user_buttons').hide();
-            $('#user'+list_user.meta.user_id).on('click', function() {
+            $('#user'+list_user.meta.user_id).on('click', function () {
                 var buttons_shown = $(this).find('.user_buttons').is(':visible');
                 $('.user_buttons').hide();
                 if (buttons_shown) {
@@ -326,7 +326,7 @@ function generateUserList(user_data) {
         $('#user'+list_user.meta.user_id+' .set li').off('click');
         $('#user'+list_user.meta.user_id+' .user_action li').off('click');
         
-        $('#user'+list_user.meta.user_id+' .set li').on('click', function() {
+        $('#user'+list_user.meta.user_id+' .set li').on('click', function () {
             var set_group = $(this).attr('class');
             if (set_group == 'unsilent') {
                 set_group = 'user';
@@ -334,7 +334,7 @@ function generateUserList(user_data) {
             setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, set_group);
         });
         
-        $('#user'+list_user.meta.user_id+' .user_action li').on('click', function() {
+        $('#user'+list_user.meta.user_id+' .user_action li').on('click', function () {
             if ($(this).attr('class') != 'ban') {
                 userAction(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, $(this).attr('class'));
             } else {
@@ -344,7 +344,7 @@ function generateUserList(user_data) {
         
     }
 
-    $(USER_LIST_ID+" .username").each(function() {
+    $(USER_LIST_ID+" .username").each(function () {
         var in_list = false;
         for (var i=0; i<user_data.length; i++) {
             if ($(this).text() == user_data[i].meta.username) {
@@ -381,9 +381,9 @@ function setFlag(flag,val) {
 
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    $.post(CHAT_MESSAGES, messageData, function(data) {
+    $.post(CHAT_MESSAGES, messageData, function (data) {
         messageParse(data);
-    }, "json").complete(function() {
+    }, "json").complete(function () {
         if (chat_state=='chat') {
             window.setTimeout(getMessages, 50);
         } else {
@@ -394,9 +394,9 @@ function getMessages() {
 
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    $.post(CHAT_MESSAGES, messageData, function(data) {
+    $.post(CHAT_MESSAGES, messageData, function (data) {
         messageParse(data);
-    }, "json").complete(function() {
+    }, "json").complete(function () {
         if (chat_state=='chat') {
             window.setTimeout(getMessages, 50);
         } else {
@@ -412,9 +412,9 @@ function getMeta(first_join) {
     } else {
         var messageData = {'chat_id': chat['id'], 'after': latestNum};
     }
-    $.post(CHAT_META, messageData, function(data) {
+    $.post(CHAT_META, messageData, function (data) {
         messageParse(data);
-    }, "json").complete(function() {
+    }, "json").complete(function () {
         if (chat_state=='chat') {
             window.setTimeout(getMeta, 50);
         }
@@ -731,7 +731,7 @@ function previewToggle() {
 
 // CUSTOM ALERTS, NO MORE alert();
 
-$(function(){
+$(function (){
     if (document.cookie=="") {
         // NOTIFY USER THAT THEY CAN'T CHAT WITHOUT COOKIES
     } else {
@@ -751,7 +751,7 @@ $(function(){
         /* START UP */
         startChat();
 
-        $('#control-buttons .ooc-button, #oocToggle input').on('click', function() {
+        $('#control-buttons .ooc-button, #oocToggle input').on('click', function () {
             if (ooc_on) {
                 if (type_force == 'me') {
                     type_force = '';
@@ -775,7 +775,7 @@ $(function(){
             updateChatPreview();
         });
 
-        $('#control-buttons .me-button').on('click', function() {
+        $('#control-buttons .me-button').on('click', function () {
             if (type_force == "me") {
                 type_force = '';
                 $('#control-buttons .me-button').css('background-color','');
@@ -792,10 +792,10 @@ $(function(){
             updateChatPreview();
         });
 
-        $('#notifications').on('click', function(){
+        $('#notifications').on('click', function (){
             try {
                 if (Notification.permission != 'granted') {
-                    Notification.requestPermission(function(e){
+                    Notification.requestPermission(function (e){
                         $('#notifications').prop('class', e);
                         if (e == 'granted') {
                             $('#notifications .deskset').prop('checked', 'checked');
@@ -806,11 +806,11 @@ $(function(){
             } catch(e) {}
         });
         
-        $('#notifications .deskset').on('click', function(){
+        $('#notifications .deskset').on('click', function (){
             desktop_notifications = $('#notifications .deskset').is(':checked');
         });
         
-        $('#topbar .right span').click(function() {
+        $('#topbar .right span').click(function () {
             if ($(this).prop('class') == current_sidebar) {
                 current_sidebar = null;
                 setSidebar(current_sidebar);
@@ -821,7 +821,7 @@ $(function(){
         });
         
         $('#topic').html(bbEncode($('#topic').text()));
-        $('#convo span').each(function() {
+        $('#convo span').each(function () {
             line = bbEncode($(this).find('.message').text());
             $(this).find('.message').html(line);
             $(this).find('.info .right .post_timestamp').text(getTimestamp($(this).find('.info .right .post_timestamp').text()));
@@ -835,7 +835,7 @@ $(function(){
             goBottom(CONVERSATION_CONTAINER);
         }
         
-        $('.controls').submit(function() {
+        $('.controls').submit(function () {
             $('#textInput').blur();
             $('#textInput').focus();
             if ($.trim($('#textInput').val())=='/ooc') {
@@ -935,7 +935,7 @@ $(function(){
             return false;
         });
         
-        $('#topicButton').on('click', function() {
+        $('#topicButton').on('click', function () {
             $('#textInput').val('/topic '+chat_topic);
             updateChatPreview();
             if ($('body.mobile').length>0) {
@@ -945,7 +945,7 @@ $(function(){
 
         $('#textInput').change(updateChatPreview).keyup(updateChatPreview).change();
 
-        $("textarea#textInput").on('keydown', function(e) {
+        $("textarea#textInput").on('keydown', function (e) {
             if (e.keyCode == 13 && !e.shiftKey)
             {
                 e.preventDefault();
@@ -953,29 +953,29 @@ $(function(){
             }
         });
 
-        $("#statusInput").on('keydown', function(e) {
+        $("#statusInput").on('keydown', function (e) {
             if (e.keyCode == 13) {
                 $('#statusButton').click();
             }
         });
 
         // MAKE PREVIEW A SETTING, DEFAULT OFF
-        $('#previewToggle input').click(function() {
+        $('#previewToggle input').click(function () {
             preview_show != preview_show;
             previewToggle();
         });
 
         $('#disconnectButton').click(disconnect);
 
-        $('#statusButton').click(function() {
+        $('#statusButton').click(function () {
             new_state = $('#statusInput').val();
             $('#statusInput').val('');
-            $.post(POST_URL, {'chat_id': chat['id'], 'state': new_state}, function(data) {
+            $.post(POST_URL, {'chat_id': chat['id'], 'state': new_state}, function (data) {
                 user_state = new_state;
             });
         });
 
-        $('#settings').submit(function() {
+        $('#settings').submit(function () {
             // Trim everything first
             formInputs = $('#settings').find('input, select');
             for (i=0; i<formInputs.length; i++) {
@@ -988,7 +988,7 @@ $(function(){
             } else {
                 var formData = $(this).serializeArray();
                 formData.push({ name: 'chat_id', value: chat['id'] })
-                $.post(SAVE_URL, formData, function(data) {
+                $.post(SAVE_URL, formData, function (data) {
                     $('#preview').css('color', '#'+$('input[name="color"]').val());
                     var formInputs = $('#settings').find('input, select');
                     for (i=0; i<formInputs.length; i++) {
@@ -1018,7 +1018,7 @@ $(function(){
             return false;
         });
         
-        $('#metaOptions input').click(function() {
+        $('#metaOptions input').click(function () {
             if ($(this).prop('id') != 'public') {
                 if ($(this).is(':checked') == true){
                     setFlag($(this).prop('id'), 'on');
@@ -1036,31 +1036,30 @@ $(function(){
         
         // Clicking the title induces a chat-change function
 
-        $('#chat-title').on('click', function() {
+        $('#chat-title').on('click', function () {
             setSidebar('chatList');
         });
 
-        $('#chatListAdd').on('click', function() {
-            $.getJSON('/chats.json', function(data){
+        $('#chatListAdd').on('click', function () {
+            $.getJSON('/chats.json', function (data){
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
                     $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
                     $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
+                    $('#'+chatData.url.replace(/\//g, "\\\\/")).on('click', function () {
+                        addChatUrl($(this).prop('id'));
+                    });
                 }
             });
             setSidebar('chatPick');
         });
 
-        $('#chatPick .list .selection').on('click', function() {
-            console.log('test');
-        });
-
-        $('.chatListCancel').on('click', function() {
+        $('.chatListCancel').on('click', function () {
             setSidebar('userList');
         });
 
-        $('#hide-topic').click(function() {
+        $('#hide-topic').click(function () {
             if (show_topic) {
                 $('#topic .text').text('Show Topic');
                 $('#topic').hide();
@@ -1071,7 +1070,7 @@ $(function(){
             show_topic = !show_topic;
         });
 
-        $(CONVERSATION_CONTAINER).scroll(function(){
+        $(CONVERSATION_CONTAINER).scroll(function (){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
             var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
             var lon = don-von;
@@ -1080,19 +1079,19 @@ $(function(){
             }
         });
         
-        $('#textInput').scroll(function() {
+        $('#textInput').scroll(function () {
             $('#aliasOffset').css('top', (5-$('#textInput').scrollTop())+'px');
         });
 
-        $('#extain').click(function(){
+        $('#extain').click(function (){
             $(MISSED_MESSAGE_COUNT_ID).html(0);
             $(CONVERSATION_CONTAINER).scrollTop($(CONVERSATION_CONTAINER).prop("scrollHeight"));
         });
 
-        $(window).focus(function(e) {
+        $(window).focus(function (e) {
             if (navigator.userAgent.indexOf('Chrome')!=-1) {
                 // You can't change document.title here in Chrome. #googlehatesyou
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     document.title = chat.title+' – '+ORIGINAL_TITLE;
                     missed_messages = 0;
                 }, 200);
@@ -1113,7 +1112,7 @@ $(function(){
             }
         }
         
-        $(window).unload(function() {
+        $(window).unload(function () {
             $.ajax(CHAT_QUIT, {'type': 'POST', data: {'chat_id': chat['id']}, 'async': false});
         });
     }
