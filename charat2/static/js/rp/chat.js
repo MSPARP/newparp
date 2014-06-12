@@ -157,6 +157,8 @@ function switchChat(url) {
         messageParse(data.messages);
         //change character data
         //change meta option data
+    }).complete(function () {
+        getMeta(true);
     });
 }
 
