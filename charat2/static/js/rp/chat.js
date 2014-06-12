@@ -1053,8 +1053,7 @@ $(function(){
         });
 
         $('#chatPick .selection').on('click', function() {
-            console.log($(this).prop('id'));
-            addChatUrl($(this).prop('id'));
+            console.log('test');
         });
 
         $('.chatListCancel').on('click', function() {
