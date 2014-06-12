@@ -1052,11 +1052,7 @@ $(function(){
             setSidebar('chatPick');
         });
 
-        $('#chatPick .selection').on('click', function() {
-            console.log('test');
-        });
-
-        $('#chatPick .selection').on('click', function() {
+        $('#chatPick .list .selection').on('click', function() {
             console.log('test');
         });
 
