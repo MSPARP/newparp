@@ -144,7 +144,7 @@ function unreadNotifications() {
 }
 
 // Chat List Management
-function addChatUrl(url) {
+function getChatData(url) {
     var chatGetData;
     $.getJSON('/'+url+'.json', function(data) {
         chatData = data.chat;
