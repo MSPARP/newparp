@@ -150,15 +150,17 @@ function addChat(url) {
 }
 
 function switchChat(url) {
+    $('#convo').empty();
+    clearTimeout(metaTimeout);
+    clearTimeout(messageTimeout);
     $.getJSON('/'+url+'.json', function (data) {
         chat = data.chat;
         latestNum = data.latest_num;
-        $('#convo').empty();
         messageParse(data.messages);
+        getMeta(true);
+        getMessages();
         //change character data
         //change meta option data
-    }).complete(function () {
-        getMeta(true);
     });
 }
 
@@ -388,18 +390,7 @@ function setFlag(flag,val) {
     $.post(SET_FLAG_URL,actionData);
 }
 
-function getMessages() {
-    var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    $.post(CHAT_MESSAGES, messageData, function (data) {
-        messageParse(data);
-    }, "json").complete(function () {
-        if (chat_state=='chat') {
-            window.setTimeout(getMessages, 50);
-        } else {
-            // Disconnected methods
-        }
-    });
-}
+var messageTimeout = null;
 
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
@@ -407,12 +398,14 @@ function getMessages() {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
-            window.setTimeout(getMessages, 50);
+            messageTimeout = setTimeout(getMessages, 50);
         } else {
             // Disconnected methods
         }
     });
 }
+
+var metaTimeout = null;
 
 function getMeta(first_join) {
     first_join = (typeof first_join === "undefined") ? false : first_join;
@@ -425,7 +418,7 @@ function getMeta(first_join) {
         messageParse(data);
     }, "json").complete(function () {
         if (chat_state=='chat') {
-            window.setTimeout(getMeta, 50);
+            metaTimeout = setTimeout(getMeta, 50);
         }
         if (first_join) {
             unreadNotifications();
