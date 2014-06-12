@@ -152,7 +152,9 @@ function addChat(url) {
 function switchChat(url) {
     $('#convo').empty();
     messageAjax.abort();
+    window.clearTimeout(messageTimeout);
     metaAjax.abort();
+    window.clearTimeout(metaTimeout);
     $.getJSON('/'+url+'.json', function (data) {
         chat = data.chat;
         latestNum = data.latest_num;
@@ -391,6 +393,7 @@ function setFlag(flag,val) {
 }
 
 var messageAjax = null;
+var messageTimeout = null
 
 function getMessages() {
     var messageData = {'chat_id': chat['id'], 'after': latestNum};
@@ -406,6 +409,7 @@ function getMessages() {
 }
 
 var metaAjax = null;
+var metaTimeout = null;
 
 function getMeta(first_join) {
     first_join = (typeof first_join === "undefined") ? false : first_join;
