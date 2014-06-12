@@ -156,6 +156,7 @@ function switchChat(url) {
     metaAjax.abort();
     window.clearTimeout(metaTimeout);
     $.getJSON('/'+url+'.json', function (data) {
+        user = data.chat_user;
         chat = data.chat;
         latestNum = data.latest_num;
         messageParse(data.messages);
