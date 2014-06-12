@@ -1,0 +1,22 @@
+<h1>Your characters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Character</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+{% for character in characters: %}
+    <tr>
+      <td>{{character.title}}</td>
+      <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
