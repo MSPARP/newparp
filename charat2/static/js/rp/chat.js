@@ -163,7 +163,6 @@ function switchChat(url) {
         messageParse(data.messages);
         getMeta(true);
         getMessages();
-        //change character data
         //change meta option data
     });
 }
@@ -1053,8 +1052,7 @@ $(function (){
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
-                    $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
+                    $('<div>').prop('id', chatData.url).text("<h1 class='titi'>"+chatData.title+"</h1>").addClass('card selection').appendTo('#chatPick .list');
                     $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
                         addChat($(this).prop('id'));
                         setSidebar('chatList');
@@ -1066,6 +1064,10 @@ $(function (){
 
         $('.chatListCancel').on('click', function () {
             setSidebar('userList');
+        });
+
+        $('#chatListChats .card').on('click', function () {
+            switchChat($(this).prop('id'));
         });
 
         $('#hide-topic').click(function () {
