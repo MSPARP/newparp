@@ -144,24 +144,15 @@ function unreadNotifications() {
 }
 
 // Chat List Management
-function getChatData(url) {
-    var chatGetData;
+function addChatUrl(url) {
     $.getJSON('/'+url+'.json', function(data) {
         chatData = data.chat;
-        chatGetData = chatData;
-    }).complete(function(){
-        return chatGetData;
+        chats[chatData.id] = chatData;
     });
 }
 
 function addChatData(data) {
     chats[data.id] = data;
-}
-
-function addChatUrl(url) {
-    var chatData = getChatData(url);
-    console.log(chatData);
-    chats[chatData.id] = chatData;
 }
 
 function startChat() {
