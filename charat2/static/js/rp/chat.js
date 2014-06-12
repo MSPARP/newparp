@@ -148,11 +148,13 @@ function addChatUrl(url) {
     $.getJSON('/'+url+'.json', function (data) {
         chatData = data.chat;
         chats[chatData.id] = chatData;
+        $('<div>').prop('id', chatData.url).html('<h1>'+$('<div>').text(chatData.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
     });
 }
 
 function addChatData(data) {
     chats[data.id] = data;
+    $('<div>').prop('id', data.url).html('<h1>'+$('<div>').text(data.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
 }
 
 function startChat() {
