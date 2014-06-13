@@ -139,6 +139,22 @@ class UserCharacter(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
+    def to_dict(self, include_options=False):
+        ucd = {
+            "id": self.id,
+            "title": self.title,
+            "name": self.name,
+            "acronym": self.acronym,
+            "color": self.color,
+        }
+        if include_options:
+            ucd["quirk_prefix"] = self.quirk_prefix
+            ucd["quirk_suffix"] = self.quirk_suffix
+            ucd["case"] = self.case
+            ucd["replacements"] = json.loads(self.replacements)
+            ucd["regexes"] = json.loads(self.regexes)
+        return ucd
+
 
 class Chat(Base):
 

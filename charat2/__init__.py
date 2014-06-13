@@ -72,6 +72,7 @@ app.add_url_rule("/characters", "character_list", characters.character_list, sub
 app.add_url_rule("/characters/new", "new_character", characters.new_character, subdomain="rp", methods=("POST",))
 
 app.add_url_rule("/characters/<int:character_id>", "character", characters.character, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>/save", "save_character", characters.save_character, subdomain="rp", methods=("POST",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_get", characters.delete_character_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_post", characters.delete_character_post, subdomain="rp", methods=("POST",))
 
