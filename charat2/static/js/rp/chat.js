@@ -156,14 +156,14 @@ function switchChat(url) {
     metaAjax.abort();
     window.clearTimeout(metaTimeout);
     $.getJSON('/'+url+'.json', function (data) {
+        //change meta option data
         user = data.chat_user;
         chat = data.chat;
         latestNum = data.latest_num;
         window.history.pushState("s", "n", "/"+url);
-        messageParse(data.messages);
+        messageParse({"messages" : data.messages});
         getMeta(true);
         getMessages();
-        //change meta option data
     });
 }
 
