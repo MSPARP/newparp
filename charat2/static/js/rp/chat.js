@@ -145,8 +145,8 @@ function unreadNotifications() {
 function addChat(url) {
     chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        $('<div>').prop('id', data.chat.url).html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').click(function () {
-            console.log('a');
+        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').click(function () {
+            switchChat(url);
         });
     });
 }
@@ -1054,12 +1054,14 @@ $(function (){
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
-                    $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
-                    $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
-                    $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
-                        addChat($(this).prop('id'));
-                        setSidebar('chatList');
-                    });
+                    if (chats.indexOf(chatData.url)>-1) {
+                        $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
+                        $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
+                        $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
+                            addChat($(this).prop('id'));
+                            setSidebar('chatList');
+                        });
+                    }
                 }
             });
             setSidebar('chatPick');
