@@ -57,6 +57,17 @@ var chats = {{rooms|tojson|safe}};
                     <div class="chat-types"><a href="">Request</a></div>
                 </div>
             </div>
+            <div id="temp-create-chat" class="section">
+                <div class="titli">CREATE CHAT</div>
+                <div class="card">
+                    {% if create_chat_error: %}
+                    <p class="error">{{create_chat_error}}</p>
+                    {% endif %}
+                    <form action="{{url_for("create_chat")}}" method="post">
+                      <p><input type="text" name="url" maxlength="50"><button type="submit">Create Room</button></p>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="titli">CHAT ROOMS</div>
         <div id="under-page"></div>
