@@ -145,7 +145,9 @@ function unreadNotifications() {
 function addChat(url) {
     chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
+        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').on('click', function () {
+            switchChat(url);
+        });
     });
 }
 
@@ -1053,12 +1055,11 @@ $(function (){
                 for (i in data.chats) {
                     var chatData = data.chats[i];
                     if (chats.indexOf(chatData.url)>-1) {
-                        $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list');
-                        $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
-                        $('#'+chatData.url.replace(/\//g, "\\/")).on('click', function () {
+                        $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list').on('click', function () {
                             addChat($(this).prop('id'));
                             setSidebar('chatList');
-                        });
+                        });;
+                        $('<h1>').addClass('titi').text(chatData.title).appendTo('#'+chatData.url.replace(/\//g, "\\/"));
                     }
                 }
             });
@@ -1067,12 +1068,6 @@ $(function (){
 
         $('.chatListCancel').on('click', function () {
             setSidebar('userList');
-        });
-
-        $('#chatListChats .card').on('click', function () {
-            if ($(this).prop('id')) {
-                switchChat($(this).prop('id'));
-            }
         });
 
         $('#hide-topic').click(function () {
