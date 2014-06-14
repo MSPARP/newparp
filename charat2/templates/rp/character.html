@@ -1,4 +1,9 @@
 <h1>{{character.title}}</h1>
+
+{% if request.args.get("message") == "saved": %}
+<p>Your changes have been saved.</p>
+{% endif %}
+
 <form action="{{url_for("save_character", character_id=character.id)}}" method="post">
   <p><label>Save as: <input type="text" name="title" value="{{character.title}}" maxlength="50"></label></p>
   <p><label>Name: <input type="text" name="name" value="{{character.name}}" maxlength="50"></label></p>
