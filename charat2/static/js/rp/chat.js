@@ -145,7 +145,7 @@ function unreadNotifications() {
 function addChat(url) {
     chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').click(function () {
+        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').on('click', function () {
             switchChat(url);
         });
     });
@@ -1069,10 +1069,6 @@ $(function (){
 
         $('.chatListCancel').on('click', function () {
             setSidebar('userList');
-        });
-
-        $('#chatListChats .card').on('click', function () {
-            switchChat($(this).prop('id'));
         });
 
         $('#hide-topic').click(function () {
