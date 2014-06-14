@@ -1054,7 +1054,7 @@ $(function (){
                 $('#chatPick .list').empty();
                 for (i in data.chats) {
                     var chatData = data.chats[i];
-                    if (chats.indexOf(chatData.url)>-1) {
+                    if (chats.indexOf(chatData.url)<0) {
                         $('<div>').prop('id', chatData.url).addClass('card selection').appendTo('#chatPick .list').on('click', function () {
                             addChat($(this).prop('id'));
                             setSidebar('chatList');
