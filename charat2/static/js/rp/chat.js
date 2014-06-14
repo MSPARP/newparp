@@ -1071,6 +1071,12 @@ $(function (){
             setSidebar('userList');
         });
 
+        $('#chatListChats .card').on('click', function () {
+            if ($(this).hasOwnProperty('id')) {
+                switchChat($(this).prop('id'));
+            }
+        });
+
         $('#hide-topic').click(function () {
             if (show_topic) {
                 $('#topic .text').text('Show Topic');

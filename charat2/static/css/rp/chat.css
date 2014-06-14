@@ -715,7 +715,7 @@ body > #save {
 
 /* Chat List */
 
-#chatListAdd, .chatListCancel, #chatPick .selection {
+#chatListAdd, .chatListCancel, #chatPick .selection, #chatList .card {
     cursor: pointer;
 }
 
