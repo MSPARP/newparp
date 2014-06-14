@@ -145,7 +145,9 @@ function unreadNotifications() {
 function addChat(url) {
     chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        $('<div>').prop('id', data.chat.url).html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
+        $('<div>').prop('id', data.chat.url).html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').click(function () {
+            console.log('a');
+        });
     });
 }
 
