@@ -77,6 +77,7 @@ app.add_url_rule("/characters/<int:character_id>.<fmt>", "character", characters
 app.add_url_rule("/characters/<int:character_id>/save", "save_character", characters.save_character, subdomain="rp", methods=("POST",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_get", characters.delete_character_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_post", characters.delete_character_post, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/set_default", "set_default_character", characters.set_default_character, subdomain="rp", methods=("POST",))
 
 # 2.3. Creating chats
 

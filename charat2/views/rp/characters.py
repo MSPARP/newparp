@@ -134,6 +134,17 @@ def delete_character_get(character_id):
 @login_required
 def delete_character_post(character_id):
     character = user_character_query(character_id)
+    if character == g.user.default_character:
+        g.user.default_character_id = None
+        g.db.flush()
     g.db.delete(character)
+    return redirect(url_for("character_list"))
+
+
+@use_db
+@login_required
+def set_default_character(character_id):
+    character = user_character_query(character_id)
+    g.user.default_character = character
     return redirect(url_for("character_list"))
 
