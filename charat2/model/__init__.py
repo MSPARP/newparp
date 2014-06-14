@@ -285,17 +285,29 @@ class ChatUser(Base):
 
     @classmethod
     def from_user(cls, user, **kwargs):
-        # Create a ChatUser using a User to determine the default values.
+        # Create a ChatUser using a User and their default character to
+        # determine the default values.
+        if user.default_character is None:
+            return cls(
+                user_id=user.id,
+                confirm_disconnect=user.confirm_disconnect,
+                show_system_messages=user.show_system_messages,
+                show_description=user.show_description,
+                show_bbcode=user.show_bbcode,
+                desktop_notifications=user.desktop_notifications,
+                **kwargs
+            )
+        dc = user.default_character
         return cls(
             user_id=user.id,
-            name=user.name,
-            acronym=user.acronym,
-            color=user.color,
-            quirk_prefix=user.quirk_prefix,
-            quirk_suffix=user.quirk_suffix,
-            case=user.case,
-            replacements=user.replacements,
-            regexes=user.regexes,
+            name=dc.name,
+            acronym=dc.acronym,
+            color=dc.color,
+            quirk_prefix=dc.quirk_prefix,
+            quirk_suffix=dc.quirk_suffix,
+            case=dc.case,
+            replacements=dc.replacements,
+            regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
             show_system_messages=user.show_system_messages,
             show_description=user.show_description,
