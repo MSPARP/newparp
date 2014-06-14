@@ -68,10 +68,12 @@ app.add_url_rule("/chats/<type>/<int:page>.<fmt>", "chat_list", chat_list.chat_l
 # 2.2. Character management
 
 app.add_url_rule("/characters", "character_list", characters.character_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters.<fmt>", "character_list", characters.character_list, subdomain="rp", methods=("GET",))
 
 app.add_url_rule("/characters/new", "new_character", characters.new_character, subdomain="rp", methods=("POST",))
 
 app.add_url_rule("/characters/<int:character_id>", "character", characters.character, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>.<fmt>", "character", characters.character, subdomain="rp", methods=("GET",))
 app.add_url_rule("/characters/<int:character_id>/save", "save_character", characters.save_character, subdomain="rp", methods=("POST",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_get", characters.delete_character_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_post", characters.delete_character_post, subdomain="rp", methods=("POST",))

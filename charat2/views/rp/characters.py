@@ -1,20 +1,27 @@
-from flask import abort, g, redirect, render_template, url_for
+from flask import abort, g, jsonify, redirect, render_template, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
+from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
 from charat2.model import case_options, UserCharacter
 from charat2.model.connections import use_db
 
+@alt_formats(set(["json"]))
 @use_db
 @login_required
-def character_list():
+def character_list(fmt=None):
+
+    characters = g.db.query(UserCharacter).filter(
+        UserCharacter.user_id == g.user.id,
+    ).order_by(UserCharacter.title, UserCharacter.id).all()
+
+    if fmt == "json":
+        return jsonify({ "characters": [_.to_dict() for _ in characters] })
 
     return render_template(
         "rp/character_list.html",
-        characters=g.db.query(UserCharacter).filter(
-            UserCharacter.user_id == g.user.id,
-        ).order_by(UserCharacter.title).all(),
+        characters=characters,
     )
 
 
@@ -27,9 +34,10 @@ def new_character():
     return redirect(url_for("character", character_id=character.id))
 
 
+@alt_formats(set(["json"]))
 @use_db
 @login_required
-def character(character_id):
+def character(character_id, fmt=None):
 
     try:
         character = g.db.query(UserCharacter).filter(and_(
@@ -38,6 +46,9 @@ def character(character_id):
         )).order_by(UserCharacter.title).one()
     except NoResultFound:
         abort(404)
+
+    if fmt == "json":
+        return jsonify(character.to_dict(include_options=True))
 
     return render_template(
         "rp/character.html",
