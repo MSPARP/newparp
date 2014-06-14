@@ -103,7 +103,27 @@ class User(Base):
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
 
-    # Global character data. This is copied whenever a ChatUser is created.
+    default_character_id = Column(Integer, ForeignKey(
+        "user_characters.id",
+        name="users_default_character_fkey",
+        use_alter=True,
+    ))
+
+    confirm_disconnect = Column(Boolean, nullable=False, default=False)
+    show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_description = Column(Boolean, nullable=False, default=True)
+    show_bbcode = Column(Boolean, nullable=False, default=True)
+    desktop_notifications = Column(Boolean, nullable=False, default=False)
+
+
+class UserCharacter(Base):
+
+    __tablename__ = "user_characters"
+
+    id = Column(Integer, primary_key=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(Unicode(50), nullable=False)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
@@ -119,11 +139,21 @@ class User(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
-    confirm_disconnect = Column(Boolean, nullable=False, default=False)
-    show_system_messages = Column(Boolean, nullable=False, default=True)
-    show_description = Column(Boolean, nullable=False, default=True)
-    show_bbcode = Column(Boolean, nullable=False, default=True)
-    desktop_notifications = Column(Boolean, nullable=False, default=False)
+    def to_dict(self, include_options=False):
+        ucd = {
+            "id": self.id,
+            "title": self.title,
+            "name": self.name,
+            "acronym": self.acronym,
+            "color": self.color,
+        }
+        if include_options:
+            ucd["quirk_prefix"] = self.quirk_prefix
+            ucd["quirk_suffix"] = self.quirk_suffix
+            ucd["case"] = self.case
+            ucd["replacements"] = json.loads(self.replacements)
+            ucd["regexes"] = json.loads(self.regexes)
+        return ucd
 
 
 class Chat(Base):
@@ -255,17 +285,29 @@ class ChatUser(Base):
 
     @classmethod
     def from_user(cls, user, **kwargs):
-        # Create a ChatUser using a User to determine the default values.
+        # Create a ChatUser using a User and their default character to
+        # determine the default values.
+        if user.default_character is None:
+            return cls(
+                user_id=user.id,
+                confirm_disconnect=user.confirm_disconnect,
+                show_system_messages=user.show_system_messages,
+                show_description=user.show_description,
+                show_bbcode=user.show_bbcode,
+                desktop_notifications=user.desktop_notifications,
+                **kwargs
+            )
+        dc = user.default_character
         return cls(
             user_id=user.id,
-            name=user.name,
-            acronym=user.acronym,
-            color=user.color,
-            quirk_prefix=user.quirk_prefix,
-            quirk_suffix=user.quirk_suffix,
-            case=user.case,
-            replacements=user.replacements,
-            regexes=user.regexes,
+            name=dc.name,
+            acronym=dc.acronym,
+            color=dc.color,
+            quirk_prefix=dc.quirk_prefix,
+            quirk_suffix=dc.quirk_suffix,
+            case=dc.case,
+            replacements=dc.replacements,
+            regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
             show_system_messages=user.show_system_messages,
             show_description=user.show_description,
@@ -384,6 +426,9 @@ class Ban(Base):
 # Index to make usernames case insensitively unique.
 Index("users_username", func.lower(User.username), unique=True)
 
+# Index for user characters.
+Index("user_characters_user_id", UserCharacter.user_id)
+
 # Index to make generating the public chat list easier.
 # This is a partial index, a feature only supported by Postgres, so I don't
 # know what will happen if you try to run this on anything else.
@@ -399,6 +444,16 @@ Index("chat_users_user_id_chat_id", ChatUser.user_id, ChatUser.chat_id)
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)
 
+
+User.default_character = relation(
+    UserCharacter,
+    primaryjoin=User.default_character_id==UserCharacter.id,
+)
+User.characters = relation(
+    UserCharacter,
+    primaryjoin=User.id==UserCharacter.user_id,
+    backref="user",
+)
 
 GroupChat.creator = relation(User, backref='created_chats')
 GroupChat.parent = relation(

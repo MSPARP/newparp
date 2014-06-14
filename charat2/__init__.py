@@ -10,7 +10,7 @@ from charat2.model.connections import (
     set_cookie,
 )
 from charat2.views import root, account, rp, blog
-from charat2.views.rp import chat, chat_api, chat_list
+from charat2.views.rp import chat, chat_api, chat_list, characters
 
 from flask.ext.babel import Babel, gettext
 
@@ -65,16 +65,30 @@ app.add_url_rule("/chats/<type>.<fmt>", "chat_list", chat_list.chat_list, subdom
 app.add_url_rule("/chats/<type>/<int:page>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
 app.add_url_rule("/chats/<type>/<int:page>.<fmt>", "chat_list", chat_list.chat_list, subdomain="rp", methods=("GET",))
 
-# 2.2. Creating chats
+# 2.2. Character management
+
+app.add_url_rule("/characters", "character_list", characters.character_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters.<fmt>", "character_list", characters.character_list, subdomain="rp", methods=("GET",))
+
+app.add_url_rule("/characters/new", "new_character", characters.new_character, subdomain="rp", methods=("POST",))
+
+app.add_url_rule("/characters/<int:character_id>", "character", characters.character, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>.<fmt>", "character", characters.character, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>/save", "save_character", characters.save_character, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_get", characters.delete_character_get, subdomain="rp", methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>/delete", "delete_character_post", characters.delete_character_post, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/set_default", "set_default_character", characters.set_default_character, subdomain="rp", methods=("POST",))
+
+# 2.3. Creating chats
 
 app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
 
-# 2.3. Rooms
+# 2.4. Rooms
 
 app.add_url_rule("/rooms", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
 app.add_url_rule("/rooms.<fmt>", "rp_rooms", rp.rooms, subdomain="rp", methods=("GET",))
 
-# 2.4. Chats
+# 2.5. Chats
 
 app.add_url_rule("/<path:url>", "chat", chat.chat, subdomain="rp", methods=("GET",))
 app.add_url_rule("/<path:url>.<fmt>", "chat", chat.chat, subdomain="rp", methods=("GET",))
@@ -88,7 +102,7 @@ app.add_url_rule("/<path:url>/log/<int:page>", "log", chat.log, subdomain="rp", 
 
 app.add_url_rule("/<path:url>/users", "chat_users", chat.users, subdomain="rp", methods=("GET",))
 
-# 2.5. Chat API
+# 2.6. Chat API
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/meta", "meta", chat_api.meta, subdomain="rp", methods=("POST",))

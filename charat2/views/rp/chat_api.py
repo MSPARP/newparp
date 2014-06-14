@@ -464,7 +464,7 @@ def save():
     # Zip replacements.
     replacements = zip(
         request.form.getlist("quirk_from"),
-        request.form.getlist("quirk_to")
+        request.form.getlist("quirk_to"),
     )
     # Strip out any rows where from is blank or the same as to.
     replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
@@ -475,7 +475,7 @@ def save():
     # Zip regexes.
     regexes = zip(
         request.form.getlist("regex_from"),
-        request.form.getlist("regex_to")
+        request.form.getlist("regex_to"),
     )
     # Strip out any rows where from is blank or the same as to.
     regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
