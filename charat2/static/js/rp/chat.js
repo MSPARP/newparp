@@ -145,9 +145,7 @@ function unreadNotifications() {
 function addChat(url) {
     chats.push(url);
     $.getJSON('/'+url+'.json', function (data) {
-        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats').on('click', function () {
-            switchChat(url);
-        });
+        $('<div>').html('<h1 class="titi">'+$('<div>').text(data.chat.title).text()+'</h1>').addClass('card').appendTo('#chatListChats');
     });
 }
 
@@ -1072,7 +1070,7 @@ $(function (){
         });
 
         $('#chatListChats .card').on('click', function () {
-            if ($(this).hasOwnProperty('id')) {
+            if ($(this).prop('id')) {
                 switchChat($(this).prop('id'));
             }
         });
