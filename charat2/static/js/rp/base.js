@@ -34,14 +34,6 @@ function screenCheck() {
     }
 }
 
-function heightAdjust() {
-    if (!$('body.mobile').exists() && !$('body.nobile').exists() && $('#typing-quirks .replacementContainer').exists()) {
-        leftHeight = $('#char_left').height();
-        centerHeight = $('#char_center').height()-$('#typing-quirks .replacementContainer').height();
-        $('#typing-quirks .replacementContainer').height(leftHeight-centerHeight);
-    }
-}
-
 $(document).ready(function() {
     var quote = quotes[Math.floor(Math.random()*quotes.length)];
     $('#quote').html(quote);
@@ -67,9 +59,7 @@ $(document).ready(function() {
 
 $(window).load(function() {
     screenCheck();
-    heightAdjust();
     $(window).resize(function() {
         screenCheck();
-        heightAdjust();
     });
 });
