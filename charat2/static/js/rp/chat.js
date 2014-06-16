@@ -1083,12 +1083,12 @@ $(function (){
             show_topic = !show_topic;
         });
 
-        $('.ooc').click(function () {
+        $('.ooc').on('click', function () {
             $('.ooc-off').prop('class', $(this).prop('class').replace('ooc-off','ooc'));
             $(this).prop('class', $(this).prop('class').replace('ooc','ooc-off'));
         });
 
-        $('.ooc-off').click(function () {
+        $('.ooc-off').on('click', function () {
             $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
         });
 
