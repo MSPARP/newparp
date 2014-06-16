@@ -172,8 +172,9 @@ function updateUser() {
         } else {
             $('#casing').val('');
         }
-
+        console.log('a');
         if (user.character.replacements && user.character.replacements.length > 0) {
+            console.log(user.character.replacements);
             clearReplacements();
             for (i in user.character.replacements) {
                 addReplacement();
