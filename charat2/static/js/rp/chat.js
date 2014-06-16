@@ -154,37 +154,46 @@ function updateUser() {
         $('#usingname').val(user.character.name);
         $('#ailin').val(user.character.acronym);
         $('#coln').val(user.character.color);
-        try {
+
+        if (user.character.prefix) {
             $('#prei').val(user.character.prefix);
-        } catch(e) {
+        } else {
             $('#prei').val('');
         }
-        try {
+
+        if (user.character.suffix) {
             $('#sufi').val(user.character.suffix);
-        } catch(e) {
+        } else {
             $('#sufi').val('');
         }
-        try {
+
+        if (user.character.case) {
             $('#casing').val(user.character.case);
-        } catch(e) {
+        } else {
             $('#casing').val('');
         }
-        try {
+
+        if (character.replacements && character.replacements.length > 0) {
+            clearReplacements();
             for (i in character.replacements) {
+                addReplacement();
                 replacement = character.replacements[i];
                 $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
                 $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
             }
-        } catch(e) {
+        } else {
             clearReplacements();
         }
-        try {
+
+        if (character.regexes && character.regexes.length > 0) {
+            clearRegexes();
             for (i in character.regexes) {
+                addRegex();
                 regex = character.regexes[i];
                 $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
                 $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
             }
-        } catch(e) {
+        } else {
             clearRegexes();
         }
     });
