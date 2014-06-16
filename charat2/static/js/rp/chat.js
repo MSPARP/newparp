@@ -147,33 +147,37 @@ function switchCharacter(character_id) {
     $.post('/chat_api/save_from_character', actionData);
 }
 
-function updateCharacter() {
-    $('#usingname').val(user.character.name);
-    $('#ailin').val(user.character.acronym);
-    $('#coln').val(user.character.color);
-    try {
-        $('#prei').val(user.character.prefix);
-    } catch(e) {}
-    try {
-        $('#sufi').val(user.character.suffix);
-    } catch(e) {}
-    try {
-        $('#casing').val(user.character.case);
-    } catch(e) {}
-    try {
-        for (i in character.replacements) {
-            replacement = character.replacements[i];
-            $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
-            $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
-        }
-    } catch(e) {}
-    try {
-        for (i in character.regexes) {
-            regex = character.regexes[i];
-            $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
-            $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
-        }
-    } catch(e) {}
+function updateUser() {
+    $.getJSON('/'+url+'.json', function (data) {
+        user = data.chat_user;
+    }).complete(function () {
+        $('#usingname').val(user.character.name);
+        $('#ailin').val(user.character.acronym);
+        $('#coln').val(user.character.color);
+        try {
+            $('#prei').val(user.character.prefix);
+        } catch(e) {}
+        try {
+            $('#sufi').val(user.character.suffix);
+        } catch(e) {}
+        try {
+            $('#casing').val(user.character.case);
+        } catch(e) {}
+        try {
+            for (i in character.replacements) {
+                replacement = character.replacements[i];
+                $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
+                $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
+            }
+        } catch(e) {}
+        try {
+            for (i in character.regexes) {
+                regex = character.regexes[i];
+                $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
+                $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
+            }
+        } catch(e) {}
+    });
 }
 
 // Chat List Management
@@ -329,13 +333,7 @@ function generateUserList(user_data) {
         var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
-            list_user.character.prefix = list_user.character.prefix?list_user.character.prefix:'';
-            list_user.character.suffix = list_user.character.suffix?list_user.character.suffix:'';
-            list_user.character.case = list_user.character.case?list_user.character.case:'';
-            list_user.character.replacements = list_user.character.replacements?list_user.character.replacements:[];
-            list_user.character.regexes = list_user.character.regexes?list_user.character.regexes:[];
-            user = list_user;
-            updateCharacter();
+            updateUser();
             $(USER_LIST_ID).prop('class', list_user.meta.group);
             $("#userList").prop('class', "sidebar "+list_user.meta.group);
         }
