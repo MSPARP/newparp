@@ -156,27 +156,37 @@ function updateUser() {
         $('#coln').val(user.character.color);
         try {
             $('#prei').val(user.character.prefix);
-        } catch(e) {}
+        } catch(e) {
+            $('#prei').val('');
+        }
         try {
             $('#sufi').val(user.character.suffix);
-        } catch(e) {}
+        } catch(e) {
+            $('#sufi').val('');
+        }
         try {
             $('#casing').val(user.character.case);
-        } catch(e) {}
+        } catch(e) {
+            $('#casing').val('');
+        }
         try {
             for (i in character.replacements) {
                 replacement = character.replacements[i];
                 $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
                 $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
             }
-        } catch(e) {}
+        } catch(e) {
+            clearReplacements();
+        }
         try {
             for (i in character.regexes) {
                 regex = character.regexes[i];
                 $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
                 $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
             }
-        } catch(e) {}
+        } catch(e) {
+            clearRegexes();
+        }
     });
 }
 
