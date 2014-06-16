@@ -173,11 +173,11 @@ function updateUser() {
             $('#casing').val('');
         }
 
-        if (character.replacements && character.replacements.length > 0) {
+        if (user.character.replacements && user.character.replacements.length > 0) {
             clearReplacements();
-            for (i in character.replacements) {
+            for (i in user.character.replacements) {
                 addReplacement();
-                replacement = character.replacements[i];
+                replacement = user.character.replacements[i];
                 $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
                 $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
             }
@@ -185,11 +185,11 @@ function updateUser() {
             clearReplacements();
         }
 
-        if (character.regexes && character.regexes.length > 0) {
+        if (user.character.regexes && user.character.regexes.length > 0) {
             clearRegexes();
-            for (i in character.regexes) {
+            for (i in user.character.regexes) {
                 addRegex();
-                regex = character.regexes[i];
+                regex = user.character.regexes[i];
                 $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
                 $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
             }
