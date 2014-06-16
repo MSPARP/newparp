@@ -18,9 +18,10 @@ from charat2.model import (
     case_options,
     group_ranks,
     Ban,
+    ChatUser,
     Message,
     User,
-    ChatUser,
+    UserCharacter,
 )
 from charat2.model.connections import (
     get_chat_user,
@@ -483,10 +484,18 @@ def save():
     g.chat_user.regexes = json.dumps(regexes)
 
     # Send a message if name or acronym has changed.
-    if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym or g.chat_user.color != old_color:
+    if (
+        g.chat_user.name != old_name
+        or g.chat_user.acronym != old_acronym
+        or g.chat_user.color != old_color
+    ):
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
+            acronym_string = (
+                " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]"
+                if len(g.chat_user.acronym) > 0 else ""
+            )
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
@@ -494,7 +503,58 @@ def save():
                 name=g.chat_user.name,
                 text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
                     old_color, g.user.username,
-                    g.chat_user.color, g.chat_user.name, " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]" if len(g.chat_user.acronym) > 0 else "",
+                    g.chat_user.color, g.chat_user.name, acronym_string,
+                ),
+            ))
+
+    return "", 204
+
+@use_db_chat
+@mark_alive
+def save_from_character():
+
+    try:
+        character = g.db.query(UserCharacter).filter(and_(
+            UserCharacter.id == request.form["character_id"],
+            UserCharacter.user_id == g.user.id,
+        )).order_by(UserCharacter.title).one()
+    except NoResultFound:
+        abort(404)
+
+    old_color = g.chat_user.color
+
+    # Send a message if name or acronym has changed.
+    changed = (
+        g.chat_user.name != character.name
+        or g.chat_user.acronym != character.acronym
+        or g.chat_user.color != character.color
+    )
+
+    g.chat_user.name = character.name
+    g.chat_user.acronym = character.acronym
+    g.chat_user.color = character.color
+    g.chat_user.quirk_prefix = character.quirk_prefix
+    g.chat_user.quirk_suffix = character.quirk_suffix
+    g.chat_user.case = character.case
+    g.chat_user.replacements = character.replacements
+    g.chat_user.regexes = character.regexes
+
+    if changed:
+        if g.chat_user.group == "silent":
+            send_userlist(g.db, g.redis, g.chat)
+        else:
+            acronym_string = (
+                " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]"
+                if len(g.chat_user.acronym) > 0 else ""
+            )
+            send_message(g.db, g.redis, Message(
+                chat_id=g.chat.id,
+                user_id=g.user.id,
+                type="user_info",
+                name=g.chat_user.name,
+                text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
+                    old_color, g.user.username,
+                    g.chat_user.color, g.chat_user.name, acronym_string,
                 ),
             ))
 

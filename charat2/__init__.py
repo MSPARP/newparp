@@ -113,6 +113,7 @@ app.add_url_rule("/chat_api/user_action", "user_action", chat_api.user_action, s
 app.add_url_rule("/chat_api/set_flag", "set_flag", chat_api.set_flag, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/save", "save", chat_api.save, subdomain="rp", methods=("POST",))
+app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_api.save_from_character, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
 
