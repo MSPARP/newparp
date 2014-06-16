@@ -673,6 +673,7 @@ function updateChatPreview() {
         try {
             command.splice(0,1);
             var new_topic = command.join(" ");
+            new_topic = new_topic.replace(/\n/g,'[br]');
             textPreview = "changed the topic to \""+new_topic+"\"";
         } catch(e) {
             aliasPreview = "";
@@ -889,6 +890,7 @@ $(function (){
                         var com = command;
                         com.splice(0,1);
                         var topic_set = com.join(' ');
+                        topic_set = topic_set.replace(/\n/g,'[br]');
                         setTopic(topic_set);
                         $('#textInput').val('');
                     }
