@@ -323,7 +323,7 @@ function addLine(msg){
             }
         }
         shownotif = 0;
-    }
+    }//
 }
 
 function generateUserList(user_data) {
