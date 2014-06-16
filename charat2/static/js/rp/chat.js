@@ -183,6 +183,7 @@ function updateUser() {
                 $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
             }
         } else {
+            console.log(user.character.replacements.length);
             clearReplacements();
         }
 
