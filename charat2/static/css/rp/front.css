@@ -1,24 +1,12 @@
 .save_character {
-    width: 100%;
-}
-
-.section .char_search {
-    text-align: center;
-}
-
-.section .char_search span {
-    font-size: 12px;
     display: block;
+    width: 80%;
+    min-width: 290px;
+    margin: auto;
+    margin-bottom: 10px;
 }
 
-button.char_search_button {
-    font-size: 16px;
-    width: 180px;
-    height: 25px;
-    padding: 0;
-}
-
-.pester-line {
+quote-line {
     font-size: 16px;
 }
 
