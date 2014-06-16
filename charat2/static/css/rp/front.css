@@ -1,5 +1,4 @@
-input[type="submit"], button {
-    max-width: 290px;
+.save_character {
     width: 100%;
 }
 
