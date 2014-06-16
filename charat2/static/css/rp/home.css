@@ -85,6 +85,10 @@ div.body {
     margin-bottom: 10px;
 }
 
+.card .titi:nth-child(n+2) {
+    margin-top: 10px;
+}
+
 label {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     font-weight: 400;
