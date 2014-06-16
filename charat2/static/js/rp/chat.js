@@ -330,7 +330,7 @@ function generateUserList(user_data) {
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             user = list_user;
-
+            updateCharacter();
             $(USER_LIST_ID).prop('class', list_user.meta.group);
             $("#userList").prop('class', "sidebar "+list_user.meta.group);
         }
