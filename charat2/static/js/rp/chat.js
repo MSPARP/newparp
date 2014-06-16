@@ -144,7 +144,7 @@ function unreadNotifications() {
 // Change into Character
 function switchCharacter(character_id) {
     var actionData = {'chat_id': chat.id, 'character_id': character_id};
-    $.post('/chat_api/save_from_character', actionData);
+    $.post('/chat_api/save_from_character', actionData).complete(updateUser);
 }
 
 function updateUser() {
