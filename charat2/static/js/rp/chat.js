@@ -1089,6 +1089,7 @@ $(function (){
         });
 
         $('.ooc-off').on('click', function () {
+            console.log(this);
             $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
         });
 
