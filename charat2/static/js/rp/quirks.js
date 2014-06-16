@@ -31,7 +31,7 @@ function applyQuirks(text,pattern) {
                 text = buffer.join('');
                 break;
         }
-    } catch(e) {
+    } catch(e) {}
 
     // Replacements
     try {
