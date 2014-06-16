@@ -1089,7 +1089,6 @@ $(function (){
         });
 
         $('#convo').on('click', '.ooc-off', function () {
-            console.log(this);
             $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
         });
 
