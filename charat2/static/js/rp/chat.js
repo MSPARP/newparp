@@ -1083,6 +1083,15 @@ $(function (){
             show_topic = !show_topic;
         });
 
+        $('.ooc').click(function () {
+            $('.ooc-off').prop('class', $(this).prop('class').replace('ooc-off','ooc'));
+            $(this).prop('class', $(this).prop('class').replace('ooc','ooc-off'));
+        });
+
+        $('.ooc-off').click(function () {
+            $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
+        });
+
         $(CONVERSATION_CONTAINER).scroll(function (){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
             var don = $(CONVERSATION_CONTAINER).prop("scrollHeight");
