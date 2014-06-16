@@ -1,25 +1,4 @@
-input[type="submit"], button {
-    max-width: 290px;
-    width: 100%;
-}
-
-.section .char_search {
-    text-align: center;
-}
-
-.section .char_search span {
-    font-size: 12px;
-    display: block;
-}
-
-button.char_search_button {
-    font-size: 16px;
-    width: 180px;
-    height: 25px;
-    padding: 0;
-}
-
-.pester-line {
+.quote-line {
     font-size: 16px;
 }
 
@@ -95,23 +74,10 @@ body.nobile .section .center, body.mobile .section .center {
     display: block;
 }
 
-
-/* Button Showing */
-
-#inztwo .save_character {
-    display: none;
-}
-
-body.nobile #inzone, body.nobile #inztwo {
-    display: none;
-}
-
-body.mobile #inzone .save_character {
-    display: none;
-}
-
-body.nobile #inztwo .save_characte, body.mobile #inztwo .save_character {
+button.save_character {
     display: block;
-    position: relative;
-    left: 10px;
+    width: 80%;
+    min-width: 290px;
+    margin: auto;
+    margin-bottom: 10px;
 }
