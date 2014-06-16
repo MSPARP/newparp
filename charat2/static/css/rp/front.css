@@ -74,7 +74,7 @@ body.nobile .section .center, body.mobile .section .center {
     display: block;
 }
 
-.save_character {
+button.save_character {
     display: block;
     width: 80%;
     min-width: 290px;
