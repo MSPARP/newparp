@@ -59,7 +59,7 @@ def character(character_id, fmt=None):
         return jsonify(character.to_dict(include_options=True))
 
     return render_template(
-        "rp/editor.html",
+        "rp/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
     )
