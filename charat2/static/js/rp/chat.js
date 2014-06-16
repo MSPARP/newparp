@@ -141,6 +141,12 @@ function unreadNotifications() {
     });
 }
 
+// Change into Character
+function switchCharacter(character_id) {
+    var actionData = {'chat_id': chat.id, 'character_id': character_id};
+    $.post('/chat_api/save_from_character', actionData);
+}
+
 // Chat List Management
 function addChat(url) {
     chats.push(url);
