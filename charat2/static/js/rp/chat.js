@@ -147,6 +147,35 @@ function switchCharacter(character_id) {
     $.post('/chat_api/save_from_character', actionData);
 }
 
+function updateCharacter() {
+    $('#usingname').val(user.character.name);
+    $('#ailin').val(user.character.acronym);
+    $('#coln').val(user.character.color);
+    try {
+        $('#prei').val(user.character.prefix);
+    } catch(e) {}
+    try {
+        $('#sufi').val(user.character.suffix);
+    } catch(e) {}
+    try {
+        $('#casing').val(user.character.case);
+    } catch(e) {}
+    try {
+        for (i in character.replacements) {
+            replacement = character.replacements[i];
+            $($('#replacementList input[name="quirk_from"]')[i]).val(replacement[0]);
+            $($('#replacementList input[name="quirk_to"]')[i]).val(replacement[1]);
+        }
+    } catch(e) {}
+    try {
+        for (i in character.regexes) {
+            regex = character.regexes[i];
+            $($('#replacementList input[name="regex_from"]')[i]).val(regex[0]);
+            $($('#replacementList input[name="regex_to"]')[i]).val(regex[1]);
+        }
+    } catch(e) {}
+}
+
 // Chat List Management
 function addChat(url) {
     chats.push(url);
@@ -301,6 +330,7 @@ function generateUserList(user_data) {
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
             user = list_user;
+            updateCharacter();
             $(USER_LIST_ID).prop('class', list_user.meta.group);
             $("#userList").prop('class', "sidebar "+list_user.meta.group);
         }
