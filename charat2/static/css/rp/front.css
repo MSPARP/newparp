@@ -1,12 +1,4 @@
-.save_character {
-    display: block;
-    width: 80%;
-    min-width: 290px;
-    margin: auto;
-    margin-bottom: 10px;
-}
-
-quote-line {
+.quote-line {
     font-size: 16px;
 }
 
@@ -82,23 +74,10 @@ body.nobile .section .center, body.mobile .section .center {
     display: block;
 }
 
-
-/* Button Showing */
-
-#inztwo .save_character {
-    display: none;
-}
-
-body.nobile #inzone, body.nobile #inztwo {
-    display: none;
-}
-
-body.mobile #inzone .save_character {
-    display: none;
-}
-
-body.nobile #inztwo .save_characte, body.mobile #inztwo .save_character {
+.save_character {
     display: block;
-    position: relative;
-    left: 10px;
+    width: 80%;
+    min-width: 290px;
+    margin: auto;
+    margin-bottom: 10px;
 }
