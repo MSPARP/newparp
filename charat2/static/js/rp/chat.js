@@ -148,7 +148,7 @@ function switchCharacter(character_id) {
 }
 
 function updateUser() {
-    $.getJSON('/'+url+'.json', function (data) {
+    $.getJSON('/'+chat.url+'.json', function (data) {
         user = data.chat_user;
     }).complete(function () {
         $('#usingname').val(user.character.name);
@@ -323,7 +323,7 @@ function addLine(msg){
             }
         }
         shownotif = 0;
-    }//
+    }
 }
 
 function generateUserList(user_data) {
