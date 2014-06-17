@@ -98,7 +98,6 @@ function bbRemove(S) {
 }
 
 function bbRemoveAll(S) {
-    S = linkify($('<div/>').html(S).text(S).html());
     if (S.indexOf('[') < 0 || S.indexOf(']') < 0) return S;
 
     function X(p, f) {return new RegExp(p, f)}
