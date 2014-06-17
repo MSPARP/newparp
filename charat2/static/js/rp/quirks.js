@@ -16,13 +16,11 @@ function applyQuirks(text,pattern) {
                 var buffer = text.replace(/[a-zA-Z]/g, function(t) {
                     var out = t.toUpperCase();
                     if (out==t) {
-                        console.log(t.toLowerCase());
                         return t.toLowerCase();
                     } else {
-                        console.log(out);
                         return out;
                     }
-                }).replace(/\bI\b/g, 'i').replace(/,\s*[A-Z]/g, function(t) { return t.toLowerCase(); });
+                });
                 text = buffer.charAt(0).toLowerCase()+buffer.substr(1);
                 break;
             case "alt-lines":
