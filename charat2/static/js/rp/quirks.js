@@ -35,8 +35,7 @@ function applyQuirks(text,pattern) {
                 if (line == 0) {
                     buffer = text.toLowerCase();
                     line = 1;
-                }
-                if (line == 1) {
+                } else if (line == 1) {
                     buffer = text.toUpperCase();
                     line = 0;
                 }
