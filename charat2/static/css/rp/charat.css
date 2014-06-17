@@ -29,8 +29,8 @@ a.button {
     background-color: #69926A;
     color: #fffffb;
     padding: 5px;
+    padding-bottom: 10px;
     margin-top: 5px;
-    margin-bottom: 10px;
     width: 110px;
     text-align: center;
 }
