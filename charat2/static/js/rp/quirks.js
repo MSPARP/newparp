@@ -22,12 +22,19 @@ function applyQuirks(text,pattern) {
                     }
                 });
                 break;
-            case "alt-lines":
+            case "alternating":
                 var buffer = text.toLowerCase().split('');
                 for(var i=0; i<buffer.length; i+=2){
                     buffer[i] = buffer[i].toUpperCase();
                 }
                 text = buffer.join('');
+                break;
+            case "alt-lines":
+                var buffer = text.toLowerCase().split('\n');
+                for(var i=0; i<buffer.length; i+=2){
+                    buffer[i] = buffer[i].toUpperCase();
+                }
+                text = buffer.join('\n');
                 break;
         }
     } catch(e) {}
