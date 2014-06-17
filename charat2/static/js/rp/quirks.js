@@ -1,7 +1,7 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    pattern.case = 'a';
+    console.log(pattern);
 
     // Replacements
     try {
