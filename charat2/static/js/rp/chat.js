@@ -54,8 +54,6 @@ var user_state = 'online';
 
 var current_sidebar = null;
 
-var line = 0;
-
 var hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") {
     hidden = "hidden";
@@ -154,13 +152,7 @@ function updateUser() {
         user = data.chat_user;
     }).complete(function () {
         $('#usingname').val(user.character.name);
-
-        if (user.character.acronym) {
-            $('#ailin').val(user.character.acronym);
-        } else {
-            $('#ailin').val('');
-        }
-
+        $('#ailin').val(user.character.acronym);
         $('#coln').val(user.character.color);
 
         if (user.character.prefix) {
@@ -227,7 +219,7 @@ function switchChat(url) {
         user = data.chat_user;
         chat = data.chat;
         latestNum = data.latest_num;
-        //History.pushState('', data.chat.title+' - '+ORIGINAL_TITLE, url);
+        window.history.pushState("s", "n", "/"+url);
         messageParse({"messages" : data.messages});
         getMeta(true);
         getMessages();
@@ -664,21 +656,19 @@ function updateChatPreview() {
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
     var command = $('#textInput').val().split(' ');
-
-    is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc' || is_command) {
+    if (command[0] == '/ic' || command[0] == '/ooc' ||
+            command[0] == '/ban' || command[0] == '/kick' ||
+            command[0] == '/set' || command[0] == '/topic' ||
+            command[0] == '/publicity' || command[0] == '/nsfw' ||
+            command[0] == '/autosilence' || command[0] == '/me') {
         textPreview = textPreview.substring(command[0].length);
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        if (command[0] == '/') {
-            textPreview = textPreview.substr(1);
-        }
+        textPreview = textPreview.substr(1);
     } else {
-        pattern = user.character;
-        pattern.line = line;
-        textPreview = applyQuirks(textPreview,pattern);
+        textPreview = applyQuirks(textPreview,user.character);
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
@@ -695,22 +685,13 @@ function updateChatPreview() {
         $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
-    if ((command[0] == '/me' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
+    if (($('#textInput').val().substr(0,1)=='/' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
         $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":" ")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
-    }
-
-    if (is_command && command[0] != '/me') {
-        $('#preview').css('color', '#000000');
-        $('#textInput').css('color','#000000');
-        $('#aliasOffset').css('color','#000000');
-        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.meta.username+"</span>");
-        aliasPreview = "[color=#"+user.character.color+"]"+user.meta.username+"[/color] ";
-        $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
     if (command[0] == '/ban') {
@@ -1011,7 +992,6 @@ $(function (){
                     type_force = '';
                     $('#control-buttons .me-button').css('background-color','');
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
-                    line = line==0?1:0;
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
                     updateChatPreview();
@@ -1048,29 +1028,7 @@ $(function (){
             }
         });
 
-        $('#quickSwitch').on('click', '.characterSwitch', function () {
-            switchCharacter($(this).prop('id').substr(10));
-            $('#quickSwitch').hide();
-        });
-
-        $('#quickSwitch').on('click', '#cancelSwitch', function () {
-            $('#quickSwitch').hide();
-        });
-
-        $('#aliasOffset').on('click', function () {
-            $('#quickSwitch').empty();
-            $('<div>').prop('id', 'cancelSwitch').text('[cancel]').appendTo('#quickSwitch');
-            $('#quickSwitch').append(' ');
-            $.getJSON('/characters.json', function (data) {
-                for (i in data.characters) {
-                    character = data.characters[i];
-                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
-                    $('#quickSwitch').append(' ');
-                }
-            });
-            $('#quickSwitch').show();
-        });
-
+        // MAKE PREVIEW A SETTING, DEFAULT OFF
         $('#previewToggle input').click(function () {
             preview_show != preview_show;
             previewToggle();
