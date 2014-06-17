@@ -1,7 +1,6 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    console.log(pattern.case);
     try {
         switch (pattern.case) {
             case "lower":
@@ -14,12 +13,13 @@ function applyQuirks(text,pattern) {
                 text = text.toLowerCase().replace(/\b\w/g, function(t) { return t.toUpperCase(); });
                 break;
             case "inverted":
-                console.log(text);
                 var buffer = text.replace(/[a-zA-Z]/g, function(t) {
                     var out = t.toUpperCase();
                     if (out==t) {
+                        console.log(t.toLowerCase());
                         return t.toLowerCase();
                     } else {
+                        console.log(out);
                         return out;
                     }
                 }).replace(/\bI\b/g, 'i').replace(/,\s*[A-Z]/g, function(t) { return t.toLowerCase(); });
