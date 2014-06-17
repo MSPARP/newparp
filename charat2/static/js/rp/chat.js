@@ -1043,6 +1043,7 @@ $(function (){
             $.getJSON('/characters.json', function (data) {
                 for (i in data) {
                     character = data[i];
+                    console.log(character);
                     $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
                 }
             });
