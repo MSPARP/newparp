@@ -50,7 +50,7 @@ function applyQuirks(text,pattern) {
             regex[re[0]] = re[1];
         }
     } catch(e) {
-        regex = {}
+        regex = {};
     }
 
     var empty = true;
