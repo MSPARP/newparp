@@ -13,7 +13,7 @@ function applyQuirks(text,pattern) {
                 text = text.toLowerCase().replace(/\b\w/g, function(t) { return t.toUpperCase(); });
                 break;
             case "inverted":
-                var buffer = text.replace(/[a-zA-Z]/g, function(t) {
+                var text = text.replace(/[a-zA-Z]/g, function(t) {
                     var out = t.toUpperCase();
                     if (out==t) {
                         return t.toLowerCase();
@@ -21,8 +21,6 @@ function applyQuirks(text,pattern) {
                         return out;
                     }
                 });
-                console.log(buffer);
-                text = buffer.charAt(0).toLowerCase()+buffer.substr(1);
                 break;
             case "alt-lines":
                 var buffer = text.toLowerCase().split('');
