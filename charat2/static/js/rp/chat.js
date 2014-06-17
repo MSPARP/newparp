@@ -152,7 +152,13 @@ function updateUser() {
         user = data.chat_user;
     }).complete(function () {
         $('#usingname').val(user.character.name);
-        $('#ailin').val(user.character.acronym);
+
+        if (user.character.acronym) {
+            $('#ailin').val(user.character.acronym);
+        } else {
+            $('#ailin').val('');
+        }
+        
         $('#coln').val(user.character.color);
 
         if (user.character.prefix) {
@@ -1032,7 +1038,17 @@ $(function (){
             switchCharacter($(this).prop('id').substr(10));
         });
 
-        // MAKE PREVIEW A SETTING, DEFAULT OFF
+        $('#aliasOffset').on('click', function () {
+            $('#quickSwitch').empty();
+            $.getJSON('/characters.json', function (data) {
+                for (i in data) {
+                    character = data[i];
+                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'++'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
+                }
+            });
+            $('#quickSwitch').show();
+        });
+
         $('#previewToggle input').click(function () {
             preview_show != preview_show;
             previewToggle();
