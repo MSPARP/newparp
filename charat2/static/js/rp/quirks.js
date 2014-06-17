@@ -30,6 +30,7 @@ function applyQuirks(text,pattern) {
                 text = buffer.join('');
                 break;
             case "alt-lines":
+                console.log('a');
                 var buffer = text.toLowerCase().split(' ');
                 for(var i=0; i<buffer.length; i+=2){
                     buffer[i] = buffer[i].toUpperCase();
