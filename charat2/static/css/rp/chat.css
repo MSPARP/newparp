@@ -398,6 +398,7 @@ body.withSidebar.mobile .controls {
     position: relative;
     background-color: #fffffb;
     height: 100%;
+    padding: 5px;
     z-index: 3;
 }
 

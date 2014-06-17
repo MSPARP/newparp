@@ -1028,6 +1028,10 @@ $(function (){
             }
         });
 
+        $('#quickSwitch').on('click', '.characterSwitch', function () {
+            characterSwitch($(this).prop('id').substr(10));
+        });
+
         // MAKE PREVIEW A SETTING, DEFAULT OFF
         $('#previewToggle input').click(function () {
             preview_show != preview_show;
