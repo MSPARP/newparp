@@ -167,15 +167,13 @@ function updateUser() {
             $('#sufi').val('');
         }
         
-        /*
         try {
-            if (user.character.case) {
-                $('#casing').val(user.character.case);
+            if (user.character['case']) {
+                $('#casing').val(user.character['case']);
             } else {
                 $('#casing').val('');
             }
         } catch(e) {}
-        */
 
         if (user.character.replacements && user.character.replacements.length > 0) {
             clearReplacements();

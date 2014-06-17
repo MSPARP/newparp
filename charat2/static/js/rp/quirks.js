@@ -1,9 +1,8 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    /*
     try {
-        switch (pattern.case) {
+        switch (pattern.character['case']) {
             case "lower":
                 text = text.toLowerCase();
                 break;
@@ -40,7 +39,6 @@ function applyQuirks(text,pattern) {
                 break;
         }
     } catch(e) {}
-    */
 
     // Replacements
     try {
