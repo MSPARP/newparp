@@ -9,8 +9,9 @@
     var user = {{chat_user_dict|tojson|safe}};
     var chat = {{chat|tojson|safe}};
     var latestNum = {{latest_num|tojson|safe}};
+    user.character.case = '';
 </script>
-<script src="{{url_for('static', filename='js/rp/chat.js')}}"></script>
+<script src="{{url_for('static', filename='js/rp/chat.js')}}" defer></script>
 {% endblock %}
 {% block content %}
 
