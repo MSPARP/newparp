@@ -1,5 +1,3 @@
-var line = 0;
-
 function applyQuirks(text,pattern) {
 
     // Case
@@ -32,13 +30,10 @@ function applyQuirks(text,pattern) {
                 text = buffer.join('');
                 break;
             case "alt-lines":
-                console.log(line);
-                if (line == 0) {
+                if (pattern.line == 0) {
                     buffer = text.toLowerCase();
-                    line = 1;
                 } else {
                     buffer = text.toUpperCase();
-                    line = 0;
                 }
                 text = buffer;
                 break;

@@ -54,6 +54,8 @@ var user_state = 'online';
 
 var current_sidebar = null;
 
+var line = 0;
+
 var hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") {
     hidden = "hidden";
@@ -674,7 +676,9 @@ function updateChatPreview() {
     if ($('#textInput').val().substr(0,1)=='/') {
         textPreview = textPreview.substr(1);
     } else {
-        textPreview = applyQuirks(textPreview,user.character);
+        pattern = user.character;
+        pattern.line = line;
+        textPreview = applyQuirks(textPreview,pattern);
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
@@ -998,6 +1002,7 @@ $(function (){
                     type_force = '';
                     $('#control-buttons .me-button').css('background-color','');
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
+                    line = line==0?1:0;
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
                     updateChatPreview();
