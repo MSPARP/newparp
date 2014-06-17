@@ -403,6 +403,11 @@ body.withSidebar.mobile .controls {
     z-index: 3;
 }
 
+#cancelSwitch {
+    display: inline-block;
+    cursor: pointer;
+}
+
 #quickSwitch .characterSwitch {
     display: inline-block;
     cursor: pointer;
