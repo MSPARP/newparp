@@ -1031,6 +1031,29 @@ $(function (){
             }
         });
 
+        $('#quickSwitch').on('click', '.characterSwitch', function () {
+            switchCharacter($(this).prop('id').substr(10));
+            $('#quickSwitch').hide();
+        });
+
+        $('#quickSwitch').on('click', '#cancelSwitch', function () {
+            $('#quickSwitch').hide();
+        });
+
+        $('#aliasOffset').on('click', function () {
+            $('#quickSwitch').empty();
+            $('<div>').prop('id', 'cancelSwitch').text('[cancel]').appendTo('#quickSwitch');
+            $('#quickSwitch').append(' ');
+            $.getJSON('/characters.json', function (data) {
+                for (i in data.characters) {
+                    character = data.characters[i];
+                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
+                    $('#quickSwitch').append(' ');
+                }
+            });
+            $('#quickSwitch').show();
+        });
+
         // MAKE PREVIEW A SETTING, DEFAULT OFF
         $('#previewToggle input').click(function () {
             preview_show != preview_show;
