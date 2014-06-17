@@ -167,6 +167,7 @@ function updateUser() {
             $('#sufi').val('');
         }
         
+        /*
         try {
             if (user.character.case) {
                 $('#casing').val(user.character.case);
@@ -174,7 +175,8 @@ function updateUser() {
                 $('#casing').val('');
             }
         } catch(e) {}
-        
+        */
+
         if (user.character.replacements && user.character.replacements.length > 0) {
             clearReplacements();
             for (i in user.character.replacements) {

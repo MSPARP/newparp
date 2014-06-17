@@ -1,7 +1,46 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    alert(pattern);
+    /*
+    try {
+        switch (pattern.case) {
+            case "lower":
+                text = text.toLowerCase();
+                break;
+            case "upper":
+                text = text.toUpperCase();
+                break;
+            case "title":
+                text = text.toLowerCase().replace(/\b\w/g, function(t) { return t.toUpperCase(); });
+                break;
+            case "inverted":
+                text = text.replace(/[a-zA-Z]/g, function(t) {
+                    var out = t.toUpperCase();
+                    if (out==t) {
+                        return t.toLowerCase();
+                    } else {
+                        return out;
+                    }
+                });
+                break;
+            case "alternating":
+                var buffer = text.toLowerCase().split('');
+                for(var i=0; i<buffer.length; i+=2){
+                    buffer[i] = buffer[i].toUpperCase();
+                }
+                text = buffer.join('');
+                break;
+            case "alt-lines":
+                if (pattern.line == 0) {
+                    buffer = text.toLowerCase();
+                } else {
+                    buffer = text.toUpperCase();
+                }
+                text = buffer;
+                break;
+        }
+    } catch(e) {}
+    */
 
     // Replacements
     try {
