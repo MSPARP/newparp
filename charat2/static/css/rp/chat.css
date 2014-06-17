@@ -394,6 +394,17 @@ body.withSidebar.mobile .controls {
     right: 10px;
 }
 
+#quickSwitch {
+    position: relative;
+    background-color: #fffffb;
+    height: 100%;
+    z-index: 3;
+}
+
+#quickSwitch .characterSwitch {
+    display: inline-block;
+}
+
 #preview {
     display: none;
     padding: 5px;
