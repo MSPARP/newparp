@@ -708,8 +708,8 @@ function updateChatPreview() {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
-        $('#aliasOffset').text("<span style='color: #"+user.character.color+";'>"+user.meta.username+"</span>");
-        aliasPreview = "[color=#"+user.character.color+"]"+user.meta.username+"[/color]";
+        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.meta.username+"</span>");
+        aliasPreview = "[color=#"+user.character.color+"]"+user.meta.username+"[/color] ";
         $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
