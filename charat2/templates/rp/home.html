@@ -18,6 +18,8 @@
         <div class="topborder"></div>
         <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
         <div class="topborder"></div>
+        <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
+        <div class="topborder"></div>
         <a id="goUser" href="">Guide</a>
         <div class="topborder"></div>
         <a id="goUser" href="">Settings</a>
@@ -39,6 +41,7 @@
             <center>
                 <a class="button" href="">Guide</a>
                 <a class="button" href="{{url_for('chat_list')}}">Chats</a>
+                <a class="button" href="{{url_for('character_list')}}">Characters</a>
                 {% if logged_in %}
                 <a class="button" href="">Settings</a>
                 <a class="button" href="{{url_for('logout')}}">Logout</a>

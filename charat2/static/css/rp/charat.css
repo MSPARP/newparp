@@ -35,10 +35,6 @@ a.button {
     text-align: center;
 }
 
-a.button.chat {
-    width: 236px;
-}
-
 a.button:hover {
     background-color: #70A070;
 }

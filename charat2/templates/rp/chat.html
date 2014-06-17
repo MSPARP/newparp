@@ -26,6 +26,8 @@
             <div class="topborder"></div>
             <a id="goUser" href="">Guide</a>
             <div class="topborder"></div>
+            <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
+            <div class="topborder"></div>
             <a id="goUser" href="">Settings</a>
             <div class="topborder"></div>
             {% if logged_in %}
@@ -227,9 +229,7 @@
             <button class="me-button" type="button">me</button>
         </div>
         <div id="aliasOffset"></div>
-        <div id="quickSwitch">
-            <div id="character-8" class="characterSwitch"><span style="color:#00cc00;">adorableSleep</span> [<span style="color:#00cc00;">Sho</span>]</div>
-        </div>
+        <div id="quickSwitch"></div>
     </div>
 </form>
 
