@@ -664,12 +664,10 @@ function updateChatPreview() {
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
     var command = $('#textInput').val().split(' ');
+
+    is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc' ||
-            command[0] == '/ban' || command[0] == '/kick' ||
-            command[0] == '/set' || command[0] == '/topic' ||
-            command[0] == '/publicity' || command[0] == '/nsfw' ||
-            command[0] == '/autosilence' || command[0] == '/me') {
+    if (command[0] == '/ic' || command[0] == '/ooc' || is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
@@ -697,13 +695,22 @@ function updateChatPreview() {
         $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
-    if (($('#textInput').val().substr(0,1)=='/' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
+    if ((command[0] == '/me' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
         $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":" ")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
+    }
+
+    if (is_command && command[0] != '/me') {
+        $('#preview').css('color', '#000000');
+        $('#textInput').css('color','#000000');
+        $('#aliasOffset').css('color','#000000');
+        $('#aliasOffset').text("<span style='color: #"+user.character.color+";'>"+user.meta.username+"</span>");
+        aliasPreview = "[color=#"+user.character.color+"]"+user.meta.username+"[/color]";
+        $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
     if (command[0] == '/ban') {
