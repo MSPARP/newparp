@@ -33,8 +33,10 @@ function applyQuirks(text,pattern) {
                 var buffer = text.toLowerCase().split(' ');
                 for(var i=0; i<buffer.length; i+=2){
                     buffer[i] = buffer[i].toUpperCase();
+                    console.log(test);
                 }
                 text = buffer.join(' ');
+                console.log(text);
                 break;
         }
     } catch(e) {}
