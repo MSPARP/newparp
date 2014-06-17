@@ -674,7 +674,9 @@ function updateChatPreview() {
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        textPreview = textPreview.substr(1);
+        if (command[0] == '/') {
+            textPreview = textPreview.substr(1);
+        }
     } else {
         pattern = user.character;
         pattern.line = line;
