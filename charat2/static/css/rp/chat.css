@@ -395,6 +395,7 @@ body.withSidebar.mobile .controls {
 }
 
 #quickSwitch {
+    display: none;
     position: relative;
     background-color: #fffffb;
     height: 100%;
