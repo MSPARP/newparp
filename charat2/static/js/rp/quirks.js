@@ -36,7 +36,6 @@ function applyQuirks(text,pattern) {
                     buffer[i] = buffer[i].toUpperCase();
                 }
                 text = buffer.join(' ');
-                console.log(text);
                 break;
         }
     } catch(e) {}
