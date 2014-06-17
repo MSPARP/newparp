@@ -1029,7 +1029,7 @@ $(function (){
         });
 
         $('#quickSwitch').on('click', '.characterSwitch', function () {
-            characterSwitch($(this).prop('id').substr(10));
+            switchCharacter($(this).prop('id').substr(10));
         });
 
         // MAKE PREVIEW A SETTING, DEFAULT OFF
