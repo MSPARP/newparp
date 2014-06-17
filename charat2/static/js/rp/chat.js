@@ -1041,6 +1041,7 @@ $(function (){
         $('#aliasOffset').on('click', function () {
             $('#quickSwitch').empty();
             $.getJSON('/characters.json', function (data) {
+                console.log(data);
                 for (i in data) {
                     character = data[i];
                     console.log(character);
