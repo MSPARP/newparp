@@ -1041,10 +1041,8 @@ $(function (){
         $('#aliasOffset').on('click', function () {
             $('#quickSwitch').empty();
             $.getJSON('/characters.json', function (data) {
-                console.log(data);
-                for (i in data) {
-                    character = data[i];
-                    console.log(character);
+                for (i in data.characters) {
+                    character = data.characters[i];
                     $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
                 }
             });
