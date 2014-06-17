@@ -405,6 +405,7 @@ body.withSidebar.mobile .controls {
 
 #quickSwitch .characterSwitch {
     display: inline-block;
+    cursor: pointer;
 }
 
 #preview {
