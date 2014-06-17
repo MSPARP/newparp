@@ -158,7 +158,7 @@ function updateUser() {
         } else {
             $('#ailin').val('');
         }
-        
+
         $('#coln').val(user.character.color);
 
         if (user.character.prefix) {
@@ -1043,7 +1043,7 @@ $(function (){
             $.getJSON('/characters.json', function (data) {
                 for (i in data) {
                     character = data[i];
-                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'++'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
+                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
                 }
             });
             $('#quickSwitch').show();
