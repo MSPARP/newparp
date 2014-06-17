@@ -21,6 +21,7 @@ function applyQuirks(text,pattern) {
                         return out;
                     }
                 });
+                console.log(buffer);
                 text = buffer.charAt(0).toLowerCase()+buffer.substr(1);
                 break;
             case "alt-lines":
