@@ -42,6 +42,7 @@ var MISSED_MESSAGE_COUNT_ID = '#exclaim';
 var USER_LIST_ID = '#users';
 
 /* VARIABLES */
+var line = 0;
 
 var chats = [chat.url];
 
