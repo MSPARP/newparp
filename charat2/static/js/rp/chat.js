@@ -659,19 +659,21 @@ function updateChatPreview() {
     $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     
     var command = $('#textInput').val().split(' ');
+
+    is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc' ||
-            command[0] == '/ban' || command[0] == '/kick' ||
-            command[0] == '/set' || command[0] == '/topic' ||
-            command[0] == '/publicity' || command[0] == '/nsfw' ||
-            command[0] == '/autosilence' || command[0] == '/me') {
+    if (command[0] == '/ic' || command[0] == '/ooc' || is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        textPreview = textPreview.substr(1);
+        if (command[0] == '/') {
+            textPreview = textPreview.substr(1);
+        }
     } else {
-        textPreview = applyQuirks(textPreview,user.character);
+        pattern = user.character;
+        pattern.line = line;
+        textPreview = applyQuirks(textPreview,pattern);
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
@@ -688,13 +690,22 @@ function updateChatPreview() {
         $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
-    if (($('#textInput').val().substr(0,1)=='/' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
+    if ((command[0] == '/me' || type_force == 'me') && command[0] != '/' && command[0] != '/ic' && command[0] != '/ooc') {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
         aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
         $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":" ")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
+    }
+
+    if (is_command && command[0] != '/me') {
+        $('#preview').css('color', '#000000');
+        $('#textInput').css('color','#000000');
+        $('#aliasOffset').css('color','#000000');
+        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.meta.username+"</span>");
+        aliasPreview = "[color=#"+user.character.color+"]"+user.meta.username+"[/color] ";
+        $("#textInput").css('text-indent', $('#aliasOffset').width()+4+'px');
     }
     
     if (command[0] == '/ban') {
@@ -780,6 +791,7 @@ function updateChatPreview() {
     }
     return textPreview.length!=0;
 }
+
 
 function previewToggle() {
     if (!preview_show) {
