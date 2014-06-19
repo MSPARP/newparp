@@ -224,7 +224,7 @@ function switchChat(url) {
         chat = data.chat;
         latestNum = data.latest_num;
         History.pushState({}, "", url);
-        document.title = data.title+" - "+ORIGINAL_TITLE;
+        document.title = data.chat.title+" - "+ORIGINAL_TITLE;
         messageParse({"messages" : data.messages});
         getMeta(true);
         getMessages();
