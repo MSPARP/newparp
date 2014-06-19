@@ -223,7 +223,8 @@ function switchChat(url) {
         user = data.chat_user;
         chat = data.chat;
         latestNum = data.latest_num;
-        window.history.pushState("s", "n", "/"+url);
+        History.pushState({}, "", url);
+        document.title = data.title+" - "+ORIGINAL_TITLE;
         messageParse({"messages" : data.messages});
         getMeta(true);
         getMessages();
