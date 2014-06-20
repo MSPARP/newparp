@@ -921,7 +921,6 @@ $(function (){
         }
         
         $('.controls').submit(function () {
-            $('#textInput').blur();
             $('#textInput').focus();
             if ($.trim($('#textInput').val())=='/ooc') {
                 if (!ooc_on) {
