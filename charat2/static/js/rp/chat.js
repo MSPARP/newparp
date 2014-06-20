@@ -921,7 +921,6 @@ $(function (){
         }
         
         $('.controls').submit(function () {
-            $('#textInput').focus();
             $('#textInput').blur();
             $('#textInput').focus();
             if ($.trim($('#textInput').val())=='/ooc') {
@@ -1015,9 +1014,7 @@ $(function (){
                     updateChatPreview();
                 }
             }
-            if ($(document.body).hasClass('mobile')) {} else {
-                $("#textInput").focus();
-            }
+            $("#textInput").focus();
             $('#textInput').val('');
             return false;
         });
