@@ -82,6 +82,11 @@ button.save_character {
     margin-bottom: 10px;
 }
 
+.card.save_as {
+    text-align: center;
+}
+
 .card.save_as input {
     text-align: center;
 }
+
