@@ -321,7 +321,7 @@ function addLine(msg){
         
         var message_container = $('<span>').prop("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
         var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
-        var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
+        var info_left = $('<span>').addClass("left").text(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
             var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
