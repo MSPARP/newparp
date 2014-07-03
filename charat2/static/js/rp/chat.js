@@ -362,7 +362,7 @@ function generateUserList(user_data) {
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
-            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+' '+list_user.meta.group+is_self+'"><span class="userCharacter'+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+' '+list_user.meta.group+is_self+'"><span class="userCharacter'+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+$("<div>").html(list_user.character.name).text()+'</span><span class="username">'+list_user.meta.username+'</span></li>');
 
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
