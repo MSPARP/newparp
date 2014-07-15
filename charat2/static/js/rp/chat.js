@@ -1178,14 +1178,7 @@ $(function (){
             show_topic = !show_topic;
         });
 
-        $('#convo').on('click', '.ooc', function () {
-            $('.ooc-off').prop('class', $(this).prop('class').replace('ooc-off','ooc'));
-            $(this).prop('class', $(this).prop('class').replace('ooc','ooc-off'));
-        });
-
-        $('#convo').on('click', '.ooc-off', function () {
-            $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
-        });
+        $('#convo').on('click', '.ooc', function () {});
 
         $(CONVERSATION_CONTAINER).scroll(function (){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;
