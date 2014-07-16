@@ -668,7 +668,7 @@ function updateChatPreview() {
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || ommand[0] == '/') {
+        if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
     } else {
