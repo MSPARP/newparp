@@ -668,12 +668,8 @@ function updateChatPreview() {
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        if (command[0] == '/ic' || command[0] == '/ooc') {
+        if (command[0] == '/') {
             textPreview = textPreview.substr(1);
-            console.log("a-"+textPreview+"-");
-        } else if (command[0] == '/') {
-            textPreview = textPreview.substr(1);
-            console.log("b-"+textPreview+"-");
         }
     } else {
         pattern = user.character;
