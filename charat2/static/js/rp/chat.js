@@ -666,9 +666,7 @@ function updateChatPreview() {
     
     if (command[0] == '/ic' || command[0] == '/ooc') {
         textPreview = textPreview.substring(command[0].length+1);
-    }
-
-    if (is_command) {
+    } else if (is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
