@@ -663,14 +663,14 @@ function updateChatPreview() {
 
     is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc') {
-        textPreview = textPreview.substring(command[0].length+1);
-    } else if (is_command) {
+    if (command[0] == '/ic' || command[0] == '/ooc' || (is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        if (command[0] == '/') {
+        if (command[0] == '/ic' || command[0] == '/ooc') {
+            textPreview = textPreview.substr(2);
+        } else if (command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
     } else {
