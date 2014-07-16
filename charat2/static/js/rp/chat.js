@@ -669,7 +669,7 @@ function updateChatPreview() {
     
     if ($('#textInput').val().substr(0,1)=='/') {
         if (command[0] == '/ic' || command[0] == '/ooc') {
-            textPreview = textPreview.substr(2);
+            textPreview = textPreview.substr(1);
             console.log("a-"+textPreview+"-");
         } else if (command[0] == '/') {
             textPreview = textPreview.substr(1);
