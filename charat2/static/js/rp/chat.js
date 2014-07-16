@@ -1082,11 +1082,7 @@ $(function (){
         });
 
         $('#settings').submit(function () {
-            // Trim everything first
             formInputs = $('#settings').find('input, select');
-            for (i=0; i<formInputs.length; i++) {
-                formInputs[i].value = $.trim(formInputs[i].value)
-            }
             if ($('input[name="name"]').val()=="") {
                 alert("You can't chat with a blank name!");
             } else if ($('input[name="color"]').val().match(/^[0-9a-fA-F]{6}$/)==null) {
