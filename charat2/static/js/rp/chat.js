@@ -663,7 +663,7 @@ function updateChatPreview() {
 
     is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc' || is_command) {
+    if (command[0] == '/' || command[0] == '/ic' || command[0] == '/ooc' || is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
