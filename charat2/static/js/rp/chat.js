@@ -779,8 +779,6 @@ function updateChatPreview() {
         }
     }
     
-    textPreview = $.trim(textPreview);
-    
     if (textPreview.length>0) {
         $('#preview').html(bbEncode(aliasPreview + textPreview));
         sending_line = textPreview;
