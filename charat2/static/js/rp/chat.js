@@ -264,7 +264,6 @@ function startChat() {
     getMeta(true);
     getMessages();
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
-    goBottom(CONVERSATION_CONTAINER);
     updateChatPreview();
 }
 
@@ -910,6 +909,8 @@ $(function (){
             line = bbEncode($(this).find('.message').text());
             $(this).find('.message').html(line);
             $(this).find('.info .right .post_timestamp').text(getTimestamp($(this).find('.info .right .post_timestamp').text()));
+        }).promise().done(function () {
+            goBottom(CONVERSATION_CONTAINER);
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
