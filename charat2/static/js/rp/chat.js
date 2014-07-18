@@ -355,7 +355,7 @@ function generateUserList(user_data) {
         var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
-            updateUser();
+            //updateUser();
             $(USER_LIST_ID).prop('class', list_user.meta.group);
             $("#userList").prop('class', "sidebar "+list_user.meta.group);
         }
