@@ -346,6 +346,7 @@ ul#metaOptions {
     text-align: center;
     overflow: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .replacementContainer {
@@ -401,6 +402,7 @@ body.withSidebar.mobile .controls {
     height: 50px;
     padding: 5px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 3;
 }
 
