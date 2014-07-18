@@ -101,7 +101,7 @@ def send():
     if "text" not in request.form:
         abort(400)
 
-    text = request.form["text"].replace(" ", u"\u00A0");
+    text = request.form["text"].replace("  ", u" \u00A0");
     if text == "":
         abort(400)
     
