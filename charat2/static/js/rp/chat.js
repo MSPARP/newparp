@@ -297,10 +297,10 @@ function addLine(msg){
     
         var alias = "";
         if (msg.acronym) {
-            alias = msg.acronym+":\\u00A0";
+            alias = msg.acronym+":\u00A0";
         }
         if (msg.type == 'ooc') {
-            alias = msg.user.username+":\\u00A0";
+            alias = msg.user.username+":\u00A0";
         }
     
         if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
