@@ -57,7 +57,7 @@
             {% if message.type == 'me' %}
             <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.acronym+"[/color]]" if message.acronym|length else ""}} {{message.text}}</p>
             {% else %}
-            <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:\u00A0{% else %}{% if message.acronym %}{{message.acronym}}:\u00A0{% endif %}{% endif %}{{message.text}}</p>
+            <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.acronym %}{{message.acronym}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
             {% endif %}
         </span>
         {% endfor %}
