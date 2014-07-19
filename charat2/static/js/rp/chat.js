@@ -472,6 +472,9 @@ function getMessages(first_join) {
         } else {
             // Disconnected methods
         }
+        if (first_join) {
+            unreadNotifications();
+        }
     });
 }
 
