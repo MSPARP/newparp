@@ -71,7 +71,7 @@ body.menu #topbar #toptitle {
 }
 
 #topbar.unread #toptitle {
-    background-color: #f4f5ae;
+    /* background-color: #f4f5ae; */
 }
 
 #topbar #toptitle:hover {
