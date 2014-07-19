@@ -40,6 +40,14 @@ def messages():
     except (KeyError, ValueError):
         after = 0
 
+    if "joining" in request.form or g.joining:
+        db_connect()
+        get_chat_user()
+        return jsonify({
+            "users": get_userlist(g.db, g.redis, g.chat),
+            "chat": g.chat.to_dict(),
+        })
+
     # Look for stored messages first, and only subscribe if there aren't any.
     messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
     if len(messages) != 0 or g.joining:
@@ -49,6 +57,8 @@ def messages():
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
     pubsub.subscribe("channel:%s:messages" % g.chat_id)
+    # Channel for user list updates.
+    pubsub.subscribe("channel:%s:meta" % g.chat_id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
     pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 

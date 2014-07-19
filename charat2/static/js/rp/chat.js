@@ -226,8 +226,8 @@ function switchChat(url) {
         History.replaceState({}, "", url);
         document.title = data.chat.title+" - "+ORIGINAL_TITLE;
         messageParse({"messages" : data.messages});
-        getMeta(true);
-        getMessages();
+        //getMeta(true);
+        getMessages(true);
     });
 }
 
@@ -460,8 +460,13 @@ function setFlag(flag,val) {
 var messageAjax = null;
 var messageTimeout = null
 
-function getMessages() {
-    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+function getMessages(first_join) {
+    first_join = (typeof first_join === "undefined") ? false : first_join;
+    if (first_join) {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum, 'joining': true};
+    } else {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    }
     messageAjax = $.post(CHAT_MESSAGES, messageData, function (data) {
         messageParse(data);
     }, "json").complete(function () {
