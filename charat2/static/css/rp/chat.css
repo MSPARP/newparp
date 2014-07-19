@@ -70,6 +70,10 @@ body.menu #topbar #toptitle {
     background-color: #f6f6f6;
 }
 
+#topbar.unread #toptitle {
+    background-color: #f4f5ae;
+}
+
 #topbar #toptitle:hover {
     background-color: #f6f6f6;
 }
@@ -77,16 +81,6 @@ body.menu #topbar #toptitle {
 #toptitle img {
     position: relative;
     top: 8px;
-}
-
-#topbar #unread-notifier {
-    display: none;
-    position: absolute;
-    font-family: sans-serif;
-    color: #444;
-    font-size: 20px;
-    bottom: -12px;
-    left: 40px;
 }
 
 #topbar #topmenu {

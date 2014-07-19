@@ -130,11 +130,11 @@ function isChecked(id) {
 function unreadNotifications() {
     $.getJSON('/chats/unread.json', function (data) {
         if (data.total!=0) {
-            $('#unread-notifier').show().text(data.total+'!');
-            $('#goChats').prop('href', '/chats/unread').addClass('unread');
+            $('#topbar').addClass('unread');
+            $('#goChats').prop('href', '/chats/unread');
         } else {
-            $('#unread-notifier').hide();
-            $('#goChats').prop('href', '/chats').removeClass('unread');
+            $('#topbar').removeClass('unread');
+            $('#goChats').prop('href', '/chats');
         }
     }).complete(function () {
         window.setTimeout(unreadNotifications, 10000);
