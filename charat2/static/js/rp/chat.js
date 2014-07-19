@@ -1004,7 +1004,8 @@ $(function (){
                     }
                     var lineSend = sending_line;
                     var type = ooc_on ? "ooc" : "ic";
-                    if (lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
+                    var textInput = $('#textInput').val();
+                    if (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}")) {
                         type = "ooc";
                     }
                     if (type_force) {
