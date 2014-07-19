@@ -67,12 +67,8 @@ p:hover .timestamp {
     background-color: transparent;
 }
 
-body.menu #topbar #toptitle {
+body.menu #topbar #toptitle, #topbar.unread #toptitle {
     background-color: #f6f6f6;
-}
-
-#topbar.unread #toptitle {
-    /* background-color: #f4f5ae; */
 }
 
 #topbar #toptitle:hover {
