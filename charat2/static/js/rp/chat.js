@@ -13,7 +13,6 @@ var SAVE_URL = '/chat_api/save';
 var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
 var CHAT_QUIT = '/chat_api/quit';
-var CHAT_META = '/chat_api/meta';
 
 var CHAT_FLAGS = ['autosilence','publicity','nsfw'];
 var CHAT_FLAG_MAP = {
@@ -472,28 +471,6 @@ function getMessages(first_join) {
             messageTimeout = window.setTimeout(getMessages, 50);
         } else {
             // Disconnected methods
-        }
-    });
-}
-
-var metaAjax = null;
-var metaTimeout = null;
-
-function getMeta(first_join) {
-    first_join = (typeof first_join === "undefined") ? false : first_join;
-    if (first_join) {
-        var messageData = {'chat_id': chat['id'], 'after': latestNum, 'joining': true};
-    } else {
-        var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    }
-    metaAjax = $.post(CHAT_META, messageData, function (data) {
-        messageParse(data);
-    }, "json").complete(function () {
-        if (chat_state=='chat') {
-            metaTimeout = window.setTimeout(getMeta, 50);
-        }
-        if (first_join) {
-            unreadNotifications();
         }
     });
 }

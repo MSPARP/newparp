@@ -71,29 +71,6 @@ def messages():
             return resp
 
 @mark_alive
-def meta():
-
-    if "joining" in request.form or g.joining:
-        db_connect()
-        get_chat_user()
-        return jsonify({
-            "users": get_userlist(g.db, g.redis, g.chat),
-            "chat": g.chat.to_dict(),
-        })
-
-    pubsub = g.redis.pubsub()
-    # Channel for user list updates.
-    pubsub.subscribe("channel:%s:meta" % g.chat_id)
-
-    for msg in pubsub.listen():
-        if msg["type"]=="message":
-            # The pubsub channel sends us a JSON string, so we return that
-            # instead of using jsonify.
-            resp = make_response(msg["data"])
-            resp.headers["Content-type"] = "application/json"
-            return resp
-
-@mark_alive
 def ping():
     return "", 204
 
