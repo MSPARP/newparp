@@ -226,7 +226,6 @@ function switchChat(url) {
         History.replaceState({}, "", url);
         document.title = data.chat.title+" - "+ORIGINAL_TITLE;
         messageParse({"messages" : data.messages});
-        //getMeta(true);
         getMessages(true);
     });
 }
@@ -261,8 +260,7 @@ function startChat() {
     } else {
         setSidebar(current_sidebar);
     }
-    getMeta(true);
-    getMessages();
+    getMessages(true);
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
     updateChatPreview();
 }
