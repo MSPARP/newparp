@@ -1,7 +1,7 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    console.log(pattern);
+    console.log(pattern.line);
     switch (pattern.case) {
         case "lower":
             text = text.toLowerCase();

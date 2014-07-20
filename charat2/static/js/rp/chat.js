@@ -657,7 +657,7 @@ function updateChatPreview() {
         }
     } else {
         pattern = user.character;
-        pattern.line = line;
+        user.character.line = line;
         textPreview = applyQuirks(textPreview,pattern);
     }
     
