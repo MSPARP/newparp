@@ -649,8 +649,9 @@ function updateChatPreview() {
     if (command[0] == '/' || command[0] == '/ic' || command[0] == '/ooc' || is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
-    
-    if ($('#textInput').val().substr(0,1)=='/' || textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}")) {
+
+    var textInput = $('#textInput').val();    
+    if (textInput.substr(0,1)=='/' || textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}")) {
         if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
