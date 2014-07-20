@@ -57,6 +57,7 @@ p:hover .timestamp {
     width: 44px;
     height: 44px;
     padding: 0 5px;
+    padding-bottom: 2px;
     background-color: transparent;
     display: inline;
     width: auto;
@@ -66,7 +67,7 @@ p:hover .timestamp {
     background-color: transparent;
 }
 
-body.menu #topbar #toptitle {
+body.menu #topbar #toptitle, #topbar.unread #toptitle {
     background-color: #f6f6f6;
 }
 
@@ -77,16 +78,6 @@ body.menu #topbar #toptitle {
 #toptitle img {
     position: relative;
     top: 8px;
-}
-
-#topbar #unread-notifier {
-    display: none;
-    position: absolute;
-    font-family: sans-serif;
-    color: #444;
-    font-size: 20px;
-    bottom: -12px;
-    left: 40px;
 }
 
 #topbar #topmenu {
@@ -346,6 +337,7 @@ ul#metaOptions {
     text-align: center;
     overflow: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .replacementContainer {
@@ -398,8 +390,10 @@ body.withSidebar.mobile .controls {
     display: none;
     position: relative;
     background-color: #fffffb;
-    height: 100%;
+    height: 50px;
     padding: 5px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 3;
 }
 

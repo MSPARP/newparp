@@ -2,7 +2,7 @@ function linkify(inputText) {
     var replacedText, replacePattern1, replacePattern2;
 
     //URLs starting with http://, https://, or ftp://
-    replacePattern1 = /]?=?https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gim;
+    replacePattern1 = /]?=?https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@;:%_\+.~#?&//=]*)/gim;
     replacedText = inputText.replace(replacePattern1,
     function(m) {
         if (m.substr(0,1) == "=" || m.substr(0,1) == "]") {

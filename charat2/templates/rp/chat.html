@@ -16,7 +16,7 @@
 
 <div id="topbar">
     <center>
-       <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /><div id="unread-notifier"></div></div>
+       <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /></div>
         <div id="topmenu">
             <a id="goHome" href="{{url_for('home')}}">Home</a>
             <div class="topborder"></div>
@@ -41,7 +41,7 @@
         <span id="extain"><span id="exclaim">0</span><span id="reclaim">!</span></span>
     </span>
     <span class="right">
-        <span class="userList">U</span> <span class="settings">S</span>
+        <span class="userList">U</span> <span class="settings">C</span>
     </span>
 </div>
 
@@ -57,7 +57,7 @@
             {% if message.type == 'me' %}
             <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.acronym+"[/color]]" if message.acronym|length else ""}} {{message.text}}</p>
             {% else %}
-            <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}: {% else %}{% if message.acronym %}{{message.acronym}}: {% endif %}{% endif %}{{message.text}}</p>
+            <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.acronym %}{{message.acronym}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
             {% endif %}
         </span>
         {% endfor %}

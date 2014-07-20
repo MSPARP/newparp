@@ -13,7 +13,6 @@ var SAVE_URL = '/chat_api/save';
 var CHAT_PING = '/chat_api/ping';
 var CHAT_MESSAGES = '/chat_api/messages';
 var CHAT_QUIT = '/chat_api/quit';
-var CHAT_META = '/chat_api/meta';
 
 var CHAT_FLAGS = ['autosilence','publicity','nsfw'];
 var CHAT_FLAG_MAP = {
@@ -131,11 +130,11 @@ function isChecked(id) {
 function unreadNotifications() {
     $.getJSON('/chats/unread.json', function (data) {
         if (data.total!=0) {
-            $('#unread-notifier').show().text(data.total+'!');
-            $('#goChats').prop('href', '/chats/unread').addClass('unread');
+            $('#topbar').addClass('unread');
+            $('#goChats').prop('href', '/chats/unread');
         } else {
-            $('#unread-notifier').hide();
-            $('#goChats').prop('href', '/chats').removeClass('unread');
+            $('#topbar').removeClass('unread');
+            $('#goChats').prop('href', '/chats');
         }
     }).complete(function () {
         window.setTimeout(unreadNotifications, 10000);
@@ -226,8 +225,7 @@ function switchChat(url) {
         History.replaceState({}, "", url);
         document.title = data.chat.title+" - "+ORIGINAL_TITLE;
         messageParse({"messages" : data.messages});
-        getMeta(true);
-        getMessages();
+        getMessages(true);
     });
 }
 
@@ -261,10 +259,8 @@ function startChat() {
     } else {
         setSidebar(current_sidebar);
     }
-    getMeta(true);
-    getMessages();
+    getMessages(true);
     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
-    goBottom(CONVERSATION_CONTAINER);
     updateChatPreview();
 }
 
@@ -298,10 +294,10 @@ function addLine(msg){
     
         var alias = "";
         if (msg.acronym) {
-            alias = msg.acronym+": ";
+            alias = msg.acronym+":\u00A0";
         }
         if (msg.type == 'ooc') {
-            alias = msg.user.username+": ";
+            alias = msg.user.username+":\u00A0";
         }
     
         if ($(CONVERSATION_CONTAINER+' p:last').hasClass("user"+msg.user_id) && $(CONVERSATION_CONTAINER+' p:last').hasClass('ic') && msg.type == 'ic') {
@@ -321,7 +317,7 @@ function addLine(msg){
         
         var message_container = $('<span>').prop("id","message"+msg.id).addClass(msg.type).addClass("user"+msg.user.id).appendTo(CONVERSATION_ID);
         var info = $('<p>').addClass("info").appendTo("#message"+msg.id);
-        var info_left = $('<span>').addClass("left").html(left_text).appendTo("#message"+msg.id+" .info");
+        var info_left = $('<span>').addClass("left").text(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
             var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
@@ -356,13 +352,13 @@ function generateUserList(user_data) {
         var user_description = GROUP_DESCRIPTIONS[list_user.meta.group].title+(GROUP_DESCRIPTIONS[list_user.meta.group].description ? ' – '+GROUP_DESCRIPTIONS[list_user.meta.group].description : '')
         if (list_user.meta.user_id == user.meta.user_id) {
             is_self = " self";
-            updateUser();
+            //updateUser();
             $(USER_LIST_ID).prop('class', list_user.meta.group);
             $("#userList").prop('class', "sidebar "+list_user.meta.group);
         }
         
         if ($('#user'+list_user.meta.user_id).length <= 0) {
-            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+' '+list_user.meta.group+is_self+'"><span class="userCharacter'+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+list_user.character.name+'</span><span class="username">'+list_user.meta.username+'</span></li>');
+            $(USER_LIST_ID).append('<li id="user'+list_user.meta.user_id+'" class="'+list_user.meta.username+' '+list_user.meta.group+is_self+'"><span class="userCharacter'+'"  style="color:#'+list_user.character.color+';" title="'+user_description+'">'+$("<div>").text(list_user.character.name).html()+'</span><span class="username">'+list_user.meta.username+'</span></li>');
 
             var user_buttons = '<span class="set">' +
                     '<li class="mod">Make Magical Mod</li>' +
@@ -461,8 +457,13 @@ function setFlag(flag,val) {
 var messageAjax = null;
 var messageTimeout = null
 
-function getMessages() {
-    var messageData = {'chat_id': chat['id'], 'after': latestNum};
+function getMessages(first_join) {
+    first_join = (typeof first_join === "undefined") ? false : first_join;
+    if (first_join) {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum, 'joining': true};
+    } else {
+        var messageData = {'chat_id': chat['id'], 'after': latestNum};
+    }
     messageAjax = $.post(CHAT_MESSAGES, messageData, function (data) {
         messageParse(data);
     }, "json").complete(function () {
@@ -470,25 +471,6 @@ function getMessages() {
             messageTimeout = window.setTimeout(getMessages, 50);
         } else {
             // Disconnected methods
-        }
-    });
-}
-
-var metaAjax = null;
-var metaTimeout = null;
-
-function getMeta(first_join) {
-    first_join = (typeof first_join === "undefined") ? false : first_join;
-    if (first_join) {
-        var messageData = {'chat_id': chat['id'], 'after': latestNum, 'joining': true};
-    } else {
-        var messageData = {'chat_id': chat['id'], 'after': latestNum};
-    }
-    metaAjax = $.post(CHAT_META, messageData, function (data) {
-        messageParse(data);
-    }, "json").complete(function () {
-        if (chat_state=='chat') {
-            metaTimeout = window.setTimeout(getMeta, 50);
         }
         if (first_join) {
             unreadNotifications();
@@ -664,12 +646,12 @@ function updateChatPreview() {
 
     is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
-    if (command[0] == '/ic' || command[0] == '/ooc' || is_command) {
+    if (command[0] == '/' || command[0] == '/ic' || command[0] == '/ooc' || is_command) {
         textPreview = textPreview.substring(command[0].length);
     }
     
     if ($('#textInput').val().substr(0,1)=='/') {
-        if (command[0] == '/') {
+        if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
     } else {
@@ -680,10 +662,11 @@ function updateChatPreview() {
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
     
+    var textInput = $('#textInput').val();
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
-            textPreview.startsWith("((") || textPreview.endsWith("))") || 
-            textPreview.startsWith("[[") || textPreview.endsWith("]]") || 
-            textPreview.startsWith("{{") || textPreview.endsWith("}}"))) {
+            textInput.startsWith("((") || textInput.endsWith("))") || 
+            textInput.startsWith("[[") || textInput.endsWith("]]") || 
+            textInput.startsWith("{{") || textInput.endsWith("}}"))) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
         $('#preview').css('opacity','0.5');
@@ -778,8 +761,6 @@ function updateChatPreview() {
             textPreview = "[color=#EE0000]Error[/color]";
         }
     }
-    
-    textPreview = $.trim(textPreview);
     
     if (textPreview.length>0) {
         $('#preview').html(bbEncode(aliasPreview + textPreview));
@@ -910,6 +891,8 @@ $(function (){
             line = bbEncode($(this).find('.message').text());
             $(this).find('.message').html(line);
             $(this).find('.info .right .post_timestamp').text(getTimestamp($(this).find('.info .right .post_timestamp').text()));
+        }).promise().done(function () {
+            goBottom(CONVERSATION_CONTAINER);
         });
 
         /* SUBMISSION AND ACTIVE CHANGES */
@@ -999,7 +982,8 @@ $(function (){
                     }
                     var lineSend = sending_line;
                     var type = ooc_on ? "ooc" : "ic";
-                    if (lineSend.startsWith("((") || lineSend.endsWith("))") || lineSend.startsWith("[[") || lineSend.endsWith("]]") || lineSend.startsWith("{{") || lineSend.endsWith("}}")) {
+                    var textInput = $('#textInput').val();
+                    if (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}")) {
                         type = "ooc";
                     }
                     if (type_force) {
@@ -1082,11 +1066,7 @@ $(function (){
         });
 
         $('#settings').submit(function () {
-            // Trim everything first
             formInputs = $('#settings').find('input, select');
-            for (i=0; i<formInputs.length; i++) {
-                formInputs[i].value = $.trim(formInputs[i].value)
-            }
             if ($('input[name="name"]').val()=="") {
                 alert("You can't chat with a blank name!");
             } else if ($('input[name="color"]').val().match(/^[0-9a-fA-F]{6}$/)==null) {
@@ -1178,14 +1158,7 @@ $(function (){
             show_topic = !show_topic;
         });
 
-        $('#convo').on('click', '.ooc', function () {
-            $('.ooc-off').prop('class', $(this).prop('class').replace('ooc-off','ooc'));
-            $(this).prop('class', $(this).prop('class').replace('ooc','ooc-off'));
-        });
-
-        $('#convo').on('click', '.ooc-off', function () {
-            $(this).prop('class', $(this).prop('class').replace('ooc-off','ooc'));
-        });
+        $('#convo').on('click', '.ooc', function () {});
 
         $(CONVERSATION_CONTAINER).scroll(function (){
             var von = $(CONVERSATION_CONTAINER).scrollTop()+$(CONVERSATION_CONTAINER).height()+24;

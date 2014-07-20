@@ -29,7 +29,7 @@ a.button {
     background-color: #69926A;
     color: #fffffb;
     padding: 5px;
-    padding-bottom: 10px;
+    padding-bottom: 7px;
     margin-top: 5px;
     width: 110px;
     text-align: center;
@@ -71,7 +71,7 @@ input[type="submit"], button {
     color: #fffffb;
     border: 0;
     padding: 5px;
-    padding-bottom: 10px;
+    padding-bottom: 7px;
     width: auto;
     height: auto;
     cursor: pointer;
@@ -294,7 +294,7 @@ body.menu #topbar #topmenu {
     display: block;
 }
 
-#goChats.unread {
+#topbar.unread #goChats {
     background-color: #f4f5ae;
 }
 
