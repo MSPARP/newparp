@@ -663,7 +663,7 @@ function updateChatPreview() {
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
 
     var textInput = $('#textInput').val();
-    ooc_on = (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}"))?true:ooc_on;
+    ooc_on = (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}"))?true:false;
 
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on)) {
         $('#textInput').css('opacity','0.5');
