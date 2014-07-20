@@ -290,6 +290,9 @@ function addLine(msg){
             $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
         }
         
+        msg.original_name = msg.name;
+        msg.original_acronym = msg.acronym;
+
         msg.name = htmlEntities(msg.name);
         msg.acronym = htmlEntities(msg.acronym);
 
@@ -345,7 +348,7 @@ function addLine(msg){
         }
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(msg.name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.name+(msg.acronym ? ' ['+msg.acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(msg.original_name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.original_name+(msg.original_acronym ? ' ['+msg.original_acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
