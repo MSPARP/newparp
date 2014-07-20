@@ -650,7 +650,7 @@ function updateChatPreview() {
         textPreview = textPreview.substring(command[0].length);
     }
     
-    if ($('#textInput').val().substr(0,1)=='/') {
+    if ($('#textInput').val().substr(0,1)=='/' || ooc_on) {
         if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
@@ -664,7 +664,7 @@ function updateChatPreview() {
 
     var textInput = $('#textInput').val();
     ooc_on = (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}"))?true:ooc_on;
-    
+
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on)) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
