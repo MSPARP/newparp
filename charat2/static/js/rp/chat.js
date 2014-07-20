@@ -321,9 +321,9 @@ function addLine(msg){
         var left_text = msg.type;
         if (msg.name) {
             if (msg.type == 'ic') {
-                left_text = msg.name;
+                left_text = msg.original_name;
             } else {
-                left_text = msg.name+':'+msg.type;
+                left_text = msg.original_name+':'+msg.type;
             }
         }
     
