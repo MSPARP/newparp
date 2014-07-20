@@ -661,8 +661,10 @@ function updateChatPreview() {
     }
     
     var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
-    ooc_on = (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}"))?true:ooc_on;
+
     var textInput = $('#textInput').val();
+    ooc_on = (textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}"))?true:ooc_on;
+    
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on)) {
         $('#textInput').css('opacity','0.5');
         $('#aliasOffset').css('opacity','0.5');
