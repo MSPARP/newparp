@@ -41,7 +41,7 @@ var MISSED_MESSAGE_COUNT_ID = '#exclaim';
 var USER_LIST_ID = '#users';
 
 /* VARIABLES */
-var line = 0;
+var line = false;
 
 var chats = [chat.url];
 
@@ -995,7 +995,7 @@ $(function (){
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
-                    line=line==1?0:1;
+                    line=!line;
                     updateChatPreview();
                 }
             }
