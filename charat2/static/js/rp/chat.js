@@ -289,7 +289,10 @@ function addLine(msg){
         if (!at_bottom) {
             $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
         }
-    
+        
+        msg.name = htmlEntities(msg.name);
+        msg.acronym = htmlEntities(msg.acronym);
+
         if (show_bbcode_color == true) {
             message = bbEncode(msg.text);
         } else {
@@ -311,9 +314,9 @@ function addLine(msg){
         var left_text = msg.type;
         if (msg.name) {
             if (msg.type == 'ic') {
-                left_text = htmlEntities(msg.name);
+                left_text = msg.name;
             } else {
-                left_text = htmlEntities(msg.name)+':'+msg.type;
+                left_text = msg.name+':'+msg.type;
             }
         }
     
@@ -324,7 +327,7 @@ function addLine(msg){
         var info_left = $('<span>').addClass("left").text(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
-            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+htmlEntities(msg.name)+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
+            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
