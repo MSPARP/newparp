@@ -1,0 +1,64 @@
+{% extends "rp/base.html" %}
+
+{% block header %}
+<script src="{{url_for("static", filename="js/rp/search.js")}}" defer></script>
+<link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/rp/home.css")}}">
+<style>
+
+.searching {
+	background-image: url("{{url_for("static", filename="img/rp/throbber.gif")}}");
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.searching .body {
+	display: none;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div id="topbar">
+    <div id="toptitle">Charat RP</div>
+    <div id="topmenu">
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('home')}}">Home</a>
+        <div class="topborder"></div>
+        <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+        <div class="topborder"></div>
+        <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+        <div class="topborder"></div>
+        <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Guide</a>
+        <div class="topborder"></div>
+        <a id="goUser" href="">Settings</a>
+        <div class="topborder"></div>
+        {% if g.user != None: %}
+        <a class="logout" href="{{url_for('logout')}}">Logout</a>
+        {% else %}
+        <a class="login" href="">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="body">
+
+
+    <div class="section">
+        <div class="titli">SEARCH</div>
+        <div class="card">
+            <p>Search as: <select id="characterSelect">
+{% for character in characters: %}
+                <option value="{{character.id}}">{{character.title}}</option>
+{% endfor %}
+            </select></p>
+            <p><button id="searchButton">Search</button></p>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
