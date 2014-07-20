@@ -89,15 +89,19 @@ var sending_line = '';
 /* FUNCTIONS */
 
 if (typeof String.prototype.startsWith != 'function') {
-  String.prototype.startsWith = function (str){
-    return this.slice(0, str.length) == str;
-  };
+    String.prototype.startsWith = function (str){
+        return this.slice(0, str.length) == str;
+    };
 }
 
 if (typeof String.prototype.endsWith != 'function') {
-  String.prototype.endsWith = function (str){
-    return this.slice(-str.length) == str;
-  };
+    String.prototype.endsWith = function (str){
+        return this.slice(-str.length) == str;
+    };
+}
+
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function getTimestamp(seconds_from_epoch) {
@@ -320,7 +324,7 @@ function addLine(msg){
         var info_left = $('<span>').addClass("left").text(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
-            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
+            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+htmlEntities(msg.name)+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
