@@ -889,8 +889,8 @@ $(function (){
         
         $('#topic').html(bbEncode($('#topic').text()));
         $('#convo span').each(function () {
-            line = bbEncode($(this).find('.message').text());
-            $(this).find('.message').html(line);
+            var thisLine = bbEncode($(this).find('.message').text());
+            $(this).find('.message').html(thisLine);
             $(this).find('.info .right .post_timestamp').text(getTimestamp($(this).find('.info .right .post_timestamp').text()));
         }).promise().done(function () {
             goBottom(CONVERSATION_CONTAINER);
@@ -995,6 +995,7 @@ $(function (){
                     $.post('/chat_api/send',{'chat_id': chat['id'], 'text': lineSend, 'type':type}); // todo: check for for error
                     pingInterval = window.setTimeout(pingServer, PING_PERIOD*1000);
                     $('#textInput').val('');
+                    line=line==1?0:1;
                     updateChatPreview();
                 }
             }
