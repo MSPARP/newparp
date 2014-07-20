@@ -104,6 +104,10 @@ function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function htmlEntitiesEncode(str) {
+    return String(str).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+}
+
 function getTimestamp(seconds_from_epoch) {
     var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var timestamp = new Date(seconds_from_epoch*1000);
@@ -290,11 +294,11 @@ function addLine(msg){
             $(MISSED_MESSAGE_COUNT_ID).html(parseInt($(MISSED_MESSAGE_COUNT_ID).html())+1);
         }
         
-        msg.original_name = msg.name;
-        msg.original_acronym = msg.acronym;
-
         msg.name = htmlEntities(msg.name);
         msg.acronym = htmlEntities(msg.acronym);
+
+        msg.original_name = htmlEntitiesEncode(msg.name);
+        msg.original_acronym = htmlEntitiesEncode(msg.acronym);
 
         if (show_bbcode_color == true) {
             message = bbEncode(msg.text);
