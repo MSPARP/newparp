@@ -29,7 +29,6 @@ function applyQuirks(text,pattern) {
             text = buffer.join('');
             break;
         case "alt-lines":
-            console.log(pattern.line);
             if (pattern.line) {
                 buffer = text.toLowerCase();
             } else {
