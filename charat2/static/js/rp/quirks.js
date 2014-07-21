@@ -1,7 +1,7 @@
 function applyQuirks(text,pattern) {
 
     // Case
-    switch (pattern['case']]) {
+    switch (pattern['case']) {
         case "lower":
             text = text.toLowerCase();
             break;
