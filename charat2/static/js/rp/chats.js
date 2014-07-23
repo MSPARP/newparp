@@ -33,8 +33,9 @@ function chatsUpdate(first) {
     } else {
         document.title = ORIGINAL_TITLE;
     }
-    
+    console.log("test");
     if (current_mode == mode || first) {
+        console.log(mode);
         $('#under-page').empty();
         if ($('body.mobile').length>0) {
             $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
