@@ -7,7 +7,7 @@ function unreadNotifications() {
         chats_url = document.URL.substring(0,document.URL.length-1)+".json";
     }
     $.getJSON(chats_url, function(data) {
-        var chats = data.chats;
+        chats = data.chats;
         chatsUpdate(true);
     }).complete(function() {
         window.setTimeout(unreadNotifications, 10000);
