@@ -547,24 +547,8 @@ body > #save {
     display: none;
 }
 
-#chat-title, #hide-topic {
+#chat-title {
     cursor: pointer;
-}
-
-#hide-topic .text {
-    position: relative;
-    color: #999;
-    background-color: #fffffb;
-    text-align: center;
-    width: 100px;
-    margin: auto;
-    z-index: 1;
-}
-
-#hide-topic .line-behind {
-    position: relative;
-    top: 12px;
-    border-bottom: solid 1px #aaa;
 }
 
 .sidebar input[name="name"] {

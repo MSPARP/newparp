@@ -216,17 +216,24 @@ div.options button {
 	vertical-align: 20%;
 }
 
-label.quirk {
-	display: block;
+.line-behind-wrapper {
+    cursor: pointer;
 }
 
-.picky-group {
-	margin: 5px;
-	margin-left: 0.5em;
+.line-behind-wrapper .text {
+    position: relative;
+    color: #999;
+    background-color: #fffffb;
+    text-align: center;
+    width: 100px;
+    margin: auto;
+    z-index: 1;
 }
 
-.picky-header {
-	font-weight: bold;
+.line-behind-wrapper .line-behind {
+    position: relative;
+    top: 12px;
+    border-bottom: solid 1px #aaa;
 }
 
 /* Top Bar */
