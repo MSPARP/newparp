@@ -1,6 +1,7 @@
 var search = (function() {
 
 	var characterSelect = $("#characterSelect");
+	var characterTags = $("#characterTags");
 	var searchButton = $("#searchButton").click(startSearch);
 
 	var searching = false;
@@ -20,7 +21,10 @@ var search = (function() {
 	}
 
 	function searchRequest() {
-		$.post("/search", { "character_id": characterSelect.val() }, function(data) {
+		$.post("/search", {
+            "character_id": characterSelect.val(),
+            "tags": characterTags.val(),
+        }, function(data) {
 			console.log(data);
 			if (data.status == "matched") {
 				searching = false;
