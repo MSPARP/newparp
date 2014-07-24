@@ -25,7 +25,7 @@ function fillColumn(column,numCols) {
         }
         if (chat.type == 'group') {
             $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-            $('<div>').addClass('line-behind-wrapper').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            $('<div>').addClass('line-behind-wrapper hide-topic').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
             $('<div>').addClass('line-behind').appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
             $('<div>').addClass('text').html("Show Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
         }
@@ -92,6 +92,11 @@ $(function(){
     
     chatsUpdate(true);
     setTimeout(unreadNotifications, 10000)
+});
+
+$('.section .chat .line-behind-wrapper').one('click', function (){
+    $(this).parent().find('.topic').show();
+    $(this).find('.text').html('Hide Topic');
 });
 
 $(window).resize(function () {
