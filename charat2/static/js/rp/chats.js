@@ -1,5 +1,6 @@
 var ORIGINAL_TITLE = document.title;
 var current_mode;
+var shown_topics = {};
 
 function unreadNotifications() {
     var chats_url = document.URL+".json";
@@ -24,7 +25,11 @@ function fillColumn(column,numCols) {
             $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
         }
         if (chat.type == 'group') {
-            $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            if (shown_topics['chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-')]) {
+                $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-')).show();
+            } else {
+                $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            }
             $('<div>').addClass('line-behind-wrapper hide-topic').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
             $('<div>').addClass('line-behind').appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
             $('<div>').addClass('text').html("Show Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
@@ -95,8 +100,15 @@ $(function(){
 });
 
 $('.section .chat .line-behind-wrapper').on('click', function (){
-    $(this).parent().find('.topic').show();
-    $(this).find('.text').html('Hide Topic');
+    if ($(this).parent().find('.topic').is(':visible')) {
+        $(this).parent().find('.topic').hide();
+        $(this).find('.text').html('Show Topic');
+        shown_topics[$(this).parent().prop('id')] = false; 
+    } else {
+        $(this).parent().find('.topic').show();
+        $(this).find('.text').html('Hide Topic');
+        shown_topics[$(this).parent().prop('id')] = true;
+    }
 });
 
 $(window).resize(function () {
