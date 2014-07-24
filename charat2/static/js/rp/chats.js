@@ -14,6 +14,21 @@ function unreadNotifications() {
     });
 }
 
+function fillColumn(column) {
+    $('<div>').addClass('section').prop('id', 'column-'+column).appendTo('#under-page');
+    for(i in chats) {
+        chat = chats[i];
+        $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-'+column);
+        $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+        if (chat.online > 0) {
+            $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
+        }
+        if (chat.type == 'group') {
+            $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+        }
+    }
+}
+
 function chatsUpdate(first) {
     if ($('body').prop('class')) {
         mode = $('body').prop('class');
@@ -37,80 +52,14 @@ function chatsUpdate(first) {
     if (current_mode == mode || first) {
         $('#under-page').empty();
         if ($('body.mobile').length>0) {
-            $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
-            for(i in chats) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
+            fillColumn(1);
         } else if ($('body.nobile').length>0) {
-            $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
-            $('<div>').addClass('section').prop('id', 'column-2').appendTo('#under-page');
-            for (var i=0; i<chats.length; i+=2) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
-            for (var i=1; i<chats.length; i+=2) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-2');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
+            fillColumn(1);
+            fillColumn(2);
         } else {
-            $('<div>').addClass('section').prop('id', 'column-1').appendTo('#under-page');
-            $('<div>').addClass('section').prop('id', 'column-2').appendTo('#under-page');
-            $('<div>').addClass('section').prop('id', 'column-3').appendTo('#under-page');
-            for (var i=0; i<chats.length; i+=3) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-1');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
-            for (var i=1; i<chats.length; i+=3) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-2');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
-            for (var i=2; i<chats.length; i+=3) {
-                chat = chats[i];
-                $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-3');
-                $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                if (chat.online > 0) {
-                    $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
-                }
-                if (chat.type == 'group') {
-                    $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
-                }
-            }
+            fillColumn(1);
+            fillColumn(2);
+            fillColumn(3);
         }
     }
     
