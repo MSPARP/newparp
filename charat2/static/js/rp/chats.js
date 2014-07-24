@@ -14,9 +14,9 @@ function unreadNotifications() {
     });
 }
 
-function fillColumn(column) {
+function fillColumn(column,numCols) {
     $('<div>').addClass('section').prop('id', 'column-'+column).appendTo('#under-page');
-    for(i in chats) {
+    for(var i=column; i<chats.length; i+=numCols) {
         chat = chats[i];
         $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-'+column);
         $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
@@ -52,14 +52,14 @@ function chatsUpdate(first) {
     if (current_mode == mode || first) {
         $('#under-page').empty();
         if ($('body.mobile').length>0) {
-            fillColumn(1);
+            fillColumn(1, 1);
         } else if ($('body.nobile').length>0) {
-            fillColumn(1);
-            fillColumn(2);
+            fillColumn(1, 2);
+            fillColumn(2, 2);
         } else {
-            fillColumn(1);
-            fillColumn(2);
-            fillColumn(3);
+            fillColumn(1, 3);
+            fillColumn(2, 3);
+            fillColumn(3, 3);
         }
     }
     
