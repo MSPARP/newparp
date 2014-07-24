@@ -94,7 +94,7 @@ $(function(){
     setTimeout(unreadNotifications, 10000)
 });
 
-$('.section .chat .line-behind-wrapper').one('click', function (){
+$('.section .chat .line-behind-wrapper').on('click', function (){
     $(this).parent().find('.topic').show();
     $(this).find('.text').html('Hide Topic');
 });
