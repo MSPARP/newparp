@@ -32,7 +32,11 @@ function fillColumn(column,numCols) {
             }
             $('<div>').addClass('line-behind-wrapper hide-topic').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
             $('<div>').addClass('line-behind').appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
-            $('<div>').addClass('text').html("Show Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
+            if (shown_topics['chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-')]) {
+                $('<div>').addClass('text').html("Hide Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
+            } else {
+                $('<div>').addClass('text').html("Show Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
+            }
         }
     }
 }
