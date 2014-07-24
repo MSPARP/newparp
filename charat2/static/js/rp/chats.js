@@ -30,7 +30,17 @@ function fillColumn(column,numCols) {
             } else {
                 $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
             }
-            $('<div>').addClass('line-behind-wrapper hide-topic').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            $('<div>').addClass('line-behind-wrapper hide-topic').appendTo('#chat-'+chat.url.replace(/\//g,'-')).on('click', function (){
+                if ($(this).parent().find('.topic').is(':visible')) {
+                    $(this).parent().find('.topic').hide();
+                    $(this).find('.text').html('Show Topic');
+                    shown_topics[$(this).parent().prop('id')] = false; 
+                } else {
+                    $(this).parent().find('.topic').show();
+                    $(this).find('.text').html('Hide Topic');
+                    shown_topics[$(this).parent().prop('id')] = true;
+                }
+            });
             $('<div>').addClass('line-behind').appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
             if (shown_topics['chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-')]) {
                 $('<div>').addClass('text').html("Hide Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
@@ -62,6 +72,7 @@ function chatsUpdate(first) {
         document.title = ORIGINAL_TITLE;
     }
     if (current_mode == mode || first) {
+        $('.line-behind-wrapper').off();
         $('#under-page').empty();
         if ($('body.mobile').length>0) {
             fillColumn(1, 1);
@@ -101,18 +112,6 @@ $(function(){
     
     chatsUpdate(true);
     setTimeout(unreadNotifications, 10000)
-});
-
-$('.section .chat .line-behind-wrapper').on('click', function (){
-    if ($(this).parent().find('.topic').is(':visible')) {
-        $(this).parent().find('.topic').hide();
-        $(this).find('.text').html('Show Topic');
-        shown_topics[$(this).parent().prop('id')] = false; 
-    } else {
-        $(this).parent().find('.topic').show();
-        $(this).find('.text').html('Hide Topic');
-        shown_topics[$(this).parent().prop('id')] = true;
-    }
 });
 
 $(window).resize(function () {
