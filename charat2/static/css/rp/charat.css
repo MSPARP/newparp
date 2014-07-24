@@ -221,6 +221,7 @@ div.options button {
 }
 
 .line-behind-wrapper .text {
+    font-size: 16px;
     position: relative;
     color: #999;
     background-color: #fffffb;
