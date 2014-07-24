@@ -25,6 +25,9 @@ function fillColumn(column,numCols) {
         }
         if (chat.type == 'group') {
             $('<div>').addClass('topic').html(bbEncode(chat.topic)).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            $('<div>').addClass('line-behind-wrapper').appendTo('#chat-'+chat.url.replace(/\//g,'-'));
+            $('<div>').addClass('line-behind').appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
+            $('<div>').addClass('text').html("Show Topic").appendTo('#chat-'+chat.url.replace(/\//g,'-')+' .line-behind-wrapper');
         }
     }
 }

@@ -44,6 +44,7 @@ body.mobile #chat-pages {
 }
 
 .card.chat .topic {
+    display: none;
     font-size: 16px;
 }
 
