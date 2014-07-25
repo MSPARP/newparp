@@ -400,6 +400,7 @@ class Message(Base):
         u"user_group",
         u"user_action",
         u"chat_meta",
+        u"search_info",
         name=u"messages_type",
     ), nullable=False, default=u"ic")
 

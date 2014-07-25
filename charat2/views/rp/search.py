@@ -22,6 +22,16 @@ def search_get():
     )
 
 
+def _tags_to_set(tag_string):
+    tags = set()
+    for tag in tag_string.split(","):
+        tag = tag.strip()
+        if tag == "":
+            continue
+        tags.add(tag.lower())
+    return tags
+
+
 @use_db
 @login_required
 def search_post():
@@ -39,19 +49,20 @@ def search_post():
     except:
         g.redis.delete("session:%s:character_id" % g.session_id)
 
-    tags = set()
     # Tags are a single string separated by commas, so we split and trim it
     # here.
     # XXX use several fields like we do for replacements?
-    for tag in request.form["tags"].split(","):
-        tag = tag.strip()
-        if tag == "":
-            continue
-        tags.add(tag.lower())
+    tags = _tags_to_set(request.form["tags"])
     g.redis.delete("session:%s:tags" % g.session_id)
     if len(tags) > 0:
         g.redis.sadd("session:%s:tags" % g.session_id, *tags)
         g.redis.expire("session:%s:tags" % g.session_id, 30)
+
+    exclude_tags = _tags_to_set(request.form["exclude_tags"])
+    g.redis.delete("session:%s:exclude_tags" % g.session_id)
+    if len(exclude_tags) > 0:
+        g.redis.sadd("session:%s:exclude_tags" % g.session_id, *exclude_tags)
+        g.redis.expire("session:%s:exclude_tags" % g.session_id, 30)
 
     pubsub = g.redis.pubsub()
     pubsub.subscribe("searcher:%s" % g.session_id)

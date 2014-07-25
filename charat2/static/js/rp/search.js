@@ -2,6 +2,7 @@ var search = (function() {
 
 	var characterSelect = $("#characterSelect");
 	var characterTags = $("#characterTags");
+	var characterExcludeTags = $("#characterExcludeTags");
 	var searchButton = $("#searchButton").click(startSearch);
 
 	var searching = false;
@@ -24,6 +25,7 @@ var search = (function() {
 		$.post("/search", {
             "character_id": characterSelect.val(),
             "tags": characterTags.val(),
+            "exclude_tags": characterExcludeTags.val(),
         }, function(data) {
 			console.log(data);
 			if (data.status == "matched") {

@@ -11,8 +11,31 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
-from charat2.model import sm, ChatUser, SearchedChat, UserCharacter
+from charat2.helpers.chat import send_message
+from charat2.model import sm, ChatUser, Message, SearchedChat, UserCharacter
 from charat2.model.connections import redis_pool
+
+
+def check_compatibility(s1, s2):
+
+    # Normal tags.
+    if len(s1["tags"]) == 0 and len(s2["tags"]) == 0:
+        logging.debug("Neither session has tags.")
+        tags_in_common = set()
+    else:
+        tags_in_common = s1["tags"] & s2["tags"]
+        logging.debug("Tags in common: %s" % tags_in_common)
+        if len(tags_in_common) == 0:
+            return None
+
+    s1_exclusions = s1["exclude_tags"] & s2["tags"]
+    s2_exclusions = s2["exclude_tags"] & s1["tags"]
+    if len(s1_exclusions) > 0 or len(s2_exclusions) > 0:
+        logging.debug("Session %s excludes %s" % (s1["id"], s1_exclusions))
+        logging.debug("Session %s excludes %s" % (s2["id"], s2_exclusions))
+        return None
+
+    return { "tags_in_common": tags_in_common }
 
 
 def set_user_character(chat_id, searcher):
@@ -76,6 +99,7 @@ if __name__ == "__main__":
             "id": _,
             "character_id": redis.get("session:%s:character_id" % _),
             "tags": redis.smembers("session:%s:tags" % _),
+            "exclude_tags": redis.smembers("session:%s:exclude_tags" % _),
         } for _ in searchers]
         logging.debug("Session list: %s" % sessions)
         shuffle(sessions)
@@ -93,14 +117,10 @@ if __name__ == "__main__":
 
                 logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
 
-                if len(s1["tags"]) == 0 and len(s2["tags"]) == 0:
-                    logging.debug("Neither session has tags.")
-                    tags_in_common = set()
-                else:
-                    tags_in_common = s1["tags"] & s2["tags"]
-                    logging.debug("Tags in common: %s" % tags_in_common)
-                    if len(tags_in_common) == 0:
-                        continue
+                match = check_compatibility(s1, s2)
+                if match is None:
+                    logging.debug("No match.")
+                    continue
 
                 new_url = str(uuid4()).replace("-", "")
                 logging.info(
@@ -110,6 +130,16 @@ if __name__ == "__main__":
                 new_chat = SearchedChat(url=new_url)
                 db.add(new_chat)
                 db.flush()
+
+                if len(match["tags_in_common"]) > 0:
+                    send_message(db, redis, Message(
+                        chat_id=new_chat.id,
+                        type="search_info",
+                        text=(
+                            "Tags in common: %s."
+                            % (", ".join(sorted(match["tags_in_common"])))
+                        ),
+                    ))
 
                 set_user_character(new_chat.id, s1)
                 set_user_character(new_chat.id, s2)
