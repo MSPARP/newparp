@@ -352,7 +352,7 @@ function addLine(msg){
         }
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(msg.original_name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.original_name+(msg.original_acronym ? ' ['+msg.original_acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.thae.li/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(msg.original_name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.original_name+(msg.original_acronym ? ' ['+msg.original_acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.tk/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
