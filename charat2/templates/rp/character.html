@@ -8,25 +8,6 @@
 {% endblock %}
 
 {% block content %}
-
-<div id="topbar">
-	<center>
-	    <a id="toptitle" href="/">Charat</a>
-        <div id="topmenu">
-            <div class="topborder"></div>
-            <a id="goUser" href="/user/{{g.user.username}}">Hello {{g.user.username}}!</a>
-            <div class="topborder"></div>
-            <a id="goPresets" href="#">Presets</a>
-            <div class="topborder"></div>
-            <a id="goGroups" href="/groups">Groups</a>
-            <div class="topborder"></div>
-            <a id="goHelp" href="/help">Help</a>
-            <div class="topborder"></div>
-            <a id="logout" href="{{url_for("logout")}}">Log Out</a>
-        </div>
-    </center>
-</div>
-
 <div class="body">
 <form id="frontform" method="post" action="{{url_for("save_character", character_id=character.id)}}" >
     <!-- Put in some noscript things -->

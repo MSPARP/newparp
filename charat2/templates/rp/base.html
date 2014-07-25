@@ -24,6 +24,31 @@
     </head>
 
     <body>
-        {%block content%}{% endblock %}
+    {% if self.topbar() %}
+        {% block topbar %}{% endblock %}
+    {% else %}
+        <div id="topbar">
+            <div id="toptitle">Charat RP</div>
+            <div id="topmenu">
+                <div class="topborder"></div>
+                <a id="goHome" href="{{url_for('home')}}">Home</a>
+                <div class="topborder"></div>
+                <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+                <div class="topborder"></div>
+                <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+                <div class="topborder"></div>
+                <a id="goUser" href="">Guide</a>
+                <div class="topborder"></div>
+                <a id="goUser" href="">Settings</a>
+                <div class="topborder"></div>
+                {% if logged_in %}
+                <a class="logout" href="{{url_for('logout')}}">Logout</a>
+                {% else %}
+                <a class="login" href="">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    {%block content%}{% endblock %}
     </body>
 </html>

@@ -1,247 +1,249 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} – Charat RP{% endblock %}
 {% block header %}
-<link rel="stylesheet" href="{{url_for('static', filename='css/rp/chat.css')}}" defer>
-<script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
-<script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
-<script type="text/javascript">
-    var logged_in = {{'true' if logged_in else 'false'}};
-    var user = {{chat_user_dict|tojson|safe}};
-    var chat = {{chat|tojson|safe}};
-    var latestNum = {{latest_num|tojson|safe}};
-</script>
-<script src="{{url_for('static', filename='js/rp/chat.js')}}" defer></script>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/rp/chat.css')}}" defer>
+        <script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
+        <script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
+        <script type="text/javascript">
+            var logged_in = {{'true' if logged_in else 'false'}};
+            var user = {{chat_user_dict|tojson|safe}};
+            var chat = {{chat|tojson|safe}};
+            var latestNum = {{latest_num|tojson|safe}};
+        </script>
+        <script src="{{url_for('static', filename='js/rp/chat.js')}}" defer></script>
 {% endblock %}
+
+{% block topbar %}
+        <div id="topbar">
+            <center>
+               <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /></div>
+                <div id="topmenu">
+                    <a id="goHome" href="{{url_for('home')}}">Home</a>
+                    <div class="topborder"></div>
+                    <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
+                    <div class="topborder"></div>
+                    <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+                    <div class="topborder"></div>
+                    <a id="goUser" href="">Guide</a>
+                    <div class="topborder"></div>
+                    <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
+                    <div class="topborder"></div>
+                    <a id="goUser" href="">Settings</a>
+                    <div class="topborder"></div>
+                    {% if logged_in %}
+                    <a class="logout" href="{{url_for('logout')}}">Logout</a>
+                    {% else %}
+                    <a class="login" href="">Login</a>
+                    {% endif %}
+                </div>
+            </center>
+            <span class="left">
+                <span id="extain"><span id="exclaim">0</span><span id="reclaim">!</span></span>
+            </span>
+            <span class="right">
+                <span class="userList">U</span> <span class="settings">C</span>
+            </span>
+        </div>
+{% endblock %}
+
 {% block content %}
-
-<div id="topbar">
-    <center>
-       <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /></div>
-        <div id="topmenu">
-            <a id="goHome" href="{{url_for('home')}}">Home</a>
-            <div class="topborder"></div>
-            <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
-            <div class="topborder"></div>
-            <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
-            <div class="topborder"></div>
-            <a id="goUser" href="">Guide</a>
-            <div class="topborder"></div>
-            <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
-            <div class="topborder"></div>
-            <a id="goUser" href="">Settings</a>
-            <div class="topborder"></div>
-            {% if logged_in %}
-            <a class="logout" href="{{url_for('logout')}}">Logout</a>
-            {% else %}
-            <a class="login" href="">Login</a>
-            {% endif %}
-        </div>
-    </center>
-    <span class="left">
-        <span id="extain"><span id="exclaim">0</span><span id="reclaim">!</span></span>
-    </span>
-    <span class="right">
-        <span class="userList">U</span> <span class="settings">C</span>
-    </span>
-</div>
-
-<div id="conversation" class="body">
-    <div id="convo">
-        <p><a id="logAnchor" href="/{{url}}/log" target="_blank">View Log</a></p>
-        {% for message in messages %}
-        <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
-            <p class="info">
-                <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
-                <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span>
-            </p>
-            {% if message.type == 'me' %}
-            <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.acronym+"[/color]]" if message.acronym|length else ""}} {{message.text}}</p>
-            {% else %}
-            <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.acronym %}{{message.acronym}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
-            {% endif %}
-        </span>
-        {% endfor %}
-    </div>
-</div>
-
-<div class="body">
-<div id="userList" class="sidebar">
-    <div class="sidebarContain">
-        {% if chat.type=='group' %}
-            <div id="groupMeta" class="card">
-                <h1 id="chat-title" class="titi">{{chat.title}}</h1>
-                <p id="topic">{{chat.topic}}</p>
-                <button type="button" id="topicButton" class="metaOptions">Set Topic</button>
-                <div id="hide-topic" class="line-behind-wrapper">
-                    <div class="line-behind"></div>
-                    <div class="text">Hide Topic</div>
-                </div>
-            </div>
-            <div class="card metaOptions stoptions">
-                <h1 class="titi">CHAT SETTINGS</h1>
-                <ul id="metaOptions">
-                    <li style="display:none;"><label><input type="checkbox" id="public" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Public Chat</div></label></li>
-                    <li><label><input type="checkbox" id="autosilence" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Autosilence</div></label></li>
-                    <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">NSFW</div></label></li>
-                </ul>
-           </div>
-        {% else %}
-            <div class="card">
-                <h1 id="chat-title" class="titi">{{chat.title}}</h1>
-            </div>
-        {% endif %}
-        <div class="card">
-            <h1 class="titi">CHAT</h1>
-            <div id="statusContain"><input type="text" id="statusInput" autocomplete="off" maxlength="50" placeholder="Status"><div type="button" id="statusButton">!</div></div>
-            <button type="button">Disconnect</button>
-        </div>
-        <div id="onlineContainer" class="card">
-            <h1 class="titi">USERS</h1>
-            <ul id="users" class="{{chat_user.group}}"></ul>
-        </div>
-    </div>
-</div>
-
-<form id="settings" class="sidebar">
-    <div class="sidebarContain">
-        <div class="card character">
-            <div class="titi">CHARACTER DETAILS</div>
-            <div class="left">
-                <label>Name:</label><br />
-                <label>Alias:</label><br />
-                <label>Color:</label>
-            </div>
-            <div class="right">
-                <input id="usingname" type="text" name="name" value="{{chat_user.name}}" maxlength="50" /><br />
-                <input id="ailin" type="text" name="acronym" value="{{chat_user.acronym}}" maxlength="15" /><br />
-                <input id="coln" type="text" name="color" value="{{chat_user.color}}" maxlength="6" />
-            </div>
-            <button class="big" type="submit">Apply</button>
-        </div>
-
-        <div class="card" id="typing-quirks">
-            <div class="titi">TYPING PATTERNS</div>
-            <div class="left">
-                <label>Prefix: </label><br />
-                <label>Suffix: </label><br />
-                <label>Case: </label>
-            </div>
-            <div class="right">
-                <input id="prei" type="text" name="quirk_prefix" value="{{chat_user.quirk_prefix}}" /><br />
-                <input id="sufi" type="text" name="quirk_suffix" value="{{chat_user.quirk_suffix}}" /><br />
-                <div class="select-bind"><div class="arrow">▼</div>
-                    <select id="casing" name="case">
-                        {% for value, name in case_options.items(): %}
-                        <option value="{{value}}"{% if value==chat_user.case %} selected="selected"{% endif %}>{{name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="titi">REPLACEMENTS</div>
-            <div class="replacementContainer">
-                <ul id="replacementList">
-                    {% if chat_user_dict.character.replacements|length!=0 %}
-                        {% for replacement in chat_user_dict.character.replacements %}
-                            <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
-                        {% endfor %}
+        <div id="conversation" class="body">
+            <div id="convo">
+                <p><a id="logAnchor" href="/{{url}}/log" target="_blank">View Log</a></p>
+                {% for message in messages %}
+                <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
+                    <p class="info">
+                        <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
+                        <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span>
+                    </p>
+                    {% if message.type == 'me' %}
+                    <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.acronym+"[/color]]" if message.acronym|length else ""}} {{message.text}}</p>
                     {% else %}
-                        <li><input type="text" name="quirk_from" size="4"> to <input type="text" name="quirk_to" size="4"> <a href="#" class="deleteReplacement">x</a></li>
+                    <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.acronym %}{{message.acronym}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
                     {% endif %}
-                </ul>
-                <a href="#" id="addReplacement">+Add another replacement</a>
-                <br />
-                <a href="#" id="clearReplacements">-Clear replacements</a>
+                </span>
+                {% endfor %}
             </div>
-            
-            <div class="titi">REGEX REPLACEMENTS</div>
-            <div class="replacementContainer">
-                <ul id="regexList">
-                    {% if chat_user_dict.character.regexes|length!=0 %}
-                        {% for replacement in chat_user_dict.character.regexes %}
-                            <li><input type="text" name="regex_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="regex_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteRegex">x</a></li>
-                        {% endfor %}
-                    {% else %}
-                        <li><input type="text" name="regex_from" size="4"> to <input type="text" name="regex_to" size="4"> <a href="#" class="deleteRegex">x</a></li>
-                    {% endif %}
-                </ul>
-                <a href="#" id="addRegex">+Add another replacement</a>
-                <br />
-                <a href="#" id="clearRegexes">-Clear replacements</a>
-            </div>
-            <button class="big" type="submit">Apply</button>
         </div>
 
-        <div class="card">
-            <h1 class="titi">OPTIONS</h1>
-            <div class="stoptions">
-                <label id="confirmCloseToggle"><input type="checkbox" autocomplete="off" checked><div class="checkbox"></div><div class="checkbox-text">Confirm Window Close</div></label>
-                <label id="oocToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Out Of Character</div></label>
-                <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox" autocomplete="off"></div><div class="checkbox-text">BBCode</div></label>
-                <div id="notificationHead" data-ng-app>
-                    <div id="notifications">
-                        <label><input type="checkbox" class="deskset" name="deskset" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Desktop Notifications</div></label>
+        <div class="body">
+        <div id="userList" class="sidebar">
+            <div class="sidebarContain">
+                {% if chat.type=='group' %}
+                    <div id="groupMeta" class="card">
+                        <h1 id="chat-title" class="titi">{{chat.title}}</h1>
+                        <p id="topic">{{chat.topic}}</p>
+                        <button type="button" id="topicButton" class="metaOptions">Set Topic</button>
+                        <div id="hide-topic" class="line-behind-wrapper">
+                            <div class="line-behind"></div>
+                            <div class="text">Hide Topic</div>
+                        </div>
                     </div>
-               </div>
-               <label id="previewToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Show Preview</div></label>
-           </div>
-        </div>
-        
-        <div id="sharing" class="card stoptions">
-            <h1 class="titi">Share On...</h1>
-            <label><button type="button"><a href="http://www.tumblr.com/share/link?url=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}&name=Charat - {{chat}}&description=Check out this cool group on Charat!&tags=charat, charatrp, roleplaying"
-            id="tumShare" target="_blank">Tumblr</a></button></label>
-            <label><button type="button"><a href="https://www.twitter.com/share?via=charatrp&url=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}&name=Charat - {{chat}}&text=Check out this cool group on Charat!&hashtags=charat, charatrp, roleplaying"
-            id="twitShare" target="_blank">Twitter</a></button></label>
-            <label><button type="button"><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}"
-            id="faceShare" target="_blank">Facebook</a></button></label>
-        </div>
-    </div>
-</form>
-
-<div id="chatList" class="sidebar">
-    <div class="sidebarContain">
-        <div id="chatListChats">
-            <div class="card">
-                <h1 class="titi">{{chat.title}}</h1>
+                    <div class="card metaOptions stoptions">
+                        <h1 class="titi">CHAT SETTINGS</h1>
+                        <ul id="metaOptions">
+                            <li style="display:none;"><label><input type="checkbox" id="public" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Public Chat</div></label></li>
+                            <li><label><input type="checkbox" id="autosilence" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Autosilence</div></label></li>
+                            <li class="opmod"><label><input type="checkbox" id="nsfw" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">NSFW</div></label></li>
+                        </ul>
+                   </div>
+                {% else %}
+                    <div class="card">
+                        <h1 id="chat-title" class="titi">{{chat.title}}</h1>
+                    </div>
+                {% endif %}
+                <div class="card">
+                    <h1 class="titi">CHAT</h1>
+                    <div id="statusContain"><input type="text" id="statusInput" autocomplete="off" maxlength="50" placeholder="Status"><div type="button" id="statusButton">!</div></div>
+                    <button type="button">Disconnect</button>
+                </div>
+                <div id="onlineContainer" class="card">
+                    <h1 class="titi">USERS</h1>
+                    <ul id="users" class="{{chat_user.group}}"></ul>
+                </div>
             </div>
         </div>
-        <div id="chatListAdd" class="card"><h1 class="titi">Add Chat +</h1></div>
-        <div class="chatListCancel card"><h1 class="titi">Cancel</h1></div>
-    </div>
-</div>
 
-<div id="chatPick" class="sidebar">
-    <div class="sidebarContain">
-        <div class="chatListCancel card"><h1 class="titi">Cancel</h1></div>
-        <div class="card"></div>
-        <div class="list"></div>
-    </div>
-</div>
+        <form id="settings" class="sidebar">
+            <div class="sidebarContain">
+                <div class="card character">
+                    <div class="titi">CHARACTER DETAILS</div>
+                    <div class="left">
+                        <label>Name:</label><br />
+                        <label>Alias:</label><br />
+                        <label>Color:</label>
+                    </div>
+                    <div class="right">
+                        <input id="usingname" type="text" name="name" value="{{chat_user.name}}" maxlength="50" /><br />
+                        <input id="ailin" type="text" name="acronym" value="{{chat_user.acronym}}" maxlength="15" /><br />
+                        <input id="coln" type="text" name="color" value="{{chat_user.color}}" maxlength="6" />
+                    </div>
+                    <button class="big" type="submit">Apply</button>
+                </div>
 
-<form class="controls">
-    <div id="previewWrapper"><div id="preview"></div></div>
-    <div id="control-container">
-        <div id="textInput-container"><textarea id="textInput" name="textInput" style="color: #{{chat_user.color}};"></textarea></div>
-        <div id="control-buttons">
-            <button class="send-button" type="submit">Send</button>
-            <button class="ooc-button" type="button">ooc</button>
-            <button class="me-button" type="button">me</button>
-        </div>
-        <div id="aliasOffset"></div>
-        <div id="quickSwitch"></div>
-    </div>
-</form>
+                <div class="card" id="typing-quirks">
+                    <div class="titi">TYPING PATTERNS</div>
+                    <div class="left">
+                        <label>Prefix: </label><br />
+                        <label>Suffix: </label><br />
+                        <label>Case: </label>
+                    </div>
+                    <div class="right">
+                        <input id="prei" type="text" name="quirk_prefix" value="{{chat_user.quirk_prefix}}" /><br />
+                        <input id="sufi" type="text" name="quirk_suffix" value="{{chat_user.quirk_suffix}}" /><br />
+                        <div class="select-bind"><div class="arrow">▼</div>
+                            <select id="casing" name="case">
+                                {% for value, name in case_options.items(): %}
+                                <option value="{{value}}"{% if value==chat_user.case %} selected="selected"{% endif %}>{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 
-<span class="hidden">
-    <div id="save">
-        <p>Did you enjoy that chat? If so, remember to save the log.</p>
-        <form action="/logs/save" method="post" target="_blank"><p>
-            <input type="hidden" name="chat" value="">
-            <input id="saveLinking" type="submit" name="save" value="Save">
+                    <div class="titi">REPLACEMENTS</div>
+                    <div class="replacementContainer">
+                        <ul id="replacementList">
+                            {% if chat_user_dict.character.replacements|length!=0 %}
+                                {% for replacement in chat_user_dict.character.replacements %}
+                                    <li><input type="text" name="quirk_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteReplacement">x</a></li>
+                                {% endfor %}
+                            {% else %}
+                                <li><input type="text" name="quirk_from" size="4"> to <input type="text" name="quirk_to" size="4"> <a href="#" class="deleteReplacement">x</a></li>
+                            {% endif %}
+                        </ul>
+                        <a href="#" id="addReplacement">+Add another replacement</a>
+                        <br />
+                        <a href="#" id="clearReplacements">-Clear replacements</a>
+                    </div>
+                    
+                    <div class="titi">REGEX REPLACEMENTS</div>
+                    <div class="replacementContainer">
+                        <ul id="regexList">
+                            {% if chat_user_dict.character.regexes|length!=0 %}
+                                {% for replacement in chat_user_dict.character.regexes %}
+                                    <li><input type="text" name="regex_from" size="4" value="{{replacement[0]}}"> to <input type="text" name="regex_to" size="4" value="{{replacement[1]}}"> <a href="#" class="deleteRegex">x</a></li>
+                                {% endfor %}
+                            {% else %}
+                                <li><input type="text" name="regex_from" size="4"> to <input type="text" name="regex_to" size="4"> <a href="#" class="deleteRegex">x</a></li>
+                            {% endif %}
+                        </ul>
+                        <a href="#" id="addRegex">+Add another replacement</a>
+                        <br />
+                        <a href="#" id="clearRegexes">-Clear replacements</a>
+                    </div>
+                    <button class="big" type="submit">Apply</button>
+                </div>
+
+                <div class="card">
+                    <h1 class="titi">OPTIONS</h1>
+                    <div class="stoptions">
+                        <label id="confirmCloseToggle"><input type="checkbox" autocomplete="off" checked><div class="checkbox"></div><div class="checkbox-text">Confirm Window Close</div></label>
+                        <label id="oocToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Out Of Character</div></label>
+                        <label id="bbColorToggle"><input type="checkbox" checked><div class="checkbox" autocomplete="off"></div><div class="checkbox-text">BBCode</div></label>
+                        <div id="notificationHead" data-ng-app>
+                            <div id="notifications">
+                                <label><input type="checkbox" class="deskset" name="deskset" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Desktop Notifications</div></label>
+                            </div>
+                       </div>
+                       <label id="previewToggle"><input type="checkbox" autocomplete="off"><div class="checkbox"></div><div class="checkbox-text">Show Preview</div></label>
+                   </div>
+                </div>
+                
+                <div id="sharing" class="card stoptions">
+                    <h1 class="titi">Share On...</h1>
+                    <label><button type="button"><a href="http://www.tumblr.com/share/link?url=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}&name=Charat - {{chat}}&description=Check out this cool group on Charat!&tags=charat, charatrp, roleplaying"
+                    id="tumShare" target="_blank">Tumblr</a></button></label>
+                    <label><button type="button"><a href="https://www.twitter.com/share?via=charatrp&url=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}&name=Charat - {{chat}}&text=Check out this cool group on Charat!&hashtags=charat, charatrp, roleplaying"
+                    id="twitShare" target="_blank">Twitter</a></button></label>
+                    <label><button type="button"><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fcharatrp.com%2Fchat%2F{{chat.url}}"
+                    id="faceShare" target="_blank">Facebook</a></button></label>
+                </div>
+            </div>
         </form>
-    </div>
-</span>
-</div>
+
+        <div id="chatList" class="sidebar">
+            <div class="sidebarContain">
+                <div id="chatListChats">
+                    <div class="card">
+                        <h1 class="titi">{{chat.title}}</h1>
+                    </div>
+                </div>
+                <div id="chatListAdd" class="card"><h1 class="titi">Add Chat +</h1></div>
+                <div class="chatListCancel card"><h1 class="titi">Cancel</h1></div>
+            </div>
+        </div>
+
+        <div id="chatPick" class="sidebar">
+            <div class="sidebarContain">
+                <div class="chatListCancel card"><h1 class="titi">Cancel</h1></div>
+                <div class="card"></div>
+                <div class="list"></div>
+            </div>
+        </div>
+
+        <form class="controls">
+            <div id="previewWrapper"><div id="preview"></div></div>
+            <div id="control-container">
+                <div id="textInput-container"><textarea id="textInput" name="textInput" style="color: #{{chat_user.color}};"></textarea></div>
+                <div id="control-buttons">
+                    <button class="send-button" type="submit">Send</button>
+                    <button class="ooc-button" type="button">ooc</button>
+                    <button class="me-button" type="button">me</button>
+                </div>
+                <div id="aliasOffset"></div>
+                <div id="quickSwitch"></div>
+            </div>
+        </form>
+
+        <span class="hidden">
+            <div id="save">
+                <p>Did you enjoy that chat? If so, remember to save the log.</p>
+                <form action="/logs/save" method="post" target="_blank"><p>
+                    <input type="hidden" name="chat" value="">
+                    <input id="saveLinking" type="submit" name="save" value="Save">
+                </form>
+            </div>
+        </span>
+        </div>
 
 {% endblock %}

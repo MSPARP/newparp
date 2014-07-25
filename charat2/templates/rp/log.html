@@ -1,62 +1,49 @@
 {% extends "rp/base.html" %}
 {% block title%}{{chat.title}} Log – Charat RP{% endblock %}
 {% block header %}
-<link rel="stylesheet" href="{{url_for("static", filename="css/rp/chat.css")}}">
-<style>
-#topbar {
-    background-color: rgba(255,255,255,.9);
-    position: fixed;
-}
-</style>
-<script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
+        <link rel="stylesheet" href="{{url_for("static", filename="css/rp/chat.css")}}">
+        <style>
+        #topbar {
+            background-color: rgba(255,255,255,.9);
+            position: fixed;
+        }
+        </style>
+        <script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
 {% endblock %}
 
 {% block pager %}
-{% if paginator.page_count!=1 %}
-<div class="pager">
-{{paginator.pager(format='~20~')}}
-</div>
-{% endif %}
+        {% if paginator.page_count!=1 %}
+        <div class="pager">
+        {{paginator.pager(format='~20~')}}
+        </div>
+        {% endif %}
 {% endblock %}
 
 {% block content %}
-<div id="topbar">
-    <center>
-       <div id="toptitle"><img src="{{url_for("static", filename="icon.png")}}" /></div>
-        <div id="topmenu">
-            <a id="goHelp" href="/help">Help</a>
-            <div class="topborder"></div>
-            <a id="goSupport" href="http://charatrp.tumblr.com/support">Donate</a>
+        {{ self.pager() }}
+        <div id="archiveConversation">
+            {% if messages|length!=0 %}
+            {% set last_date = None %}
+                {% for message in messages %}
+                {% set current_date = message.posted.date() %}
+                {% if current_date!=last_date %}
+                <p class="info"></p>
+                <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
+                {% set last_date = current_date %}
+                {% endif %}
+                <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
+                    <p class="info">
+                        <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
+                        <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
+                    </p>
+                    <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+                </span>
+                {% endfor %}
+            {% else %}
+            <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
+            {% endif %}
+            <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
         </div>
-    </center>
-</div>
 
-{{ self.pager() }}
-
-<div id="archiveConversation">
-    {% if messages|length!=0 %}
-    {% set last_date = None %}
-        {% for message in messages %}
-        {% set current_date = message.posted.date() %}
-        {% if current_date!=last_date %}
-        <p class="info"></p>
-        <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
-        {% set last_date = current_date %}
-        {% endif %}
-        <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
-            <p class="info">
-                <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
-                <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
-            </p>
-            <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
-        </span>
-        {% endfor %}
-    {% else %}
-    <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
-    {% endif %}
-    <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
-</div>
-
-{{ self.pager() }}
-
+        {{ self.pager() }}
 {% endblock %}
