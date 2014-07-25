@@ -19,7 +19,7 @@ function fillColumn(column,numCols) {
     $('<div>').addClass('section').prop('id', 'column-'+column).appendTo('#under-page');
     for(var i=column-1; i<chats.length; i+=numCols) {
         chat = chats[i];
-        $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-'+column);
+        $('<div>').addClass('card chat '+chat.type).prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-'+column);
         $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
         if (chat.online > 0) {
             $('<div>').addClass('users-online').text(chat.online+' online').appendTo('#chat-'+chat.url.replace(/\//g,'-').replace(/\//g,'-'));
