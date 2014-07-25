@@ -71,7 +71,7 @@ body.menu #topbar #toptitle {
     background-color: #f6f6f6;
 }
 
-#topbar.unread #toptitle img {
+#topbar.unread #toptitle {
     padding-bottom: 0;
 }
 
