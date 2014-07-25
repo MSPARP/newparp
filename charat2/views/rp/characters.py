@@ -36,6 +36,7 @@ def character_list(fmt=None):
     return render_template(
         "rp/character_list.html",
         characters=characters,
+        logged_in=g.user is not None,
     )
 
 
@@ -62,6 +63,7 @@ def character(character_id, fmt=None):
         "rp/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
+        logged_in=g.user is not None,
     )
 
 
@@ -127,7 +129,7 @@ def save_character(character_id):
 @login_required
 def delete_character_get(character_id):
     character = user_character_query(character_id)
-    return render_template("rp/delete_character.html", character_id=character_id)
+    return render_template("rp/delete_character.html", character_id=character_id, logged_in=g.user is not None)
 
 
 @use_db

@@ -34,6 +34,7 @@ def search_get(character_id=None):
         "rp/search.html",
         characters=characters,
         selected_character=character_id,
+        logged_in=g.user is not None,
     )
 
 
