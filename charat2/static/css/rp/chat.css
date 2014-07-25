@@ -72,6 +72,10 @@ body.menu #topbar #toptitle {
 }
 
 #topbar.unread #toptitle img {
+    padding-bottom: 0;
+}
+
+#topbar.unread #toptitle img {
     border-bottom: solid 2px #00aadd;
 }
 
