@@ -49,9 +49,9 @@ body.mobile #chat-pages {
 }
 
 .card.chat.group {
-    border-bottom: solid 2px #aa0000;
+    border-bottom: solid 2px #cc5500;
 }
 
 .card.chat.pm {
-    border-bottom: solid 2px #0000cc;
+    border-bottom: solid 2px #00aaff;
 }
