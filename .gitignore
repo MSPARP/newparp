@@ -2,6 +2,6 @@ logs/
 *.pyc
 *.ini
 *.egg-info
-*.c9
+.c9/
 build/
 dist/
