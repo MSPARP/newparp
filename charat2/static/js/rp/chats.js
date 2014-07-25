@@ -17,7 +17,7 @@ function unreadNotifications() {
 
 function fillColumn(column,numCols) {
     $('<div>').addClass('section').prop('id', 'column-'+column).appendTo('#under-page');
-    for(var i=column; i<chats.length; i+=numCols) {
+    for(var i=column-1; i<chats.length; i+=numCols) {
         chat = chats[i];
         $('<div>').addClass('card chat').prop('id', 'chat-'+chat.url.replace(/\//g,'-')).appendTo('#column-'+column);
         $('<a>').addClass('title').prop('href','/'+chat.url).text(chat.title+(chat.unread ? ' (unread)' : '')).appendTo('#chat-'+chat.url.replace(/\//g,'-'));
