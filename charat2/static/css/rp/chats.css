@@ -48,3 +48,10 @@ body.mobile #chat-pages {
     font-size: 16px;
 }
 
+.card.chat.group {
+    border-bottom: solid 2px #aa0000;
+}
+
+.card.chat.pm {
+    border-bottom: solid 2px #aaaa00;
+}
