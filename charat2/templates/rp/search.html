@@ -6,13 +6,13 @@
 <style>
 
 .searching {
-	background-image: url("{{url_for("static", filename="img/rp/throbber.gif")}}");
-	background-position: center;
-	background-repeat: no-repeat;
+    background-image: url("{{url_for("static", filename="img/rp/throbber.gif")}}");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .searching .body {
-	display: none;
+    display: none;
 }
 
 </style>
@@ -48,17 +48,17 @@
 
 
     <div class="section">
-        <div class="titli">SEARCH</div>
+        <div class="titli">RANDOM SEARCH</div>
         <div class="card">
-{% if characters %}
+        {% if characters %}
             <p>Search as: <select id="characterSelect">
-{% for character in characters: %}
+        {% for character in characters: %}
                 <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
-{% endfor %}
+        {% endfor %}
             </select></p>
-{% else %}
+        {% else %}
             <p>Currently searching as anonymous. <a href="{{url_for("character_list")}}">Create a character</a> to customise who you appear as.</p>
-{% endif %}
+        {% endif %}
             <p>Tags (separated by commas): <input id="characterTags" value="{{", ".join(g.user.search_tags)}}"></p>
             <p>Exclude tags (separated by commas): <input id="characterExcludeTags" value="{{", ".join(g.user.search_exclude_tags)}}"></p>
             <p><button id="searchButton">Search</button></p>
