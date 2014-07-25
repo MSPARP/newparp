@@ -71,9 +71,8 @@ body.menu #topbar #toptitle {
     background-color: #f6f6f6;
 }
 
-#topbar.unread #toptitle {
+#topbar.unread #toptitle img {
     border-bottom: solid 2px #00aadd;
-    padding-bottom: 0;
 }
 
 #topbar #toptitle:hover {
