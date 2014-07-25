@@ -157,9 +157,7 @@ def chat(url, fmt=None):
             "latest_num": latest_num,
         })
 
-    logged_in = False
-    if g.user is not None:
-        logged_in = True
+    logged_in = g.user is not None;
 
     return render_template(
         "rp/chat.html",
