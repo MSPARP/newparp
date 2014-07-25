@@ -238,7 +238,15 @@ class PMChat(Chat):
 
 
 class SearchedChat(Chat):
+
     __mapper_args__ = { "polymorphic_identity": "searched" }
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "url": self.url,
+            "type": self.type,
+        }
 
 
 AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, SearchedChat])
