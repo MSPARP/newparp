@@ -53,7 +53,7 @@
 {% if characters %}
             <p>Search as: <select id="characterSelect">
 {% for character in characters: %}
-                <option value="{{character.id}}">{{character.title}}</option>
+                <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
 {% endfor %}
             </select></p>
 {% else %}

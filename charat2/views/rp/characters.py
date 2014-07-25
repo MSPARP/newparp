@@ -16,7 +16,7 @@ def user_character_query(character_id):
         return g.db.query(UserCharacter).filter(and_(
             UserCharacter.id == character_id,
             UserCharacter.user_id == g.user.id,
-        )).order_by(UserCharacter.title).one()
+        )).one()
     except NoResultFound:
         abort(404)
 

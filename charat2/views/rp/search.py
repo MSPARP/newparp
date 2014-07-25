@@ -2,6 +2,8 @@ from flask import (
     abort, g, jsonify, make_response, redirect, render_template, request,
     url_for
 )
+from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import login_required
 from charat2.model import UserCharacter
@@ -10,15 +12,28 @@ from charat2.model.connections import use_db, db_commit, db_disconnect
 
 @use_db
 @login_required
-def search_get():
+def search_get(character_id=None):
 
     characters = g.db.query(UserCharacter).filter(
         UserCharacter.user_id == g.user.id,
     ).order_by(UserCharacter.title, UserCharacter.id).all()
 
+    # If we have a character ID, make sure that character exists.
+    if character_id is not None:
+        try:
+            character = g.db.query(UserCharacter).filter(and_(
+                UserCharacter.id == character_id,
+                UserCharacter.user_id == g.user.id,
+            )).one()
+        except NoResultFound:
+            abort(404)
+    else:
+        character_id = g.user.default_character_id
+
     return render_template(
         "rp/search.html",
         characters=characters,
+        selected_character=character_id,
     )
 
 

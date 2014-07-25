@@ -6,6 +6,7 @@
       <th>Title</th>
       <th>Character</th>
       <th>Default</th>
+      <th>Search</th>
       <th>Edit</th>
       <th>Delete</th>
     </tr>
@@ -22,6 +23,7 @@
         Default character
 {% endif %}
       </td>
+      <td><a href="{{url_for("rp_search_character", character_id=character.id)}}">Search</a></td>
       <td><a href="{{url_for("character", character_id=character.id)}}">Edit</a></td>
       <td><a href="{{url_for("delete_character_get", character_id=character.id)}}">Delete</a></td>
     </tr>
