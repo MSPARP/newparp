@@ -223,12 +223,14 @@ def log(url, page=None):
         Message.chat_id==chat.id,
     ).scalar()
     
+    messageNumberPerPage = 200
+
     if page is None:
-        page = message_count/100+1
+        page = message_count/messageNumberPerPage+1
     
     messages = g.db.query(Message).filter(
         Message.chat_id==chat.id,
-    ).order_by(Message.id).limit(100).offset((page-1)*100).all()
+    ).order_by(Message.id).limit(messageNumberPerPage).offset((page-1)*messageNumberPerPage).all()
 
     if len(messages) == 0:
         abort(404)
@@ -236,7 +238,7 @@ def log(url, page=None):
     paginator = paginate.Page(
         [],
         page=page,
-        items_per_page=100,
+        items_per_page=messageNumberPerPage,
         item_count=message_count,
         url=lambda page: url_for("log", url=url, page=page),
     )
