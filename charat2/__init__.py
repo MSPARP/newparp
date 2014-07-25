@@ -88,6 +88,7 @@ app.add_url_rule("/create_chat", "create_chat", chat.create_chat, subdomain="rp"
 app.add_url_rule("/search", "rp_search", search.search_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, subdomain="rp", methods=("POST",))
 app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/search", "rp_search_character", search.search_get, subdomain="rp", methods=("GET",))
 
 # 2.5. Rooms
 

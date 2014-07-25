@@ -11,6 +11,8 @@ from sqlalchemy.orm import (
     sessionmaker,
     with_polymorphic,
 )
+# Sorry SQLiters, this just ain't gonna work.
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     func,
@@ -108,6 +110,9 @@ class User(Base):
         name="users_default_character_fkey",
         use_alter=True,
     ))
+
+    search_tags = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    search_exclude_tags = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)

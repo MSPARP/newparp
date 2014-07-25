@@ -2,6 +2,8 @@ from flask import (
     abort, g, jsonify, make_response, redirect, render_template, request,
     url_for
 )
+from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import login_required
 from charat2.model import UserCharacter
@@ -10,15 +12,28 @@ from charat2.model.connections import use_db, db_commit, db_disconnect
 
 @use_db
 @login_required
-def search_get():
+def search_get(character_id=None):
 
     characters = g.db.query(UserCharacter).filter(
         UserCharacter.user_id == g.user.id,
     ).order_by(UserCharacter.title, UserCharacter.id).all()
 
+    # If we have a character ID, make sure that character exists.
+    if character_id is not None:
+        try:
+            character = g.db.query(UserCharacter).filter(and_(
+                UserCharacter.id == character_id,
+                UserCharacter.user_id == g.user.id,
+            )).one()
+        except NoResultFound:
+            abort(404)
+    else:
+        character_id = g.user.default_character_id
+
     return render_template(
         "rp/search.html",
         characters=characters,
+        selected_character=character_id,
     )
 
 
@@ -28,17 +43,15 @@ def _tags_to_set(tag_string):
         tag = tag.strip()
         if tag == "":
             continue
-        tags.add(tag.lower())
+        # Silently truncate to 100 because we need a limit in the database and
+        # people are unlikely to type that much.
+        tags.add(tag.lower()[:100])
     return tags
 
 
 @use_db
 @login_required
 def search_post():
-
-    # End the database session so the long poll doesn't hang onto it.
-    db_commit()
-    db_disconnect()
 
     # This is just making sure it's a number, the actual validation happens
     # after the person is matched to save on database queries.
@@ -53,16 +66,22 @@ def search_post():
     # here.
     # XXX use several fields like we do for replacements?
     tags = _tags_to_set(request.form["tags"])
+    g.user.search_tags = tags
     g.redis.delete("session:%s:tags" % g.session_id)
     if len(tags) > 0:
         g.redis.sadd("session:%s:tags" % g.session_id, *tags)
         g.redis.expire("session:%s:tags" % g.session_id, 30)
 
     exclude_tags = _tags_to_set(request.form["exclude_tags"])
+    g.user.search_exclude_tags = exclude_tags
     g.redis.delete("session:%s:exclude_tags" % g.session_id)
     if len(exclude_tags) > 0:
         g.redis.sadd("session:%s:exclude_tags" % g.session_id, *exclude_tags)
         g.redis.expire("session:%s:exclude_tags" % g.session_id, 30)
+
+    # End the database session so the long poll doesn't hang onto it.
+    db_commit()
+    db_disconnect()
 
     pubsub = g.redis.pubsub()
     pubsub.subscribe("searcher:%s" % g.session_id)
