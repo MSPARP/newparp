@@ -11,10 +11,9 @@ from charat2.helpers.chat import disconnect, send_message, send_userlist
 from charat2.model import sm, Message, ChatUser
 from charat2.model.connections import redis_pool
 
-db = sm()
-redis = StrictRedis(connection_pool=redis_pool)
-
 if __name__ == "__main__":
+    db = sm()
+    redis = StrictRedis(connection_pool=redis_pool)
     while True:
         current_time = int(time.time())
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):

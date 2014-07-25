@@ -284,6 +284,28 @@ class ChatUser(Base):
     desktop_notifications = Column(Boolean, nullable=False, default=False)
 
     @classmethod
+    def from_character(cls, character, **kwargs):
+        # Create a ChatUser using a Character and their user to determine the
+        # default values.
+        return cls(
+            user_id=character.user.id,
+            name=character.name,
+            acronym=character.acronym,
+            color=character.color,
+            quirk_prefix=character.quirk_prefix,
+            quirk_suffix=character.quirk_suffix,
+            case=character.case,
+            replacements=character.replacements,
+            regexes=character.regexes,
+            confirm_disconnect=character.user.confirm_disconnect,
+            show_system_messages=character.user.show_system_messages,
+            show_description=character.user.show_description,
+            show_bbcode=character.user.show_bbcode,
+            desktop_notifications=character.user.desktop_notifications,
+            **kwargs
+        )
+
+    @classmethod
     def from_user(cls, user, **kwargs):
         # Create a ChatUser using a User and their default character to
         # determine the default values.
@@ -378,6 +400,7 @@ class Message(Base):
         u"user_group",
         u"user_action",
         u"chat_meta",
+        u"search_info",
         name=u"messages_type",
     ), nullable=False, default=u"ic")
 
