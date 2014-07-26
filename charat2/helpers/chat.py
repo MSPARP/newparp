@@ -90,6 +90,11 @@ def send_message(db, redis, message):
     redis.zadd(cache_key, message.id, json.dumps(message_dict))
     redis.zremrangebyrank(cache_key, 0, -51)
 
+    # Prepare pubsub message
+    redis_message = {
+        "messages": [message_dict],
+    }
+
     # Reload userlist if necessary.
     if message.type in (
         u"join",
@@ -99,21 +104,16 @@ def send_message(db, redis, message):
         u"user_group",
         u"user_action",
     ):
-        send_userlist(db, redis, message.chat)
+        redis_message["users"] = get_userlist(db, redis, message.chat)
     # Reload chat metadata if necessary.
-    elif message.type == "chat_meta":
-		redis.publish("channel:%s:meta" % message.chat.id, json.dumps({
-		    "chat": message.chat.to_dict(),
-		}))
-
-	# And send the message.
-    redis.publish("channel:%s:messages" % message.chat_id, json.dumps({
-        "messages": [message_dict],
-    }))
+    if message.type == "chat_meta":
+        redis_message["chat"] = message.chat.to_dict()
+    redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
 
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
-    redis.publish("channel:%s:meta" % chat.id, json.dumps({
+    redis.publish("channel:%s" % chat.id, json.dumps({
+        "messages": [],
         "users": get_userlist(db, redis, chat),
     }))
 
