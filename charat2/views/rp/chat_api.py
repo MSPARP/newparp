@@ -56,7 +56,7 @@ def messages():
 
     pubsub = g.redis.pubsub()
     # Channel for general chat messages.
-    pubsub.subscribe("channel:%s:messages" % g.chat_id)
+    pubsub.subscribe("channel:%s" % g.chat_id)
     # Channel for messages aimed specifically at you - kicks, bans etc.
     pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 
