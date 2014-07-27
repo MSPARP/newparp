@@ -546,7 +546,7 @@ def save_from_character():
     return "", 204
 
 def quit():
-    # Only send the message if we were already online.
+    # Only send a message if we were already online.
     if g.user_id is None or "chat_id" not in request.form:
         abort(400)
     try:
