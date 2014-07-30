@@ -60,7 +60,7 @@ def mark_alive(f):
                 ))
         g.redis.zadd(
             "chats_alive",
-            time.time()+15,
+            time.time()+60,
             "%s/%s" % (g.chat_id, g.user_id),
         )
         return f(*args, **kwargs)
