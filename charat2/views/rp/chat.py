@@ -1,4 +1,4 @@
-from flask import Flask, abort, g, jsonify, redirect, render_template, request, url_for
+from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
@@ -24,16 +24,29 @@ from charat2.model.validators import url_validator
 @use_db
 @login_required
 def create_chat():
+
     # Silently truncate to 50 because we've got a maxlength on the <input>.
     url = request.form["url"][:50]
+
     # Change URL to lower case but remember the original case for the title.
     lower_url = url.lower()
+
     if url_validator.match(lower_url) is None:
         return render_template(
             "rp/home.html",
             create_chat_error="That URL isn't valid. Chat URLs can only "
             "contain letters, numbers, hyphens and underscores."
         )
+
+    # Check the URL against the routing to make sure it doesn't crash into any
+    # of the other routes.
+    route, args = current_app.url_map.bind("", subdomain="rp").match("/"+lower_url)
+    if route != "chat":
+        return render_template(
+            "rp/home.html",
+            create_chat_error="The URL \"%s\" has already been taken." % url
+        )
+
     # Don't allow pm because subchats of it (pm/*) will crash into private
     # chat URLs.
     if url=="pm" or g.db.query(Chat.id).filter(Chat.url==lower_url).count()!=0:
@@ -41,6 +54,7 @@ def create_chat():
             "rp/home.html",
             create_chat_error="The URL \"%s\" has already been taken." % url
         )
+
     g.db.add(GroupChat(
         url=lower_url,
         title=url.replace("_", " "),
