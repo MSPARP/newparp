@@ -2,7 +2,6 @@
 {% block title%}Chat Rooms – Charat RP{% endblock %}
 {% block header %}
 <script>
-var logged_in = {{'true' if logged_in else 'false'}};
 var chats = {{rooms|tojson|safe}};
 </script>
 <script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>

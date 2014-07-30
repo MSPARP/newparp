@@ -8,14 +8,16 @@ from charat2.model.connections import use_db
 
 @use_db
 def home():
-    return render_template("rp/home.html", logged_in=g.user is not None, base_domain=os.environ['BASE_DOMAIN'], log_in_error=request.args.get("log_in_error"), register_error=request.args.get("register_error"))
+    return render_template(
+        "rp/home.html",
+        base_domain=os.environ['BASE_DOMAIN'],
+        log_in_error=request.args.get("log_in_error"),
+        register_error=request.args.get("register_error"),
+    )
 
 @alt_formats(set(["json"]))
 @use_db
 def rooms(fmt=None):
-    logged_in = False
-    if g.user is not None:
-        logged_in = True
     
     rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
@@ -30,7 +32,7 @@ def rooms(fmt=None):
             "chats": chat_dicts,
         })
 
-    return render_template("rp/rooms.html", rooms=chat_dicts, logged_in=g.user is not None)
+    return render_template("rp/rooms.html", rooms=chat_dicts)
 
 @use_db
 def logout():

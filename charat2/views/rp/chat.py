@@ -166,7 +166,6 @@ def chat(url, fmt=None):
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
-        logged_in=g.user is not None,
     )
 
 

@@ -10,7 +10,6 @@ def home():
     posts = json.loads(blog.feed())
     return render_template(
         "root/home.html",
-        logged_in=g.user is not None,
         posts=posts
     )
 

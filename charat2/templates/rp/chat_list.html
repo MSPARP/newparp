@@ -2,7 +2,6 @@
 {% block title%}{% if type == None: %}Your{% elif type == 'pm' %}Private Message{% else %}{{type|capitalize}}{% endif %} Chats – Charat RP{% endblock %}
 {% block header %}
 <script>
-var logged_in = {{'true' if logged_in else 'false'}};
 var chats = {{chats|tojson|safe}};
 </script>
 <script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>

@@ -5,7 +5,6 @@
         <script src="{{url_for('static', filename='js/rp/characters.js')}}" defer></script>
         <script src="{{url_for('static', filename='js/rp/quirks.js')}}" defer></script>
         <script type="text/javascript">
-            var logged_in = {{'true' if logged_in else 'false'}};
             var user = {{chat_user_dict|tojson|safe}};
             var chat = {{chat|tojson|safe}};
             var latestNum = {{latest_num|tojson|safe}};
@@ -30,7 +29,7 @@
                     <div class="topborder"></div>
                     <a id="goUser" href="">Settings</a>
                     <div class="topborder"></div>
-                    {% if logged_in %}
+                    {% if g.user != None %}
                     <a class="logout" href="{{url_for('logout')}}">Logout</a>
                     {% else %}
                     <a class="login" href="">Login</a>

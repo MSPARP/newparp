@@ -110,6 +110,5 @@ def chat_list(fmt=None, type=None, page=1):
         chats=chat_dicts,
         paginator=paginator,
         chat_classes=chat_classes,
-        logged_in=g.user is not None,
     )
 

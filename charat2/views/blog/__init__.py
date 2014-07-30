@@ -10,7 +10,6 @@ def home():
     posts = json.loads(feed())
     return render_template(
         "blog/home.html",
-        logged_in=g.user is not None,
         posts=posts
     )
 
@@ -28,7 +27,6 @@ def view_post(post_id, post_title=None):
 
     return render_template(
         "blog/post.html",
-        logged_in=g.user is not None,
         post=post
     )
 

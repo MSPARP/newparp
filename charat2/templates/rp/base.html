@@ -20,6 +20,7 @@
         <script src="{{url_for("static", filename="js/rp/base.js")}}" defer></script>
         <script src="{{url_for("static", filename="js/desktop-notify.js")}}" defer></script>
         <script type="text/javascript" src="{{url_for("static", filename="colorpicker/js/colorpicker.js")}}" defer></script>
+        <script>var logged_in = {{"true" if g.user != None else "false"}};</script>
         {%block header%}{%endblock%}
     </head>
 
@@ -41,7 +42,7 @@
                 <div class="topborder"></div>
                 <a id="goUser" href="">Settings</a>
                 <div class="topborder"></div>
-                {% if logged_in %}
+                {% if g.user != None: %}
                 <a class="logout" href="{{url_for('logout')}}">Logout</a>
                 {% else %}
                 <a class="login" href="">Login</a>
