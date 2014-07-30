@@ -14,9 +14,7 @@ from charat2.helpers.chat import (
     get_userlist,
 )
 from charat2.model import (
-    action_ranks,
     case_options,
-    group_ranks,
     Ban,
     ChatUser,
     Message,
@@ -116,18 +114,18 @@ def set_state():
 @mark_alive
 def set_group():
 
-    # Validate group setting.
-    if request.form.get("group") not in group_ranks:
-        abort(400)
-
-    # If we're not a mod, creator or site admin, don't even bother looking up
-    # the other user.
-    if (
-        group_ranks[g.chat_user.group] == 0
-        and g.chat.creator != g.user
-        and g.user.group != "admin"
-    ):
+    # Validation #1: We must be allowed to set groups.
+    if not g.chat_user.can("set_group"):
         abort(403)
+
+    # Validation #2: Set group must be lower than ours.
+    # Also 400 if the group is invalid.
+    set_group = request.form["group"]
+    try:
+        if ChatUser.group_ranks[set_group] >= g.chat_user.computed_rank:
+            abort(403)
+    except KeyError:
+        abort(400)
 
     # Fetch the ChatUser we're trying to change.
     if "user_id" in request.form:
@@ -146,41 +144,30 @@ def set_group():
     except NoResultFound:
         abort(404)
 
-    # If they're the creator or a site admin, don't allow the change.
-    if set_chat_user.user==g.chat.creator or set_chat_user.user.group=="admin":
+    # Validation #3: Set user's group must be lower than ours.
+    if set_chat_user.computed_rank >= g.chat_user.computed_rank:
         abort(403)
-
-    # Creator and admin can do anything, so only do the following checks if
-    # we're not.
-    if g.chat.creator != g.user and g.user.group != "admin":
-        # If the other user's group is above our own, don't allow the change.
-        if group_ranks[set_chat_user.group] > group_ranks[g.chat_user.group]:
-            abort(403)
-        # If the group we're trying to set them to is above our own, don't allow
-        # the change.
-        if group_ranks[request.form["group"]] > group_ranks[g.chat_user.group]:
-            abort(403)
 
     # If we're changing them to their current group, just send a 204 without
     # actually doing anything.
-    if request.form["group"] == set_chat_user.group:
+    if set_group == set_chat_user.group:
         return "", 204
 
-    if request.form["group"] == "mod":
+    if set_group == "mod":
         message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Magical Mod. They can now silence, kick and ban other users.")
-    elif request.form["group"] == "mod2":
+    elif set_group == "mod2":
         message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Cute-Cute Mod. They can now silence and kick other users.")
-    elif request.form["group"] == "mod3":
+    elif set_group == "mod3":
         message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Little Mod. They can now silence other users.")
-    elif request.form["group"] == "user":
+    elif set_group == "user":
         if set_chat_user.group == "silent":
             message = ("[color=#%s]%s[/color] unsilenced [color=#%s]%s[/color].")
         else:
             message = ("[color=#%s]%s[/color] removed moderator status from [color=#%s]%s[/color].")
-    elif request.form["group"] == "silent":
+    elif set_group == "silent":
         message = ("[color=#%s]%s[/color] silenced [color=#%s]%s[/color].")
 
-    set_chat_user.group = request.form["group"]
+    set_chat_user.group = set_group
 
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
@@ -200,15 +187,12 @@ def set_group():
 @mark_alive
 def user_action():
 
-    if request.form.get("action") not in ("kick", "ban"):
+    action = request.form["action"]
+    if action not in ("kick", "ban"):
         abort(400)
 
-    # Make sure we're allowed to perform this action.
-    if (
-        group_ranks[g.chat_user.group] < action_ranks[request.form["action"]]
-        and g.chat.creator != g.user
-        and g.user.group != "admin"
-    ):
+    # Validation #1: We must be allowed to perform this action.
+    if not g.chat_user.can(action):
         abort(403)
 
     # Fetch the ChatUser we're trying to act upon.
@@ -228,18 +212,11 @@ def user_action():
     except NoResultFound:
         abort(404)
 
-    # If creator or admin, don't allow the action.
-    if set_user==g.chat.creator or set_user.group=="admin":
+    # Validation #2: Set user's group must be lower than ours.
+    if set_chat_user.computed_rank >= g.chat_user.computed_rank:
         abort(403)
 
-    # If they're above us or equal too us and we're not creator or admin, don't allow it.
-    if (
-        group_ranks[set_chat_user.group] >= group_ranks[g.chat_user.group]
-        and g.chat.creator != g.user and g.user.group != "admin"
-    ):
-        abort(403)
-
-    if request.form["action"]=="kick":
+    if action=="kick":
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"kick\"}",
@@ -264,7 +241,7 @@ def user_action():
         ))
         return "", 204
 
-    elif request.form["action"]=="ban":
+    elif action=="ban":
         # Skip if they're already banned.
         if g.db.query(func.count('*')).select_from(Ban).filter(and_(
             Ban.chat_id==g.chat.id,
@@ -319,43 +296,34 @@ def user_action():
 @mark_alive
 def set_flag():
 
+    flag = request.form["flag"]
+    value = request.form["value"]
     if "flag" not in request.form or "value" not in request.form:
         abort(400)
 
-    # Make sure we're a mod, creator, or admin.
-    if (
-        group_ranks[g.chat_user.group] < 1
-        and g.chat.creator != g.user
-        and g.user.group != "admin"
-    ):
+    # Validation: We must be allowed to set flags.
+    if not g.chat_user.can("set_flag"):
         abort(403)
 
     # Boolean flags.
-    if (
-        request.form["flag"] in ("autosilence", "nsfw")
-        and request.form["value"] in ("on", "off")
-    ):
-        new_value = request.form["value"] == "on"
-        if new_value == getattr(g.chat, request.form["flag"]):
+    if (flag in ("autosilence", "nsfw") and value in ("on", "off")):
+        new_value = value == "on"
+        if new_value == getattr(g.chat, flag):
             return "", 204
-        setattr(g.chat, request.form["flag"], new_value)
-        message = ("[color=#%%s]%%s[/color] switched %s %s.") % (
-            request.form["flag"], request.form["value"],
-        )
+        setattr(g.chat, flag, new_value)
+        message = ("[color=#%%s]%%s[/color] switched %s %s.") % (flag, value)
 
     # Publicity is an enum because we might add options for password protected
     # or invite only chats in the future.
-    elif (
-        request.form["flag"] == "publicity"
-        and request.form["value"] in ("listed", "unlisted")
-    ):
-        if request.form["value"] == g.chat.publicity:
+    elif (flag == "publicity" and value in ("listed", "unlisted")):
+        if value == g.chat.publicity:
             return "", 204
-        g.chat.publicity = request.form["value"]
+        g.chat.publicity = value
         if g.chat.publicity == "listed":
             message = "[color=#%s]%s[/color] listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
             message = "[color=#%s]%s[/color] unlisted the chat."
+
     else:
         abort(400)
 
@@ -363,9 +331,7 @@ def set_flag():
         chat_id=g.chat.id,
         user_id=g.user.id,
         type="chat_meta",
-        text=message % (
-            g.chat_user.color, g.user.username,
-        ),
+        text=message % (g.chat_user.color, g.user.username),
     ))
 
     return "", 204
@@ -375,12 +341,8 @@ def set_flag():
 @mark_alive
 def set_topic():
 
-    # Make sure we're allowed to set the topic.
-    if (
-        group_ranks[g.chat_user.group] < action_ranks["set_topic"]
-        and g.chat.creator != g.user
-        and g.user.group != "admin"
-    ):
+    # Validation: We must be allowed to set the topic.
+    if not g.chat_user.can("set_topic"):
         abort(403)
 
     if "topic" not in request.form:

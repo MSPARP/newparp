@@ -61,27 +61,6 @@ case_options = {
 case_options_enum = Enum(*case_options.keys(), name=u"case")
 
 
-# Group changes and user actions can only be performed on people of the same
-# group as yourself and lower. To make this easier to check, we store a numeric
-# value for each rank so we can do a simple less-than-or-equal-to comparison.
-# Also 0 indicates that the person is not a mod, so they can't perform group
-# changes and user actions at all.
-group_ranks = {
-    "mod": 3,
-    "mod2": 2,
-    "mod3": 1,
-    "user": 0,
-    "silent": 0,
-}
-
-# Minimum ranks for user actions.
-action_ranks = {
-    "ban": 3,
-    "kick": 2,
-    "set_topic": 1,
-}
-
-
 class User(Base):
 
     __tablename__ = "users"
@@ -351,6 +330,47 @@ class ChatUser(Base):
             **kwargs
         )
 
+    # Group changes and user actions can only be performed on people of the
+    # same group as yourself and lower. To make this easier to check, we store
+    # a numeric value for each rank so we can do a simple less-than-or-equal-to
+    # comparison.
+    group_ranks = {
+        "admin": float("inf"),
+        "creator": float("inf"),
+        "mod": 3,
+        "mod2": 2,
+        "mod3": 1,
+        "user": 0,
+        "silent": -1,
+    }
+
+    # Minimum ranks for actions.
+    action_ranks = {
+        "ban": 3,
+        "kick": 2,
+        # XXX different ranks for each flag?
+        "set_flag": 1,
+        "set_group": 1,
+        "set_topic": 1,
+    }
+
+    @property
+    def computed_group(self):
+        # Group is overridden by chat creator and user status.
+        # Needs joinedload whenever we're getting these.
+        if self.user.group == "admin":
+            return "admin"
+        if self.chat.type=="group" and self.chat.creator==self.user:
+            return "creator"
+        return self.group
+
+    @property
+    def computed_rank(self):
+        return self.group_ranks[self.computed_group]
+
+    def can(self, action):
+        return self.group_ranks[self.computed_group] >= self.action_ranks[action]
+
     def to_dict(self, include_user=True, include_options=False):
         ucd = {
             "character": {
@@ -361,14 +381,7 @@ class ChatUser(Base):
             "meta": {
                 # Group is overridden by chat creator and user status.
                 # Needs joinedload whenever we're getting these.
-                "group": (
-                    "admin" if self.user.group=="admin"
-                    else "creator" if (
-                        self.chat.type=="group" and
-                        self.chat.creator==self.user
-                    )
-                    else self.group
-                ),
+                "group": self.computed_group,
             },
         }
         if include_options:
