@@ -93,13 +93,22 @@ app.add_url_rule("/characters/<int:character_id>/search", "rp_search_character",
 # 2.5. Request searching
 
 app.add_url_rule("/requests", "rp_request_list", request_search.request_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests.<fmt>", "rp_request_list", request_search.request_list, subdomain="rp", methods=("GET",))
+
 app.add_url_rule("/requests/yours", "rp_your_request_list", request_search.your_request_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/yours.<fmt>", "rp_your_request_list", request_search.your_request_list, subdomain="rp", methods=("GET",))
+
 app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
+
 app.add_url_rule("/requests/<int:request_id>", "rp_request", request_search.request, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/<int:request_id>/answer", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/<int:request_id>.<fmt>", "rp_request", request_search.request, subdomain="rp", methods=("GET",))
+
+app.add_url_rule("/requests/<int:request_id>/answer", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
+
 app.add_url_rule("/requests/<int:request_id>/edit", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/<int:request_id>/edit", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
+
 app.add_url_rule("/requests/<int:request_id>/delete", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/<int:request_id>/delete", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
 

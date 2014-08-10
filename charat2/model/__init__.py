@@ -472,6 +472,38 @@ class Ban(Base):
     reason = Column(UnicodeText)
 
 
+class Request(Base):
+
+    __tablename__ = "requests"
+
+    id = Column(Integer, primary_key=True)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    status = Column(Enum(
+        u"draft",
+        u"posted",
+        name=u"requests_status",
+    ), nullable=False, default=u"draft")
+
+    posted = Column(DateTime(), nullable=False, default=now)
+
+    # If the user doesn't have a character this may be null.
+    user_character_id = Column(Integer, ForeignKey("user_characters.id"))
+
+    scenario = Column(UnicodeText, nullable=False, default=u"")
+    prompt = Column(UnicodeText, nullable=False, default=u"")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "status": self.status,
+            "posted": time.mktime(self.posted.timetuple()),
+            "scenario": self.scenario,
+            "prompt": self.prompt,
+        }
+
+
 # Index to make usernames case insensitively unique.
 Index("users_username", func.lower(User.username), unique=True)
 
