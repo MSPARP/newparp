@@ -562,4 +562,5 @@ Ban.creator = relation(
 )
 
 Request.user = relation(User, backref="requests")
+Request.user_character = relation(UserCharacter, backref="requests")
 
