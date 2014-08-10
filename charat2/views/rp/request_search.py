@@ -9,6 +9,19 @@ from charat2.model import (
 )
 from charat2.model.connections import use_db
 
+
+def request_query(request_id, own=False):
+    try:
+        request = g.db.query(Request).filter(Request.id == request_id).one()
+    except NoResultFound:
+        abort(404)
+    if own and request.user != g.user:
+        abort(404)
+    elif request.status == "draft" and request.user != g.user:
+        abort(404)
+    return request
+
+
 @alt_formats(set(["json"]))
 @use_db
 @login_required
@@ -43,8 +56,20 @@ def new_request_post():
     raise NotImplementedError
 
 
-def request(request_id):
-    raise NotImplementedError
+@alt_formats(set(["json"]))
+@use_db
+@login_required
+def request(request_id, fmt=None):
+
+    request = request_query(request_id)
+
+    if fmt == "json":
+        return jsonify(request.to_dict())
+
+    return render_template(
+        "rp/request_search/request.html",
+        request=request,
+    )
 
 
 def answer_request(request_id):

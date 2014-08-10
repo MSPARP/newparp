@@ -29,7 +29,7 @@ from sqlalchemy import (
 )
 
 engine = create_engine(
-    os.environ['POSTGRES_URL'],
+    os.environ["POSTGRES_URL"],
     convert_unicode=True,
     pool_recycle=3600,echo=True,
 )
@@ -536,28 +536,30 @@ User.characters = relation(
     backref="user",
 )
 
-GroupChat.creator = relation(User, backref='created_chats')
+GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
     Chat,
-    backref='children',
+    backref="children",
     primaryjoin=GroupChat.parent_id==Chat.id,
 )
 
-ChatUser.user = relation(User, backref='chats')
-ChatUser.chat = relation(Chat, backref='users')
+ChatUser.user = relation(User, backref="chats")
+ChatUser.chat = relation(Chat, backref="users")
 
 Message.chat = relation(Chat)
 Message.user = relation(User)
 
 Ban.user = relation(
     User,
-    backref='bans',
+    backref="bans",
     primaryjoin=Ban.user_id==User.id,
 )
-Ban.chat = relation(Chat, backref='bans')
+Ban.chat = relation(Chat, backref="bans")
 Ban.creator = relation(
     User,
-    backref='bans_created',
+    backref="bans_created",
     primaryjoin=Ban.creator_id==User.id,
 )
+
+Request.user = relation(User, backref="requests")
 
