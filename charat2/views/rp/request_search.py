@@ -160,10 +160,20 @@ def edit_request_post(request_id):
     raise NotImplementedError
 
 
+@use_db
+@login_required
 def delete_request_get(request_id):
-    raise NotImplementedError
+    return render_template(
+        "rp/request_search/delete_request.html",
+        search_request=_request_query(request_id, own=True),
+    )
 
 
+@use_db
+@login_required
 def delete_request_post(request_id):
-    raise NotImplementedError
+    search_request = _request_query(request_id, own=True)
+    g.db.delete(search_request)
+    g.db.commit()
+    return redirect(url_for("rp_your_request_list"))
 
