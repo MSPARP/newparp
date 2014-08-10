@@ -26,7 +26,7 @@ def request_query(request_id, own=False):
 @use_db
 @login_required
 def request_list(fmt=None):
-
+    print request.matched_route
     requests = g.db.query(Request).order_by(
         Request.posted.desc(),
     ).filter(
@@ -59,16 +59,17 @@ def new_request_post():
 @alt_formats(set(["json"]))
 @use_db
 @login_required
-def request(request_id, fmt=None):
+def request_detail(request_id, fmt=None):
 
-    request = request_query(request_id)
+    # Don't call it "request" because that overrides the flask request.
+    search_request = request_query(request_id)
 
     if fmt == "json":
         return jsonify(request.to_dict())
 
     return render_template(
         "rp/request_search/request.html",
-        request=request,
+        search_request=search_request,
     )
 
 

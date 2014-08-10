@@ -1,18 +1,18 @@
-<h1>Request #{{request.id}}</h1>
+<h1>Request #{{search_request.id}}</h1>
 
-{% if request.scenario: %}
-<p>Scenario: {{request.scenario}}</p>
+{% if search_request.scenario: %}
+<p>Scenario: {{search_request.scenario}}</p>
 {% endif %}
 
-{% if request.prompt: %}
-<p>Prompt: {{request.prompt}}</p>
+{% if search_request.prompt: %}
+<p>Prompt: {{search_request.prompt}}</p>
 {% endif %}
 
-{% if request.user_id == g.user.id: %}
+{% if search_request.user_id == g.user.id: %}
 <p>
-  <a href="{{url_for("rp_edit_request_get", request_id=request.id)}}">Edit</a>
-  <a href="{{url_for("rp_delete_request_get", request_id=request.id)}}">Delete</a>
+  <a href="{{url_for("rp_edit_request_get", request_id=search_request.id)}}">Edit</a>
+  <a href="{{url_for("rp_delete_request_get", request_id=search_request.id)}}">Delete</a>
 </p>
 {% else: %}
-<form action="{{url_for("rp_answer_request", request_id=request.id)}}" method="post"><button type="submit">Answer</button></form>
+<form action="{{url_for("rp_answer_request", request_id=search_request.id)}}" method="post"><button type="submit">Answer</button></form>
 {% endif %}

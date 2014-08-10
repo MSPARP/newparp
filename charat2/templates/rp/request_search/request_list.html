@@ -1,29 +1,29 @@
 <h1>Requests</h1>
 
 <ul>
-{% for request in requests: %}
+{% for search_request in requests: %}
   <li>
-{% if request.scenario: %}
-{% if request.scenario|length > 150: %}
-    <p>Scenario: {{request.scenario[:150]}}<a href="{{url_for("rp_request", request_id=request.id)}}">...</a></p>
+{% if search_request.scenario: %}
+{% if search_request.scenario|length > 150: %}
+    <p>Scenario: {{search_request.scenario[:150]}}<a href="{{url_for("rp_request", request_id=search_request.id)}}">...</a></p>
 {% else: %}
-    <p>Scenario: {{request.scenario}}</p>
+    <p>Scenario: {{search_request.scenario}}</p>
 {% endif %}
 {% endif %}
-{% if request.prompt: %}
-{% if request.prompt|length > 150: %}
-    <p>Prompt: {{request.prompt[:150]}}<a href="{{url_for("rp_request", request_id=request.id)}}">...</a></p>
+{% if search_request.prompt: %}
+{% if search_request.prompt|length > 150: %}
+    <p>Prompt: {{search_request.prompt[:150]}}<a href="{{url_for("rp_request", request_id=search_request.id)}}">...</a></p>
 {% else: %}
-    <p>Prompt: {{request.prompt}}</p>
+    <p>Prompt: {{search_request.prompt}}</p>
 {% endif %}
 {% endif %}
-{% if request.user_id == g.user.id: %}
+{% if search_request.user_id == g.user.id: %}
     <p>
-      <a href="{{url_for("rp_edit_request_get", request_id=request.id)}}">Edit</a>
-      <a href="{{url_for("rp_delete_request_get", request_id=request.id)}}">Delete</a>
+      <a href="{{url_for("rp_edit_request_get", request_id=search_request.id)}}">Edit</a>
+      <a href="{{url_for("rp_delete_request_get", request_id=search_request.id)}}">Delete</a>
     </p>
 {% else: %}
-    <form action="{{url_for("rp_answer_request", request_id=request.id)}}" method="post"><button type="submit">Answer</button></form>
+    <form action="{{url_for("rp_answer_request", request_id=search_request.id)}}" method="post"><button type="submit">Answer</button></form>
 {% endif %}
   </li>
 {% endfor %}
