@@ -1,8 +1,24 @@
 <h1>Requests</h1>
 
+<p>
+{% if page == "all": %}
+All requests
+{% else: %}
+<a href="{{url_for("rp_request_list")}}">All requests</a>
+{% endif %}
+{% if page == "yours": %}
+Your requests
+{% else: %}
+<a href="{{url_for("rp_your_request_list")}}">Your requests</a>
+{% endif %}
+</p>
+
 <ul>
 {% for search_request in requests: %}
   <li>
+{% if page == "yours": %}
+    <p>Status: {{search_request.status}}</p>
+{% endif %}
 {% if search_request.scenario: %}
 {% if search_request.scenario|length > 150: %}
     <p>Scenario: {{search_request.scenario[:150]}}<a href="{{url_for("rp_request", request_id=search_request.id)}}">...</a></p>

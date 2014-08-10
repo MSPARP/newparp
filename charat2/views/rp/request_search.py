@@ -26,7 +26,7 @@ def request_query(request_id, own=False):
 @use_db
 @login_required
 def request_list(fmt=None):
-    print request.matched_route
+
     requests = g.db.query(Request).order_by(
         Request.posted.desc(),
     ).filter(
@@ -40,12 +40,32 @@ def request_list(fmt=None):
 
     return render_template(
         "rp/request_search/request_list.html",
+        page="all",
         requests=requests,
     )
 
 
-def your_request_list():
-    raise NotImplementedError
+@alt_formats(set(["json"]))
+@use_db
+@login_required
+def your_request_list(fmt=None):
+
+    requests = g.db.query(Request).order_by(
+        Request.posted.desc(),
+    ).filter(
+        Request.user_id == g.user.id,
+    ).all()
+
+    if fmt == "json":
+        return jsonify({
+            "requests": [_.to_dict() for _ in requests],
+        })
+
+    return render_template(
+        "rp/request_search/request_list.html",
+        page="yours",
+        requests=requests,
+    )
 
 
 def new_request_get():
