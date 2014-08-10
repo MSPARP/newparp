@@ -37,7 +37,7 @@ def request_list(fmt=None):
 
     if fmt == "json":
         return jsonify({
-            "requests": [_.to_dict() for _ in requests],
+            "requests": [_.to_dict(user=g.user) for _ in requests],
         })
 
     return render_template(
@@ -60,7 +60,7 @@ def your_request_list(fmt=None):
 
     if fmt == "json":
         return jsonify({
-            "requests": [_.to_dict() for _ in requests],
+            "requests": [_.to_dict(user=g.user) for _ in requests],
         })
 
     return render_template(
@@ -140,7 +140,7 @@ def request_detail(request_id, fmt=None):
     search_request = _request_query(request_id)
 
     if fmt == "json":
-        return jsonify(search_request.to_dict())
+        return jsonify(search_request.to_dict(user=g.user))
 
     return render_template(
         "rp/request_search/request.html",

@@ -494,14 +494,17 @@ class Request(Base):
     scenario = Column(UnicodeText, nullable=False, default=u"")
     prompt = Column(UnicodeText, nullable=False, default=u"")
 
-    def to_dict(self):
-        return {
+    def to_dict(self, user=None):
+        rd = {
             "id": self.id,
             "status": self.status,
             "posted": time.mktime(self.posted.timetuple()),
             "scenario": self.scenario,
             "prompt": self.prompt,
         }
+        if user is not None:
+            rd["yours"] = user.id == self.user_id
+        return rd
 
 
 # Index to make usernames case insensitively unique.
