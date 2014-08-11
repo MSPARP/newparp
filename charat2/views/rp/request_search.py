@@ -2,28 +2,31 @@ import datetime
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
 from charat2.model import (
+    ChatUser,
+    Message,
     Request,
+    SearchedChat,
     UserCharacter,
 )
 from charat2.model.connections import use_db
 
 
-def _request_query(request_id, own=False):
+def _own_request_query(request_id):
     try:
-        request = g.db.query(Request).filter(Request.id == request_id).one()
+        search_request = g.db.query(Request).filter(Request.id == request_id).one()
     except NoResultFound:
         abort(404)
-    if own and request.user != g.user:
+    if search_request.user != g.user:
         abort(404)
-    elif request.status == "draft" and request.user != g.user:
-        abort(404)
-    return request
+    return search_request
 
 
 @alt_formats(set(["json"]))
@@ -116,7 +119,7 @@ def new_request_post():
             UserCharacter.id == int(request.form["character_id"]),
             UserCharacter.user_id == g.user.id,
         )).one()
-    except (ValueError, NoResultFound):
+    except (KeyError, ValueError, NoResultFound):
         character = None
 
     new_request = Request(
@@ -138,7 +141,13 @@ def new_request_post():
 def request_detail(request_id, fmt=None):
 
     # Don't call it "request" because that overrides the flask request.
-    search_request = _request_query(request_id)
+    try:
+        search_request = g.db.query(Request).filter(Request.id == request_id).one()
+    except NoResultFound:
+        abort(404)
+
+    if search_request.status == "draft" and search_request.user != g.user:
+        abort(404)
 
     if fmt == "json":
         return jsonify(search_request.to_dict(user=g.user))
@@ -149,8 +158,59 @@ def request_detail(request_id, fmt=None):
     )
 
 
+@use_db
+@login_required
 def answer_request(request_id):
-    raise NotImplementedError
+
+    try:
+        search_request = g.db.query(Request).filter(
+            Request.id == request_id,
+        ).options(
+            joinedload(Request.user),
+            joinedload(Request.user_character),
+        ).one()
+    except NoResultFound:
+        abort(404)
+
+    if search_request.status != "posted" or search_request.user == g.user:
+        abort(404)
+
+    new_chat = SearchedChat(url=str(uuid4()).replace("-", ""))
+    g.db.add(new_chat)
+    g.db.flush()
+
+    if search_request.user_character is not None:
+        new_chat_user = ChatUser.from_character(
+            search_request.user_character,
+            chat_id=new_chat.id,
+        )
+    else:
+        new_chat_user = ChatUser.from_user(
+            search_request.user,
+            chat_id=new_chat.id,
+        )
+    g.db.add(new_chat_user)
+
+    if len(search_request.scenario) > 0:
+        g.db.add(Message(
+            chat_id=new_chat.id,
+            type="search_info",
+            acronym="Scenario",
+            text=search_request.scenario,
+        ))
+
+    if len(search_request.prompt) > 0:
+        g.db.add(Message(
+            chat_id=new_chat.id,
+            user_id=new_chat_user.user_id,
+            type="ic",
+            color=new_chat_user.color,
+            acronym=new_chat_user.acronym,
+            name=new_chat_user.name,
+            text=search_request.prompt,
+        ))
+
+    return redirect(url_for("chat", url=new_chat.url))
 
 
 def _edit_request_form(search_request, error=None):
@@ -178,14 +238,14 @@ def _edit_request_form(search_request, error=None):
 @use_db
 @login_required
 def edit_request_get(request_id):
-    return _edit_request_form(_request_query(request_id, own=True))
+    return _edit_request_form(_own_request_query(request_id))
 
 
 @use_db
 @login_required
 def edit_request_post(request_id):
 
-    search_request = _request_query(request_id, own=True)
+    search_request = _own_request_query(request_id)
 
     scenario = request.form["scenario"].strip()
     prompt = request.form["prompt"].strip()
@@ -200,7 +260,7 @@ def edit_request_post(request_id):
             UserCharacter.id == int(request.form["character_id"]),
             UserCharacter.user_id == g.user.id,
         )).one()
-    except (ValueError, NoResultFound):
+    except (KeyError, ValueError, NoResultFound):
         character = None
 
     search_request.scenario = scenario
@@ -222,14 +282,14 @@ def edit_request_post(request_id):
 def delete_request_get(request_id):
     return render_template(
         "rp/request_search/delete_request.html",
-        search_request=_request_query(request_id, own=True),
+        search_request=_own_request_query(request_id),
     )
 
 
 @use_db
 @login_required
 def delete_request_post(request_id):
-    search_request = _request_query(request_id, own=True)
+    search_request = _own_request_query(request_id)
     g.db.delete(search_request)
     g.db.commit()
     return redirect(url_for("rp_your_request_list"))
