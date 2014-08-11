@@ -1,3 +1,11 @@
+{% block pager %}
+{% if paginator.page_count!=1 %}
+<div class="pager">
+{{paginator.pager(format='~5~')}}
+</div>
+{% endif %}
+{% endblock %}
+
 <h1>Requests</h1>
 
 <p>
@@ -13,6 +21,8 @@ Your requests
 {% endif %}
 <a href="{{url_for("rp_new_request_get")}}">New request</a>
 </p>
+
+{{ self.pager() }}
 
 <ul>
 {% for search_request in requests: %}
@@ -37,3 +47,5 @@ Your requests
   </li>
 {% endfor %}
 </ul>
+
+{{ self.pager() }}

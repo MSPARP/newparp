@@ -1,7 +1,7 @@
 import datetime
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
@@ -32,46 +32,80 @@ def _own_request_query(request_id):
 @alt_formats(set(["json"]))
 @use_db
 @login_required
-def request_list(fmt=None):
+def request_list(fmt=None, page=1):
 
     requests = g.db.query(Request).order_by(
         Request.posted.desc(),
     ).filter(
         Request.status == "posted",
-    ).all()
+    ).offset((page-1)*50).limit(50).all()
+
+    if len(requests) == 0 and page != 1:
+        abort(404)
+
+    request_count = g.db.query(func.count('*')).select_from(Request).filter(
+        Request.status == "posted",
+    ).scalar()
 
     if fmt == "json":
         return jsonify({
+            "total": request_count,
             "requests": [_.to_dict(user=g.user) for _ in requests],
         })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=request_count,
+        url=lambda page: url_for("rp_request_list", page=page),
+    )
 
     return render_template(
         "rp/request_search/request_list.html",
         page="all",
         requests=requests,
+        paginator=paginator,
     )
 
 
 @alt_formats(set(["json"]))
 @use_db
 @login_required
-def your_request_list(fmt=None):
+def your_request_list(fmt=None, page=1):
 
     requests = g.db.query(Request).order_by(
         Request.posted.desc(),
     ).filter(
         Request.user_id == g.user.id,
-    ).all()
+    ).offset((page-1)*50).limit(50).all()
+
+    if len(requests) == 0 and page != 1:
+        abort(404)
+
+    request_count = g.db.query(func.count('*')).select_from(Request).filter(
+        Request.user_id == g.user.id,
+    ).scalar()
 
     if fmt == "json":
         return jsonify({
+            "total": request_count,
             "requests": [_.to_dict(user=g.user) for _ in requests],
         })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=request_count,
+        url=lambda page: url_for("rp_your_request_list", page=page),
+    )
 
     return render_template(
         "rp/request_search/request_list.html",
         page="yours",
         requests=requests,
+        paginator=paginator,
     )
 
 
@@ -132,7 +166,7 @@ def new_request_post():
     g.db.add(new_request)
     g.db.flush()
 
-    return redirect(url_for("rp_request", request_id=new_request.id))
+    return redirect(url_for("rp_your_request_list"))
 
 
 @use_db
