@@ -2,6 +2,8 @@
 
 {% if search_request.user == g.user: %}
 <p>Status: {{search_request.status}}</p>
+{# We didn't join user_character in the view so this causes an extra query. #}
+<p>Character: <a href="{{url_for("character", character_id=search_request.user_character.id)}}">{{search_request.user_character.title}}</a></p>
 {% endif %}
 
 {% if search_request.scenario: %}

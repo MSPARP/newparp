@@ -1,0 +1,17 @@
+<h1>New request</h1>
+
+<form action="{{url_for("rp_new_request_post")}}" method="post">
+  <p><label>Character: <select name="character_id">
+{% for character in characters: %}
+    <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
+{% endfor %}
+  </select></label></p>
+{% if error == "blank" %}
+  <p class="error">Please fill in at least one of scenario and prompt.</p>
+{% endif %}
+  <p><label for="request_scenario">Scenario:</label></p>
+  <p><textarea id="request_scenario" name="scenario">{{request.form["scenario"]}}</textarea></p>
+  <p><label for="request_prompt">Prompt:</label></p>
+  <p><textarea id="request_prompt" name="prompt">{{request.form["prompt"]}}</textarea></p>
+  <p><input type="submit" name="draft" value="Save as draft"> <input type="submit" name="post" value="Post request"></p>
+</form>

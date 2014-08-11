@@ -1,3 +1,5 @@
+import datetime
+
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -84,8 +86,7 @@ def _new_request_form(error=None):
             pass
 
     return render_template(
-        "rp/request_search/request_form.html",
-        page="new",
+        "rp/request_search/new_request.html",
         characters=characters,
         selected_character=selected_character,
         error=error,
@@ -152,12 +153,68 @@ def answer_request(request_id):
     raise NotImplementedError
 
 
+def _edit_request_form(search_request, error=None):
+
+    characters = g.db.query(UserCharacter).filter(
+        UserCharacter.user_id == g.user.id,
+    ).order_by(UserCharacter.title, UserCharacter.id).all()
+
+    selected_character = None
+    if "character_id" in request.form:
+        try:
+            selected_character = int(request.form["character_id"])
+        except ValueError:
+            pass
+
+    return render_template(
+        "rp/request_search/edit_request.html",
+        search_request=search_request,
+        characters=characters,
+        selected_character=selected_character,
+        error=error,
+    )
+
+
+@use_db
+@login_required
 def edit_request_get(request_id):
-    raise NotImplementedError
+    return _edit_request_form(_request_query(request_id, own=True))
 
 
+@use_db
+@login_required
 def edit_request_post(request_id):
-    raise NotImplementedError
+
+    search_request = _request_query(request_id, own=True)
+
+    scenario = request.form["scenario"].strip()
+    prompt = request.form["prompt"].strip()
+
+    # At least one of prompt or scenario must be filled in.
+    if len(scenario) == 0 and len(prompt) == 0:
+        return _edit_request_form(search_request, error="blank")
+
+    # Just make the character none if the specified character isn't valid.
+    try:
+        character = g.db.query(UserCharacter).filter(and_(
+            UserCharacter.id == int(request.form["character_id"]),
+            UserCharacter.user_id == g.user.id,
+        )).one()
+    except (ValueError, NoResultFound):
+        character = None
+
+    search_request.scenario = scenario
+    search_request.prompt = prompt
+    search_request.user_character = character
+
+    if "draft" in request.form:
+        search_request.status = "draft"
+    elif search_request.status != "posted":
+        search_request.status = "posted"
+        # Bump the date if the request is being re-posted.
+        search_request.posted = datetime.datetime.now()
+
+    return redirect(url_for("rp_request", request_id=search_request.id))
 
 
 @use_db
