@@ -101,16 +101,13 @@ app.add_url_rule("/requests/yours.<fmt>", "rp_your_request_list", request_search
 app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/<int:request_id>", "rp_request", request_search.request_detail, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/<int:request_id>.<fmt>", "rp_request", request_search.request_detail, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/<int:request_id>/answer", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
+app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/<int:request_id>/edit", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/<int:request_id>/edit", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
-
-app.add_url_rule("/requests/<int:request_id>/delete", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/<int:request_id>/delete", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
+app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
 
 # 2.5. Rooms
 

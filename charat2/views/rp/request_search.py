@@ -135,29 +135,6 @@ def new_request_post():
     return redirect(url_for("rp_request", request_id=new_request.id))
 
 
-@alt_formats(set(["json"]))
-@use_db
-@login_required
-def request_detail(request_id, fmt=None):
-
-    # Don't call it "request" because that overrides the flask request.
-    try:
-        search_request = g.db.query(Request).filter(Request.id == request_id).one()
-    except NoResultFound:
-        abort(404)
-
-    if search_request.status == "draft" and search_request.user != g.user:
-        abort(404)
-
-    if fmt == "json":
-        return jsonify(search_request.to_dict(user=g.user))
-
-    return render_template(
-        "rp/request_search/request.html",
-        search_request=search_request,
-    )
-
-
 @use_db
 @login_required
 def answer_request(request_id):
@@ -274,7 +251,7 @@ def edit_request_post(request_id):
         # Bump the date if the request is being re-posted.
         search_request.posted = datetime.datetime.now()
 
-    return redirect(url_for("rp_request", request_id=search_request.id))
+    return redirect(url_for("rp_edit_request_get", request_id=search_request.id))
 
 
 @use_db

@@ -5,5 +5,5 @@
 {% if search_request.status == "posted": %}
   <p>If you want to remove the request from public view without deleting it, you can <a href="{{url_for("rp_edit_request_get", request_id=search_request.id)}}">edit the request</a> and select the "Save as draft" option.</p>
 {% endif %}
-  <p><button type="submit">Delete request</button> <a href="{{url_for("rp_request", request_id=search_request.id)}}">Go back</a></p>
+  <p><button type="submit">Delete request</button></p>
 </form>
