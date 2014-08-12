@@ -1,11 +1,22 @@
 <h1>New request</h1>
 
 <form action="{{url_for("rp_new_request_post")}}" method="post">
-  <p><label>Character: <select name="character_id">
+  <p><label>Saved character: <select name="character_id">
 {% for character in characters: %}
     <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
 {% endfor %}
   </select></label></p>
+  <h2>Tags</h2>
+  <p>Enter some tags for your request, separated by commas:</p>
+  <p><label>Trigger warnings: <input type="text" name="trigger" maxlength="500"></label></p>
+  <p><label>Type: <input type="text" name="type" maxlength="500"></label></p>
+  <p><label>Fandom(s): <input type="text" name="fandom" maxlength="500"></label></p>
+  <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500"></label></p>
+  <p><label>Character(s) you're looking for: <input type="text" name="wanted" maxlength="500"></label></p>
+  <p><label>Your character's gender(s): <input type="text" name="playing_gender" maxlength="500"></label></p>
+  <p><label>Gender(s) you're looking for: <input type="text" name="wanted_gender" maxlength="500"></label></p>
+  <p><label>Any other tags: <input type="text" name="misc" maxlength="500"></label></p>
+  <h2>Info</h2>
 {% if error == "blank" %}
   <p class="error">Please fill in at least one of scenario and prompt.</p>
 {% endif %}

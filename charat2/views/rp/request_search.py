@@ -2,7 +2,7 @@ import datetime
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 from webhelpers import paginate
@@ -13,7 +13,9 @@ from charat2.model import (
     ChatUser,
     Message,
     Request,
+    RequestTag,
     SearchedChat,
+    Tag,
     UserCharacter,
 )
 from charat2.model.connections import use_db
@@ -29,6 +31,27 @@ def _own_request_query(request_id):
     return search_request
 
 
+def _tags_from_form(form):
+    request_tags = []
+    for tag_type in Tag.type_options:
+        names = {}
+        for alias in form[tag_type].split(","):
+            alias = alias.strip()
+            if alias == "":
+                continue
+            name = alias.lower().replace(" ", "_")[:50]
+            names[name] = alias
+        for name, alias in names.iteritems():
+            try:
+                tag = g.db.query(Tag).filter(and_(
+                    Tag.type == tag_type, Tag.name == name,
+                )).one()
+            except:
+                tag = Tag(type=tag_type, name=name)
+            request_tags.append(RequestTag(tag=tag, alias=alias))
+    return request_tags
+
+
 @alt_formats(set(["json"]))
 @use_db
 @login_required
@@ -38,6 +61,8 @@ def request_list(fmt=None, page=1):
         Request.posted.desc(),
     ).filter(
         Request.status == "posted",
+    ).options(
+        joinedload_all("tags.tag")
     ).offset((page-1)*50).limit(50).all()
 
     if len(requests) == 0 and page != 1:
@@ -163,8 +188,10 @@ def new_request_post():
         scenario=scenario,
         prompt=prompt,
     )
+
+    new_request.tags = _tags_from_form(request.form)
+
     g.db.add(new_request)
-    g.db.flush()
 
     return redirect(url_for("rp_your_request_list"))
 
