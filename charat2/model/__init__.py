@@ -61,6 +61,9 @@ case_options = {
 case_options_enum = Enum(*case_options.keys(), name=u"case")
 
 
+# 1. Classes
+
+
 class User(Base):
 
     __tablename__ = "users"
@@ -507,6 +510,40 @@ class Request(Base):
         return rd
 
 
+class RequestTag(Base):
+
+    __tablename__ = "request_tags"
+
+    request_id = Column(Integer, ForeignKey("requests.id"), primary_key=True)
+    tag_id = Column(Integer, ForeignKey("tags.id"), primary_key=True)
+
+    alias = Column(Unicode(50))
+
+
+class Tag(Base):
+
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True)
+
+    type_options = {
+        u"trigger",
+        u"type",
+        u"fandom",
+        u"playing",
+        u"wanted",
+        u"playing_gender",
+        u"wanted_gender",
+        u"misc",
+    }
+
+    type = Column(Enum(*type_options, name=u"tags_type"), nullable=False, default=u"misc")
+    name = Column(Unicode(50), nullable=False)
+
+
+# 2. Indexes
+
+
 # Index to make usernames case insensitively unique.
 Index("users_username", func.lower(User.username), unique=True)
 
@@ -528,6 +565,17 @@ Index("chat_users_user_id_chat_id", ChatUser.user_id, ChatUser.chat_id)
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)
 
+# XXX indexes on requests table
+# index by user id for your requests?
+
+# Index for searching requests by tag.
+Index("request_tags_tag_id", RequestTag.tag_id)
+
+# Index to make tag type/name combo unique.
+Index("tags_type_name", Tag.type, Tag.name, unique=True)
+
+
+# 3. Relationships
 
 User.default_character = relation(
     UserCharacter,
@@ -566,4 +614,7 @@ Ban.creator = relation(
 
 Request.user = relation(User, backref="requests")
 Request.user_character = relation(UserCharacter, backref="requests")
+
+RequestTag.request = relation(Request, backref="tags")
+RequestTag.tag = relation(Tag, backref="requests")
 
