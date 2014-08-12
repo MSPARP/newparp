@@ -18,7 +18,13 @@
 
 </style>
 
+{% if page == "yours" %}
+<h1>Your requests</h1>
+{% elif page == "tag" %}
+<h1>Requests tagged "{{tag.type}}:{{tag.name.replace("_", " ")}}"</h1>
+{% else %}
 <h1>Requests</h1>
+{% endif %}
 
 <p>
 {% if page == "all": %}
@@ -45,7 +51,7 @@ Your requests
     <h3>Trigger warnings:</h3>
     <ul class="tag_list tag_trigger">
 {% for tag in tags.trigger: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -54,7 +60,7 @@ Your requests
     <h3>Type:</h3>
     <ul class="tag_list tag_type">
 {% for tag in tags.type: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -63,7 +69,7 @@ Your requests
     <h3>Fandom:</h3>
     <ul class="tag_list tag_fandom">
 {% for tag in tags.fandom: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -72,7 +78,7 @@ Your requests
     <h3>Playing characters:</h3>
     <ul class="tag_list tag_playing">
 {% for tag in tags.playing: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -81,7 +87,7 @@ Your requests
     <h3>Wanted characters:</h3>
     <ul class="tag_list tag_wanted">
 {% for tag in tags.wanted: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -90,7 +96,7 @@ Your requests
     <h3>Playing gender:</h3>
     <ul class="tag_list tag_playing_gender">
 {% for tag in tags.playing_gender: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -99,7 +105,7 @@ Your requests
     <h3>Wanted gender:</h3>
     <ul class="tag_list tag_wanted_gender">
 {% for tag in tags.wanted_gender: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
@@ -108,7 +114,7 @@ Your requests
     <h3>Other tags:</h3>
     <ul class="tag_list tag_misc">
 {% for tag in tags.misc: %}
-      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}

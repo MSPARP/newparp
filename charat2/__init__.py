@@ -102,6 +102,11 @@ app.add_url_rule("/requests/yours.<fmt>", "rp_your_request_list", request_search
 app.add_url_rule("/requests/yours/<int:page>", "rp_your_request_list", request_search.your_request_list, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/yours/<int:page>.<fmt>", "rp_your_request_list", request_search.your_request_list, subdomain="rp", methods=("GET",))
 
+app.add_url_rule("/requests/<tag_type>:<name>", "rp_tagged_request_list", request_search.tagged_request_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/<tag_type>:<name>.<fmt>", "rp_tagged_request_list", request_search.tagged_request_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/<tag_type>:<name>/<int:page>", "rp_tagged_request_list", request_search.tagged_request_list, subdomain="rp", methods=("GET",))
+app.add_url_rule("/requests/<tag_type>:<name>/<int:page>.<fmt>", "rp_tagged_request_list", request_search.tagged_request_list, subdomain="rp", methods=("GET",))
+
 app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
 app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
 

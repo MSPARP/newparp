@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
@@ -21,6 +22,20 @@ from charat2.model import (
 from charat2.model.connections import use_db
 
 
+special_char_regex = re.compile("[\\ \\./]+")
+underscore_strip_regex = re.compile("^_+|_+$")
+
+
+def _name_from_alias(alias):
+    # 1. Change to lowercase.
+    # 2. Change spaces to underscores.
+    # 3. Change . and / to underscores because they screw up the routing.
+    # 4. Strip extra underscores from the start and end.
+    return underscore_strip_regex.sub("",
+        special_char_regex.sub("_", alias)
+    ).lower()
+
+
 def _own_request_query(request_id):
     try:
         search_request = g.db.query(Request).filter(
@@ -41,7 +56,9 @@ def _tags_from_form(form):
             alias = alias.strip()
             if alias == "":
                 continue
-            name = alias.lower().replace(" ", "_")[:50]
+            name = _name_from_alias(alias)
+            if name == "":
+                continue
             names[name] = alias
         for name, alias in names.iteritems():
             try:
@@ -133,6 +150,72 @@ def your_request_list(fmt=None, page=1):
     return render_template(
         "rp/request_search/request_list.html",
         page="yours",
+        requests=requests,
+        paginator=paginator,
+    )
+
+
+@alt_formats(set(["json"]))
+@use_db
+@login_required
+def tagged_request_list(tag_type, name, fmt=None, page=1):
+
+    # Redirect to lowercase and replace spaces.
+    replaced_name = name.lower().replace(" ", "_")[:50]
+    if replaced_name != name:
+        return redirect(url_for(
+            "rp_tagged_request_list",
+            tag_type=tag_type,
+            name=replaced_name,
+            fmt=fmt,
+            page=page if page != 1 else None,
+        ))
+
+    try:
+        tag = g.db.query(Tag).filter(and_(
+            Tag.type == tag_type,
+            Tag.name == name,
+        )).one()
+    except NoResultFound:
+        abort(404)
+
+    requests = g.db.query(Request).order_by(
+        Request.posted.desc(),
+    ).join(
+        RequestTag,
+        Request.id == RequestTag.request_id,
+    ).filter(and_(
+        RequestTag.tag_id == tag.id,
+        Request.status == "posted",
+    )).options(
+        joinedload_all("tags.tag"),
+    ).offset((page-1)*50).limit(50).all()
+
+    if len(requests) == 0 and page != 1:
+        abort(404)
+
+    request_count = g.db.query(func.count('*')).select_from(RequestTag).filter(
+        RequestTag.tag_id == tag.id,
+    ).scalar()
+
+    if fmt == "json":
+        return jsonify({
+            "total": request_count,
+            "requests": [_.to_dict(user=g.user) for _ in requests],
+        })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=request_count,
+        url=lambda page: url_for("rp_tagged_request_list", tag_type=tag_type, name=name, page=page),
+    )
+
+    return render_template(
+        "rp/request_search/request_list.html",
+        page="tag",
+        tag=tag,
         requests=requests,
         paginator=paginator,
     )
