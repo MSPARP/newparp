@@ -497,11 +497,22 @@ class Request(Base):
     scenario = Column(UnicodeText, nullable=False, default=u"")
     prompt = Column(UnicodeText, nullable=False, default=u"")
 
+    def tags_by_type(self):
+        tags = { _: [] for _ in Tag.type_options }
+        for request_tag in self.tags:
+            tags[request_tag.tag.type].append({
+                "type": request_tag.tag.type,
+                "name": request_tag.tag.name,
+                "alias": request_tag.alias,
+            })
+        return tags
+
     def to_dict(self, user=None):
         rd = {
             "id": self.id,
             "status": self.status,
             "posted": time.mktime(self.posted.timetuple()),
+            "tags": self.tags_by_type(),
             "scenario": self.scenario,
             "prompt": self.prompt,
         }
@@ -614,7 +625,7 @@ Ban.creator = relation(
 
 Request.user = relation(User, backref="requests")
 Request.user_character = relation(UserCharacter, backref="requests")
+Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias)
 
-RequestTag.request = relation(Request, backref="tags")
-RequestTag.tag = relation(Tag, backref="requests")
+Tag.requests = relation(RequestTag, backref="tag")
 

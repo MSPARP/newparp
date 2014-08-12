@@ -62,7 +62,7 @@ def request_list(fmt=None, page=1):
     ).filter(
         Request.status == "posted",
     ).options(
-        joinedload_all("tags.tag")
+        joinedload_all("tags.tag"),
     ).offset((page-1)*50).limit(50).all()
 
     if len(requests) == 0 and page != 1:
@@ -103,6 +103,8 @@ def your_request_list(fmt=None, page=1):
         Request.posted.desc(),
     ).filter(
         Request.user_id == g.user.id,
+    ).options(
+        joinedload_all("tags.tag"),
     ).offset((page-1)*50).limit(50).all()
 
     if len(requests) == 0 and page != 1:

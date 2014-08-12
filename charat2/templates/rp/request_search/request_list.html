@@ -6,6 +6,18 @@
 {% endif %}
 {% endblock %}
 
+<style>
+
+.tag_list li {
+	display: inline;
+}
+
+.tag_list li:not(:last-child):after {
+	content: ",";
+}
+
+</style>
+
 <h1>Requests</h1>
 
 <p>
@@ -26,16 +38,96 @@ Your requests
 
 <ul>
 {% for search_request in requests: %}
-  <li>
+{% set tags = search_request.tags_by_type() %}
+  <li class="request">
+
+{% if tags.trigger: %}
+    <h3>Trigger warnings:</h3>
+    <ul class="tag_list tag_trigger">
+{% for tag in tags.trigger: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.type: %}
+    <h3>Type:</h3>
+    <ul class="tag_list tag_type">
+{% for tag in tags.type: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.fandom: %}
+    <h3>Fandom:</h3>
+    <ul class="tag_list tag_fandom">
+{% for tag in tags.fandom: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.playing: %}
+    <h3>Playing characters:</h3>
+    <ul class="tag_list tag_playing">
+{% for tag in tags.playing: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.wanted: %}
+    <h3>Wanted characters:</h3>
+    <ul class="tag_list tag_wanted">
+{% for tag in tags.wanted: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.playing_gender: %}
+    <h3>Playing gender:</h3>
+    <ul class="tag_list tag_playing_gender">
+{% for tag in tags.playing_gender: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.wanted_gender: %}
+    <h3>Wanted gender:</h3>
+    <ul class="tag_list tag_wanted_gender">
+{% for tag in tags.wanted_gender: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
+{% if tags.misc: %}
+    <h3>Other tags:</h3>
+    <ul class="tag_list tag_misc">
+{% for tag in tags.misc: %}
+      <li><a href="NOTBEENDONEYET">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
 {% if page == "yours": %}
-    <p>Status: {{search_request.status}}</p>
+    <h3>Status:</h3>
+    <p>{{search_request.status}}</p>
 {% endif %}
+
 {% if search_request.scenario: %}
-    <p>Scenario: {{search_request.scenario}}</p>
+    <h3>Scenario:</h3>
+    <p>{{search_request.scenario}}</p>
 {% endif %}
+
 {% if search_request.prompt: %}
-    <p>Prompt: {{search_request.prompt}}</p>
+    <h3>Prompt:</h3>
+    <p>{{search_request.prompt}}</p>
 {% endif %}
+
 {% if search_request.user_id == g.user.id: %}
     <p>
       <a href="{{url_for("rp_edit_request_get", request_id=search_request.id)}}">Edit</a>
@@ -44,6 +136,7 @@ Your requests
 {% else: %}
     <form action="{{url_for("rp_answer_request", request_id=search_request.id)}}" method="post"><button type="submit">Answer</button></form>
 {% endif %}
+
   </li>
 {% endfor %}
 </ul>
