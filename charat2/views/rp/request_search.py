@@ -423,7 +423,8 @@ def delete_request_get(request_id):
 @login_required
 def delete_request_post(request_id):
     search_request = _own_request_query(request_id)
-    g.db.delete(search_request)
+    g.db.query(RequestTag).filter(RequestTag.request_id==search_request.id).delete()
+    g.db.query(Request).filter(Request.id==search_request.id).delete()
     g.db.commit()
     return redirect(url_for("rp_your_request_list"))
 
