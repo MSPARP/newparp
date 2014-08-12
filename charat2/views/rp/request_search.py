@@ -23,7 +23,9 @@ from charat2.model.connections import use_db
 
 def _own_request_query(request_id):
     try:
-        search_request = g.db.query(Request).filter(Request.id == request_id).one()
+        search_request = g.db.query(Request).filter(
+            Request.id == request_id,
+        ).options(joinedload_all("tags.tag")).one()
     except NoResultFound:
         abort(404)
     if search_request.user != g.user:
@@ -269,6 +271,10 @@ def _edit_request_form(search_request, error=None):
     return render_template(
         "rp/request_search/edit_request.html",
         search_request=search_request,
+        search_request_tags={
+            tag_type: ", ".join(tag["alias"] for tag in tags)
+            for tag_type, tags in search_request.tags_by_type().iteritems()
+        },
         characters=characters,
         selected_character=selected_character,
         error=error,
@@ -306,6 +312,10 @@ def edit_request_post(request_id):
     search_request.scenario = scenario
     search_request.prompt = prompt
     search_request.user_character = character
+
+    g.db.query(RequestTag).filter(RequestTag.request_id==search_request.id).delete()
+
+    search_request.tags += _tags_from_form(request.form)
 
     if "draft" in request.form:
         search_request.status = "draft"
