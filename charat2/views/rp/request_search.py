@@ -49,9 +49,27 @@ def _own_request_query(request_id):
 
 
 def _tags_from_form(form):
-    request_tags = []
+
+    tag_dict = {}
+
     for tag_type in Tag.type_options:
-        names = {}
+
+        # Enforce preset values for maturity.
+        if tag_type == "maturity":
+            name = form["maturity"]
+            if name in Tag.maturity_names:
+                tag_dict[("maturity", name)] = name.capitalize()
+            else:
+                tag_dict[("maturity", "general")] = "General"
+            continue
+
+        # Enforce preset values for type.
+        elif tag_type == "type":
+            for name in Tag.type_names:
+                if "type_"+name in form:
+                    tag_dict[("type", name)] = name.capitalize()
+            continue
+
         for alias in form[tag_type].split(","):
             alias = alias.strip()
             if alias == "":
@@ -59,15 +77,19 @@ def _tags_from_form(form):
             name = _name_from_alias(alias)
             if name == "":
                 continue
-            names[name] = alias
-        for name, alias in names.iteritems():
-            try:
-                tag = g.db.query(Tag).filter(and_(
-                    Tag.type == tag_type, Tag.name == name,
-                )).one()
-            except:
-                tag = Tag(type=tag_type, name=name)
-            request_tags.append(RequestTag(tag=tag, alias=alias))
+            tag_dict[(tag_type, name)] = alias
+
+    request_tags = []
+
+    for (tag_type, name), alias in tag_dict.iteritems():
+        try:
+            tag = g.db.query(Tag).filter(and_(
+                Tag.type == tag_type, Tag.name == name,
+            )).one()
+        except:
+            tag = Tag(type=tag_type, name=name)
+        request_tags.append(RequestTag(tag=tag, alias=alias))
+
     return request_tags
 
 
@@ -236,6 +258,7 @@ def _new_request_form(error=None):
 
     return render_template(
         "rp/request_search/new_request.html",
+        Tag=Tag,
         characters=characters,
         selected_character=selected_character,
         error=error,
@@ -351,13 +374,23 @@ def _edit_request_form(search_request, error=None):
         except ValueError:
             pass
 
+    tags_by_type = search_request.tags_by_type()
+
+    try:
+        search_request_maturity = tags_by_type["maturity"][0]["name"]
+    except IndexError:
+        search_request_maturity = None
+
     return render_template(
         "rp/request_search/edit_request.html",
         search_request=search_request,
         search_request_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)
-            for tag_type, tags in search_request.tags_by_type().iteritems()
+            for tag_type, tags in tags_by_type.iteritems()
         },
+        search_request_maturity=search_request_maturity,
+        search_request_types=set(_["name"] for _ in tags_by_type["type"]),
+        Tag=Tag,
         characters=characters,
         selected_character=selected_character,
         error=error,

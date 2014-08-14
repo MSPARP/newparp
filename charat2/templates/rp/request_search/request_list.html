@@ -47,6 +47,15 @@ Your requests
 {% set tags = search_request.tags_by_type() %}
   <li class="request">
 
+{% if tags.maturity: %}
+    <h3>Maturity:</h3>
+    <ul class="tag_list tag_maturity">
+{% for tag in tags.maturity: %}
+      <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
+{% endfor %}
+    </ul>
+{% endif %}
+
 {% if tags.trigger: %}
     <h3>Trigger warnings:</h3>
     <ul class="tag_list tag_trigger">
