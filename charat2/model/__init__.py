@@ -548,6 +548,9 @@ class Tag(Base):
         u"misc",
     }
 
+    # List to preserve order.
+    type_names = ["fluff", "plot-driven", "sexual", "shippy", "violent"]
+
     type = Column(Enum(*type_options, name=u"tags_type"), nullable=False, default=u"misc")
     name = Column(Unicode(50), nullable=False)
 

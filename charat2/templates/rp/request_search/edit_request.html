@@ -10,7 +10,11 @@
   <h2>Tags</h2>
   <p>Enter some tags for your request, separated by commas:</p>
   <p><label>Trigger warnings: <input type="text" name="trigger" maxlength="500" value="{{search_request_tags.trigger}}"></label></p>
-  <p><label>Type: <input type="text" name="type" maxlength="500" value="{{search_request_tags.type}}"></label></p>
+  <p>Type:
+{% for name in Tag.type_names: %}
+    <label><input type="checkbox" name="type_{{name}}"{% if name in search_request_types: %} checked="checked"{% endif %}> {{name.capitalize()}}</label>
+{% endfor %}
+  </p>
   <p><label>Fandom(s): <input type="text" name="fandom" maxlength="500" value="{{search_request_tags.fandom}}"></label></p>
   <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500" value="{{search_request_tags.playing}}"></label></p>
   <p><label>Character(s) you're looking for: <input type="text" name="wanted" maxlength="500" value="{{search_request_tags.wanted}}"></label></p>
@@ -22,8 +26,8 @@
   <p class="error">Please fill in at least one of scenario and prompt.</p>
 {% endif %}
   <p><label for="request_scenario">Scenario:</label></p>
-  <p><textarea id="request_scenario" name="scenario">{% if "scenario" in request.form: %}{{request.form["scenario"]}}{% else: %}{{search_request.scenario}}{% endif %}</textarea></p>
+  <p><textarea id="request_scenario" name="scenario">{{search_request.scenario}}</textarea></p>
   <p><label for="request_prompt">Prompt:</label></p>
-  <p><textarea id="request_prompt" name="prompt">{% if "prompt" in request.form: %}{{request.form["prompt"]}}{% else: %}{{search_request.prompt}}{% endif %}</textarea></p>
+  <p><textarea id="request_prompt" name="prompt">{{search_request.prompt}}</textarea></p>
   <p><input type="submit" name="draft" value="Save as draft"> <input type="submit" name="post" value="Post request"></p>
 </form>
