@@ -538,6 +538,7 @@ class Tag(Base):
     id = Column(Integer, primary_key=True)
 
     type_options = {
+        u"maturity",
         u"trigger",
         u"type",
         u"fandom",
@@ -549,6 +550,7 @@ class Tag(Base):
     }
 
     # List to preserve order.
+    maturity_names = ["general", "teen", "mature", "explicit"]
     type_names = ["fluff", "plot-driven", "sexual", "shippy", "violent"]
 
     type = Column(Enum(*type_options, name=u"tags_type"), nullable=False, default=u"misc")

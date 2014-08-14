@@ -49,15 +49,27 @@ def _own_request_query(request_id):
 
 
 def _tags_from_form(form):
-    request_tags = []
+
     tag_dict = {}
+
     for tag_type in Tag.type_options:
-        # Type checkboxes mean people can't specify arbitrary types.
-        if tag_type == "type":
+
+        # Enforce preset values for maturity.
+        if tag_type == "maturity":
+            name = form["maturity"]
+            if name in Tag.maturity_names:
+                tag_dict[("maturity", name)] = name.capitalize()
+            else:
+                tag_dict[("maturity", "general")] = "General"
+            continue
+
+        # Enforce preset values for type.
+        elif tag_type == "type":
             for name in Tag.type_names:
                 if "type_"+name in form:
-                    tag_dict[(tag_type, name)] = name.capitalize()
+                    tag_dict[("type", name)] = name.capitalize()
             continue
+
         for alias in form[tag_type].split(","):
             alias = alias.strip()
             if alias == "":
@@ -66,6 +78,9 @@ def _tags_from_form(form):
             if name == "":
                 continue
             tag_dict[(tag_type, name)] = alias
+
+    request_tags = []
+
     for (tag_type, name), alias in tag_dict.iteritems():
         try:
             tag = g.db.query(Tag).filter(and_(
@@ -74,6 +89,7 @@ def _tags_from_form(form):
         except:
             tag = Tag(type=tag_type, name=name)
         request_tags.append(RequestTag(tag=tag, alias=alias))
+
     return request_tags
 
 
@@ -360,6 +376,11 @@ def _edit_request_form(search_request, error=None):
 
     tags_by_type = search_request.tags_by_type()
 
+    try:
+        search_request_maturity = tags_by_type["maturity"][0]["name"]
+    except IndexError:
+        search_request_maturity = None
+
     return render_template(
         "rp/request_search/edit_request.html",
         search_request=search_request,
@@ -367,6 +388,7 @@ def _edit_request_form(search_request, error=None):
             tag_type: ", ".join(tag["alias"] for tag in tags)
             for tag_type, tags in tags_by_type.iteritems()
         },
+        search_request_maturity=search_request_maturity,
         search_request_types=set(_["name"] for _ in tags_by_type["type"]),
         Tag=Tag,
         characters=characters,

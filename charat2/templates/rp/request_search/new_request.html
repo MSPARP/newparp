@@ -8,6 +8,11 @@
   </select></label></p>
   <h2>Tags</h2>
   <p>Enter some tags for your request, separated by commas:</p>
+  <p><label>Maturity: <select name="maturity">
+{% for name in Tag.maturity_names: %}
+    <option value="{{name}}"{% if request.form.get("maturity") == name: %} selected="selected"{% endif %}>{{name.capitalize()}}</option>
+{% endfor %}
+  </select></label></p>
   <p><label>Trigger warnings: <input type="text" name="trigger" maxlength="500" value="{{request.form["trigger"]}}"></label></p>
   <p>Type:
 {% for name in Tag.type_names: %}
