@@ -12,7 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         
         <link rel="stylesheet" type="text/css" href="{{url_for("static", filename="css/blog/base.css")}}"/>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" defer></script>
+        <script src="{{url_for("static", filename="js/jquery.js")}}" defer></script>
         <script src="{{url_for("static", filename="js/blog/base.js")}}" defer></script>
         {% block header %}{%endblock %}
     </head>
