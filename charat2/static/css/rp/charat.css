@@ -4,6 +4,10 @@
     -webkit-overflow-scrolling: touch;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     font-family: Sans-Serif;
     background-attachment: fixed;

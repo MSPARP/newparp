@@ -1,3 +1,7 @@
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     background-color: #1e4d2b;
     font-family: Sans-Serif;
