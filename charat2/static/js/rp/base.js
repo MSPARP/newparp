@@ -17,7 +17,7 @@ window.JSON||(window.JSON={}),function(){function f(a){return a<10?"0"+a:a}funct
 $.fn.exists = function(){return this.length>0;}
 
 function cmobile() {
-    if (navigator.userAgent.indexOf('Android')!=-1 || navigator.userAgent.indexOf('iPhone')!=-1 || navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1 || window.innerWidth<=630) {
+    if (navigator.userAgent.indexOf('Android')!=-1 || navigator.userAgent.indexOf('iPhone')!=-1 || navigator.userAgent.indexOf('Nintendo 3DS')!=-1 || navigator.userAgent.indexOf('Nintendo DSi')!=-1 || window.innerWidth<=660) {
         return true;
     } else {
         return false;
@@ -28,7 +28,7 @@ function screenCheck() {
     if (cmobile()){
         $(document.body).addClass('mobile');
         $(document.body).removeClass('nobile');
-    } else if (window.innerWidth<=950){
+    } else if (window.innerWidth<=980){
         $(document.body).addClass('nobile');
         $(document.body).removeClass('mobile');
     } else  {
