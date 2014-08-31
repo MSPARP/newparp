@@ -507,6 +507,26 @@ def save_from_character():
 
     return "", 204
 
+@use_db_chat
+@mark_alive
+def save_variables():
+
+    # Boolean variables.
+    for variable in [
+        "confirm_disconnect",
+        "show_system_messages",
+        "show_description",
+        "show_bbcode",
+        "desktop_notifications",
+    ]:
+        if variable not in request.form:
+            continue
+        if request.form[variable] not in {"on", "off"}:
+            abort(400)
+        setattr(g.chat_user, variable, request.form[variable] == "on")
+
+    return "", 204
+
 def quit():
     # Only send a message if we were already online.
     if g.user_id is None or "chat_id" not in request.form:
