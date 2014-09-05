@@ -1,4 +1,5 @@
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
+from math import ceil
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
@@ -185,7 +186,7 @@ def chat(url, fmt=None):
 
 @use_db
 @login_required
-def log(url, page=None):
+def log(url, fmt=None, page=None):
 
     # Do some special URL stuff for PM chats.
     if url == "pm":
@@ -239,7 +240,8 @@ def log(url, page=None):
     messages_per_page = 200
 
     if page is None:
-        page = message_count / messages_per_page + 1
+        # Default to last page.
+        page = int(ceil(float(message_count) / messages_per_page))
 
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
@@ -247,6 +249,13 @@ def log(url, page=None):
 
     if len(messages) == 0:
         abort(404)
+
+    if fmt == "json":
+
+        return jsonify({
+            "total": message_count,
+            "messages": [_.to_dict() for _ in messages],
+        })
 
     paginator = paginate.Page(
         [],

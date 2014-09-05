@@ -124,7 +124,7 @@ make_rules("rp", "/<path:url>", chat.chat, formats=True)
 app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
-make_rules("rp", "/<path:url>/log", chat.log, paging=True)
+make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True)
 
