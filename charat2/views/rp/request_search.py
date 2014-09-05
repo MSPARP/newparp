@@ -344,7 +344,7 @@ def answer_request(request_id):
         g.db.add(Message(
             chat_id=new_chat.id,
             type="search_info",
-            acronym="Scenario",
+            alias="Scenario",
             text=search_request.scenario,
         ))
 
@@ -354,7 +354,7 @@ def answer_request(request_id):
             user_id=new_chat_user.user_id,
             type="ic",
             color=new_chat_user.color,
-            acronym=new_chat_user.acronym,
+            alias=new_chat_user.alias,
             name=new_chat_user.name,
             text=search_request.prompt,
         ))

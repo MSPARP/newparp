@@ -28,7 +28,7 @@
                 </div>
                 <div class="right">
                     <input id="usingname" type="text" name="name" value="{{character.name}}" maxlength="50" /><br />
-                    <input id="ailin" type="text" name="acronym" value="{{character.acronym}}" maxlength="15" /><br />
+                    <input id="ailin" type="text" name="alias" value="{{character.alias}}" maxlength="15" /><br />
                     <input id="coln" type="text" name="color" value="{{character.color}}" maxlength="6" />
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="card quote-line" id="color-preview" style="color:#{{character.color}};">
-                <span id="acronym">{{character.acronym}}: </span><span id="quote"></span>
+                <span id="alias">{{character.alias}}: </span><span id="quote"></span>
             </div>
             {% if error=="color" %}<span class="error">You entered an invalid hex code. Try using the color picker.</span><br />{% endif %}
         </div>

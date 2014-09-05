@@ -160,7 +160,7 @@ function updateUser() {
         user = data.chat_user;
     }).complete(function () {
         $('#usingname').val(user.character.name);
-        $('#ailin').val(user.character.acronym);
+        $('#ailin').val(user.character.alias);
         $('#coln').val(user.character.color);
 
         if (user.character.prefix) {
@@ -295,10 +295,10 @@ function addLine(msg){
         }
         
         msg.name = htmlEntities(msg.name);
-        msg.acronym = htmlEntities(msg.acronym);
+        msg.alias = htmlEntities(msg.alias);
 
         msg.original_name = htmlEntitiesEncode(msg.name);
-        msg.original_acronym = htmlEntitiesEncode(msg.acronym);
+        msg.original_alias = htmlEntitiesEncode(msg.alias);
 
         if (show_bbcode_color == true) {
             message = bbEncode(msg.text);
@@ -307,8 +307,8 @@ function addLine(msg){
         }
     
         var alias = "";
-        if (msg.acronym) {
-            alias = msg.acronym+":\u00A0";
+        if (msg.alias) {
+            alias = msg.alias+":\u00A0";
         }
         if (msg.type == 'ooc') {
             alias = msg.user.username+":\u00A0";
@@ -334,7 +334,7 @@ function addLine(msg){
         var info_left = $('<span>').addClass("left").text(left_text).appendTo("#message"+msg.id+" .info");
         var info_right = $('<span>').addClass("right").html(right_text).appendTo("#message"+msg.id+" .info");
         if (msg.type == 'me') {
-            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.acronym.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.acronym+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
+            var message = $('<p>').addClass("message").html("<span style=\"color: #"+msg.color+";\">"+msg.name+"</span>"+(msg.alias.length>0?" [<span style=\"color: #"+msg.color+";\">"+msg.alias+"</span>]":"")+" "+message).appendTo("#message"+msg.id);
         } else {
             var message = $('<p>').addClass("message").css('color', '#'+msg.color).html(alias+message).appendTo("#message"+msg.id);
         }
@@ -352,7 +352,7 @@ function addLine(msg){
         }
         if (!document.hasFocus() && desktop_notifications == true) {
             if (msg.type == 'ic' || msg.type == 'ooc' || msg.type == 'me') {
-                desktopNotification(msg.original_name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.original_name+(msg.original_acronym ? ' ['+msg.original_acronym+'] ':' ')+bbRemoveAll(msg.text),'http://charat.tk/static/img/favicons/rp/touch-icon-ipad.png');
+                desktopNotification(msg.original_name+' - '+chat.title,msg.type!='me'?alias+bbRemoveAll(msg.text):msg.original_name+(msg.original_alias ? ' ['+msg.original_alias+'] ':' ')+bbRemoveAll(msg.text),'http://charat.tk/static/img/favicons/rp/touch-icon-ipad.png');
             }
         }
         shownotif = 0;
@@ -649,8 +649,8 @@ function updateChatPreview() {
     $('#textInput').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color', '#'+user.character.color);
     $('#aliasOffset').css('color','#'+user.character.color);
-    if (user.character.acronym) {
-        $('#aliasOffset').text(user.character.acronym+":");
+    if (user.character.alias) {
+        $('#aliasOffset').text(user.character.alias+":");
     } else {
         $('#aliasOffset').html("&nbsp;&nbsp&nbsp&nbsp&nbsp;&nbsp&nbsp&nbsp");
     }
@@ -675,7 +675,7 @@ function updateChatPreview() {
         textPreview = applyQuirks(textPreview,pattern);
     }
     
-    var aliasPreview = user.character.acronym ? user.character.acronym+": " : "\xa0";
+    var aliasPreview = user.character.alias ? user.character.alias+": " : "\xa0";
     
     var textInput = $('#textInput').val();
     if (!type_force && command[0] != '/me' && command[0] != '/ic' && (command[0] == '/ooc' || ooc_on ||
@@ -694,8 +694,8 @@ function updateChatPreview() {
         $('#preview').css('color', '#000000');
         $('#textInput').css('color','#000000');
         $('#aliasOffset').css('color','#000000');
-        aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.acronym?"[[color=#"+user.character.color+"]"+user.character.acronym+"[/color]] ":"");
-        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.acronym?" [<span style='color: #"+user.character.color+";'>"+user.character.acronym+"</span>]":" ")).css('color','#000000');
+        aliasPreview = "[color=#"+user.character.color+"]"+user.character.name+"[/color] "+(user.character.alias?"[[color=#"+user.character.color+"]"+user.character.alias+"[/color]] ":"");
+        $('#aliasOffset').html("<span style='color: #"+user.character.color+";'>"+user.character.name+"</span>"+(user.character.alias?" [<span style='color: #"+user.character.color+";'>"+user.character.alias+"</span>]":" ")).css('color','#000000');
         $("#textInput").css('text-indent', ($('#aliasOffset').width()+4)+'px');
     }
 
@@ -713,7 +713,7 @@ function updateChatPreview() {
             var action_user = user_list[command[1]];
             command.splice(0,2);
             var reason = command.join(" ");
-            textPreview = "banned [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat."+(reason ? " Reason: "+reason : "");
+            textPreview = "banned [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.alias+"[/color]] from the chat."+(reason ? " Reason: "+reason : "");
         } catch(e) {
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
@@ -721,7 +721,7 @@ function updateChatPreview() {
     } else if (command[0] == '/kick') {
         try {
             var action_user = user_list[command[1]];
-            textPreview = "kicked [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]] from the chat.";
+            textPreview = "kicked [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color] [[color=#"+action_user.character.color+"]"+action_user.character.alias+"[/color]] from the chat.";
         } catch(e) {
             aliasPreview = "";
             textPreview = "[color=#EE0000]Error[/color]";
@@ -733,7 +733,7 @@ function updateChatPreview() {
             if (groups.indexOf(command[2])!=-1 && command[1]) {
                 var action_user = user_list[command[1]];
                 var group_set = GROUP_DESCRIPTIONS[group_map[command[2]]];
-                textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color]"+(action_user.character.acronym?" [[color=#"+action_user.character.color+"]"+action_user.character.acronym+"[/color]]": "")+" to "+group_set.title+"."+(group_set.description ? " They can now "+group_set.description+"." : "");
+                textPreview = "set [color=#"+action_user.character.color+"]"+action_user.character.name+"[/color]"+(action_user.character.alias?" [[color=#"+action_user.character.color+"]"+action_user.character.alias+"[/color]]": "")+" to "+group_set.title+"."+(group_set.description ? " They can now "+group_set.description+"." : "");
             } else {
                 throw "error";
             }
@@ -1058,7 +1058,7 @@ $(function (){
             $.getJSON('/characters.json', function (data) {
                 for (i in data.characters) {
                     character = data.characters[i];
-                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.acronym?' [<span style="color:#'+character.color+';">'+character.acronym+'</span>]':'')).appendTo('#quickSwitch');
+                    $('<div>').addClass('characterSwitch').prop('id', 'character-'+character.id).html('<span style="color:#'+character.color+';">'+character.name+'</span>'+(character.alias?' [<span style="color:#'+character.color+';">'+character.alias+'</span>]':'')).appendTo('#quickSwitch');
                     $('#quickSwitch').append(' ');
                 }
             });

@@ -63,7 +63,7 @@
                         <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
                         <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
                     </p>
-                    <p class="message" style="color: #{{message.color}};">{% if message.acronym %}{{message.acronym}}: {% endif %}{{message.text}}</p>
+                    <p class="message" style="color: #{{message.color}};">{% if message.alias %}{{message.alias}}: {% endif %}{{message.text}}</p>
                 </span>
                 {% endfor %}
             {% else %}

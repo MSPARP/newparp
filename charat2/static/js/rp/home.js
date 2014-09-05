@@ -28,8 +28,8 @@ $(document).ready(function() {
 
     function updatePreview() {
         $('#color-preview').css('color', '#'+config.find('input[name="color"]').val());
-        var acronym = config.find('input[name="acronym"]').val();
-        $('#color-preview #acronym').text(acronym+(acronym.length>0?': ':''));
+        var alias = config.find('input[name="alias"]').val();
+        $('#color-preview #alias').text(alias+(alias.length>0?': ':''));
     }
     config.find('input').change(updatePreview).keyup(updatePreview);
     updatePreview();

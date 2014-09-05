@@ -38,13 +38,13 @@
                     </div>
                     <div class="right">
                         <input id="usingname" type="text" name="name" value="anonymous" maxlength="50" /><br />
-                        <input id="ailin" type="text" name="acronym" value="??" maxlength="15" /><br />
+                        <input id="ailin" type="text" name="alias" value="??" maxlength="15" /><br />
                         <input id="coln" type="text" name="color" value="000000" maxlength="6" />
                     </div>
                 </div>
     
                 <div class="card pester-line" id="color-preview" style="color:000000;">
-                    <span id="acronym">??: </span><span id="quote"></span>
+                    <span id="alias">??: </span><span id="quote"></span>
                 </div>
                 {% if error=="color" %}<span class="error">You entered an invalid hex code. Try using the color picker.</span><br />{% endif %}
                 <span id="inzone"><button class="save_character">Save Settings</button></span>

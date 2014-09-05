@@ -60,7 +60,7 @@ def set_user_character(chat_id, searcher):
         logging.debug("No character, character not found.")
         return
     logging.debug(
-        "Found character %s [%s]." % (character.name, character.acronym)
+        "Found character %s [%s]." % (character.name, character.alias)
     )
     db.add(ChatUser.from_character(character, chat_id=chat_id))
 

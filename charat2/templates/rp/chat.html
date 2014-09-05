@@ -56,9 +56,9 @@
                         <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span>
                     </p>
                     {% if message.type == 'me' %}
-                    <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.acronym+"[/color]]" if message.acronym|length else ""}} {{message.text}}</p>
+                    <p class="message">[color=#{{message.color}}]{{message.name}}[/color] {{"[[color=#"+message.color+"]"+message.alias+"[/color]]" if message.alias|length else ""}} {{message.text}}</p>
                     {% else %}
-                    <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.acronym %}{{message.acronym}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
+                    <p class="message" style="color: #{{message.color}};">{% if message.type == 'ooc' %}{{message.user.username}}:&nbsp;{% else %}{% if message.alias %}{{message.alias}}:&nbsp;{% endif %}{% endif %}{{message.text}}</p>
                     {% endif %}
                 </span>
                 {% endfor %}
@@ -109,7 +109,7 @@
                     </div>
                     <div class="right">
                         <input id="usingname" type="text" name="name" value="{{chat_user.name}}" maxlength="50" /><br />
-                        <input id="ailin" type="text" name="acronym" value="{{chat_user.acronym}}" maxlength="15" /><br />
+                        <input id="ailin" type="text" name="alias" value="{{chat_user.alias}}" maxlength="15" /><br />
                         <input id="coln" type="text" name="color" value="{{chat_user.color}}" maxlength="6" />
                     </div>
                     <button class="big" type="submit">Apply</button>

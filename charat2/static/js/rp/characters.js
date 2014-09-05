@@ -1,4 +1,4 @@
-var characterKeys = ['acronym', 'name', 'color', 'quirk_prefix', 'case'];
+var characterKeys = ['alias', 'name', 'color', 'quirk_prefix', 'case'];
 
 function deleteReplacement(e) {
 	$(this.parentNode).remove();

@@ -563,7 +563,7 @@ body > #save {
     width: 90%;
 }
 
-.sidebar input[name="acronym"] {
+.sidebar input[name="alias"] {
     margin-bottom: 4px;
 }
 

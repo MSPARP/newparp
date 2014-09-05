@@ -94,7 +94,7 @@ def save_character(character_id):
     # There are length limits on the front end so just silently truncate these.
     character.title = request.form["title"][:50]
     character.name = request.form["name"][:50]
-    character.acronym = request.form["acronym"][:15]
+    character.alias = request.form["alias"][:15]
     character.quirk_prefix = request.form["quirk_prefix"][:50]
     character.quirk_suffix = request.form["quirk_suffix"][:50]
 

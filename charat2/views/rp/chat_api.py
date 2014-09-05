@@ -102,7 +102,7 @@ def send():
         user_id=g.user.id,
         type=message_type,
         color=g.chat_user.color,
-        acronym=g.chat_user.acronym,
+        alias=g.chat_user.alias,
         name=g.chat_user.name,
         text=text,
     ))
@@ -260,7 +260,7 @@ def user_action():
             chat_id=g.chat.id,
             creator_id=g.user.id,
             name=set_chat_user.name,
-            acronym=set_chat_user.acronym,
+            alias=set_chat_user.alias,
             reason=request.form.get("reason"),
         ))
         if request.form.get("reason") is not None:
@@ -395,7 +395,7 @@ def save():
 
     # Remember old values so we can check if they've changed later.
     old_name = g.chat_user.name
-    old_acronym = g.chat_user.acronym
+    old_alias = g.chat_user.alias
     old_color = g.chat_user.color
 
     # Don't allow a blank name.
@@ -414,7 +414,7 @@ def save():
 
     # There are length limits on the front end so just silently truncate these.
     g.chat_user.name = request.form["name"][:50]
-    g.chat_user.acronym = request.form["acronym"][:15]
+    g.chat_user.alias = request.form["alias"][:15]
     g.chat_user.quirk_prefix = request.form["quirk_prefix"][:50]
     g.chat_user.quirk_suffix = request.form["quirk_suffix"][:50]
 
@@ -440,18 +440,18 @@ def save():
     # And encode as JSON.
     g.chat_user.regexes = json.dumps(regexes)
 
-    # Send a message if name or acronym has changed.
+    # Send a message if name or alias has changed.
     if (
         g.chat_user.name != old_name
-        or g.chat_user.acronym != old_acronym
+        or g.chat_user.alias != old_alias
         or g.chat_user.color != old_color
     ):
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
-            acronym_string = (
-                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.acronym)
-                if len(g.chat_user.acronym) > 0 else ""
+            alias_string = (
+                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.alias)
+                if len(g.chat_user.alias) > 0 else ""
             )
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -460,7 +460,7 @@ def save():
                 name=g.chat_user.name,
                 text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
                     old_color, g.user.username,
-                    g.chat_user.color, g.chat_user.name, acronym_string,
+                    g.chat_user.color, g.chat_user.name, alias_string,
                 ),
             ))
 
@@ -481,15 +481,15 @@ def save_from_character():
 
     old_color = g.chat_user.color
 
-    # Send a message if name, acronym or color has changed.
+    # Send a message if name, alias or color has changed.
     changed = (
         g.chat_user.name != character.name
-        or g.chat_user.acronym != character.acronym
+        or g.chat_user.alias != character.alias
         or g.chat_user.color != character.color
     )
 
     g.chat_user.name = character.name
-    g.chat_user.acronym = character.acronym
+    g.chat_user.alias = character.alias
     g.chat_user.color = character.color
     g.chat_user.quirk_prefix = character.quirk_prefix
     g.chat_user.quirk_suffix = character.quirk_suffix
@@ -501,9 +501,9 @@ def save_from_character():
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
-            acronym_string = (
-                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.acronym)
-                if len(g.chat_user.acronym) > 0 else ""
+            alias_string = (
+                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.alias)
+                if len(g.chat_user.alias) > 0 else ""
             )
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -512,7 +512,7 @@ def save_from_character():
                 name=g.chat_user.name,
                 text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
                     old_color, g.user.username,
-                    g.chat_user.color, g.chat_user.name, acronym_string,
+                    g.chat_user.color, g.chat_user.name, alias_string,
                 ),
             ))
 

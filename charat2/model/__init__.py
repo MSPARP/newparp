@@ -117,7 +117,7 @@ class UserCharacter(Base):
     title = Column(Unicode(50), nullable=False)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -135,7 +135,7 @@ class UserCharacter(Base):
             "id": self.id,
             "title": self.title,
             "name": self.name,
-            "acronym": self.acronym,
+            "alias": self.alias,
             "color": self.color,
         }
         if include_options:
@@ -263,7 +263,7 @@ class ChatUser(Base):
     ), nullable=False, default=u"user")
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -289,7 +289,7 @@ class ChatUser(Base):
         return cls(
             user_id=character.user.id,
             name=character.name,
-            acronym=character.acronym,
+            alias=character.alias,
             color=character.color,
             quirk_prefix=character.quirk_prefix,
             quirk_suffix=character.quirk_suffix,
@@ -322,7 +322,7 @@ class ChatUser(Base):
         return cls(
             user_id=user.id,
             name=dc.name,
-            acronym=dc.acronym,
+            alias=dc.alias,
             color=dc.color,
             quirk_prefix=dc.quirk_prefix,
             quirk_suffix=dc.quirk_suffix,
@@ -382,7 +382,7 @@ class ChatUser(Base):
         ucd = {
             "character": {
                 "name": self.name,
-                "acronym": self.acronym,
+                "alias": self.alias,
                 "color": self.color,
             },
             "meta": {
@@ -440,7 +440,7 @@ class Message(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    acronym = Column(Unicode(15), nullable=False, default=u"")
+    alias = Column(Unicode(15), nullable=False, default=u"")
 
     name = Column(Unicode(50), nullable=False, default=u"")
 
@@ -456,7 +456,7 @@ class Message(Base):
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,
-            "acronym": self.acronym,
+            "alias": self.alias,
             "name": self.name,
             "text": self.text,
         }
@@ -474,7 +474,7 @@ class Ban(Base):
     expires = Column(DateTime())
 
     name = Column(Unicode(50), nullable=False)
-    acronym = Column(Unicode(15), nullable=False)
+    alias = Column(Unicode(15), nullable=False)
 
     reason = Column(UnicodeText)
 
