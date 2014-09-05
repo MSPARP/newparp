@@ -14,8 +14,8 @@
                     <p>Welcome to Charat RP. Here you can search for people to roleplay with. Whether it be group chats, a random person or a person with a prompt, I hope that you will enjoy your stay here!</p>
                     <center>
                         <a class="button" href="">Guide</a>
-                        <a class="button" href="{{url_for('chat_list')}}">Chats</a>
-                        <a class="button" href="{{url_for('character_list')}}">Characters</a>
+                        <a class="button" href="{{url_for('rp_chat_list')}}">Chats</a>
+                        <a class="button" href="{{url_for('rp_character_list')}}">Characters</a>
                         {% if g.user != None: %}
                         <a class="button" href="">Settings</a>
                         <a class="button" href="{{url_for('logout')}}">Logout</a>

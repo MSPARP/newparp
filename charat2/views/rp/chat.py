@@ -60,7 +60,7 @@ def create_chat():
         title=url.replace("_", " "),
         creator_id=g.user.id,
     ))
-    return redirect(url_for("chat", url=lower_url))
+    return redirect(url_for("rp_chat", url=lower_url))
 
 
 @alt_formats(set(["json"]))
@@ -91,7 +91,7 @@ def chat(url, fmt=None):
             abort(404)
 
         if pm_user.username != username:
-            return redirect(url_for("chat", url="pm/" + pm_user.username))
+            return redirect(url_for("rp_chat", url="pm/" + pm_user.username))
 
         # PM
         pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
@@ -116,7 +116,7 @@ def chat(url, fmt=None):
 
         # Force lower case.
         if url != url.lower():
-            return redirect(url_for("chat", url=url.lower()))
+            return redirect(url_for("rp_chat", url=url.lower()))
 
         try:
             chat = g.db.query(AnyChat).filter(AnyChat.url == url).one()
@@ -129,7 +129,7 @@ def chat(url, fmt=None):
             Ban.user_id == g.user.id,
         )).scalar() != 0:
             if chat.url != "theoubliette":
-                return redirect(url_for("chat", url="theoubliette"))
+                return redirect(url_for("rp_chat", url="theoubliette"))
             abort(403)
 
         chat_dict = chat.to_dict()
@@ -210,7 +210,7 @@ def log(url, page=None):
             abort(404)
 
         if pm_user.username != username:
-            return redirect(url_for("log", url="pm/" + pm_user.username))
+            return redirect(url_for("rp_log", url="pm/" + pm_user.username))
 
         # PM
         pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
@@ -253,7 +253,7 @@ def log(url, page=None):
         page=page,
         items_per_page=messages_per_page,
         item_count=message_count,
-        url=lambda page: url_for("log", url=url, page=page),
+        url=lambda page: url_for("rp_log", url=url, page=page),
     )
 
     return render_template(

@@ -30,7 +30,7 @@
                 {% endfor %}
                     </select></p>
                 {% else %}
-                    <p>Currently searching as anonymous. <a href="{{url_for("character_list")}}">Create a character</a> to customise who you appear as.</p>
+                    <p>Currently searching as anonymous. <a href="{{url_for("rp_character_list")}}">Create a character</a> to customise who you appear as.</p>
                 {% endif %}
                     <p>Tags (separated by commas): <input id="characterTags" value="{{", ".join(g.user.search_tags)}}"></p>
                     <p>Exclude tags (separated by commas): <input id="characterExcludeTags" value="{{", ".join(g.user.search_exclude_tags)}}"></p>

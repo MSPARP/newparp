@@ -18,19 +18,19 @@
       <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
       <td>
 {% if character != g.user.default_character: %}
-        <form action="{{url_for("set_default_character", character_id=character.id)}}" method="post"><button type="submit">Set as default</button></form>
+        <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><button type="submit">Set as default</button></form>
 {% else: %}
         Default character
 {% endif %}
       </td>
       <td><a href="{{url_for("rp_search_character", character_id=character.id)}}">Search</a></td>
-      <td><a href="{{url_for("character", character_id=character.id)}}">Edit</a></td>
-      <td><a href="{{url_for("delete_character_get", character_id=character.id)}}">Delete</a></td>
+      <td><a href="{{url_for("rp_character", character_id=character.id)}}">Edit</a></td>
+      <td><a href="{{url_for("rp_delete_character_get", character_id=character.id)}}">Delete</a></td>
     </tr>
 {% endfor %}
   </tbody>
 </table>
 
-<form action="{{url_for("new_character")}}" method="post">
+<form action="{{url_for("rp_new_character")}}" method="post">
   <p><button type="submit">New character</button></p>
 </form>

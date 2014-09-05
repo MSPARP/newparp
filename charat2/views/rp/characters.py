@@ -45,7 +45,7 @@ def new_character():
     character = UserCharacter(user_id=g.user.id, title="Untitled character")
     g.db.add(character)
     g.db.flush()
-    return redirect(url_for("character", character_id=character.id))
+    return redirect(url_for("rp_character", character_id=character.id))
 
 
 @alt_formats(set(["json"]))
@@ -120,7 +120,7 @@ def save_character(character_id):
     # And encode as JSON.
     character.regexes = json.dumps(regexes)
 
-    return redirect(url_for("character", character_id=character.id))
+    return redirect(url_for("rp_character", character_id=character.id))
 
 
 @use_db
@@ -138,7 +138,7 @@ def delete_character_post(character_id):
         g.user.default_character_id = None
         g.db.flush()
     g.db.delete(character)
-    return redirect(url_for("character_list"))
+    return redirect(url_for("rp_character_list"))
 
 
 @use_db
@@ -146,5 +146,5 @@ def delete_character_post(character_id):
 def set_default_character(character_id):
     character = user_character_query(character_id)
     g.user.default_character = character
-    return redirect(url_for("character_list"))
+    return redirect(url_for("rp_character_list"))
 

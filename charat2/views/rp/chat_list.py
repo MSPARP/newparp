@@ -102,7 +102,7 @@ def chat_list(fmt=None, type=None, page=1):
         page=page,
         items_per_page=50,
         item_count=chat_count,
-        url=lambda page: url_for("chat_list", page=page, type=type),
+        url=lambda page: url_for("rp_chat_list", page=page, type=type),
     )
 
     return render_template(

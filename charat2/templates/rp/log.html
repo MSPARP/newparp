@@ -20,11 +20,11 @@
                     <div class="topborder"></div>
                     <a id="goHome" href="{{url_for('rp_home')}}">RP Home</a>
                     <div class="topborder"></div>
-                    <a id="goChats" href="{{url_for('chat_list')}}">Chats</a>
+                    <a id="goChats" href="{{url_for('rp_chat_list')}}">Chats</a>
                     <div class="topborder"></div>
                     <a id="goUser" href="">Guide</a>
                     <div class="topborder"></div>
-                    <a id="goCharacters" href="{{url_for('character_list')}}">Characters</a>
+                    <a id="goCharacters" href="{{url_for('rp_character_list')}}">Characters</a>
                     <div class="topborder"></div>
                     <a id="goUser" href="">Settings</a>
                     <div class="topborder"></div>
@@ -69,7 +69,7 @@
             {% else %}
             <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
             {% endif %}
-            <p><a href="{{url_for("chat", url=url)}}">Continue this chat</a></p>
+            <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
         </div>
 
         {{ self.pager() }}

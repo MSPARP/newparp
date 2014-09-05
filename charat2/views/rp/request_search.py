@@ -359,7 +359,7 @@ def answer_request(request_id):
             text=search_request.prompt,
         ))
 
-    return redirect(url_for("chat", url=new_chat.url))
+    return redirect(url_for("rp_chat", url=new_chat.url))
 
 
 def _edit_request_form(search_request, error=None):
