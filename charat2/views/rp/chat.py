@@ -265,8 +265,9 @@ def log(url, page=None):
     )
 
 
+@alt_formats(set(["json"]))
 @use_db
-def users(url):
+def users(url, fmt=None):
 
     try:
         chat = g.db.query(GroupChat).filter(
@@ -280,6 +281,9 @@ def users(url):
     ).filter(and_(
         ChatUser.chat_id == chat.id,
     )).order_by(User.username).all()
+
+    if fmt == "json":
+        return jsonify({ "users": [_[0].to_dict() for _ in users] })
 
     return render_template(
         "rp/chat_users.html",

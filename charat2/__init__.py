@@ -126,7 +126,7 @@ app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
 make_rules("rp", "/<path:url>/log", chat.log, paging=True)
 
-app.add_url_rule("/<path:url>/users", "chat_users", chat.users, subdomain="rp", methods=("GET",))
+make_rules("rp", "/<path:url>/users", chat.users, formats=True)
 
 # 2.7. Chat API
 
