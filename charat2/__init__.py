@@ -17,7 +17,10 @@ from flask.ext.babel import Babel, gettext
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
-app.debug=True
+
+# XXX REMEMBER TO REMOVE THIS BEFORE LAUNCH
+app.debug = True
+
 babel = Babel(app)
 app.jinja_env.globals.update(gettext=gettext)
 
@@ -154,7 +157,7 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", method
 
 # 3. Blog subdomain (blog.charat.net)
 
-app.add_url_rule("/", "blog_home", blog.home, subdomain="blog",methods=("GET",))
+app.add_url_rule("/", "blog_home", blog.home, subdomain="blog", methods=("GET",))
 
 @app.route("/favicon.ico", subdomain="blog")
 def blog_favicon():

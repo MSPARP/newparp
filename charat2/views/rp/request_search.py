@@ -31,7 +31,8 @@ def _name_from_alias(alias):
     # 2. Change spaces to underscores.
     # 3. Change . and / to underscores because they screw up the routing.
     # 4. Strip extra underscores from the start and end.
-    return underscore_strip_regex.sub("",
+    return underscore_strip_regex.sub(
+        "",
         special_char_regex.sub("_", alias)
     ).lower()
 
@@ -66,7 +67,7 @@ def _tags_from_form(form):
         # Enforce preset values for type.
         elif tag_type == "type":
             for name in Tag.type_names:
-                if "type_"+name in form:
+                if "type_" + name in form:
                     tag_dict[("type", name)] = name.capitalize()
             continue
 
@@ -104,7 +105,7 @@ def request_list(fmt=None, page=1):
         Request.status == "posted",
     ).options(
         joinedload_all("tags.tag"),
-    ).offset((page-1)*50).limit(50).all()
+    ).offset((page - 1) * 50).limit(50).all()
 
     if len(requests) == 0 and page != 1:
         abort(404)
@@ -146,7 +147,7 @@ def your_request_list(fmt=None, page=1):
         Request.user_id == g.user.id,
     ).options(
         joinedload_all("tags.tag"),
-    ).offset((page-1)*50).limit(50).all()
+    ).offset((page - 1) * 50).limit(50).all()
 
     if len(requests) == 0 and page != 1:
         abort(404)
@@ -211,7 +212,7 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
         Request.status == "posted",
     )).options(
         joinedload_all("tags.tag"),
-    ).offset((page-1)*50).limit(50).all()
+    ).offset((page - 1) * 50).limit(50).all()
 
     if len(requests) == 0 and page != 1:
         abort(404)
@@ -429,7 +430,7 @@ def edit_request_post(request_id):
     search_request.prompt = prompt
     search_request.user_character = character
 
-    g.db.query(RequestTag).filter(RequestTag.request_id==search_request.id).delete()
+    g.db.query(RequestTag).filter(RequestTag.request_id == search_request.id).delete()
 
     search_request.tags += _tags_from_form(request.form)
 
@@ -456,8 +457,8 @@ def delete_request_get(request_id):
 @login_required
 def delete_request_post(request_id):
     search_request = _own_request_query(request_id)
-    g.db.query(RequestTag).filter(RequestTag.request_id==search_request.id).delete()
-    g.db.query(Request).filter(Request.id==search_request.id).delete()
+    g.db.query(RequestTag).filter(RequestTag.request_id == search_request.id).delete()
+    g.db.query(Request).filter(Request.id == search_request.id).delete()
     g.db.commit()
     return redirect(url_for("rp_your_request_list"))
 

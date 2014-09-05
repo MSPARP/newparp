@@ -23,6 +23,7 @@ chat_classes = {
     "unread": AnyChat,
 }
 
+
 @alt_formats(set(["json"]))
 @use_db
 @login_required
@@ -61,13 +62,13 @@ def chat_list(fmt=None, type=None, page=1):
         ChatUser.user_id == g.user.id,
     ).order_by(
         ChatClass.last_message.desc(),
-    ).offset((page-1)*50).limit(50).all()
+    ).offset((page - 1) * 50).limit(50).all()
 
     if len(chats) == 0 and page != 1:
         abort(404)
 
     chat_count = g.db.query(func.count('*')).select_from(ChatUser).filter(
-        ChatUser.user_id==g.user.id,
+        ChatUser.user_id == g.user.id,
     )
     if type == "unread":
         chat_count = chat_count.join(ChatClass).filter(
@@ -81,8 +82,8 @@ def chat_list(fmt=None, type=None, page=1):
     for c in chats:
         cd = c[1].to_dict()
         if c[1].type == "pm":
-            cd["title"] = "Messaging "+c[2].user.username
-            cd["url"] = "pm/"+c[2].user.username
+            cd["title"] = "Messaging " + c[2].user.username
+            cd["url"] = "pm/" + c[2].user.username
         elif c[1].type != "group":
             cd["title"] = cd["url"]
         cd["unread"] = c[1].last_message > c[0].last_online

@@ -40,7 +40,7 @@ def create_chat():
 
     # Check the URL against the routing to make sure it doesn't crash into any
     # of the other routes.
-    route, args = current_app.url_map.bind("", subdomain="rp").match("/"+lower_url)
+    route, args = current_app.url_map.bind("", subdomain="rp").match("/" + lower_url)
     if route != "chat":
         return render_template(
             "rp/home.html",
@@ -49,7 +49,7 @@ def create_chat():
 
     # Don't allow pm because subchats of it (pm/*) will crash into private
     # chat URLs.
-    if url=="pm" or g.db.query(Chat.id).filter(Chat.url==lower_url).count()!=0:
+    if url == "pm" or g.db.query(Chat.id).filter(Chat.url == lower_url).count() != 0:
         return render_template(
             "rp/home.html",
             create_chat_error="The URL \"%s\" has already been taken." % url
@@ -91,13 +91,13 @@ def chat(url, fmt=None):
             abort(404)
 
         if pm_user.username != username:
-            return redirect(url_for("chat", url="pm/"+pm_user.username))
+            return redirect(url_for("chat", url="pm/" + pm_user.username))
 
         # PM
         pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
         try:
             chat = g.db.query(PMChat).filter(
-                PMChat.url==pm_url,
+                PMChat.url == pm_url,
             ).one()
         except NoResultFound:
             chat = PMChat(url=pm_url)
@@ -109,7 +109,7 @@ def chat(url, fmt=None):
 
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
-        chat_dict['title'] = "Messaging "+pm_user.username
+        chat_dict['title'] = "Messaging " + pm_user.username
         chat_dict['url'] = url
 
     else:
@@ -119,14 +119,14 @@ def chat(url, fmt=None):
             return redirect(url_for("chat", url=url.lower()))
 
         try:
-            chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
+            chat = g.db.query(AnyChat).filter(AnyChat.url == url).one()
         except NoResultFound:
             abort(404)
 
         # Redirect them to the oubliette if they're banned.
         if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-            Ban.chat_id==chat.id,
-            Ban.user_id==g.user.id,
+            Ban.chat_id == chat.id,
+            Ban.user_id == g.user.id,
         )).scalar() != 0:
             if chat.url != "theoubliette":
                 return redirect(url_for("chat", url="theoubliette"))
@@ -137,8 +137,8 @@ def chat(url, fmt=None):
     # Get or create ChatUser.
     try:
         chat_user = g.db.query(ChatUser).filter(and_(
-            ChatUser.user_id==g.user.id,
-            ChatUser.chat_id==chat.id,
+            ChatUser.user_id == g.user.id,
+            ChatUser.chat_id == chat.id,
         )).one()
     except NoResultFound:
         chat_user = ChatUser.from_user(g.user, chat_id=chat.id)
@@ -152,7 +152,7 @@ def chat(url, fmt=None):
 
     # Show the last 50 messages.
     messages = g.db.query(Message).filter(
-        Message.chat_id==chat.id,
+        Message.chat_id == chat.id,
     ).options(joinedload(Message.user)).order_by(
         Message.posted.desc(),
     ).limit(50).all()
@@ -210,48 +210,48 @@ def log(url, page=None):
             abort(404)
 
         if pm_user.username != username:
-            return redirect(url_for("log", url="pm/"+pm_user.username))
+            return redirect(url_for("log", url="pm/" + pm_user.username))
 
         # PM
         pm_url = "pm/" + ("/".join(sorted([str(g.user.id), str(pm_user.id)])))
         try:
             chat = g.db.query(PMChat).filter(
-                PMChat.url==pm_url,
+                PMChat.url == pm_url,
             ).one()
         except NoResultFound:
             abort(404)
-            
+
         # Override title with the other person's username.
         chat_dict = chat.to_dict()
-        chat_dict['title'] = "Log With "+pm_user.username
+        chat_dict['title'] = "Log with " + pm_user.username
 
     else:
 
         try:
-            chat = g.db.query(AnyChat).filter(AnyChat.url==url).one()
+            chat = g.db.query(AnyChat).filter(AnyChat.url == url).one()
         except NoResultFound:
             abort(404)
 
     message_count = g.db.query(func.count('*')).select_from(Message).filter(
-        Message.chat_id==chat.id,
+        Message.chat_id == chat.id,
     ).scalar()
-    
-    messageNumberPerPage = 200
+
+    messages_per_page = 200
 
     if page is None:
-        page = message_count/messageNumberPerPage+1
-    
+        page = message_count / messages_per_page + 1
+
     messages = g.db.query(Message).filter(
-        Message.chat_id==chat.id,
-    ).order_by(Message.id).limit(messageNumberPerPage).offset((page-1)*messageNumberPerPage).all()
+        Message.chat_id == chat.id,
+    ).order_by(Message.id).limit(messages_per_page).offset((page - 1) * messages_per_page).all()
 
     if len(messages) == 0:
         abort(404)
-    
+
     paginator = paginate.Page(
         [],
         page=page,
-        items_per_page=messageNumberPerPage,
+        items_per_page=messages_per_page,
         item_count=message_count,
         url=lambda page: url_for("log", url=url, page=page),
     )
@@ -270,15 +270,15 @@ def users(url):
 
     try:
         chat = g.db.query(GroupChat).filter(
-            GroupChat.url==url,
+            GroupChat.url == url,
         ).one()
     except NoResultFound:
         abort(404)
 
     users = g.db.query(ChatUser, User).join(
-        User, ChatUser.user_id==User.id,
+        User, ChatUser.user_id == User.id,
     ).filter(and_(
-        ChatUser.chat_id==chat.id,
+        ChatUser.chat_id == chat.id,
     )).order_by(User.username).all()
 
     return render_template(

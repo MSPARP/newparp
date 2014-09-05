@@ -30,6 +30,7 @@ from charat2.model.connections import (
 )
 from charat2.model.validators import color_validator
 
+
 @mark_alive
 def messages():
 
@@ -59,16 +60,18 @@ def messages():
     pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 
     for msg in pubsub.listen():
-        if msg["type"]=="message":
+        if msg["type"] == "message":
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
             return resp
 
+
 @mark_alive
 def ping():
     return "", 204
+
 
 @use_db_chat
 @mark_alive
@@ -84,15 +87,16 @@ def send():
     if "text" not in request.form:
         abort(400)
 
-    text = request.form["text"].replace("  ", u" \u00A0");
+    # Change double spaces to no-break space.
+    text = request.form["text"].replace("  ", u" \u00A0")
     if text == "":
         abort(400)
-    
+
     message_type = request.form["type"]
-    
+
     if message_type is None:
         message_type = "ic"
-    
+
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
         user_id=g.user.id,
@@ -105,9 +109,11 @@ def send():
 
     return "", 204
 
+
 @mark_alive
 def set_state():
     raise NotImplementedError
+
 
 @use_db_chat
 @group_chat_only
@@ -129,17 +135,17 @@ def set_group():
 
     # Fetch the ChatUser we're trying to change.
     if "user_id" in request.form:
-        user_condition = ChatUser.user_id==request.form["user_id"]
+        user_condition = ChatUser.user_id == request.form["user_id"]
     elif "username" in request.form:
-        user_condition = func.lower(User.username)==request.form["username"].lower()
+        user_condition = func.lower(User.username) == request.form["username"].lower()
     else:
         abort(400)
     try:
         set_chat_user, set_user = g.db.query(ChatUser, User).join(
-            User, ChatUser.user_id==User.id,
+            User, ChatUser.user_id == User.id,
         ).filter(and_(
             user_condition,
-            ChatUser.chat_id==g.chat.id,
+            ChatUser.chat_id == g.chat.id,
         )).one()
     except NoResultFound:
         abort(404)
@@ -182,6 +188,7 @@ def set_group():
 
     return "", 204
 
+
 @use_db_chat
 @group_chat_only
 @mark_alive
@@ -197,17 +204,17 @@ def user_action():
 
     # Fetch the ChatUser we're trying to act upon.
     if "user_id" in request.form:
-        user_condition = ChatUser.user_id==request.form["user_id"]
+        user_condition = ChatUser.user_id == request.form["user_id"]
     elif "username" in request.form:
-        user_condition = func.lower(User.username)==request.form["username"].lower()
+        user_condition = func.lower(User.username) == request.form["username"].lower()
     else:
         abort(400)
     try:
         set_chat_user, set_user = g.db.query(ChatUser, User).join(
-            User, ChatUser.user_id==User.id,
+            User, ChatUser.user_id == User.id,
         ).filter(and_(
             user_condition,
-            ChatUser.chat_id==g.chat.id,
+            ChatUser.chat_id == g.chat.id,
         )).one()
     except NoResultFound:
         abort(404)
@@ -216,7 +223,7 @@ def user_action():
     if set_chat_user.computed_rank >= g.chat_user.computed_rank:
         abort(403)
 
-    if action=="kick":
+    if action == "kick":
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"kick\"}",
@@ -241,11 +248,11 @@ def user_action():
         ))
         return "", 204
 
-    elif action=="ban":
+    elif action == "ban":
         # Skip if they're already banned.
         if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-            Ban.chat_id==g.chat.id,
-            Ban.user_id==set_user.id,
+            Ban.chat_id == g.chat.id,
+            Ban.user_id == set_user.id,
         )).scalar() != 0:
             return "", 204
         g.db.add(Ban(
@@ -290,6 +297,7 @@ def user_action():
             text=ban_message,
         ))
         return "", 204
+
 
 @use_db_chat
 @group_chat_only
@@ -336,6 +344,7 @@ def set_flag():
 
     return "", 204
 
+
 @use_db_chat
 @group_chat_only
 @mark_alive
@@ -378,6 +387,7 @@ def set_topic():
         ))
 
     return "", 204
+
 
 @use_db_chat
 @mark_alive
@@ -440,7 +450,7 @@ def save():
             send_userlist(g.db, g.redis, g.chat)
         else:
             acronym_string = (
-                " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]"
+                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.acronym)
                 if len(g.chat_user.acronym) > 0 else ""
             )
             send_message(g.db, g.redis, Message(
@@ -456,6 +466,7 @@ def save():
 
     return "", 204
 
+
 @use_db_chat
 @mark_alive
 def save_from_character():
@@ -470,7 +481,7 @@ def save_from_character():
 
     old_color = g.chat_user.color
 
-    # Send a message if name or acronym has changed.
+    # Send a message if name, acronym or color has changed.
     changed = (
         g.chat_user.name != character.name
         or g.chat_user.acronym != character.acronym
@@ -491,7 +502,7 @@ def save_from_character():
             send_userlist(g.db, g.redis, g.chat)
         else:
             acronym_string = (
-                " [[color=#"+g.chat_user.color+"]"+g.chat_user.acronym+"[/color]]"
+                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.acronym)
                 if len(g.chat_user.acronym) > 0 else ""
             )
             send_message(g.db, g.redis, Message(
@@ -506,6 +517,7 @@ def save_from_character():
             ))
 
     return "", 204
+
 
 @use_db_chat
 @mark_alive
@@ -526,6 +538,7 @@ def save_variables():
         setattr(g.chat_user, variable, request.form[variable] == "on")
 
     return "", 204
+
 
 def quit():
     # Only send a message if we were already online.

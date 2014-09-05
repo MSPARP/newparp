@@ -90,7 +90,7 @@ def search_post():
     g.redis.sadd("searchers", g.session_id)
 
     for msg in pubsub.listen():
-        if msg["type"]=="message":
+        if msg["type"] == "message":
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
             resp = make_response(msg["data"])

@@ -6,6 +6,7 @@ from charat2.helpers.auth import login_required
 from charat2.model import GroupChat
 from charat2.model.connections import use_db
 
+
 @use_db
 def home():
     return render_template(
@@ -15,11 +16,12 @@ def home():
         register_error=request.args.get("register_error"),
     )
 
+
 @alt_formats(set(["json"]))
 @use_db
 def rooms(fmt=None):
-    
-    rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity=="listed")
+
+    rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity == "listed")
     rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
     rooms.sort(key=lambda _: _[1], reverse=True)
     chat_dicts = []
@@ -33,6 +35,7 @@ def rooms(fmt=None):
         })
 
     return render_template("rp/rooms.html", rooms=chat_dicts)
+
 
 @use_db
 def logout():

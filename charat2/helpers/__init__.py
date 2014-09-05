@@ -1,6 +1,7 @@
 from flask import abort, redirect, request, url_for
 from functools import wraps
 
+
 def alt_formats(available_formats=set([])):
     def decorator(f):
         @wraps(f)

@@ -10,13 +10,15 @@ from sqlalchemy.orm import joinedload
 from charat2.model import AnyChat, Ban, Message, ChatUser
 from charat2.model.connections import db_connect, get_chat_user
 
+
 def group_chat_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if g.chat.type!="group":
-			abort(404)
+        if g.chat.type != "group":
+            abort(404)
         return f(*args, **kwargs)
     return decorated_function
+
 
 def mark_alive(f):
     @wraps(f)
@@ -34,8 +36,8 @@ def mark_alive(f):
             db_connect()
             # Check if we're banned.
             if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-                Ban.chat_id==g.chat_id,
-                Ban.user_id==g.user_id,
+                Ban.chat_id == g.chat_id,
+                Ban.user_id == g.user_id,
             )).scalar() != 0:
                 abort(403)
             # Get ChatUser if we haven't got it already.
@@ -60,11 +62,12 @@ def mark_alive(f):
                 ))
         g.redis.zadd(
             "chats_alive",
-            time.time()+60,
+            time.time() + 60,
             "%s/%s" % (g.chat_id, g.user_id),
         )
         return f(*args, **kwargs)
     return decorated_function
+
 
 def send_message(db, redis, message):
 
@@ -110,6 +113,7 @@ def send_message(db, redis, message):
         redis_message["chat"] = message.chat.to_dict()
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
 
+
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
     redis.publish("channel:%s" % chat.id, json.dumps({
@@ -117,12 +121,14 @@ def send_userlist(db, redis, chat):
         "users": get_userlist(db, redis, chat),
     }))
 
+
 def disconnect(redis, chat_id, user_id):
     redis.zrem("chats_alive", "%s/%s" % (chat_id, user_id))
     # Return True if they were in the userlist when we tried to remove them, so
     # we can avoid sending disconnection messages if someone gratuitously sends
     # quit requests.
     return (redis.srem("chat:%s:online" % chat_id, user_id) == 1)
+
 
 def get_userlist(db, redis, chat):
     online_user_ids = redis.smembers("chat:%s:online" % chat.id)

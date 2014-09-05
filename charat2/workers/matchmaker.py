@@ -109,7 +109,7 @@ if __name__ == "__main__":
         for n in range(len(sessions)):
             s1 = sessions[n]
 
-            for m in range(n+1, len(sessions)):
+            for m in range(n + 1, len(sessions)):
                 s2 = sessions[m]
 
                 if s1["id"] in already_matched or s2["id"] in already_matched:

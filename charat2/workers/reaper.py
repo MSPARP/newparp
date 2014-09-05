@@ -24,8 +24,8 @@ if __name__ == "__main__":
                 continue
             try:
                 dead_chat_user = db.query(ChatUser).filter(and_(
-                    ChatUser.user_id==user_id,
-                    ChatUser.chat_id==chat_id,
+                    ChatUser.user_id == user_id,
+                    ChatUser.chat_id == chat_id,
                 )).options(joinedload(ChatUser.chat), joinedload(ChatUser.user)).one()
             except NoResultFound:
                 pass

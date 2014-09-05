@@ -31,7 +31,9 @@ from sqlalchemy import (
 engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
-    pool_recycle=3600,echo=True,
+    pool_recycle=3600,
+    # XXX REMEMBER TO REMOVE THIS BEFORE LAUNCH
+    echo=True,
 )
 
 sm = sessionmaker(
@@ -45,8 +47,10 @@ base_session = scoped_session(sm)
 Base = declarative_base()
 Base.query = base_session.query_property()
 
+
 def now():
     return datetime.datetime.now()
+
 
 case_options = {
     u"alt-lines": "ALTERNATING lines",
@@ -189,7 +193,7 @@ class GroupChat(Chat):
 
     __mapper_args__ = {
         "polymorphic_identity": "group",
-        "inherit_condition": id==Chat.id,
+        "inherit_condition": id == Chat.id,
     }
 
     title = Column(Unicode(50), nullable=False, default=u"")
@@ -363,7 +367,7 @@ class ChatUser(Base):
         # Needs joinedload whenever we're getting these.
         if self.user.group == "admin":
             return "admin"
-        if self.chat.type=="group" and self.chat.creator==self.user:
+        if self.chat.type == "group" and self.chat.creator == self.user:
             return "creator"
         return self.group
 
@@ -572,7 +576,7 @@ Index("user_characters_user_id", UserCharacter.user_id)
 Index(
     "group_chats_publicity_listed",
     GroupChat.publicity,
-    postgresql_where=GroupChat.publicity==u"listed",
+    postgresql_where=GroupChat.publicity == u"listed",
 )
 
 # Index for your chats list.
@@ -595,11 +599,11 @@ Index("tags_type_name", Tag.type, Tag.name, unique=True)
 
 User.default_character = relation(
     UserCharacter,
-    primaryjoin=User.default_character_id==UserCharacter.id,
+    primaryjoin=User.default_character_id == UserCharacter.id,
 )
 User.characters = relation(
     UserCharacter,
-    primaryjoin=User.id==UserCharacter.user_id,
+    primaryjoin=User.id == UserCharacter.user_id,
     backref="user",
 )
 
@@ -607,7 +611,7 @@ GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
     Chat,
     backref="children",
-    primaryjoin=GroupChat.parent_id==Chat.id,
+    primaryjoin=GroupChat.parent_id == Chat.id,
 )
 
 ChatUser.user = relation(User, backref="chats")
@@ -619,13 +623,13 @@ Message.user = relation(User)
 Ban.user = relation(
     User,
     backref="bans",
-    primaryjoin=Ban.user_id==User.id,
+    primaryjoin=Ban.user_id == User.id,
 )
 Ban.chat = relation(Chat, backref="bans")
 Ban.creator = relation(
     User,
     backref="bans_created",
-    primaryjoin=Ban.creator_id==User.id,
+    primaryjoin=Ban.creator_id == User.id,
 )
 
 Request.user = relation(User, backref="requests")
