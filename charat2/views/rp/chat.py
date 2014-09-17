@@ -41,12 +41,12 @@ def create_chat():
 
     # Check the URL against the routing to make sure it doesn't crash into any
     # of the other routes.
-    route, args = current_app.url_map.bind("", subdomain="rp").match("/" + lower_url)
-    if route != "chat":
-        return render_template(
-            "rp/home.html",
-            create_chat_error="The URL \"%s\" has already been taken." % url
-        )
+    #route, args = current_app.url_map.bind("", subdomain="rp").match("/" + lower_url)
+    #if route != "chat":
+    #    return render_template(
+    #        "rp/home.html",
+    #        create_chat_error="The URL \"%s\" has already been taken." % url
+    #    )
 
     # Don't allow pm because subchats of it (pm/*) will crash into private
     # chat URLs.
