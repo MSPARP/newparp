@@ -15,7 +15,7 @@ from charat2.model import (
     Message,
     Request,
     RequestTag,
-    SearchedChat,
+    RequestedChat,
     Tag,
     UserCharacter,
 )
@@ -324,7 +324,7 @@ def answer_request(request_id):
     if search_request.status != "posted" or search_request.user == g.user:
         abort(404)
 
-    new_chat = SearchedChat(url=str(uuid4()).replace("-", ""))
+    new_chat = RequestedChat(url=str(uuid4()).replace("-", ""))
     g.db.add(new_chat)
     g.db.flush()
 
