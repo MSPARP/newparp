@@ -168,6 +168,7 @@ class Chat(Base):
     type = Column(Enum(
         u"group",
         u"pm",
+        u"requested",
         u"searched",
         name=u"chats_type",
     ), nullable=False, default=u"group")
