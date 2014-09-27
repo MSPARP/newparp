@@ -78,6 +78,8 @@ def register():
     if "referer" in request.form:
         referer = request.form["referer"]
         getreferer = "&referer=" + referer
+    else:
+        referer = request.url
     # Don't accept blank fields.
     if request.form["username"] == "" or request.form["password"] == "":
         return redirect(referer_or_home() + "?register_error=Please enter a username and password." + getreferer)
@@ -105,5 +107,5 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    return redirect(referer_or_home(request.form["referer"]))
+    return redirect(referer_or_home(referer))
 
