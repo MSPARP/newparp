@@ -20,7 +20,8 @@
     <label><input type="checkbox" name="type_{{name}}"{% if name in search_request_types: %} checked="checked"{% endif %}> {{name.capitalize()}}</label>
 {% endfor %}
   </p>
-  <p><label>Fandom(s): <input type="text" name="fandom" maxlength="500" value="{{search_request_tags.fandom}}"></label></p>
+  <p><label>Fandom(s) you're playing: <input type="text" name="playing_fandom" maxlength="500" value="{{search_request_tags.playing_fandom}}"></label></p>
+  <p><label>Fandom(s) you're looking for: <input type="text" name="wanted_fandom" maxlength="500" value="{{search_request_tags.wanted_fandom}}"></label></p>
   <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500" value="{{search_request_tags.playing}}"></label></p>
   <p><label>Character(s) you're looking for: <input type="text" name="wanted" maxlength="500" value="{{search_request_tags.wanted}}"></label></p>
   <p><label>Your character's gender(s): <input type="text" name="playing_gender" maxlength="500" value="{{search_request_tags.playing_gender}}"></label></p>

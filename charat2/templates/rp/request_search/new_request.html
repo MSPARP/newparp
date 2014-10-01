@@ -19,7 +19,8 @@
     <label><input type="checkbox" name="type_{{name}}"{% if "type_"+name in request.form: %} checked="checked"{% endif %}> {{name.capitalize()}}</label>
 {% endfor %}
   </p>
-  <p><label>Fandom(s): <input type="text" name="fandom" maxlength="500" value="{{request.form["fandom"]}}"></label></p>
+  <p><label>Fandom(s) you're playing: <input type="text" name="playing_fandom" maxlength="500" value="{{request.form["playing_fandom"]}}"></label></p>
+  <p><label>Fandom(s) you're looking for: <input type="text" name="wanted_fandom" maxlength="500" value="{{request.form["wanted_fandom"]}}"></label></p>
   <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500" value="{{request.form["playing"]}}"></label></p>
   <p><label>Character(s) you're looking for: <input type="text" name="wanted" maxlength="500" value="{{request.form["wanted"]}}"></label></p>
   <p><label>Your character's gender(s): <input type="text" name="playing_gender" maxlength="500" value="{{request.form["playing_gender"]}}"></label></p>
