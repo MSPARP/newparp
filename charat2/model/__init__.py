@@ -508,8 +508,7 @@ class Request(Base):
 
     posted = Column(DateTime(), nullable=False, default=now)
 
-    # If the user doesn't have a character this may be null.
-    user_character_id = Column(Integer, ForeignKey("user_characters.id"))
+    user_character_id = Column(Integer, ForeignKey("user_characters.id"), nullable=False)
 
     scenario = Column(UnicodeText, nullable=False, default=u"")
     prompt = Column(UnicodeText, nullable=False, default=u"")

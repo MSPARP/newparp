@@ -10,7 +10,9 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
+from charat2.helpers.characters import save_character_from_form
 from charat2.model import (
+    case_options,
     ChatUser,
     Message,
     Request,
@@ -259,6 +261,7 @@ def _new_request_form(error=None):
 
     return render_template(
         "rp/request_search/new_request.html",
+        case_options=case_options,
         Tag=Tag,
         characters=characters,
         selected_character=selected_character,
@@ -276,21 +279,59 @@ def new_request_get():
 @login_required
 def new_request_post():
 
+    new_or_saved_character = request.form["new_or_saved_character"]
+    edit_character = "edit_character" in request.form
+    save_character_as = request.form["save_character_as"]
+
+
+    if new_or_saved_character == "new":
+        if save_character_as == "new":
+            print "CREATE NEW CHARACTER"
+            raise NotImplementedError
+        elif save_character_as == "temp":
+            print "CREATE NEW CHARACTER, TEMP"
+            raise NotImplementedError
+        else:
+            abort(400)
+    elif new_or_saved_character == "saved":
+        if edit_character:
+            if save_character_as == "update":
+                print "UPDATE EXISTING CHARACTER"
+                # Update an existing character's details.
+                try:
+                    character_id = int(request.form["character_id"])
+                except ValueError:
+                    abort(400)
+                character = save_character_from_form(character_id)
+            elif save_character_as == "new":
+                print "CREATE NEW CHARACTER"
+                raise NotImplementedError
+            elif save_character_as == "temp":
+                print "CREATE NEW CHARACTER, TEMP"
+                raise NotImplementedError
+            else:
+                abort(400)
+        else:
+            print "USE EXISTING CHARACTER UNMODIFIED"
+            # Use an existing character unmodified.
+            try:
+                character = g.db.query(UserCharacter).filter(and_(
+                    UserCharacter.id == int(request.form["character_id"]),
+                    UserCharacter.user_id == g.user.id,
+                )).one()
+            except ValueError:
+                abort(400)
+            except NoResultFound:
+                abort(404)
+    else:
+        abort(400)
+
     scenario = request.form["scenario"].strip()
     prompt = request.form["prompt"].strip()
 
     # At least one of prompt or scenario must be filled in.
     if len(scenario) == 0 and len(prompt) == 0:
-        return _new_request_form(error="blank")
-
-    # Just make the character none if the specified character isn't valid.
-    try:
-        character = g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == int(request.form["character_id"]),
-            UserCharacter.user_id == g.user.id,
-        )).one()
-    except (KeyError, ValueError, NoResultFound):
-        character = None
+        abort(400)
 
     new_request = Request(
         user=g.user,
@@ -299,9 +340,7 @@ def new_request_post():
         scenario=scenario,
         prompt=prompt,
     )
-
     new_request.tags = _tags_from_form(request.form)
-
     g.db.add(new_request)
 
     return redirect(url_for("rp_your_request_list"))
@@ -384,6 +423,7 @@ def _edit_request_form(search_request, error=None):
 
     return render_template(
         "rp/request_search/edit_request.html",
+        case_options=case_options,
         search_request=search_request,
         search_request_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)

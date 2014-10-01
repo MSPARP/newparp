@@ -1,38 +1,91 @@
 <h1>New request</h1>
 
 <form action="{{url_for("rp_new_request_post")}}" method="post">
-  <p><label>Saved character: <select name="character_id">
+
+  <fieldset>
+    <legend>Character details</legend>
+{% if characters: %}
+    <ul>
+      <li><label><input type="radio" name="new_or_saved_character" value="new"> Enter new character details</label></li>
+      <li><label><input type="radio" name="new_or_saved_character" value="saved" checked="checked"> Load existing character details:</label> <select name="character_id">
 {% for character in characters: %}
-    <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
+      <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
 {% endfor %}
-  </select></label></p>
-  <h2>Tags</h2>
-  <p>Enter some tags for your request, separated by commas:</p>
-  <p><label>Maturity: <select name="maturity">
-{% for name in Tag.maturity_names: %}
-    <option value="{{name}}"{% if request.form.get("maturity") == name: %} selected="selected"{% endif %}>{{name.capitalize()}}</option>
-{% endfor %}
-  </select></label></p>
-  <p><label>Trigger warnings: <input type="text" name="trigger" maxlength="500" value="{{request.form["trigger"]}}"></label></p>
-  <p>Type:
-{% for name in Tag.type_names: %}
-    <label><input type="checkbox" name="type_{{name}}"{% if "type_"+name in request.form: %} checked="checked"{% endif %}> {{name.capitalize()}}</label>
-{% endfor %}
-  </p>
-  <p><label>Fandom(s) you're playing: <input type="text" name="playing_fandom" maxlength="500" value="{{request.form["playing_fandom"]}}"></label></p>
-  <p><label>Fandom(s) you're looking for: <input type="text" name="wanted_fandom" maxlength="500" value="{{request.form["wanted_fandom"]}}"></label></p>
-  <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500" value="{{request.form["playing"]}}"></label></p>
-  <p><label>Character(s) you're looking for: <input type="text" name="wanted" maxlength="500" value="{{request.form["wanted"]}}"></label></p>
-  <p><label>Your character's gender(s): <input type="text" name="playing_gender" maxlength="500" value="{{request.form["playing_gender"]}}"></label></p>
-  <p><label>Gender(s) you're looking for: <input type="text" name="wanted_gender" maxlength="500" value="{{request.form["wanted_gender"]}}"></label></p>
-  <p><label>Any other tags: <input type="text" name="misc" maxlength="500" value="{{request.form["misc"]}}"></label></p>
-  <h2>Info</h2>
-{% if error == "blank" %}
-  <p class="error">Please fill in at least one of scenario and prompt.</p>
+    </select></li>
+    </ul>
+    <p><label><input type="checkbox" name="edit_character"> Edit character</label></p>
+{% else %}
+    <input type="hidden" name="new_or_saved_character" value="new">
 {% endif %}
-  <p><label for="request_scenario">Scenario:</label></p>
-  <p><textarea id="request_scenario" name="scenario">{{request.form["scenario"]}}</textarea></p>
-  <p><label for="request_prompt">Prompt:</label></p>
-  <p><textarea id="request_prompt" name="prompt">{{request.form["prompt"]}}</textarea></p>
+    <h2>Basic info</h2>
+    <p><label>Name: <input id="character_name" type="text" name="name" maxlength="50"></label></p>
+    <p><label>Alias: <input id="character_alias" type="text" name="alias" maxlength="15"></label></p>
+    <p><label>Color: <input id="character_color" type="text" name="color" maxlength="6"></label></p>
+    <h2>Typing quirks</h2>
+    <p><label>Prefix: <input id="character_prefix" type="text" name="quirk_prefix"></label></p>
+    <p><label>Suffix: <input id="character_suffix" type="text" name="quirk_suffix"></label></p>
+    <p><label>Case: <select id="casing" name="case">
+{% for value, name in case_options.items(): %}
+      <option value="{{value}}">{{name}}</option>
+{% endfor %}
+    </select></label></p>
+    <h2>Replacements</h2>
+    <div class="replacementContainer">
+      <ul id="replacementList">
+        <li><input type="text" name="quirk_from" size="4"> to <input type="text" name="quirk_to" size="4"> <a href="#" class="deleteReplacement">x</a></li>
+      </ul>
+      <p><a href="#" id="addReplacement">+Add another replacement</a> <a href="#" id="clearReplacements">-Clear replacements</a></p>
+    </div>
+    <h2>Regular expressions</h2>
+    <div class="replacementContainer">
+      <ul id="regexList">
+        <li><input type="text" name="regex_from" size="4"> to <input type="text" name="regex_to" size="4"> <a href="#" class="deleteRegex">x</a></li>
+      </ul>
+      <p><a href="#" id="addRegex">+Add another replacement</a> <a href="#" id="clearRegexes">-Clear replacements</a></p>
+    </div>
+    <h2>Tags</h2>
+    <p>Enter some tags for this character, separated by commas:</p>
+    <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500"></label></p>
+    <p><label>Fandom(s) they belong to: <input type="text" name="playing_fandom" maxlength="500"></label></p>
+    <p><label>Gender(s) they identify as: <input type="text" name="playing_gender" maxlength="500"></label></p>
+    <ul>
+{% if characters: %}
+      <li><label><input type="radio" name="save_character_as" value="update" checked="checked">Update this character everywhere</label></li>
+{% endif %}
+      <li><label><input type="radio" name="save_character_as" value="new">Save as a new character:</label> <input type="text" name="title" maxlength="50"></li>
+      <li><label><input type="radio" name="save_character_as" value="temp">Use details on this request only</label></li>
+    </ul>
+  </fieldset>
+
+  <fieldset>
+    <legend>Tags</legend>
+    <p>Enter some tags about your request, separated by commas:</p>
+    <p><label>Maturity: <select name="maturity">
+{% for name in Tag.maturity_names: %}
+      <option value="{{name}}">{{name.capitalize()}}</option>
+{% endfor %}
+    </select></label></p>
+    <p><label>Trigger warnings: <input type="text" name="trigger" maxlength="500"></label></p>
+    <p>Type:
+{% for name in Tag.type_names: %}
+      <label><input type="checkbox" name="type_{{name}}"> {{name.capitalize()}}</label>
+{% endfor %}
+    </p>
+    <p><label>Character(s) you're looking for: <input type="text" name="wanted"></label></p>
+    <p><label>Fandom(s) they belong to: <input type="text" name="wanted_fandom" maxlength="500"></label></p>
+    <p><label>Gender(s) they identify as: <input type="text" name="wanted_gender" maxlength="500"></label></p>
+    <p><label>Any other tags: <input type="text" name="misc" maxlength="500"></label></p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Request</legend>
+    <h2><label for="request_scenario">Scenario:</label></h2>
+    <p><textarea id="request_scenario" name="scenario"></textarea></p>
+    <h2><label for="request_prompt">Prompt:</label></h2>
+    <p><textarea id="request_prompt" name="prompt"></textarea></p>
+  </fieldset>
+
   <p><input type="submit" name="draft" value="Save as draft"> <input type="submit" name="post" value="Post request"></p>
+
 </form>
+
