@@ -10,7 +10,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
-from charat2.helpers.characters import save_character_from_form
+from charat2.helpers.characters import new_character_from_form, save_character_from_form
 from charat2.model import (
     case_options,
     ChatUser,
@@ -287,7 +287,7 @@ def new_request_post():
     if new_or_saved_character == "new":
         if save_character_as == "new":
             print "CREATE NEW CHARACTER"
-            raise NotImplementedError
+            character = new_character_from_form()
         elif save_character_as == "temp":
             print "CREATE NEW CHARACTER, TEMP"
             raise NotImplementedError
@@ -305,7 +305,7 @@ def new_request_post():
                 character = save_character_from_form(character_id)
             elif save_character_as == "new":
                 print "CREATE NEW CHARACTER"
-                raise NotImplementedError
+                character = new_character_from_form()
             elif save_character_as == "temp":
                 print "CREATE NEW CHARACTER, TEMP"
                 raise NotImplementedError
