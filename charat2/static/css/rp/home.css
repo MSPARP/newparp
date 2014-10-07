@@ -116,6 +116,10 @@ label {
     width: 50%;
 }
 
+#choices {
+    line-height: 120%;
+}
+
 body.mobile .section {
     width: 100%;
     max-width: 310px;
