@@ -11,11 +11,13 @@ from charat2.model.validators import color_validator
 def user_character_query(character_id):
     try:
         return g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == character_id,
+            UserCharacter.id == int(character_id),
             UserCharacter.user_id == g.user.id,
         )).one()
     except NoResultFound:
         abort(404)
+    except ValueError:
+        abort(400)
 
 
 def validate_character_form():
@@ -71,27 +73,12 @@ def validate_character_form():
     }
 
 
-def new_character_from_form():
-
-    new_details = validate_character_form()
-    if new_details["title"] == "":
-        new_details["title"] == "Untitled character"
-
-    new_details["user_id"] = g.user.id
-
-    character = UserCharacter(**new_details)
-
-    g.db.add(character)
-    g.db.flush()
-
-    return character
-
-
-def save_character_from_form(character_id):
+def save_character_from_form(character_id, new_details=None):
 
     character = user_character_query(character_id)
 
-    new_details = validate_character_form()
+    if new_details is None:
+        new_details = validate_character_form()
 
     # Ignore a blank title.
     if new_details["title"] != "":

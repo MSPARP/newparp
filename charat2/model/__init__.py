@@ -508,7 +508,21 @@ class Request(Base):
 
     posted = Column(DateTime(), nullable=False, default=now)
 
-    user_character_id = Column(Integer, ForeignKey("user_characters.id"), nullable=False)
+    user_character_id = Column(Integer, ForeignKey("user_characters.id"))
+
+    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
+
+    # Must be a hex code.
+    color = Column(Unicode(6), nullable=False, default=u"000000")
+
+    quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
+
+    case = Column(case_options_enum, nullable=False, default=u"normal")
+
+    replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     scenario = Column(UnicodeText, nullable=False, default=u"")
     prompt = Column(UnicodeText, nullable=False, default=u"")

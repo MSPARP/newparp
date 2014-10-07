@@ -10,7 +10,11 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
-from charat2.helpers.characters import new_character_from_form, save_character_from_form
+from charat2.helpers.characters import (
+    user_character_query,
+    validate_character_form,
+    save_character_from_form,
+)
 from charat2.model import (
     case_options,
     ChatUser,
@@ -279,53 +283,6 @@ def new_request_get():
 @login_required
 def new_request_post():
 
-    new_or_saved_character = request.form["new_or_saved_character"]
-    edit_character = "edit_character" in request.form
-    save_character_as = request.form["save_character_as"]
-
-
-    if new_or_saved_character == "new":
-        if save_character_as == "new":
-            print "CREATE NEW CHARACTER"
-            character = new_character_from_form()
-        elif save_character_as == "temp":
-            print "CREATE NEW CHARACTER, TEMP"
-            raise NotImplementedError
-        else:
-            abort(400)
-    elif new_or_saved_character == "saved":
-        if edit_character:
-            if save_character_as == "update":
-                print "UPDATE EXISTING CHARACTER"
-                # Update an existing character's details.
-                try:
-                    character_id = int(request.form["character_id"])
-                except ValueError:
-                    abort(400)
-                character = save_character_from_form(character_id)
-            elif save_character_as == "new":
-                print "CREATE NEW CHARACTER"
-                character = new_character_from_form()
-            elif save_character_as == "temp":
-                print "CREATE NEW CHARACTER, TEMP"
-                raise NotImplementedError
-            else:
-                abort(400)
-        else:
-            print "USE EXISTING CHARACTER UNMODIFIED"
-            # Use an existing character unmodified.
-            try:
-                character = g.db.query(UserCharacter).filter(and_(
-                    UserCharacter.id == int(request.form["character_id"]),
-                    UserCharacter.user_id == g.user.id,
-                )).one()
-            except ValueError:
-                abort(400)
-            except NoResultFound:
-                abort(404)
-    else:
-        abort(400)
-
     scenario = request.form["scenario"].strip()
     prompt = request.form["prompt"].strip()
 
@@ -333,13 +290,71 @@ def new_request_post():
     if len(scenario) == 0 and len(prompt) == 0:
         abort(400)
 
-    new_request = Request(
-        user=g.user,
-        status="draft" if "draft" in request.form else "posted",
-        user_character=character,
-        scenario=scenario,
-        prompt=prompt,
-    )
+    status = "draft" if "draft" in request.form else "posted"
+
+    new_or_saved_character = request.form["new_or_saved_character"]
+    edit_character = "edit_character" in request.form
+    save_character_as = request.form["save_character_as"]
+
+    # Use saved character verbatim.
+    if new_or_saved_character == "saved" and not edit_character:
+
+        character = user_character_query(request.form["character_id"])
+        # XXX consider making a classmethod for this like with user_chat
+        new_request = Request(
+            user=g.user,
+            status=status,
+            user_character=character,
+            name=character.name,
+            alias=character.alias,
+            color=character.color,
+            quirk_prefix=character.quirk_prefix,
+            quirk_suffix=character.quirk_suffix,
+            case=character.case,
+            replacements=character.replacements,
+            regexes=character.regexes,
+            scenario=scenario,
+            prompt=prompt,
+        )
+
+    # Otherwise rely on the form data.
+    else:
+
+        character = None
+        character_details = validate_character_form()
+
+        # Update existing character.
+        if new_or_saved_character == "saved" and save_character_as == "update":
+            character = save_character_from_form(request.form["character_id"])
+
+        # Create new character.
+        elif save_character_as == "new":
+            if character_details["title"] == "":
+                character_details["title"] == "Untitled character"
+            character = UserCharacter(user=g.user, **character_details)
+            g.db.add(character)
+            g.db.flush()
+
+        # Neither.
+        elif save_character_as == "temp":
+            pass
+
+        # oh god how did this get here I am not good with computer
+        else:
+            abort(400)
+
+        # Request doesn't store character title so delete it here.
+        del character_details["title"]
+
+        new_request = Request(
+            user=g.user,
+            status=status,
+            user_character=character,
+            scenario=scenario,
+            prompt=prompt,
+            **character_details
+        )
+
     new_request.tags = _tags_from_form(request.form)
     g.db.add(new_request)
 
