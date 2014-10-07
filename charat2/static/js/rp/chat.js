@@ -420,14 +420,14 @@ function generateUserList(user_data) {
             if (set_group == 'unsilent') {
                 set_group = 'user';
             }
-            setGroup(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, set_group);
+            setGroup(user_list[$(this).parent().parent().parent().prop('id').substr(4)].meta.username, set_group);
         });
         
         $('#user'+list_user.meta.user_id+' .user_action li').on('click', function () {
             if ($(this).attr('class') != 'ban') {
-                userAction(user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username, $(this).attr('class'));
+                userAction(user_list[$(this).parent().parent().parent().prop('id').substr(4)].meta.username, $(this).attr('class'));
             } else {
-                $('#textInput').val('/ban '+user_list[$(this).parent().parent().parent().prop('id').substring(4)].meta.username+' <reason>');
+                $('#textInput').val('/ban '+user_list[$(this).parent().parent().parent().prop('id').substr(4)].meta.username+' <reason>');
             }
         });
         
@@ -661,18 +661,26 @@ function updateChatPreview() {
     is_command = command[0] == '/ban' || command[0] == '/kick' || command[0] == '/set' || command[0] == '/topic' || command[0] == '/publicity' || command[0] == '/nsfw' || command[0] == '/autosilence' || command[0] == '/me';
     
     if (command[0] == '/' || command[0] == '/ic' || command[0] == '/ooc' || is_command) {
-        textPreview = textPreview.substring(command[0].length);
+        textPreview = textPreview.substr(command[0].length);
     }
 
-    var textInput = $('#textInput').val();    
-    if (textInput.substr(0,1)=='/' || textInput.startsWith("((") || textInput.endsWith("))") || textInput.startsWith("[[") || textInput.endsWith("]]") || textInput.startsWith("{{") || textInput.endsWith("}}")) {
-        if (command[0] == '/me' || command[0] == '/ic' || command[0] == '/ooc' || command[0] == '/') {
+    var textInput = $('#textInput').val();
+    if ((textInput.startsWith("/ ") ||
+        textInput.startsWith("((") || textInput.endsWith("))") ||
+        textInput.startsWith("[[") || textInput.endsWith("]]") ||
+        textInput.startsWith("{{") || textInput.endsWith("}}")) ||
+        (command[0] == '/me' || command[0] == '/ooc' || command[0] == '/') &&
+        command[0] != '/ic') {
+        if (command[0] == '/me' || command[0] == '/ooc' || command[0] == '/') {
             textPreview = textPreview.substr(1);
         }
     } else {
-        pattern = user.character;
-        user.character.line = line;
-        textPreview = applyQuirks(textPreview,pattern);
+        textPreview = command[0] == '/ic' ? textPreview.substr(1) : textPreview;
+        if (!ooc_on && type_force == '') {
+            pattern = user.character;
+            user.character.line = line;
+            textPreview = applyQuirks(textPreview,pattern);
+        }
     }
     
     var aliasPreview = user.character.alias ? user.character.alias+": " : "\xa0";
@@ -754,7 +762,7 @@ function updateChatPreview() {
     } else if (command[0] == '/nsfw' || command[0] == '/autosilence') {
         try {
             if (command[1] == 'on' || command[1] == 'off') {
-                textPreview = "switched "+command[0].substring(1)+" "+command[1];
+                textPreview = "switched "+command[0].substr(1)+" "+command[1];
             } else {
                 throw "error";
             }
@@ -932,8 +940,16 @@ $(function (){
                 }
                 $('#textInput').val('');
                 return false;
+            } else if ($.trim($('#textInput').val())=='/me') {
+                if (type_force!='me') {
+                    $('.me-button').click();
+                }
+                $('#textInput').val('');
+                return false;
             }
-            if (updateChatPreview()) {                
+
+            var createTypeMe = false;
+            if (updateChatPreview()) {
                 if ($('#textInput').val().charAt(0)=='/') {
                     var command = $('#textInput').val().split(' ');
                     if (command[0] == '/ban') {
@@ -972,26 +988,15 @@ $(function (){
                         $('#textInput').val('');
                     }
                     
-                    if (command[0] == '/ooc') {
+                    if (command[0] == '/ooc' || command[0] == '/ic' || command[0] == '/me') {
+                        type_force = command[0].substr(1);
+                        console.log(createTypeMe);
                         command.splice(0,1);
                         $('#preview').text(command.join(' '));
-                        type_force = 'ooc';
-                    }
-                    
-                    if (command[0] == '/ic') {
-                        command.splice(0,1);
-                        $('#preview').text(command.join(' '));
-                        type_force = 'ic';
-                    }
-                    
-                    if (command[0] == '/me') {
-                        command.splice(0,1);
-                        $('#preview').text(command.join(' '));
-                        type_force = 'me';
                     }
                 }
                 
-                if ($('#textInput').val()!='') {
+                if ($('#textInput').val().trim()!='') {
                     if (pingInterval) {
                         window.clearTimeout(pingInterval);
                     }
@@ -1015,6 +1020,10 @@ $(function (){
             }
             $("#textInput").focus();
             $('#textInput').val('');
+            if (createTypeMe) {
+                $('#control-buttons .me-button').click();
+            }
+
             return false;
         });
         
