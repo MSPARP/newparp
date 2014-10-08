@@ -159,7 +159,7 @@ body.menu #topbar #toptitle {
 }
 
 span:last-child p.message {
-    padding-bottom: 5px !important;
+    padding-bottom: 8px !important;
 }
 
 .ooc .info, .ooc .message {
@@ -309,7 +309,7 @@ ul#metaOptions {
 
 .card .titi {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol", "Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
-    font-weight: 100;
+    font-weight: 400;
     font-size: 25px;
     color: #6A936B;
     text-align: center;
