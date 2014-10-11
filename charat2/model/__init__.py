@@ -130,6 +130,10 @@ class UserCharacter(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
+    playing_fandom = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    playing = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    playing_gender = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+
     def to_dict(self, include_options=False):
         ucd = {
             "id": self.id,

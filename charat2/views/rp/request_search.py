@@ -28,6 +28,18 @@ from charat2.model import (
 from charat2.model.connections import use_db
 
 
+def _own_request_query(request_id):
+    try:
+        search_request = g.db.query(Request).filter(
+            Request.id == request_id,
+        ).options(joinedload_all("tags.tag")).one()
+    except NoResultFound:
+        abort(404)
+    if search_request.user != g.user:
+        abort(404)
+    return search_request
+
+
 special_char_regex = re.compile("[\\ \\./]+")
 underscore_strip_regex = re.compile("^_+|_+$")
 
@@ -43,19 +55,7 @@ def _name_from_alias(alias):
     ).lower()
 
 
-def _own_request_query(request_id):
-    try:
-        search_request = g.db.query(Request).filter(
-            Request.id == request_id,
-        ).options(joinedload_all("tags.tag")).one()
-    except NoResultFound:
-        abort(404)
-    if search_request.user != g.user:
-        abort(404)
-    return search_request
-
-
-def _tags_from_form(form):
+def _tags_from_form(form, character=None):
 
     tag_dict = {}
 
@@ -77,7 +77,15 @@ def _tags_from_form(form):
                     tag_dict[("type", name)] = name.capitalize()
             continue
 
-        for alias in form[tag_type].split(","):
+        # Override form info if we're using a character verbatim.
+        if character is not None and tag_type in {
+            "playing_fandom", "playing", "playing_character"
+        }:
+            alias_list = getattr(character, tag_type)
+        else:
+            alias_list = form[tag_type].split(",")
+
+        for alias in alias_list:
             alias = alias.strip()
             if alias == "":
                 continue
@@ -317,6 +325,8 @@ def new_request_post():
             prompt=prompt,
         )
 
+        new_request.tags = _tags_from_form(request.form, character)
+
     # Otherwise rely on the form data.
     else:
 
@@ -343,19 +353,22 @@ def new_request_post():
         else:
             abort(400)
 
-        # Request doesn't store character title so delete it here.
-        del character_details["title"]
-
         new_request = Request(
             user=g.user,
             status=status,
             user_character=character,
             scenario=scenario,
             prompt=prompt,
-            **character_details
         )
 
-    new_request.tags = _tags_from_form(request.form)
+        # The title and tag attributes from the character aren't needed on the
+        # request, so only copy the attributes Requests actually have.
+        for key, value in character_details.iteritems():
+            if hasattr(new_request, key):
+                setattr(new_request, key, value)
+
+        new_request.tags = _tags_from_form(request.form)
+
     g.db.add(new_request)
 
     return redirect(url_for("rp_your_request_list"))
