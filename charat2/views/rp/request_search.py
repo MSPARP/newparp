@@ -371,7 +371,6 @@ def answer_request(request_id):
             Request.id == request_id,
         ).options(
             joinedload(Request.user),
-            joinedload(Request.user_character),
         ).one()
     except NoResultFound:
         abort(404)
@@ -383,21 +382,24 @@ def answer_request(request_id):
     g.db.add(new_chat)
     g.db.flush()
 
-    if search_request.user_character is not None:
-        new_chat_user = ChatUser.from_character(
-            search_request.user_character,
-            chat_id=new_chat.id,
-        )
-    else:
-        new_chat_user = ChatUser.from_user(
-            search_request.user,
-            chat_id=new_chat.id,
-        )
+    new_chat_user = ChatUser(
+        user=search_request.user,
+        chat=new_chat,
+        name=search_request.name,
+        alias=search_request.alias,
+        color=search_request.color,
+        quirk_prefix=search_request.quirk_prefix,
+        quirk_suffix=search_request.quirk_suffix,
+        case=search_request.case,
+        replacements=search_request.replacements,
+        regexes=search_request.regexes,
+        # XXX USER VARIABLES
+    )
     g.db.add(new_chat_user)
 
     if len(search_request.scenario) > 0:
         g.db.add(Message(
-            chat_id=new_chat.id,
+            chat=new_chat,
             type="search_info",
             alias="Scenario",
             text=search_request.scenario,
@@ -405,8 +407,8 @@ def answer_request(request_id):
 
     if len(search_request.prompt) > 0:
         g.db.add(Message(
-            chat_id=new_chat.id,
-            user_id=new_chat_user.user_id,
+            chat=new_chat,
+            user=search_request.user,
             type="ic",
             color=new_chat_user.color,
             alias=new_chat_user.alias,
