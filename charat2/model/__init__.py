@@ -130,6 +130,10 @@ class UserCharacter(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
+    playing_fandom = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    playing = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    playing_gender = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+
     def to_dict(self, include_options=False):
         ucd = {
             "id": self.id,
@@ -508,8 +512,21 @@ class Request(Base):
 
     posted = Column(DateTime(), nullable=False, default=now)
 
-    # If the user doesn't have a character this may be null.
     user_character_id = Column(Integer, ForeignKey("user_characters.id"))
+
+    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
+
+    # Must be a hex code.
+    color = Column(Unicode(6), nullable=False, default=u"000000")
+
+    quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
+
+    case = Column(case_options_enum, nullable=False, default=u"normal")
+
+    replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     scenario = Column(UnicodeText, nullable=False, default=u"")
     prompt = Column(UnicodeText, nullable=False, default=u"")
@@ -558,7 +575,8 @@ class Tag(Base):
         u"maturity",
         u"trigger",
         u"type",
-        u"fandom",
+        u"playing_fandom",
+        u"wanted_fandom",
         u"playing",
         u"wanted",
         u"playing_gender",

@@ -1,24 +1,10 @@
-import json
-
-from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import and_
-from sqlalchemy.orm.exc import NoResultFound
+from flask import g, jsonify, redirect, render_template, url_for
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
+from charat2.helpers.characters import user_character_query, save_character_from_form
 from charat2.model import case_options, UserCharacter
 from charat2.model.connections import use_db
-from charat2.model.validators import color_validator
-
-
-def user_character_query(character_id):
-    try:
-        return g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == character_id,
-            UserCharacter.user_id == g.user.id,
-        )).one()
-    except NoResultFound:
-        abort(404)
 
 
 @alt_formats(set(["json"]))
@@ -62,64 +48,17 @@ def character(character_id, fmt=None):
         "rp/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
+        tags_playing_fandom = ", ".join(_ for _ in character.playing_fandom),
+        tags_playing = ", ".join(_ for _ in character.playing),
+        tags_playing_gender = ", ".join(_ for _ in character.playing_gender),
     )
 
 
 @use_db
 @login_required
 def save_character(character_id):
-
-    character = user_character_query(character_id)
-
-    # yeah this is just cut and pasted from chat_api.py
-
-    # Don't allow a blank title.
-    if request.form["title"] == "":
-        abort(400)
-
-    # Don't allow a blank name.
-    if request.form["name"] == "":
-        abort(400)
-
-    # Validate color.
-    if not color_validator.match(request.form["color"]):
-        abort(400)
-    character.color = request.form["color"]
-
-    # Validate case.
-    if request.form["case"] not in case_options:
-        abort(400)
-    character.case = request.form["case"]
-
-    # There are length limits on the front end so just silently truncate these.
-    character.title = request.form["title"][:50]
-    character.name = request.form["name"][:50]
-    character.alias = request.form["alias"][:15]
-    character.quirk_prefix = request.form["quirk_prefix"][:50]
-    character.quirk_suffix = request.form["quirk_suffix"][:50]
-
-    # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
-    # Zip replacements.
-    replacements = zip(
-        request.form.getlist("quirk_from"),
-        request.form.getlist("quirk_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    character.replacements = json.dumps(replacements)
-
-    # XXX PUT LENGTH LIMIT ON REGEXES?
-    # Zip regexes.
-    regexes = zip(
-        request.form.getlist("regex_from"),
-        request.form.getlist("regex_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    character.regexes = json.dumps(regexes)
-
+    # In a separate function so we can call it from request search.
+    character = save_character_from_form(character_id)
     return redirect(url_for("rp_character", character_id=character.id))
 
 

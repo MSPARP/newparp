@@ -1,4 +1,5 @@
 import datetime
+import json
 import re
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
@@ -10,7 +11,13 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import login_required
+from charat2.helpers.characters import (
+    user_character_query,
+    validate_character_form,
+    save_character_from_form,
+)
 from charat2.model import (
+    case_options,
     ChatUser,
     Message,
     Request,
@@ -20,6 +27,18 @@ from charat2.model import (
     UserCharacter,
 )
 from charat2.model.connections import use_db
+
+
+def _own_request_query(request_id):
+    try:
+        search_request = g.db.query(Request).filter(
+            Request.id == request_id,
+        ).options(joinedload_all("tags.tag")).one()
+    except NoResultFound:
+        abort(404)
+    if search_request.user != g.user:
+        abort(404)
+    return search_request
 
 
 special_char_regex = re.compile("[\\ \\./]+")
@@ -37,19 +56,7 @@ def _name_from_alias(alias):
     ).lower()
 
 
-def _own_request_query(request_id):
-    try:
-        search_request = g.db.query(Request).filter(
-            Request.id == request_id,
-        ).options(joinedload_all("tags.tag")).one()
-    except NoResultFound:
-        abort(404)
-    if search_request.user != g.user:
-        abort(404)
-    return search_request
-
-
-def _tags_from_form(form):
+def _tags_from_form(form, character=None):
 
     tag_dict = {}
 
@@ -71,7 +78,15 @@ def _tags_from_form(form):
                     tag_dict[("type", name)] = name.capitalize()
             continue
 
-        for alias in form[tag_type].split(","):
+        # Override form info if we're using a character verbatim.
+        if character is not None and tag_type in {
+            "playing_fandom", "playing", "playing_gender"
+        }:
+            alias_list = getattr(character, tag_type)
+        else:
+            alias_list = form[tag_type].split(",")
+
+        for alias in alias_list:
             alias = alias.strip()
             if alias == "":
                 continue
@@ -244,32 +259,20 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
     )
 
 
-def _new_request_form(error=None):
+@use_db
+@login_required
+def new_request_get():
 
     characters = g.db.query(UserCharacter).filter(
         UserCharacter.user_id == g.user.id,
     ).order_by(UserCharacter.title, UserCharacter.id).all()
 
-    selected_character = None
-    if "character_id" in request.form:
-        try:
-            selected_character = int(request.form["character_id"])
-        except ValueError:
-            pass
-
     return render_template(
         "rp/request_search/new_request.html",
+        case_options=case_options,
         Tag=Tag,
         characters=characters,
-        selected_character=selected_character,
-        error=error,
     )
-
-
-@use_db
-@login_required
-def new_request_get():
-    return _new_request_form()
 
 
 @use_db
@@ -281,26 +284,78 @@ def new_request_post():
 
     # At least one of prompt or scenario must be filled in.
     if len(scenario) == 0 and len(prompt) == 0:
-        return _new_request_form(error="blank")
+        abort(400)
 
-    # Just make the character none if the specified character isn't valid.
-    try:
-        character = g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == int(request.form["character_id"]),
-            UserCharacter.user_id == g.user.id,
-        )).one()
-    except (KeyError, ValueError, NoResultFound):
+    status = "draft" if "draft" in request.form else "posted"
+
+    new_or_saved_character = request.form["new_or_saved_character"]
+    edit_character = "edit_character" in request.form
+    save_character_as = request.form["save_character_as"]
+
+    # Use saved character verbatim.
+    if new_or_saved_character == "saved" and not edit_character:
+
+        character = user_character_query(request.form["character_id"])
+        # XXX consider making a classmethod for this like with user_chat
+        new_request = Request(
+            user=g.user,
+            status=status,
+            user_character=character,
+            name=character.name,
+            alias=character.alias,
+            color=character.color,
+            quirk_prefix=character.quirk_prefix,
+            quirk_suffix=character.quirk_suffix,
+            case=character.case,
+            replacements=character.replacements,
+            regexes=character.regexes,
+            scenario=scenario,
+            prompt=prompt,
+        )
+
+        new_request.tags = _tags_from_form(request.form, character)
+
+    # Otherwise rely on the form data.
+    else:
+
         character = None
+        character_details = validate_character_form()
 
-    new_request = Request(
-        user=g.user,
-        status="draft" if "draft" in request.form else "posted",
-        user_character=character,
-        scenario=scenario,
-        prompt=prompt,
-    )
+        # Update existing character.
+        if new_or_saved_character == "saved" and save_character_as == "update":
+            character = save_character_from_form(request.form["character_id"])
 
-    new_request.tags = _tags_from_form(request.form)
+        # Create new character.
+        elif save_character_as == "new":
+            if character_details["title"] == "":
+                character_details["title"] == "Untitled character"
+            character = UserCharacter(user=g.user, **character_details)
+            g.db.add(character)
+            g.db.flush()
+
+        # Neither.
+        elif save_character_as == "temp":
+            pass
+
+        # oh god how did this get here I am not good with computer
+        else:
+            abort(400)
+
+        new_request = Request(
+            user=g.user,
+            status=status,
+            user_character=character,
+            scenario=scenario,
+            prompt=prompt,
+        )
+
+        # The title and tag attributes from the character aren't needed on the
+        # request, so only copy the attributes Requests actually have.
+        for key, value in character_details.iteritems():
+            if hasattr(new_request, key):
+                setattr(new_request, key, value)
+
+        new_request.tags = _tags_from_form(request.form)
 
     g.db.add(new_request)
 
@@ -362,18 +417,15 @@ def answer_request(request_id):
     return redirect(url_for("rp_chat", url=new_chat.url))
 
 
-def _edit_request_form(search_request, error=None):
+@use_db
+@login_required
+def edit_request_get(request_id):
+
+    search_request = _own_request_query(request_id)
 
     characters = g.db.query(UserCharacter).filter(
         UserCharacter.user_id == g.user.id,
     ).order_by(UserCharacter.title, UserCharacter.id).all()
-
-    selected_character = None
-    if "character_id" in request.form:
-        try:
-            selected_character = int(request.form["character_id"])
-        except ValueError:
-            pass
 
     tags_by_type = search_request.tags_by_type()
 
@@ -382,8 +434,12 @@ def _edit_request_form(search_request, error=None):
     except IndexError:
         search_request_maturity = None
 
+    replacements = json.loads(search_request.replacements)
+    regexes = json.loads(search_request.regexes)
+
     return render_template(
         "rp/request_search/edit_request.html",
+        case_options=case_options,
         search_request=search_request,
         search_request_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)
@@ -393,15 +449,9 @@ def _edit_request_form(search_request, error=None):
         search_request_types=set(_["name"] for _ in tags_by_type["type"]),
         Tag=Tag,
         characters=characters,
-        selected_character=selected_character,
-        error=error,
+        replacements=replacements,
+        regexes=regexes,
     )
-
-
-@use_db
-@login_required
-def edit_request_get(request_id):
-    return _edit_request_form(_own_request_query(request_id))
 
 
 @use_db
@@ -410,29 +460,12 @@ def edit_request_post(request_id):
 
     search_request = _own_request_query(request_id)
 
-    scenario = request.form["scenario"].strip()
-    prompt = request.form["prompt"].strip()
+    search_request.scenario = request.form["scenario"].strip()
+    search_request.prompt = request.form["prompt"].strip()
 
     # At least one of prompt or scenario must be filled in.
-    if len(scenario) == 0 and len(prompt) == 0:
-        return _edit_request_form(search_request, error="blank")
-
-    # Just make the character none if the specified character isn't valid.
-    try:
-        character = g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == int(request.form["character_id"]),
-            UserCharacter.user_id == g.user.id,
-        )).one()
-    except (KeyError, ValueError, NoResultFound):
-        character = None
-
-    search_request.scenario = scenario
-    search_request.prompt = prompt
-    search_request.user_character = character
-
-    g.db.query(RequestTag).filter(RequestTag.request_id == search_request.id).delete()
-
-    search_request.tags += _tags_from_form(request.form)
+    if len(search_request.scenario) == 0 and len(search_request.prompt) == 0:
+        abort(400)
 
     if "draft" in request.form:
         search_request.status = "draft"
@@ -440,6 +473,63 @@ def edit_request_post(request_id):
         search_request.status = "posted"
         # Bump the date if the request is being re-posted.
         search_request.posted = datetime.datetime.now()
+
+    new_or_saved_character = request.form["new_or_saved_character"]
+    edit_character = "edit_character" in request.form
+    save_character_as = request.form["save_character_as"]
+
+    g.db.query(RequestTag).filter(RequestTag.request_id == search_request.id).delete()
+
+    # Use saved character verbatim.
+    if new_or_saved_character == "saved" and not edit_character:
+
+        character = user_character_query(request.form["character_id"])
+
+        search_request.user_character=character
+        search_request.name=character.name
+        search_request.alias=character.alias
+        search_request.color=character.color
+        search_request.quirk_prefix=character.quirk_prefix
+        search_request.quirk_suffix=character.quirk_suffix
+        search_request.case=character.case
+        search_request.replacements=character.replacements
+        search_request.regexes=character.regexes
+
+        search_request.tags += _tags_from_form(request.form, character)
+
+    # Otherwise rely on the form data.
+    else:
+
+        character = None
+        character_details = validate_character_form()
+
+        # Update existing character.
+        if new_or_saved_character == "saved" and save_character_as == "update":
+            character = save_character_from_form(request.form["character_id"])
+
+        # Create new character.
+        elif save_character_as == "new":
+            if character_details["title"] == "":
+                character_details["title"] == "Untitled character"
+            character = UserCharacter(user=g.user, **character_details)
+            g.db.add(character)
+            g.db.flush()
+
+        # Neither.
+        elif save_character_as == "temp":
+            pass
+
+        # oh god how did this get here I am not good with computer
+        else:
+            abort(400)
+
+        # The title and tag attributes from the character aren't needed on the
+        # request, so only copy the attributes Requests actually have.
+        for key, value in character_details.iteritems():
+            if hasattr(search_request, key):
+                setattr(search_request, key, value)
+
+        search_request.tags += _tags_from_form(request.form)
 
     return redirect(url_for("rp_edit_request_get", request_id=search_request.id))
 

@@ -17,3 +17,15 @@ def alt_formats(available_formats=set([])):
         return decorated_function
     return decorator
 
+
+def tags_to_set(tag_string):
+    tags = set()
+    for tag in tag_string.split(","):
+        tag = tag.strip()
+        if tag == "":
+            continue
+        # Silently truncate to 100 because we need a limit in the database and
+        # people are unlikely to type that much.
+        tags.add(tag.lower()[:100])
+    return tags
+
