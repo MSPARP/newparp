@@ -258,33 +258,20 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
     )
 
 
-def _new_request_form(error=None):
+@use_db
+@login_required
+def new_request_get():
 
     characters = g.db.query(UserCharacter).filter(
         UserCharacter.user_id == g.user.id,
     ).order_by(UserCharacter.title, UserCharacter.id).all()
-
-    selected_character = None
-    if "character_id" in request.form:
-        try:
-            selected_character = int(request.form["character_id"])
-        except ValueError:
-            pass
 
     return render_template(
         "rp/request_search/new_request.html",
         case_options=case_options,
         Tag=Tag,
         characters=characters,
-        selected_character=selected_character,
-        error=error,
     )
-
-
-@use_db
-@login_required
-def new_request_get():
-    return _new_request_form()
 
 
 @use_db

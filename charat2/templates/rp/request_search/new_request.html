@@ -9,7 +9,7 @@
       <li><label><input type="radio" name="new_or_saved_character" value="new"> Enter new character details</label></li>
       <li><label><input type="radio" name="new_or_saved_character" value="saved" checked="checked"> Load existing character details:</label> <select name="character_id">
 {% for character in characters: %}
-      <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
+      <option value="{{character.id}}"{% if character.id == g.user.default_character_id: %} selected="selected"{% endif %}>{{character.title}}</option>
 {% endfor %}
     </select></li>
     </ul>
@@ -50,7 +50,7 @@
     <p><label>Gender(s) they identify as: <input type="text" name="playing_gender" maxlength="500"></label></p>
     <ul>
 {% if characters: %}
-      <li><label><input type="radio" name="save_character_as" value="update" checked="checked">Update this character everywhere</label></li>
+      <li><label><input type="radio" name="save_character_as" value="update" checked="checked">Save changes to this character</label></li>
 {% endif %}
       <li><label><input type="radio" name="save_character_as" value="new">Save as a new character:</label> <input type="text" name="title" maxlength="50"></li>
       <li><label><input type="radio" name="save_character_as" value="temp">Use details on this request only</label></li>
