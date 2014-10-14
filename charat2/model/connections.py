@@ -110,7 +110,7 @@ def use_db_chat(f):
 
 
 def db_commit(response=None):
-    if hasattr(g, "db"):
+    if hasattr(g, "db") and response.status[0] in {"2", "3"}:
         g.db.commit()
     return response
 
