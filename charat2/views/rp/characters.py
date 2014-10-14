@@ -48,6 +48,9 @@ def character(character_id, fmt=None):
         "rp/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
+        tags_playing_fandom = ", ".join(_ for _ in character.playing_fandom),
+        tags_playing = ", ".join(_ for _ in character.playing),
+        tags_playing_gender = ", ".join(_ for _ in character.playing_gender),
     )
 
 
