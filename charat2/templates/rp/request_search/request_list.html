@@ -74,55 +74,55 @@ Your requests
     </ul>
 {% endif %}
 
-{% if tags.playing_fandom: %}
+{% if tags.fandom: %}
     <h3>Playing fandom:</h3>
-    <ul class="tag_list tag_playing_fandom">
-{% for tag in tags.playing_fandom: %}
+    <ul class="tag_list tag_fandom">
+{% for tag in tags.fandom: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
 
-{% if tags.wanted_fandom: %}
+{% if tags.fandom_wanted: %}
     <h3>Wanted fandom:</h3>
-    <ul class="tag_list tag_wanted_fandom">
-{% for tag in tags.wanted_fandom: %}
+    <ul class="tag_list tag_fandom_wanted">
+{% for tag in tags.fandom_wanted: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
 
-{% if tags.playing: %}
+{% if tags.character: %}
     <h3>Playing characters:</h3>
-    <ul class="tag_list tag_playing">
-{% for tag in tags.playing: %}
+    <ul class="tag_list tag_character">
+{% for tag in tags.character: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
 
-{% if tags.wanted: %}
+{% if tags.character_wanted: %}
     <h3>Wanted characters:</h3>
-    <ul class="tag_list tag_wanted">
-{% for tag in tags.wanted: %}
+    <ul class="tag_list tag_character_wanted">
+{% for tag in tags.character_wanted: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
 
-{% if tags.playing_gender: %}
+{% if tags.gender: %}
     <h3>Playing gender:</h3>
-    <ul class="tag_list tag_playing_gender">
-{% for tag in tags.playing_gender: %}
+    <ul class="tag_list tag_gender">
+{% for tag in tags.gender: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>
 {% endif %}
 
-{% if tags.wanted_gender: %}
+{% if tags.gender_wanted: %}
     <h3>Wanted gender:</h3>
-    <ul class="tag_list tag_wanted_gender">
-{% for tag in tags.wanted_gender: %}
+    <ul class="tag_list tag_gender_wanted">
+{% for tag in tags.gender_wanted: %}
       <li><a href="{{url_for("rp_tagged_request_list", tag_type=tag.type, name=tag.name)}}">{{tag.alias}}</a></li>
 {% endfor %}
     </ul>

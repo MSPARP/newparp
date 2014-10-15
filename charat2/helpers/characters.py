@@ -60,9 +60,9 @@ def validate_character_form():
     # And encode as JSON.
     json_regexes = json.dumps(regexes)
 
-    playing_fandom = tags_to_set(request.form["playing_fandom"])
-    playing = tags_to_set(request.form["playing"])
-    playing_gender = tags_to_set(request.form["playing_gender"])
+    fandom = tags_to_set(request.form["fandom"])
+    character = tags_to_set(request.form["character"])
+    gender = tags_to_set(request.form["gender"])
 
     return {
         # There are length limits on the front end so silently truncate these.
@@ -75,9 +75,9 @@ def validate_character_form():
         "case": request.form["case"],
         "replacements": json_replacements,
         "regexes": json_regexes,
-        "playing_fandom": playing_fandom,
-        "playing": playing,
-        "playing_gender": playing_gender,
+        "fandom": fandom,
+        "character": character,
+        "gender": gender,
     }
 
 
@@ -99,9 +99,9 @@ def save_character_from_form(character_id, new_details=None):
     character.case = new_details["case"]
     character.replacements = new_details["replacements"]
     character.regexes = new_details["regexes"]
-    character.playing_fandom = new_details["playing_fandom"]
-    character.playing = new_details["playing"]
-    character.playing_gender = new_details["playing_gender"]
+    character.fandom = new_details["fandom"]
+    character.character = new_details["character"]
+    character.gender = new_details["gender"]
 
     return character
 

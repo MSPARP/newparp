@@ -45,9 +45,9 @@
     </div>
     <h2>Tags</h2>
     <p>Enter some tags for this character, separated by commas:</p>
-    <p><label>Character(s) you're playing: <input type="text" name="playing" maxlength="500"></label></p>
-    <p><label>Fandom(s) they belong to: <input type="text" name="playing_fandom" maxlength="500"></label></p>
-    <p><label>Gender(s) they identify as: <input type="text" name="playing_gender" maxlength="500"></label></p>
+    <p><label>Character(s) you're playing: <input type="text" name="character" maxlength="500"></label></p>
+    <p><label>Fandom(s) they belong to: <input type="text" name="fandom" maxlength="500"></label></p>
+    <p><label>Gender(s) they identify as: <input type="text" name="gender" maxlength="500"></label></p>
     <ul>
 {% if characters: %}
       <li><label><input type="radio" name="save_character_as" value="update" checked="checked">Save changes to this character</label></li>
@@ -71,9 +71,9 @@
       <label><input type="checkbox" name="type_{{name}}"> {{name.capitalize()}}</label>
 {% endfor %}
     </p>
-    <p><label>Character(s) you're looking for: <input type="text" name="wanted"></label></p>
-    <p><label>Fandom(s) they belong to: <input type="text" name="wanted_fandom" maxlength="500"></label></p>
-    <p><label>Gender(s) they identify as: <input type="text" name="wanted_gender" maxlength="500"></label></p>
+    <p><label>Character(s) you're looking for: <input type="text" name="character_wanted"></label></p>
+    <p><label>Fandom(s) they belong to: <input type="text" name="fandom_wanted" maxlength="500"></label></p>
+    <p><label>Gender(s) they identify as: <input type="text" name="gender_wanted" maxlength="500"></label></p>
     <p><label>Any other tags: <input type="text" name="misc" maxlength="500"></label></p>
   </fieldset>
 

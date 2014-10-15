@@ -130,9 +130,9 @@ class UserCharacter(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
-    playing_fandom = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
-    playing = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
-    playing_gender = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    fandom = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    character = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    gender = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
 
     def to_dict(self, include_options=False):
         ucd = {
@@ -575,12 +575,12 @@ class Tag(Base):
         u"maturity",
         u"trigger",
         u"type",
-        u"playing_fandom",
-        u"wanted_fandom",
-        u"playing",
-        u"wanted",
-        u"playing_gender",
-        u"wanted_gender",
+        u"fandom",
+        u"fandom_wanted",
+        u"character",
+        u"character_wanted",
+        u"gender",
+        u"gender_wanted",
         u"misc",
     }
 

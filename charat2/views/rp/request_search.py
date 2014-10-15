@@ -79,9 +79,7 @@ def _tags_from_form(form, character=None):
             continue
 
         # Override form info if we're using a character verbatim.
-        if character is not None and tag_type in {
-            "playing_fandom", "playing", "playing_gender"
-        }:
+        if character is not None and tag_type in { "fandom", "character", "gender" }:
             alias_list = getattr(character, tag_type)
         else:
             alias_list = form[tag_type].split(",")
