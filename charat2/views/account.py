@@ -17,7 +17,7 @@ def referer_or_home():
 
 @use_db
 def log_in_get():
-    raise NotImplementedError
+    return render_template("root/log_in.html")
 
 
 @use_db
@@ -40,7 +40,11 @@ def log_in_post():
 
     g.redis.set("session:" + g.session_id, user.id)
 
-    return redirect(referer_or_home())
+    redirect_url = referer_or_home()
+    # Make sure we don't go back to the log in page.
+    if redirect_url == url_for("log_in", _external=True):
+        return redirect(url_for("home"))
+    return redirect(redirect_url)
 
 
 @use_db
@@ -52,7 +56,7 @@ def log_out():
 
 @use_db
 def register_get():
-    raise NotImplementedError
+    return render_template("root/register.html")
 
 
 @use_db
@@ -90,5 +94,9 @@ def register_post():
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
 
-    return redirect(referer_or_home())
+    redirect_url = referer_or_home()
+    # Make sure we don't go back to the log in page.
+    if redirect_url == url_for("register", _external=True):
+        return redirect(url_for("home"))
+    return redirect(redirect_url)
 
