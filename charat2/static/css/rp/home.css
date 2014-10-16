@@ -67,7 +67,7 @@ div.body {
 
 body.mobile .card {
     display: block;
-    width: inherit;
+    width: auto;
     max-width: 100%;
 }
 
