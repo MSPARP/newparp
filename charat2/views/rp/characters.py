@@ -1,7 +1,7 @@
 from flask import g, jsonify, redirect, render_template, url_for
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import user_character_query, save_character_from_form
 from charat2.model import case_options, UserCharacter
 from charat2.model.connections import use_db
@@ -9,7 +9,7 @@ from charat2.model.connections import use_db
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def character_list(fmt=None):
 
     characters = g.db.query(UserCharacter).filter(
@@ -26,7 +26,7 @@ def character_list(fmt=None):
 
 
 @use_db
-@login_required
+@log_in_required
 def new_character():
     character = UserCharacter(user_id=g.user.id, title="Untitled character")
     g.db.add(character)
@@ -36,7 +36,7 @@ def new_character():
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def character(character_id, fmt=None):
 
     character = user_character_query(character_id)
@@ -55,7 +55,7 @@ def character(character_id, fmt=None):
 
 
 @use_db
-@login_required
+@log_in_required
 def save_character(character_id):
     # In a separate function so we can call it from request search.
     character = save_character_from_form(character_id)
@@ -63,14 +63,14 @@ def save_character(character_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def delete_character_get(character_id):
     character = user_character_query(character_id)
     return render_template("rp/delete_character.html", character_id=character_id)
 
 
 @use_db
-@login_required
+@log_in_required
 def delete_character_post(character_id):
     character = user_character_query(character_id)
     if character == g.user.default_character:
@@ -81,7 +81,7 @@ def delete_character_post(character_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def set_default_character(character_id):
     character = user_character_query(character_id)
     g.user.default_character = character

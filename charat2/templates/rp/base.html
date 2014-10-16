@@ -43,9 +43,9 @@
                 <a id="goUser" href="">Settings</a>
                 <div class="topborder"></div>
                 {% if g.user != None: %}
-                <a class="logout" href="{{url_for('logout')}}">Logout</a>
+                <form action="{{url_for("log_out")}}" method="post"><button type="submit" class="log_out">Log out</button></form>
                 {% else %}
-                <a class="login" href="">Login</a>
+                <a class="log_in" href="">Log in</a>
                 {% endif %}
             </div>
         </div>

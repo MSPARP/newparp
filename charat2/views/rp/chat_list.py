@@ -4,7 +4,7 @@ from sqlalchemy.orm import aliased, joinedload
 from webhelpers import paginate
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.model import (
     case_options,
     AnyChat,
@@ -28,7 +28,7 @@ chat_classes = {
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def chat_list(fmt=None, type=None, page=1):
 
     try:

@@ -1,10 +1,10 @@
 {% extends "root/base.html" %}
 
 {% block header %}
-        <title>Charat – Register</title>
+        <title>Charat – Log in or register</title>
         <style>
             #main-block {
-                {% if "register_error" in request.args: %}
+                {% if "log_in_error" in request.args or "register_error" in request.args: %}
                     height: 270px;
                 {% else %}
                     height: 250px;
@@ -21,9 +21,24 @@
         <div id="main-block" class="block-container">
             <div class="block">
                 <a href="{{url_for("home")}}">
-                    <logo class="root"></logo>
+                    <img src="{{url_for("static", filename="img/root-icons/root.png")}}">
                     <header>Charat</header>
                 </a>
+                <p>You need to be logged in to visit this page. Please log in or register for an account below:</p>
+                <h2>Log in</h2>
+                {% if "log_in_error" in request.args: %}
+				{% if request.args["log_in_error"] == "no_user": %}
+                <span class="error">There doesn't seem to be an account with that username.</span>
+				{% elif request.args["log_in_error"] == "wrong_password": %}
+                <span class="error">That password is incorrect.</span>
+				{% endif %}
+                {% endif %}
+                <form action="{{url_for("log_in")}}" method="post">
+                    <input id="logUsername" type="text" name="username" placeholder="Username" autofocus>
+                    <input id="logPassword" type="password" name="password" placeholder="Password">
+                    <button class="block-button" type="submit">Log in</button>
+                </form>
+                <h2>Register</h2>
                 {% if "register_error" in request.args: %}
 				{% if request.args["register_error"] == "blank": %}
                 <span class="error">Please enter a username and password.</span>
@@ -38,7 +53,7 @@
                 <form action="{{url_for("register")}}" method="post">
                     <input id="regUsername" type="text" name="username" placeholder="Username" autofocus>
                     <input id="regPassword" type="password" name="password" placeholder="Password">
-                    <input id="regConfirm" type="password" name="password_again" placeholder="Confirm Pass">
+                    <input id="regConfirm" type="password" name="password_again" placeholder="Confirm pass">
                     <button class="block-button" type="submit">Register</button>
                 </form>
             </div>

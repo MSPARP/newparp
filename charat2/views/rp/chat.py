@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from webhelpers import paginate
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.model import (
     case_options,
     AnyChat,
@@ -23,7 +23,7 @@ from charat2.model.validators import url_validator
 
 
 @use_db
-@login_required
+@log_in_required
 def create_chat():
 
     # Silently truncate to 50 because we've got a maxlength on the <input>.
@@ -64,9 +64,10 @@ def create_chat():
     return redirect(url_for("rp_chat", url=lower_url))
 
 
+# XXX CUSTOM LOG IN/REGISTER PAGE WITH CHAT INFO
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def chat(url, fmt=None):
 
     # Do some special URL stuff for PM chats.
@@ -185,7 +186,7 @@ def chat(url, fmt=None):
 
 
 @use_db
-@login_required
+@log_in_required
 def log(url, fmt=None, page=None):
 
     # Do some special URL stuff for PM chats.
@@ -276,6 +277,7 @@ def log(url, fmt=None, page=None):
 
 @alt_formats(set(["json"]))
 @use_db
+@log_in_required
 def users(url, fmt=None):
 
     try:
