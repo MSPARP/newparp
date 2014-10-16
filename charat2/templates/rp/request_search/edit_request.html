@@ -9,7 +9,7 @@
       <li><label><input type="radio" name="new_or_saved_character" value="new" checked="checked"> Use current details</label></li>
       <li><label><input type="radio" name="new_or_saved_character" value="saved"> Use a saved character:</label> <select name="character_id">
 {% for character in characters: %}
-      <option value="{{character.id}}"{% if character.id == search_request.user_character_id: %} selected="selected"{% endif %}>{{character.title}}</option>
+      <option value="{{character.id}}"{% if character.id == search_request.character_id: %} selected="selected"{% endif %}>{{character.title}}</option>
 {% endfor %}
     </select></li>
     </ul>

@@ -5,15 +5,15 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import and_
 
 from charat2.helpers import tags_to_set
-from charat2.model import case_options, UserCharacter
+from charat2.model import case_options, Character
 from charat2.model.validators import color_validator
 
 
-def user_character_query(character_id):
+def character_query(character_id):
     try:
-        return g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == int(character_id),
-            UserCharacter.user_id == g.user.id,
+        return g.db.query(Character).filter(and_(
+            Character.id == int(character_id),
+            Character.user_id == g.user.id,
         )).one()
     except NoResultFound:
         abort(404)
@@ -83,7 +83,7 @@ def validate_character_form():
 
 def save_character_from_form(character_id, new_details=None):
 
-    character = user_character_query(character_id)
+    character = character_query(character_id)
 
     if new_details is None:
         new_details = validate_character_form()

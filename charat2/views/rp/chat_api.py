@@ -19,7 +19,7 @@ from charat2.model import (
     ChatUser,
     Message,
     User,
-    UserCharacter,
+    Character,
 )
 from charat2.model.connections import (
     get_chat_user,
@@ -472,10 +472,10 @@ def save():
 def save_from_character():
 
     try:
-        character = g.db.query(UserCharacter).filter(and_(
-            UserCharacter.id == request.form["character_id"],
-            UserCharacter.user_id == g.user.id,
-        )).order_by(UserCharacter.title).one()
+        character = g.db.query(Character).filter(and_(
+            Character.id == request.form["character_id"],
+            Character.user_id == g.user.id,
+        )).order_by(Character.title).one()
     except NoResultFound:
         abort(404)
 

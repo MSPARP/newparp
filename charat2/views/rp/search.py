@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
-from charat2.model import UserCharacter
+from charat2.model import Character
 from charat2.model.connections import use_db, db_commit, db_disconnect
 
 
@@ -15,16 +15,16 @@ from charat2.model.connections import use_db, db_commit, db_disconnect
 @log_in_required
 def search_get(character_id=None):
 
-    characters = g.db.query(UserCharacter).filter(
-        UserCharacter.user_id == g.user.id,
-    ).order_by(UserCharacter.title, UserCharacter.id).all()
+    characters = g.db.query(Character).filter(
+        Character.user_id == g.user.id,
+    ).order_by(Character.title, Character.id).all()
 
     # If we have a character ID, make sure that character exists.
     if character_id is not None:
         try:
-            character = g.db.query(UserCharacter).filter(and_(
-                UserCharacter.id == character_id,
-                UserCharacter.user_id == g.user.id,
+            character = g.db.query(Character).filter(and_(
+                Character.id == character_id,
+                Character.user_id == g.user.id,
             )).one()
         except NoResultFound:
             abort(404)

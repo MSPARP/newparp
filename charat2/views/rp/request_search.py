@@ -12,7 +12,7 @@ from webhelpers import paginate
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import (
-    user_character_query,
+    character_query,
     validate_character_form,
     save_character_from_form,
 )
@@ -24,7 +24,7 @@ from charat2.model import (
     RequestTag,
     RequestedChat,
     Tag,
-    UserCharacter,
+    Character,
 )
 from charat2.model.connections import use_db
 
@@ -261,9 +261,9 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
 @log_in_required
 def new_request_get():
 
-    characters = g.db.query(UserCharacter).filter(
-        UserCharacter.user_id == g.user.id,
-    ).order_by(UserCharacter.title, UserCharacter.id).all()
+    characters = g.db.query(Character).filter(
+        Character.user_id == g.user.id,
+    ).order_by(Character.title, Character.id).all()
 
     return render_template(
         "rp/request_search/new_request.html",
@@ -293,12 +293,12 @@ def new_request_post():
     # Use saved character verbatim.
     if new_or_saved_character == "saved" and not edit_character:
 
-        character = user_character_query(request.form["character_id"])
+        character = character_query(request.form["character_id"])
         # XXX consider making a classmethod for this like with user_chat
         new_request = Request(
             user=g.user,
             status=status,
-            user_character=character,
+            character=character,
             name=character.name,
             alias=character.alias,
             color=character.color,
@@ -327,7 +327,7 @@ def new_request_post():
         elif save_character_as == "new":
             if character_details["title"] == "":
                 character_details["title"] == "Untitled character"
-            character = UserCharacter(user=g.user, **character_details)
+            character = Character(user=g.user, **character_details)
             g.db.add(character)
             g.db.flush()
 
@@ -342,7 +342,7 @@ def new_request_post():
         new_request = Request(
             user=g.user,
             status=status,
-            user_character=character,
+            character=character,
             scenario=scenario,
             prompt=prompt,
         )
@@ -423,9 +423,9 @@ def edit_request_get(request_id):
 
     search_request = _own_request_query(request_id)
 
-    characters = g.db.query(UserCharacter).filter(
-        UserCharacter.user_id == g.user.id,
-    ).order_by(UserCharacter.title, UserCharacter.id).all()
+    characters = g.db.query(Character).filter(
+        Character.user_id == g.user.id,
+    ).order_by(Character.title, Character.id).all()
 
     tags_by_type = search_request.tags_by_type()
 
@@ -483,9 +483,9 @@ def edit_request_post(request_id):
     # Use saved character verbatim.
     if new_or_saved_character == "saved" and not edit_character:
 
-        character = user_character_query(request.form["character_id"])
+        character = character_query(request.form["character_id"])
 
-        search_request.user_character=character
+        search_request.character=character
         search_request.name=character.name
         search_request.alias=character.alias
         search_request.color=character.color
@@ -511,7 +511,7 @@ def edit_request_post(request_id):
         elif save_character_as == "new":
             if character_details["title"] == "":
                 character_details["title"] == "Untitled character"
-            character = UserCharacter(user=g.user, **character_details)
+            character = Character(user=g.user, **character_details)
             g.db.add(character)
             g.db.flush()
 

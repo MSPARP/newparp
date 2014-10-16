@@ -92,7 +92,7 @@ class User(Base):
     last_online = Column(DateTime(), nullable=False, default=now)
 
     default_character_id = Column(Integer, ForeignKey(
-        "user_characters.id",
+        "characters.id",
         name="users_default_character_fkey",
         use_alter=True,
     ))
@@ -107,9 +107,9 @@ class User(Base):
     desktop_notifications = Column(Boolean, nullable=False, default=False)
 
 
-class UserCharacter(Base):
+class Character(Base):
 
-    __tablename__ = "user_characters"
+    __tablename__ = "characters"
 
     id = Column(Integer, primary_key=True)
 
@@ -512,7 +512,7 @@ class Request(Base):
 
     posted = Column(DateTime(), nullable=False, default=now)
 
-    user_character_id = Column(Integer, ForeignKey("user_characters.id"))
+    character_id = Column(Integer, ForeignKey("characters.id"))
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     alias = Column(Unicode(15), nullable=False, default=u"??")
@@ -599,7 +599,7 @@ class Tag(Base):
 Index("users_username", func.lower(User.username), unique=True)
 
 # Index for user characters.
-Index("user_characters_user_id", UserCharacter.user_id)
+Index("characters_user_id", Character.user_id)
 
 # Index to make generating the public chat list easier.
 # This is a partial index, a feature only supported by Postgres, so I don't
@@ -629,12 +629,12 @@ Index("tags_type_name", Tag.type, Tag.name, unique=True)
 # 3. Relationships
 
 User.default_character = relation(
-    UserCharacter,
-    primaryjoin=User.default_character_id == UserCharacter.id,
+    Character,
+    primaryjoin=User.default_character_id == Character.id,
 )
 User.characters = relation(
-    UserCharacter,
-    primaryjoin=User.id == UserCharacter.user_id,
+    Character,
+    primaryjoin=User.id == Character.user_id,
     backref="user",
 )
 
@@ -664,7 +664,7 @@ Ban.creator = relation(
 )
 
 Request.user = relation(User, backref="requests")
-Request.user_character = relation(UserCharacter, backref="requests")
+Request.character = relation(Character, backref="requests")
 Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias)
 
 Tag.requests = relation(RequestTag, backref="tag")

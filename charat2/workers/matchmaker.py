@@ -12,7 +12,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from charat2.helpers.chat import send_message
-from charat2.model import sm, ChatUser, Message, SearchedChat, UserCharacter
+from charat2.model import sm, ChatUser, Message, SearchedChat, Character
 from charat2.model.connections import redis_pool
 
 
@@ -38,7 +38,7 @@ def check_compatibility(s1, s2):
     return { "tags_in_common": tags_in_common }
 
 
-def set_user_character(chat_id, searcher):
+def set_character(chat_id, searcher):
     if searcher["character_id"] is None:
         logging.debug("No character ID specified for %s." % searcher["id"])
         return
@@ -49,10 +49,10 @@ def set_user_character(chat_id, searcher):
             "Setting character for %s: user %s, character %s."
             % (searcher["id"], user_id, character_id)
         )
-        character = db.query(UserCharacter).filter(and_(
-            UserCharacter.id == character_id,
-            UserCharacter.user_id == user_id,
-        )).options(joinedload(UserCharacter.user)).one()
+        character = db.query(Character).filter(and_(
+            Character.id == character_id,
+            Character.user_id == user_id,
+        )).options(joinedload(Character.user)).one()
     except ValueError:
         logging.debug("No character, character ID or user ID not valid.")
         return
@@ -141,8 +141,8 @@ if __name__ == "__main__":
                         ),
                     ))
 
-                set_user_character(new_chat.id, s1)
-                set_user_character(new_chat.id, s2)
+                set_character(new_chat.id, s1)
+                set_character(new_chat.id, s2)
 
                 db.commit()
 
