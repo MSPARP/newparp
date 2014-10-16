@@ -40,9 +40,9 @@
                     <a id="goUser" href="">Settings</a>
                     <div class="topborder"></div>
                     {% if g.user != None %}
-                    <a class="logout" href="{{url_for('logout')}}">Logout</a>
+                    <a class="log_out" href="{{url_for('log_out')}}">Log out</a>
                     {% else %}
-                    <a class="login" href="">Login</a>
+                    <a class="log_in" href="">Log in</a>
                     {% endif %}
                 </div>
             </center>

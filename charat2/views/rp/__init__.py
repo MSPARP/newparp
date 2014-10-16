@@ -2,7 +2,7 @@ import os
 from flask import g, jsonify, render_template, request, redirect, url_for
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.model import GroupChat
 from charat2.model.connections import use_db
 
@@ -11,9 +11,6 @@ from charat2.model.connections import use_db
 def home():
     return render_template(
         "rp/home.html",
-        base_domain=os.environ['BASE_DOMAIN'],
-        log_in_error=request.args.get("log_in_error"),
-        register_error=request.args.get("register_error"),
     )
 
 
@@ -35,11 +32,4 @@ def rooms(fmt=None):
         })
 
     return render_template("rp/rooms.html", rooms=chat_dicts)
-
-
-@use_db
-def logout():
-    if "session" in request.cookies:
-        g.redis.delete("session:" + request.cookies["session"])
-    return redirect(url_for("rp_home"))
 

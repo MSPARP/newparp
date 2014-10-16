@@ -10,7 +10,7 @@ from uuid import uuid4
 from webhelpers import paginate
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import (
     user_character_query,
     validate_character_form,
@@ -109,7 +109,7 @@ def _tags_from_form(form, character=None):
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def request_list(fmt=None, page=1):
 
     requests = g.db.query(Request).order_by(
@@ -151,7 +151,7 @@ def request_list(fmt=None, page=1):
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def your_request_list(fmt=None, page=1):
 
     requests = g.db.query(Request).order_by(
@@ -193,7 +193,7 @@ def your_request_list(fmt=None, page=1):
 
 @alt_formats(set(["json"]))
 @use_db
-@login_required
+@log_in_required
 def tagged_request_list(tag_type, name, fmt=None, page=1):
 
     # Redirect to lowercase and replace spaces.
@@ -258,7 +258,7 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
 
 
 @use_db
-@login_required
+@log_in_required
 def new_request_get():
 
     characters = g.db.query(UserCharacter).filter(
@@ -274,7 +274,7 @@ def new_request_get():
 
 
 @use_db
-@login_required
+@log_in_required
 def new_request_post():
 
     scenario = request.form["scenario"].strip()
@@ -361,7 +361,7 @@ def new_request_post():
 
 
 @use_db
-@login_required
+@log_in_required
 def answer_request(request_id):
 
     try:
@@ -418,7 +418,7 @@ def answer_request(request_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def edit_request_get(request_id):
 
     search_request = _own_request_query(request_id)
@@ -455,7 +455,7 @@ def edit_request_get(request_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def edit_request_post(request_id):
 
     search_request = _own_request_query(request_id)
@@ -535,7 +535,7 @@ def edit_request_post(request_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def delete_request_get(request_id):
     return render_template(
         "rp/request_search/delete_request.html",
@@ -544,7 +544,7 @@ def delete_request_get(request_id):
 
 
 @use_db
-@login_required
+@log_in_required
 def delete_request_post(request_id):
     search_request = _own_request_query(request_id)
     g.db.query(RequestTag).filter(RequestTag.request_id == search_request.id).delete()

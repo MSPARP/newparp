@@ -52,11 +52,9 @@ app.add_url_rule("/", "home", root.home, methods=("GET",))
 def favicon():
     return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/root/favicon.ico", mimetype="image/vnd.microsoft.icon")
 
-app.add_url_rule("/login", "login_get", account.login_get, methods=("GET",))
-app.add_url_rule("/register", "register_get", account.register_get, methods=("GET",))
-app.add_url_rule("/login", "login_post", account.login_post, methods=("POST",))
-app.add_url_rule("/logout", "logout", account.logout)
-app.add_url_rule("/register", "register", account.register, methods=("POST",))
+app.add_url_rule("/log_in", "log_in", account.log_in_post, methods=("POST",))
+app.add_url_rule("/log_out", "log_out", account.log_out, methods=("POST",))
+app.add_url_rule("/register", "register", account.register_post, methods=("POST",))
 
 # 2. RP subdomain (rp.charat.net)
 

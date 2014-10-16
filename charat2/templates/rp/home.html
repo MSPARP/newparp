@@ -19,10 +19,10 @@
                         <a class="button" href="{{url_for('rp_character_list')}}">Characters</a>
                         {% if g.user != None: %}
                         <a class="button" href="">Settings</a>
-                        <a class="button" href="{{url_for('logout')}}">Logout</a>
+                        <a class="button" href="{{url_for('log_out')}}">Log out</a>
                         {% else %}
-                        <a class="button" href="{{url_for('login_get')}}">Login</a>
-                        <a class="button" href="{{url_for('register_get')}}">Register</a>
+                        <a class="button" href="{{url_for('log_in')}}">Log in</a>
+                        <a class="button" href="{{url_for('register')}}">Register</a>
                         {% endif %}
                         <a class="button" href="">Chat</a>
                     </center>
@@ -30,11 +30,19 @@
             </div>
 
             {% if not g.user %}
-            <div id="login-register" class="section">
-                <div class="titli">LOGIN/REGISTER</div>
+            <div id="log_in-register" class="section">
+                <div class="titli">LOG IN/REGISTER</div>
                 <div id="register" class="card">
-                    {% if register_error: %}
-                    <p class="error">{{register_error}}</p>
+                    {% if "register_error" in request.args: %}
+				    {% if request.args["register_error"] == "blank": %}
+                    <span class="error">Please enter a username and password.</span>
+				    {% elif request.args["register_error"] == "passwords_didnt_match": %}
+                    <span class="error">The two passwords didn't match.</span>
+				    {% elif request.args["register_error"] == "invalid_username": %}
+                    <span class="error">Usernames can only contain letters, numbers, hyphens and underscores.</span>
+				    {% elif request.args["register_error"] == "username_taken": %}
+                    <span class="error">That username has already been taken.</span>
+				    {% endif %}
                     {% endif %}
                     <form action="{{url_for('register')}}" method="post">
                         <div class="left">
@@ -51,11 +59,15 @@
                     </form>
                 </div>
                 
-                <div id="login" class="card">
-                    {% if log_in_error: %}
-                    <p class="error">{{log_in_error}}</p>
+                <div id="log_in" class="card">
+                    {% if "log_in_error" in request.args: %}
+				    {% if request.args["log_in_error"] == "no_user": %}
+                    <span class="error">There doesn't seem to be an account with that username.</span>
+				    {% elif request.args["log_in_error"] == "wrong_password": %}
+                    <span class="error">That password is incorrect.</span>
+				    {% endif %}
                     {% endif %}
-                    <form action="{{url_for('login_post')}}" method="post">
+                    <form action="{{url_for('log_in')}}" method="post">
                         <div class="left">
                             <label>Username: </label><br />
                             <label>Password: </label>
@@ -64,7 +76,7 @@
                             <input id="logUsername" type="text" name="username"><br />
                             <input id="logPassword" type="password" name="password">
                         </div>
-                        <button type="submit">Login</button>
+                        <button type="submit">Log in</button>
                     </form>
                 </div>
             </div>

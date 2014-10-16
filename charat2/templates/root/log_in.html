@@ -1,10 +1,10 @@
 {% extends "root/base.html" %}
 
 {% block header %}
-        <title>Charat – Login</title>
+        <title>Charat – Log in</title>
         <style>
             #main-block {
-                {% if log_in_error: %}
+                {% if "log_in_error" in request.args: %}
                     height: 250px;
                 {% else %}
                     height: 220px;
@@ -24,14 +24,18 @@
                     <logo class="root"></logo>
                     <header>Charat</header>
                 </a>
-                {% if log_in_error: %}
-                <span class="error">{{log_in_error}}</span>
+                {% if "log_in_error" in request.args: %}
+				{% if request.args["log_in_error"] == "no_user": %}
+                <span class="error">There doesn't seem to be an account with that username.</span>
+				{% elif request.args["log_in_error"] == "wrong_password": %}
+                <span class="error">That password is incorrect.</span>
+				{% endif %}
                 {% endif %}
-                <form action="{{url_for("login_post")}}" method="post">
+                <form action="{{url_for("log_in")}}" method="post">
                     <input id="logUsername" type="text" name="username" placeholder="Username" autofocus>
                     <input id="logPassword" type="password" name="password" placeholder="Password">
                     {% if referer: %}<input type="hidden" name="referer" value="{{referer}}" />{% endif %}
-                    <button class="block-button" type="submit">Login</button>
+                    <button class="block-button" type="submit">Log in</button>
                 </form>
             </div>
         </div>

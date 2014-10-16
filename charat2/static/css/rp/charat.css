@@ -310,7 +310,7 @@ body.menu #topbar #topmenu {
     background-color: #f4f5ae;
 }
 
-#topmenu .logout, #topmenu .login {
+#topmenu .log_out, #topmenu .log_in {
     padding-bottom: 5px;
 }
 

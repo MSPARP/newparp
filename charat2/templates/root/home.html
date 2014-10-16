@@ -25,13 +25,13 @@
                 {% if not g.user %}
                 <header>Welcome Guest</header>
                 <subtitle>What would you like to do?</subtitle>
-                <a class="block-button" href="{{url_for("login_get")}}">Login</a>
-                <a class="block-button" href="{{url_for("register_get")}}">Register</a>
+                <a class="block-button" href="{{url_for("log_in")}}">Log in</a>
+                <a class="block-button" href="{{url_for("register")}}">Register</a>
                 {% else %}
                 <header>Welcome {{g.user.username}}</header>
                 <subtitle>What would you like to do?</subtitle>
                 <a class="block-button" href="/settings">Settings</a>
-                <a class="block-button" href="{{url_for("logout")}}">Logout</a>
+                <a class="block-button" href="{{url_for("log_out")}}">Log out</a>
                 {% endif %}
             </div>
         </div>

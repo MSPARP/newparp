@@ -6,13 +6,13 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import tags_to_set
-from charat2.helpers.auth import login_required
+from charat2.helpers.auth import log_in_required
 from charat2.model import UserCharacter
 from charat2.model.connections import use_db, db_commit, db_disconnect
 
 
 @use_db
-@login_required
+@log_in_required
 def search_get(character_id=None):
 
     characters = g.db.query(UserCharacter).filter(
@@ -39,7 +39,7 @@ def search_get(character_id=None):
 
 
 @use_db
-@login_required
+@log_in_required
 def search_post():
 
     # This is just making sure it's a number, the actual validation happens
@@ -88,7 +88,7 @@ def search_post():
 
 
 @use_db
-@login_required
+@log_in_required
 def search_stop():
 
     g.redis.srem("searchers", g.session_id)
