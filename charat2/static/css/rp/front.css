@@ -82,6 +82,17 @@ button.save_character {
     margin-bottom: 10px;
 }
 
+body.nobile button.save_character {
+    min-width: 0px;
+    width: 290px;
+}
+
+body.mobile button.save_character {
+    min-width: 0px;
+    width: 290px;
+    max-width: 90%;
+}
+
 .card.save_as {
     text-align: center;
 }

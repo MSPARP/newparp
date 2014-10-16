@@ -22,7 +22,7 @@
         
         <div class="block-container">
             <div class="block" style="margin-top: 31px;">
-                {% if not logged_in %}
+                {% if not g.user %}
                 <header>Welcome Guest</header>
                 <subtitle>What would you like to do?</subtitle>
                 <a class="block-button" href="{{url_for("login_get")}}">Login</a>

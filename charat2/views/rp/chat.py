@@ -45,7 +45,7 @@ def create_chat():
     if route != "rp_chat":
         return render_template(
             "rp/home.html",
-            create_chat_error="The URL \"%s\" has already been taken. route %s args %s" % (url, route, args)
+            create_chat_error="The URL \"%s\" has already been taken." % (url)
         )
 
     # Don't allow pm because subchats of it (pm/*) will crash into private

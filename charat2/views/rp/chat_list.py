@@ -9,6 +9,7 @@ from charat2.model import (
     case_options,
     AnyChat,
     GroupChat,
+    RequestedChat,
     SearchedChat,
     PMChat,
     ChatUser,
@@ -19,6 +20,7 @@ chat_classes = {
     None: AnyChat,
     "group": GroupChat,
     "pm": PMChat,
+    "requested": RequestedChat,
     "searched": SearchedChat,
     "unread": AnyChat,
 }

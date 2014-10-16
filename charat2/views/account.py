@@ -73,22 +73,27 @@ def logout():
 
 @use_db
 def register():
-    referer = None
-    getreferer = ""
     if "referer" in request.form:
         referer = request.form["referer"]
         getreferer = "&referer=" + referer
+    else:
+        referer = request.url
+        getreferer = ""
+
     # Don't accept blank fields.
     if request.form["username"] == "" or request.form["password"] == "":
         return redirect(referer_or_home() + "?register_error=Please enter a username and password." + getreferer)
+
     # Make sure the two passwords match.
     if request.form["password"] != request.form["password_again"]:
         return redirect(referer_or_home() + "?register_error=The two passwords didn't match." + getreferer)
+
     # Check username against username_validator.
     # Silently truncate it because the only way it can be longer is if they've hacked the front end.
     username = request.form["username"][:50]
     if username_validator.match(username) is None:
         return redirect(referer_or_home() + "?register_error=Usernames can only contain letters, numbers, hyphens and underscores." + getreferer)
+
     # XXX DON'T ALLOW USERNAMES STARTING WITH GUEST_.
     # Make sure this username hasn't been taken before.
     # Also check against reserved usernames.
@@ -105,5 +110,5 @@ def register():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
     g.db.commit()
-    return redirect(referer_or_home(request.form["referer"]))
+    return redirect(referer_or_home(referer))
 

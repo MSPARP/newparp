@@ -61,8 +61,14 @@ div.body {
     border-bottom: solid 2px #696969;
     margin: 10px;
     padding: 10px;
-    max-width: 270px;
+    width: 270px;
     text-align: left;
+}
+
+body.mobile .card {
+    display: block;
+    width: inherit;
+    max-width: 100%;
 }
 
 .card button {
@@ -114,6 +120,10 @@ label {
 
 #login-register .card .right {
     width: 50%;
+}
+
+#choices {
+    line-height: 120%;
 }
 
 body.mobile .section {

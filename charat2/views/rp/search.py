@@ -5,6 +5,7 @@ from flask import (
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
+from charat2.helpers import tags_to_set
 from charat2.helpers.auth import login_required
 from charat2.model import UserCharacter
 from charat2.model.connections import use_db, db_commit, db_disconnect
@@ -37,18 +38,6 @@ def search_get(character_id=None):
     )
 
 
-def _tags_to_set(tag_string):
-    tags = set()
-    for tag in tag_string.split(","):
-        tag = tag.strip()
-        if tag == "":
-            continue
-        # Silently truncate to 100 because we need a limit in the database and
-        # people are unlikely to type that much.
-        tags.add(tag.lower()[:100])
-    return tags
-
-
 @use_db
 @login_required
 def search_post():
@@ -65,14 +54,14 @@ def search_post():
     # Tags are a single string separated by commas, so we split and trim it
     # here.
     # XXX use several fields like we do for replacements?
-    tags = _tags_to_set(request.form["tags"])
+    tags = tags_to_set(request.form["tags"])
     g.user.search_tags = tags
     g.redis.delete("session:%s:tags" % g.session_id)
     if len(tags) > 0:
         g.redis.sadd("session:%s:tags" % g.session_id, *tags)
         g.redis.expire("session:%s:tags" % g.session_id, 30)
 
-    exclude_tags = _tags_to_set(request.form["exclude_tags"])
+    exclude_tags = tags_to_set(request.form["exclude_tags"])
     g.user.search_exclude_tags = exclude_tags
     g.redis.delete("session:%s:exclude_tags" % g.session_id)
     if len(exclude_tags) > 0:
