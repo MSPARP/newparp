@@ -103,7 +103,9 @@ class User(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_description = Column(Boolean, nullable=False, default=True)
-    show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_connection_messages = Column(Boolean, nullable=False, default=True)
+    show_ic_messages = Column(Boolean, nullable=False, default=True)
+    show_ooc_messages = Column(Boolean, nullable=False, default=True)
     show_message_info = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_preview = Column(Boolean, nullable=False, default=False)
@@ -299,7 +301,9 @@ class ChatUser(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_description = Column(Boolean, nullable=False, default=True)
-    show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_connection_messages = Column(Boolean, nullable=False, default=True)
+    show_ic_messages = Column(Boolean, nullable=False, default=True)
+    show_ooc_messages = Column(Boolean, nullable=False, default=True)
     show_message_info = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_preview = Column(Boolean, nullable=False, default=False)
@@ -319,11 +323,16 @@ class ChatUser(Base):
             case=character.case,
             replacements=character.replacements,
             regexes=character.regexes,
-            confirm_disconnect=character.user.confirm_disconnect,
-            show_system_messages=character.user.show_system_messages,
-            show_description=character.user.show_description,
-            show_bbcode=character.user.show_bbcode,
-            desktop_notifications=character.user.desktop_notifications,
+            confirm_disconnect=user.confirm_disconnect,
+            desktop_notifications=user.desktop_notifications,
+            show_description=user.show_description,
+            show_connection_messages=user.show_connection_messages,
+            show_ic_messages=user.show_ic_messages,
+            show_ooc_messages=user.show_ooc_messages,
+            show_message_info=user.show_message_info,
+            show_bbcode=user.show_bbcode,
+            show_preview=user.show_preview,
+            ooc_on=user.ooc_on,
             **kwargs
         )
 
@@ -337,7 +346,9 @@ class ChatUser(Base):
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
                 show_description=user.show_description,
-                show_system_messages=user.show_system_messages,
+                show_connection_messages=user.show_connection_messages,
+                show_ic_messages=user.show_ic_messages,
+                show_ooc_messages=user.show_ooc_messages,
                 show_message_info=user.show_message_info,
                 show_bbcode=user.show_bbcode,
                 show_preview=user.show_preview,
@@ -358,7 +369,9 @@ class ChatUser(Base):
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_description=user.show_description,
-            show_system_messages=user.show_system_messages,
+            show_connection_messages=user.show_connection_messages,
+            show_ic_messages=user.show_ic_messages,
+            show_ooc_messages=user.show_ooc_messages,
             show_message_info=user.show_message_info,
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
@@ -429,7 +442,9 @@ class ChatUser(Base):
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
             ucd["meta"]["show_description"] = self.show_description
-            ucd["meta"]["show_system_messages"] = self.show_system_messages
+            ucd["meta"]["show_connection_messages"] = self.show_connection_messages
+            ucd["meta"]["show_ic_messages"] = self.show_ic_messages
+            ucd["meta"]["show_ooc_messages"] = self.show_ooc_messages
             ucd["meta"]["show_message_info"] = self.show_message_info
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
