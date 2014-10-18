@@ -101,10 +101,13 @@ class User(Base):
     search_exclude_tags = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
-    show_system_messages = Column(Boolean, nullable=False, default=True)
-    show_description = Column(Boolean, nullable=False, default=True)
-    show_bbcode = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
+    show_description = Column(Boolean, nullable=False, default=True)
+    show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_message_info = Column(Boolean, nullable=False, default=True)
+    show_bbcode = Column(Boolean, nullable=False, default=True)
+    show_preview = Column(Boolean, nullable=False, default=False)
+    ooc_on = Column(Boolean, nullable=False, default=False)
 
 
 class Character(Base):
@@ -294,10 +297,13 @@ class ChatUser(Base):
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
-    show_system_messages = Column(Boolean, nullable=False, default=True)
-    show_description = Column(Boolean, nullable=False, default=True)
-    show_bbcode = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
+    show_description = Column(Boolean, nullable=False, default=True)
+    show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_message_info = Column(Boolean, nullable=False, default=True)
+    show_bbcode = Column(Boolean, nullable=False, default=True)
+    show_preview = Column(Boolean, nullable=False, default=False)
+    ooc_on = Column(Boolean, nullable=False, default=False)
 
     @classmethod
     def from_character(cls, character, **kwargs):
@@ -329,10 +335,13 @@ class ChatUser(Base):
             return cls(
                 user_id=user.id,
                 confirm_disconnect=user.confirm_disconnect,
-                show_system_messages=user.show_system_messages,
-                show_description=user.show_description,
-                show_bbcode=user.show_bbcode,
                 desktop_notifications=user.desktop_notifications,
+                show_description=user.show_description,
+                show_system_messages=user.show_system_messages,
+                show_message_info=user.show_message_info,
+                show_bbcode=user.show_bbcode,
+                show_preview=user.show_preview,
+                ooc_on=user.ooc_on,
                 **kwargs
             )
         dc = user.default_character
@@ -347,10 +356,13 @@ class ChatUser(Base):
             replacements=dc.replacements,
             regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
-            show_system_messages=user.show_system_messages,
-            show_description=user.show_description,
-            show_bbcode=user.show_bbcode,
             desktop_notifications=user.desktop_notifications,
+            show_description=user.show_description,
+            show_system_messages=user.show_system_messages,
+            show_message_info=user.show_message_info,
+            show_bbcode=user.show_bbcode,
+            show_preview=user.show_preview,
+            ooc_on=user.ooc_on,
             **kwargs
         )
 
@@ -415,10 +427,13 @@ class ChatUser(Base):
             ucd["character"]["replacements"] = json.loads(self.replacements)
             ucd["character"]["regexes"] = json.loads(self.regexes)
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
-            ucd["meta"]["show_system_messages"] = self.show_system_messages
-            ucd["meta"]["show_description"] = self.show_description
-            ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
+            ucd["meta"]["show_description"] = self.show_description
+            ucd["meta"]["show_system_messages"] = self.show_system_messages
+            ucd["meta"]["show_message_info"] = self.show_message_info
+            ucd["meta"]["show_bbcode"] = self.show_bbcode
+            ucd["meta"]["show_preview"] = self.show_preview
+            ucd["meta"]["ooc_on"] = self.ooc_on
         if include_user:
             ucd["meta"]["user_id"] = self.user.id
             ucd["meta"]["username"] = self.user.username

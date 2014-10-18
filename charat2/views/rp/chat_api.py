@@ -526,10 +526,13 @@ def save_variables():
     # Boolean variables.
     for variable in [
         "confirm_disconnect",
-        "show_system_messages",
-        "show_description",
-        "show_bbcode",
         "desktop_notifications",
+        "show_description",
+        "show_system_messages",
+        "show_message_info",
+        "show_bbcode",
+        "show_preview",
+        "ooc_on",
     ]:
         if variable not in request.form:
             continue
