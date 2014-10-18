@@ -309,6 +309,10 @@ class ChatUser(Base):
     show_preview = Column(Boolean, nullable=False, default=False)
     ooc_on = Column(Boolean, nullable=False, default=False)
 
+    # No joins or filtering here so these don't need to be foreign keys.
+    highlighted_user_ids = Column(ARRAY(Integer), nullable=False, default=lambda: [])
+    blocked_user_ids = Column(ARRAY(Integer), nullable=False, default=lambda: [])
+
     @classmethod
     def from_character(cls, character, **kwargs):
         # Create a ChatUser using a Character and their user to determine the
@@ -449,6 +453,8 @@ class ChatUser(Base):
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
             ucd["meta"]["ooc_on"] = self.ooc_on
+            ucd["meta"]["highlighted_user_ids"] = self.highlighted_user_ids
+            ucd["meta"]["blocked_user_ids"] = self.blocked_user_ids
         if include_user:
             ucd["meta"]["user_id"] = self.user.id
             ucd["meta"]["username"] = self.user.username

@@ -542,6 +542,22 @@ def save_variables():
             abort(400)
         setattr(g.chat_user, variable, request.form[variable] == "on")
 
+    for variable in [
+        "highlighted_user_ids",
+        "blocked_user_ids",
+    ]:
+        if variable not in request.form:
+            continue
+        # Convert to a set to remove duplicates.
+        temp_set = set()
+        for item in request.form[variable].split(","):
+            try:
+                temp_set.add(int(item.strip()))
+            except ValueError:
+                pass
+        # XXX LENGTH LIMIT?
+        setattr(g.chat_user, variable, list(temp_set))
+
     return "", 204
 
 
