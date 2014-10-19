@@ -1,6 +1,5 @@
 import datetime
 import json
-import re
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
@@ -16,6 +15,7 @@ from charat2.helpers.characters import (
     validate_character_form,
     save_character_from_form,
 )
+from charat2.helpers.tags import request_tags_from_character, request_tags_from_form
 from charat2.model import (
     case_options,
     ChatUser,
@@ -39,72 +39,6 @@ def _own_request_query(request_id):
     if search_request.user != g.user:
         abort(404)
     return search_request
-
-
-special_char_regex = re.compile("[\\ \\./]+")
-underscore_strip_regex = re.compile("^_+|_+$")
-
-
-def _name_from_alias(alias):
-    # 1. Change to lowercase.
-    # 2. Change spaces to underscores.
-    # 3. Change . and / to underscores because they screw up the routing.
-    # 4. Strip extra underscores from the start and end.
-    return underscore_strip_regex.sub(
-        "",
-        special_char_regex.sub("_", alias)
-    ).lower()
-
-
-def _tags_from_form(form, character=None):
-
-    tag_dict = {}
-
-    for tag_type in Tag.type_options:
-
-        # Enforce preset values for maturity.
-        if tag_type == "maturity":
-            name = form["maturity"]
-            if name in Tag.maturity_names:
-                tag_dict[("maturity", name)] = name.capitalize()
-            else:
-                tag_dict[("maturity", "general")] = "General"
-            continue
-
-        # Enforce preset values for type.
-        elif tag_type == "type":
-            for name in Tag.type_names:
-                if "type_" + name in form:
-                    tag_dict[("type", name)] = name.capitalize()
-            continue
-
-        # Override form info if we're using a character verbatim.
-        if character is not None and tag_type in { "fandom", "character", "gender" }:
-            alias_list = getattr(character, tag_type)
-        else:
-            alias_list = form[tag_type].split(",")
-
-        for alias in alias_list:
-            alias = alias.strip()
-            if alias == "":
-                continue
-            name = _name_from_alias(alias)
-            if name == "":
-                continue
-            tag_dict[(tag_type, name)] = alias
-
-    request_tags = []
-
-    for (tag_type, name), alias in tag_dict.iteritems():
-        try:
-            tag = g.db.query(Tag).filter(and_(
-                Tag.type == tag_type, Tag.name == name,
-            )).one()
-        except:
-            tag = Tag(type=tag_type, name=name)
-        request_tags.append(RequestTag(tag=tag, alias=alias))
-
-    return request_tags
 
 
 @alt_formats(set(["json"]))
@@ -293,7 +227,7 @@ def new_request_post():
     # Use saved character verbatim.
     if new_or_saved_character == "saved" and not edit_character:
 
-        character = character_query(request.form["character_id"])
+        character = character_query(request.form["character_id"], join_tags=True)
         # XXX consider making a classmethod for this like with user_chat
         new_request = Request(
             user=g.user,
@@ -311,17 +245,18 @@ def new_request_post():
             prompt=prompt,
         )
 
-        new_request.tags = _tags_from_form(request.form, character)
+        new_request.tags = request_tags_from_character(character)
+        new_request.tags += request_tags_from_form(request.form)
 
     # Otherwise rely on the form data.
     else:
 
         character = None
-        character_details = validate_character_form()
+        character_details = validate_character_form(request.form)
 
         # Update existing character.
         if new_or_saved_character == "saved" and save_character_as == "update":
-            character = save_character_from_form(request.form["character_id"])
+            character = save_character_from_form(request.form["character_id"], request.form)
 
         # Create new character.
         elif save_character_as == "new":
@@ -353,7 +288,11 @@ def new_request_post():
             if hasattr(new_request, key):
                 setattr(new_request, key, value)
 
-        new_request.tags = _tags_from_form(request.form)
+        if character is not None:
+            new_request.tags = request_tags_from_character(character)
+            new_request.tags += request_tags_from_form(request.form)
+        else:
+            new_request.tags = request_tags_from_form(request.form, include_character_tags=True)
 
     g.db.add(new_request)
 
@@ -483,7 +422,7 @@ def edit_request_post(request_id):
     # Use saved character verbatim.
     if new_or_saved_character == "saved" and not edit_character:
 
-        character = character_query(request.form["character_id"])
+        character = character_query(request.form["character_id"], join_tags=True)
 
         search_request.character=character
         search_request.name=character.name
@@ -495,17 +434,18 @@ def edit_request_post(request_id):
         search_request.replacements=character.replacements
         search_request.regexes=character.regexes
 
-        search_request.tags += _tags_from_form(request.form, character)
+        search_request.tags += request_tags_from_character(character)
+        search_request.tags += request_tags_from_form(request.form)
 
     # Otherwise rely on the form data.
     else:
 
         character = None
-        character_details = validate_character_form()
+        character_details = validate_character_form(request.form)
 
         # Update existing character.
         if new_or_saved_character == "saved" and save_character_as == "update":
-            character = save_character_from_form(request.form["character_id"])
+            character = save_character_from_form(request.form["character_id"], request.form)
 
         # Create new character.
         elif save_character_as == "new":
@@ -529,7 +469,11 @@ def edit_request_post(request_id):
             if hasattr(search_request, key):
                 setattr(search_request, key, value)
 
-        search_request.tags += _tags_from_form(request.form)
+        if character is not None:
+            search_request.tags += request_tags_from_character(character)
+            search_request.tags += request_tags_from_form(request.form)
+        else:
+            search_request.tags += request_tags_from_form(request.form, include_character_tags=True)
 
     return redirect(url_for("rp_edit_request_get", request_id=search_request.id))
 

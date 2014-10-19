@@ -135,9 +135,19 @@ class Character(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
-    fandom = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
-    character = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
-    gender = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    def tags_by_type(self):
+        tags = { "fandom": [], "character": [], "gender": [] }
+        for request_tag in self.tags:
+            # Characters should only have fandom, character and gender tags,
+            # so ignore any others.
+            if request_tag.tag.type not in tags:
+                continue
+            tags[request_tag.tag.type].append({
+                "type": request_tag.tag.type,
+                "name": request_tag.tag.name,
+                "alias": request_tag.alias,
+            })
+        return tags
 
     def to_dict(self, include_options=False):
         ucd = {
@@ -146,6 +156,7 @@ class Character(Base):
             "name": self.name,
             "alias": self.alias,
             "color": self.color,
+            "tags": self.tags_by_type(),
         }
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
@@ -591,6 +602,16 @@ class Request(Base):
         return rd
 
 
+class CharacterTag(Base):
+
+    __tablename__ = "character_tags"
+
+    character_id = Column(Integer, ForeignKey("characters.id"), primary_key=True)
+    tag_id = Column(Integer, ForeignKey("tags.id"), primary_key=True)
+
+    alias = Column(Unicode(50))
+
+
 class RequestTag(Base):
 
     __tablename__ = "request_tags"
@@ -674,6 +695,8 @@ User.characters = relation(
     backref="user",
 )
 
+Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
+
 GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
     Chat,
@@ -703,5 +726,6 @@ Request.user = relation(User, backref="requests")
 Request.character = relation(Character, backref="requests")
 Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias)
 
+Tag.characters = relation(CharacterTag, backref="tag")
 Tag.requests = relation(RequestTag, backref="tag")
 

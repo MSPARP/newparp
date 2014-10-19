@@ -1,9 +1,9 @@
-from flask import g, jsonify, redirect, render_template, url_for
+from flask import g, jsonify, redirect, request, render_template, url_for
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import character_query, save_character_from_form
-from charat2.model import case_options, Character
+from charat2.model import case_options, Character, CharacterTag, Request
 from charat2.model.connections import use_db
 
 
@@ -39,7 +39,7 @@ def new_character():
 @log_in_required
 def character(character_id, fmt=None):
 
-    character = character_query(character_id)
+    character = character_query(character_id, join_tags=True)
 
     if fmt == "json":
         return jsonify(character.to_dict(include_options=True))
@@ -48,9 +48,10 @@ def character(character_id, fmt=None):
         "rp/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
-        tags_fandom = ", ".join(_ for _ in character.fandom),
-        tags_character = ", ".join(_ for _ in character.character),
-        tags_gender = ", ".join(_ for _ in character.gender),
+        character_tags={
+            tag_type: ", ".join(tag["alias"] for tag in tags)
+            for tag_type, tags in character.tags_by_type().iteritems()
+        },
     )
 
 
@@ -58,7 +59,7 @@ def character(character_id, fmt=None):
 @log_in_required
 def save_character(character_id):
     # In a separate function so we can call it from request search.
-    character = save_character_from_form(character_id)
+    character = save_character_from_form(character_id, request.form)
     return redirect(url_for("rp_character", character_id=character.id))
 
 
@@ -73,10 +74,15 @@ def delete_character_get(character_id):
 @log_in_required
 def delete_character_post(character_id):
     character = character_query(character_id)
-    if character == g.user.default_character:
+    character_id = character.id
+    if g.user.default_character_id == character_id:
         g.user.default_character_id = None
         g.db.flush()
-    g.db.delete(character)
+    g.db.query(CharacterTag).filter(CharacterTag.character_id == character_id).delete()
+    g.db.query(Request).filter(Request.character_id==character_id).update({ "character_id": None })
+    # Don't use g.db.delete(character) because it does a load of extra queries
+    # for foreign keys and stuff.
+    g.db.query(Character).filter(Character.id == character_id).delete()
     return redirect(url_for("rp_character_list"))
 
 
