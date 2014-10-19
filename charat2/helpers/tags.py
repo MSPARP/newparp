@@ -39,6 +39,7 @@ def character_tags_from_form(form):
             tag_dict[(tag_type, name)] = alias
 
     character_tags = []
+    used_ids = set()
 
     for (tag_type, name), alias in tag_dict.iteritems():
         try:
@@ -47,10 +48,14 @@ def character_tags_from_form(form):
             )).one()
         except NoResultFound:
             tag = Tag(type=tag_type, name=name)
-        if tag.synonym_id is not None:
-            character_tags.append(CharacterTag(tag_id=tag.synonym_id, alias=alias))
-        else:
-            character_tags.append(CharacterTag(tag=tag, alias=alias))
+            g.db.add(tag)
+            g.db.flush()
+        tag_id = (tag.synonym_id or tag.id)
+        # Remember IDs to skip synonyms.
+        if tag_id in used_ids:
+            continue
+        used_ids.add(tag_id)
+        character_tags.append(CharacterTag(tag_id=tag_id, alias=alias))
 
     return character_tags
 
@@ -97,6 +102,7 @@ def request_tags_from_form(form, include_character_tags=False):
             tag_dict[(tag_type, name)] = alias
 
     request_tags = []
+    used_ids = set()
 
     for (tag_type, name), alias in tag_dict.iteritems():
         try:
@@ -105,10 +111,12 @@ def request_tags_from_form(form, include_character_tags=False):
             )).one()
         except NoResultFound:
             tag = Tag(type=tag_type, name=name)
-        if tag.synonym_id is not None:
-            request_tags.append(RequestTag(tag_id=tag.synonym_id, alias=alias))
-        else:
-            request_tags.append(RequestTag(tag=tag, alias=alias))
+        tag_id = (tag.synonym_id or tag.id)
+        # Remember IDs to skip synonyms.
+        if tag_id in used_ids:
+            continue
+        used_ids.add(tag_id)
+        request_tags.append(RequestTag(tag_id=tag_id, alias=alias))
 
     return request_tags
 
