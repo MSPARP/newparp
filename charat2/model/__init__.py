@@ -594,11 +594,20 @@ class Request(Base):
             "status": self.status,
             "posted": time.mktime(self.posted.timetuple()),
             "tags": self.tags_by_type(),
+            "name": self.name,
+            "alias": self.alias,
+            "color": self.color,
             "scenario": self.scenario,
             "prompt": self.prompt,
         }
         if user is not None:
             rd["yours"] = user.id == self.user_id
+            if rd["yours"]:
+                rd["quirk_prefix"] = self.quirk_prefix
+                rd["quirk_suffix"] = self.quirk_suffix
+                rd["case"] = self.case
+                rd["replacements"] = json.loads(self.replacements)
+                rd["regexes"] = json.loads(self.regexes)
         return rd
 
 
