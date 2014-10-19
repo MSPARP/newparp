@@ -648,6 +648,8 @@ class Tag(Base):
     type = Column(Enum(*type_options, name=u"tags_type"), nullable=False, default=u"misc")
     name = Column(Unicode(50), nullable=False)
 
+    synonym_id = Column(Integer, ForeignKey("tags.id"))
+
 
 # 2. Indexes
 
@@ -675,6 +677,9 @@ Index("messages_chat_id", Message.chat_id, Message.posted)
 
 # XXX indexes on requests table
 # index by user id for your requests?
+
+# Index for searching characters by tag.
+Index("character_tags_tag_id", CharacterTag.tag_id)
 
 # Index for searching requests by tag.
 Index("request_tags_tag_id", RequestTag.tag_id)
@@ -728,4 +733,5 @@ Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias
 
 Tag.characters = relation(CharacterTag, backref="tag")
 Tag.requests = relation(RequestTag, backref="tag")
+Tag.synonym_of = relation(Tag, backref="synonyms", remote_side=Tag.id)
 

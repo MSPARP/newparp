@@ -47,7 +47,10 @@ def character_tags_from_form(form):
             )).one()
         except NoResultFound:
             tag = Tag(type=tag_type, name=name)
-        character_tags.append(CharacterTag(tag=tag, alias=alias))
+        if tag.synonym_id is not None:
+            character_tags.append(CharacterTag(tag_id=tag.synonym_id, alias=alias))
+        else:
+            character_tags.append(CharacterTag(tag=tag, alias=alias))
 
     return character_tags
 
@@ -102,7 +105,10 @@ def request_tags_from_form(form, include_character_tags=False):
             )).one()
         except NoResultFound:
             tag = Tag(type=tag_type, name=name)
-        request_tags.append(RequestTag(tag=tag, alias=alias))
+        if tag.synonym_id is not None:
+            request_tags.append(RequestTag(tag_id=tag.synonym_id, alias=alias))
+        else:
+            request_tags.append(RequestTag(tag=tag, alias=alias))
 
     return request_tags
 

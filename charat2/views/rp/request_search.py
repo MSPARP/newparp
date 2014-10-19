@@ -145,9 +145,18 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
         tag = g.db.query(Tag).filter(and_(
             Tag.type == tag_type,
             Tag.name == name,
-        )).one()
+        )).options(joinedload(Tag.synonym_of)).one()
     except NoResultFound:
         abort(404)
+
+    if tag.synonym_of is not None:
+        return redirect(url_for(
+            "rp_tagged_request_list",
+            tag_type=tag.synonym_of.type,
+            name=tag.synonym_of.name,
+            fmt=fmt,
+            page=page if page != 1 else None,
+        ))
 
     requests = g.db.query(Request).order_by(
         Request.posted.desc(),
