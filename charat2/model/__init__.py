@@ -283,6 +283,8 @@ class ChatUser(Base):
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
+    subscribed = Column(Boolean, nullable=False, default=True)
+
     last_online = Column(DateTime(), nullable=False, default=now)
 
     # Ignored if the user is an admin or the chat's creator.
@@ -454,6 +456,7 @@ class ChatUser(Base):
             ucd["character"]["case"] = self.case
             ucd["character"]["replacements"] = json.loads(self.replacements)
             ucd["character"]["regexes"] = json.loads(self.regexes)
+            ucd["meta"]["subscribed"] = self.subscribed
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
             ucd["meta"]["show_description"] = self.show_description
@@ -679,7 +682,7 @@ Index(
 )
 
 # Index for your chats list.
-Index("chat_users_user_id_chat_id", ChatUser.user_id, ChatUser.chat_id)
+Index("chat_users_user_id_subscribed", ChatUser.user_id, ChatUser.subscribed)
 
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)

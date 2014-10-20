@@ -128,6 +128,9 @@ make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True)
 
+app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, subdomain="rp", methods=("POST",))
+app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, subdomain="rp", methods=("POST",))
+
 # 2.7. Chat API
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
