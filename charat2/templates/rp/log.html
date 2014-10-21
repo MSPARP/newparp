@@ -30,7 +30,7 @@
                     <a id="goUser" href="">Settings</a>
                     <div class="topborder"></div>
                     {% if g.user != None: %}
-                    <form action="{{url_for("log_out")}}" method="post"><button type="submit" class="log_out">Log out</button></form>
+                    <form class="log_out_form" action="{{url_for("log_out")}}" method="post"><button type="submit" class="log_out">Logout</button></form>
                     {% else %}
                     <a class="log_in" href="">Log in</a>
                     {% endif %}

@@ -95,13 +95,17 @@ body.menu #topbar #toptitle {
     top: -4px;
 }
 
-#topbar #topmenu a, #topbar #topmenu div {
+#topbar #topmenu a, #topbar #topmenu div, #topmenu .log_out_form button {
     color: #a0d0a0;
     cursor: pointer;
 }
 
-#topbar #topmenu a:hover, #topbar #topmenu div:hover {
+#topbar #topmenu a:hover, #topbar #topmenu div:hover, #topmenu .log_out_form:hover {
     background-color: #fffffb;
+}
+
+#topmenu .log_out_form button {
+    font-size: 35px;
 }
 
 #topmenu .topborder {

@@ -133,4 +133,13 @@ body.mobile .section {
     margin-right: 0;
 }
 
+#chat-options .log_out_form {
+    color: #fffffb;
+    padding: 0 5px;
+}
+
+#chat-options .log_out_form button {
+    top: auto;
+    margin: 0;
+}
 
