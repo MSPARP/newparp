@@ -170,9 +170,11 @@ def chat(chat, pm_user, url, fmt=None):
         )).one()
     except NoResultFound:
         chat_user = ChatUser.from_user(g.user, chat_id=chat.id)
+        if chat.type == "group" and g.user.id != chat.creator_id:
+            chat_user.subscribed = False
         if (
             chat.type == "group" and chat.autosilence
-            and g.user.group != "admin" and g.user != chat.creator
+            and g.user.group != "admin" and g.user.id != chat.creator_id
         ):
             chat_user.group = "silent"
         g.db.add(chat_user)
