@@ -39,7 +39,7 @@ a.button, #chat-options .log_out_form {
     text-align: center;
 }
 
-a.button:hover {
+a.button:hover, #chat-options .log_out_form:hover {
     background-color: #70A070;
 }
 
@@ -303,6 +303,8 @@ body.menu #topbar #topmenu {
     font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,sans-serif;
     text-align: center;
     font-size: 30px;
+    padding: 0;
+    padding: 3px;
 }
 
 #topmenu .log_out_form:hover {
