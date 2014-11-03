@@ -97,20 +97,20 @@ app.add_url_rule("/characters/<int:character_id>/search", "rp_search_character",
 
 # 2.5. Request searching
 
-make_rules("rp", "/requests", request_search.request_list, formats=True, paging=True)
-make_rules("rp", "/requests/yours", request_search.your_request_list, formats=True, paging=True)
-make_rules("rp", "/requests/<tag_type>:<name>", request_search.tagged_request_list, formats=True, paging=True)
+#make_rules("rp", "/requests", request_search.request_list, formats=True, paging=True)
+#make_rules("rp", "/requests/yours", request_search.your_request_list, formats=True, paging=True)
+#make_rules("rp", "/requests/<tag_type>:<name>", request_search.tagged_request_list, formats=True, paging=True)
 
-app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
+#app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
+#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
 
-app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
+#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
 
 # 2.5. Rooms
 
