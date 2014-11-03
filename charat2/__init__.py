@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import root, account, rp, blog
+from charat2.views import root, account, rp
 from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search
 
 from flask.ext.babel import Babel, gettext
@@ -145,18 +145,6 @@ app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_ap
 app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
-
-# 3. Blog subdomain (blog.charat.net)
-
-app.add_url_rule("/", "blog_home", blog.home, subdomain="blog", methods=("GET",))
-
-@app.route("/favicon.ico", subdomain="blog")
-def blog_favicon():
-    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/blog/favicon.ico", mimetype="image/vnd.microsoft.icon")
-
-app.add_url_rule("/post/<post_id>", "blog_post", blog.view_post, subdomain="blog", methods=("GET",))
-app.add_url_rule("/post/<post_id>/<post_title>", "blog_post", blog.view_post, subdomain="blog", methods=("GET",))
-app.add_url_rule("/feed.json", "blog_feed", blog.feed, subdomain="blog", methods=("GET",))
 
 # XXX dear fucking lord we need traversal
 

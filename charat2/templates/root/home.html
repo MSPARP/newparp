@@ -50,37 +50,6 @@
             </div>
         </div>
         
-        <div class="block-container">
-            <div class="block" style="margin-top: 47px;">
-                <logo class="blog"></logo>
-                <header>The Charat Blog</header>
-                <subtitle>Updates and Information</subtitle>
-            </div>
-            <div class="description">
-                <a href="{{url_for("blog_home")}}"><header>The Charat Blog</header></a>
-                <p>
-                    This is The Charat Blog, check here for information on new products or updates on current ones.
-                </p>
-            </div>
-        </div>
-        
-        {% for key in posts|sort %}
-        {% set post = posts[key] %}
-        <div id="post-{{post.id}}" class="blog-post">
-            <div class="inner-blog-post">
-                <a href="{{url_for("blog_home")}}post/{{post.id}}">
-                    <div class="block">
-                        <header>{{post.title}}</header>
-                        <subtitle>{{post.author}}</subtitle>
-                    </div>
-                </a>
-                <div class="content">
-                    {{post.content[:100]}}{% if post.content[:100]|length != post.content|length %}...{% endif %}
-                    <a href="{{url_for("blog_home")}}post/{{post.id}}">[More]</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
 {% endblock %}
 
 
