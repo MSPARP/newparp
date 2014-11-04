@@ -321,8 +321,19 @@ def set_flag():
         setattr(g.chat, flag, new_value)
         message = ("[color=#%%s]%%s[/color] switched %s %s.") % (flag, value)
 
-    # Publicity is an enum because we might add options for password protected
-    # or invite only chats in the future.
+    elif (flag == "level" and value in ("sfw", "nsfw", "nsfw-extreme")):
+        if value == g.chat.level:
+            return "", 204
+        g.chat.level = value
+        if g.chat.level == "sfw":
+            message = "[color=#%s]%s[/color] marked the chat as safe for work."
+        elif g.chat.level == "nsfw":
+            message = "[color=#%s]%s[/color] marked the chat as not safe for work."
+        elif g.chat.level == "nsfw-extreme":
+            message = "[color=#%s]%s[/color] marked the chat as NSFW extreme."
+
+    # Publicity is also an enum because we might add options for password
+    # protected or invite only chats in the future.
     elif (flag == "publicity" and value in ("listed", "unlisted")):
         if value == g.chat.publicity:
             return "", 204

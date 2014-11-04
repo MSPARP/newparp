@@ -221,7 +221,13 @@ class GroupChat(Chat):
     topic = Column(UnicodeText, nullable=False, default=u"")
 
     autosilence = Column(Boolean, nullable=False, default=False)
-    nsfw = Column(Boolean, nullable=False, default=False)
+
+    level = Column(Enum(
+        u"sfw",
+        u"nsfw",
+        u"nsfw-extreme",
+        name=u"group_chats_level",
+    ), nullable=False, default=u"unlisted")
 
     publicity = Column(Enum(
         u"listed",
@@ -240,7 +246,7 @@ class GroupChat(Chat):
             "title": self.title,
             "topic": self.topic,
             "autosilence": self.autosilence,
-            "nsfw": self.nsfw,
+            "level": self.level,
             "publicity": self.publicity,
         }
 
