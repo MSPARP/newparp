@@ -20,7 +20,7 @@ chat_classes = {
     None: AnyChat,
     "group": GroupChat,
     "pm": PMChat,
-    "requested": RequestedChat,
+#    "requested": RequestedChat,
     "searched": SearchedChat,
     "unread": AnyChat,
 }
