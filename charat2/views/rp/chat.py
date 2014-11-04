@@ -117,28 +117,18 @@ def create_chat():
     lower_url = url.lower()
 
     if url_validator.match(lower_url) is None:
-        return render_template(
-            "rp/home.html",
-            create_chat_error="That URL isn't valid. Chat URLs can only "
-            "contain letters, numbers, hyphens and underscores."
-        )
+        return redirect(url_for("rp_rooms", create_chat_error="url_invalid"))
 
     # Check the URL against the routing to make sure it doesn't crash into any
     # of the other routes.
     route, args = current_app.url_map.bind("").match("/" + lower_url)
     if route != "rp_chat":
-        return render_template(
-            "rp/home.html",
-            create_chat_error="The URL \"%s\" has already been taken." % url
-        )
+        return redirect(url_for("rp_rooms", create_chat_error="url_taken"))
 
     # Don't allow pm because subchats of it (pm/*) will crash into private
     # chat URLs.
     if url == "pm" or g.db.query(Chat.id).filter(Chat.url == lower_url).count() != 0:
-        return render_template(
-            "rp/home.html",
-            create_chat_error="The URL \"%s\" has already been taken." % url
-        )
+        return redirect(url_for("rp_rooms", create_chat_error="url_taken"))
 
     g.db.add(GroupChat(
         url=lower_url,

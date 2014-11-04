@@ -1,53 +1,42 @@
-{% extends "rp/base.html" %}
-{% block title%}Chat Rooms – Charat RP{% endblock %}
-{% block header %}
-<script>
-var chats = {{rooms|tojson|safe}};
-</script>
-<script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/front.css')}}" />
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/chats.css')}}" />
-{% endblock %}
-
+{% extends "base.html" %}
+{% block title%}Group chats - {% endblock %}
 {% block content %}
-<div class="body">
-    <!-- Put in some noscript things -->
-    <div id="chat-pages" class="section">
-        <div id="page-div">
-            <div id="your-pages" class="section">
-                <div class="titli">YOUR CHATS</div>
-                <div class="card">
-                    <div class="chat-types"><a href="/chats">All</a></div>
-                    <div class="chat-types"><a href="/chats/group">Group</a></div>
-                    <div class="chat-types"><a href="/chats/pm">Private</a></div>
-                    <div class="chat-types"><a href="/chats/searched">Searched</a></div>
-                    <div class="chat-types"><a href="/chats/unread">Unread</a></div>
-                </div>
-            </div>
-            <div id="new-pages" class="section">
-                <div class="titli">NEW CHATS</div>
-                <div class="card">
-                    <div class="chat-types">Rooms</div>
-                    <div class="chat-types"><a href="/search">Random</a></div>
-                    <div class="chat-types"><a href="/requests">Request</a></div>
-                </div>
-            </div>
-            <div id="temp-create-chat" class="section">
-                <div class="titli">CREATE CHAT</div>
-                <div class="card">
-                    {% if create_chat_error: %}
-                    <p class="error">{{create_chat_error}}</p>
-                    {% endif %}
-                    <form action="{{url_for("rp_create_chat")}}" method="post">
-                      <p><input type="text" name="url" maxlength="50"><button type="submit">Create Room</button></p>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="titli">CHAT ROOMS</div>
-        <div id="under-page"></div>
+    <div class="toggle_box">
+        <input type="checkbox" id="toggle_create_chat"{% if "create_chat_error" in request.args: %} checked="checked"{% endif %}>
+        <h2>&gt; <label for="toggle_create_chat">Create a group chat</label></h2>
+        {% if "create_chat_error" in request.args: %}
+        {% if request.args["create_chat_error"] == "url_invalid": %}
+        <p class="error">That URL isn't valid. Chat URLs can only contain letters, numbers, hyphens and underscores.</p>
+        {% elif request.args["create_chat_error"] == "url_taken": %}
+        <p class="error">That URL has already been taken.</p>
+        {% endif %}
+        {% endif %}
+        <form action="{{url_for("rp_create_chat")}}" method="post">
+            <p><label>URL: <input type="text" name="url" maxlength="50" required></label> <button type="submit">Create</button></p>
+        </form>
     </div>
-</div>
+    <h2>&gt; Existing group chats</h2>
+    <!-- needz moar back end code for filtering by level -->
+    <!--<form action="#" method="get">
+        <p>
+            <label>Show: <select name="level">
+                <option value="sfw">SFW only</option>
+                <option value="all">SFW and NSFW</option>
+                <option value="nsfw">NSFW only</option>
+            </select></label>
+            <button type="submit">Show</button>
+        </p>
+    </form>-->
+    <ul class="chat_list">
+        {% for room in rooms: %}
+        <li>
+            <h3><a href="{{url_for("rp_chat", url=room.url)}}">{{room.title}}</a></h3>
+            <p class="subtitle">{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[room.level] }}, {{room.online}} online.</p>
+            {% if room.topic != "": %}
+            <p>{{room.topic}}</p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
 

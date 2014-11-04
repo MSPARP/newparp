@@ -227,7 +227,7 @@ class GroupChat(Chat):
         u"nsfw",
         u"nsfw-extreme",
         name=u"group_chats_level",
-    ), nullable=False, default=u"unlisted")
+    ), nullable=False, default=u"sfw")
 
     publicity = Column(Enum(
         u"listed",

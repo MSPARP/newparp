@@ -7,13 +7,6 @@ from charat2.model import GroupChat
 from charat2.model.connections import use_db
 
 
-@use_db
-def home():
-    return render_template(
-        "rp/home.html",
-    )
-
-
 @alt_formats(set(["json"]))
 @use_db
 def rooms(fmt=None):
