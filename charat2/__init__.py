@@ -34,14 +34,15 @@ app.teardown_request(redis_disconnect)
 
 
 def make_rules(subdomain, path, func, formats=False, paging=False):
+    # Keep subdomain here for consistency with charat2's route names.
     name = (subdomain + "_" + func.__name__) if subdomain else func.__name__
-    app.add_url_rule(path, name, func, subdomain=subdomain, methods=("GET",))
+    app.add_url_rule(path, name, func, methods=("GET",))
     if formats:
-        app.add_url_rule(path + ".<fmt>", name, func, subdomain=subdomain, methods=("GET",))
+        app.add_url_rule(path + ".<fmt>", name, func, methods=("GET",))
     if paging:
-        app.add_url_rule(path + "/<int:page>", name, func, subdomain=subdomain, methods=("GET",))
+        app.add_url_rule(path + "/<int:page>", name, func, methods=("GET",))
     if formats and paging:
-        app.add_url_rule(path + "/<int:page>.<fmt>", name, func, subdomain=subdomain, methods=("GET",))
+        app.add_url_rule(path + "/<int:page>.<fmt>", name, func, methods=("GET",))
 
 
 # 1. Root domain (charat.net)
@@ -58,65 +59,57 @@ app.add_url_rule("/log_out", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register_get, methods=("GET",))
 app.add_url_rule("/register", "register_post", account.register_post, methods=("POST",))
 
-# 2. RP subdomain (rp.charat.net)
-
-app.add_url_rule("/", "rp_home", rp.home, subdomain="rp", methods=("GET",))
-
-@app.route("/favicon.ico", subdomain="rp")
-def rp_favicon():
-    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/rp/favicon.ico", mimetype="image/vnd.microsoft.icon")
-
-# 2.1. Chats list
+# 2. Chats list
 
 make_rules("rp", "/chats", chat_list.chat_list, formats=True, paging=True)
 make_rules("rp", "/chats/<type>", chat_list.chat_list, formats=True, paging=True)
 
-# 2.2. Character management
+# 3. Character management
 
 make_rules("rp", "/characters", characters.character_list, formats=True)
 
-app.add_url_rule("/characters/new", "rp_new_character", characters.new_character, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/new", "rp_new_character", characters.new_character, methods=("POST",))
 
 make_rules("rp", "/characters/<int:character_id>", characters.character, formats=True)
 
-app.add_url_rule("/characters/<int:character_id>/save", "rp_save_character", characters.save_character, subdomain="rp", methods=("POST",))
-app.add_url_rule("/characters/<int:character_id>/delete", "rp_delete_character_get", characters.delete_character_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/characters/<int:character_id>/delete", "rp_delete_character_post", characters.delete_character_post, subdomain="rp", methods=("POST",))
-app.add_url_rule("/characters/<int:character_id>/set_default", "rp_set_default_character", characters.set_default_character, subdomain="rp", methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/save", "rp_save_character", characters.save_character, methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/delete", "rp_delete_character_get", characters.delete_character_get, methods=("GET",))
+app.add_url_rule("/characters/<int:character_id>/delete", "rp_delete_character_post", characters.delete_character_post, methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/set_default", "rp_set_default_character", characters.set_default_character, methods=("POST",))
 
-# 2.3. Creating chats
+# 4. Creating chats
 
-app.add_url_rule("/create_chat", "rp_create_chat", chat.create_chat, subdomain="rp", methods=("POST",))
+app.add_url_rule("/create_chat", "rp_create_chat", chat.create_chat, methods=("POST",))
 
-# 2.4. Searching
+# 5. Searching
 
-app.add_url_rule("/search", "rp_search", search.search_get, subdomain="rp", methods=("GET",))
-app.add_url_rule("/search", "rp_search_post", search.search_post, subdomain="rp", methods=("POST",))
-app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, subdomain="rp", methods=("POST",))
-app.add_url_rule("/characters/<int:character_id>/search", "rp_search_character", search.search_get, subdomain="rp", methods=("GET",))
+app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
+app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
+app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
+app.add_url_rule("/characters/<int:character_id>/search", "rp_search_character", search.search_get, methods=("GET",))
 
-# 2.5. Request searching
+# 6. Request searching
 
 #make_rules("rp", "/requests", request_search.request_list, formats=True, paging=True)
 #make_rules("rp", "/requests/yours", request_search.your_request_list, formats=True, paging=True)
 #make_rules("rp", "/requests/<tag_type>:<name>", request_search.tagged_request_list, formats=True, paging=True)
 
-#app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, subdomain="rp", methods=("GET",))
-#app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, methods=("GET",))
+#app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, methods=("POST",))
 
-#app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, methods=("POST",))
 
-#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, subdomain="rp", methods=("GET",))
-#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, methods=("GET",))
+#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, methods=("POST",))
 
-#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, subdomain="rp", methods=("GET",))
-#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, subdomain="rp", methods=("POST",))
+#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, methods=("GET",))
+#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, methods=("POST",))
 
-# 2.5. Rooms
+# 7. Rooms
 
 make_rules("rp", "/rooms", rp.rooms, formats=True)
 
-# 2.6. Chats
+# 8. Chats
 
 make_rules("rp", "/<path:url>", chat.chat, formats=True)
 
@@ -128,23 +121,23 @@ make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True)
 
-app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, subdomain="rp", methods=("POST",))
-app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, subdomain="rp", methods=("POST",))
+app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
+app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
-# 2.7. Chat API
+# 9. Chat API
 
-app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/send", "send", chat_api.send, subdomain="rp", methods=("post",))
-app.add_url_rule("/chat_api/set_state", "set_state", chat_api.set_state, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/set_group", "set_group", chat_api.set_group, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/user_action", "user_action", chat_api.user_action, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/set_flag", "set_flag", chat_api.set_flag, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/save", "save", chat_api.save, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_api.save_from_character, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, subdomain="rp", methods=("POST",))
-app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, subdomain="rp", methods=("POST",))
+app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
+app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("post",))
+app.add_url_rule("/chat_api/set_state", "set_state", chat_api.set_state, methods=("POST",))
+app.add_url_rule("/chat_api/set_group", "set_group", chat_api.set_group, methods=("POST",))
+app.add_url_rule("/chat_api/user_action", "user_action", chat_api.user_action, methods=("POST",))
+app.add_url_rule("/chat_api/set_flag", "set_flag", chat_api.set_flag, methods=("POST",))
+app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, methods=("POST",))
+app.add_url_rule("/chat_api/save", "save", chat_api.save, methods=("POST",))
+app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_api.save_from_character, methods=("POST",))
+app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, methods=("POST",))
+app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
+app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
 # XXX dear fucking lord we need traversal
 
