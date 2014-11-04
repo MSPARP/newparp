@@ -7,7 +7,7 @@ from charat2.model.connections import use_db
 
 @use_db
 def home():
-    return render_template(
-        "root/home.html",
-    )
+    if g.user is None:
+        return render_template("root/home_guest.html")
+    return render_template("root/home.html")
 

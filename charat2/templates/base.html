@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{% block title: %}{% endblock %}MSPARP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/css/normalize.css">
+<link rel="stylesheet" href="/static/css/newparp.css">
+</head>
+<body>
+
+<header>
+    <div id="users_online">
+        <p>2000 connected</p>
+        <p>12 searching</p>
+    </div>
+    <h1><a href="{{url_for("home")}}"><img src="/static/img/logo.gif" alt="MSPARP"></a></h1>
+</header>
+
+<nav id="global_navigation">
+    <ul>
+        <li><a href="#">Character search</a></li>
+        <li><a href="#">Roulette</a></li>
+        <li><a href="{{url_for("rp_rooms")}}">Group chats</a></li>
+        <li><a href="#">Prompts</a></li>
+        <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
+        <li><a href="http://forums.msparp.com/">Forums</a></li>
+        <!-- log out button? -->
+    </ul>
+</nav>
+
+<main>
+    <div id="announcements">
+        <h2>Announcements</h2>
+        <ul>
+            <li>For more information about the recent updates, please read <a href="#">this post</a>.</li>
+        </ul>
+    </div>
+{% block content: %}{% endblock %}
+</main>
+
+<footer>
+    <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Suggestions</a></li>
+        <li><a href="#">Affiliates</a></li>
+        <li><a href="#">Guides</a></li>
+        <li><a href="#">Site map</a></li>
+    </ul>
+</footer>
+
+</body>
+</html>
