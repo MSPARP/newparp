@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+{% macro pager(): %}
+{% if paginator.page_count!=1 %}
+<div class="pager">
+{{paginator.pager(format='~5~')}}
+</div>
+{% endif %}
+{% endmacro %}
 <html>
 <head>
 <title>{% block title: %}{% endblock %}MSPARP</title>

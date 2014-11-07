@@ -1,66 +1,45 @@
-{% extends "rp/base.html" %}
-{% block title%}{% if type == None: %}Your{% elif type == 'pm' %}Private Message{% else %}{{type|capitalize}}{% endif %} Chats – Charat RP{% endblock %}
-{% block header %}
-<script>
-var chats = {{chats|tojson|safe}};
-</script>
-<script src="{{url_for('static', filename='js/rp/chats.js')}}" defer></script>
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/home.css')}}" />
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/front.css')}}" />
-<link rel="stylesheet" media="screen" type="text/css" href="{{url_for('static', filename='css/rp/chats.css')}}" />
-{% endblock %}
-
-{% block pager %}
-{% if paginator.page_count!=1 %}
-<div class="pager">
-{{paginator.pager(format='~5~')}}
-</div>
-{% endif %}
-{% endblock %}
-
+{% extends "base.html" %}
+{% block title%}Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats – {% endblock %}
 {% block content %}
-<div class="body">
-    <!-- Put in some noscript things -->
-    <div id="chat-pages" class="section">
-        <div id="page-div">
-            <div id="your-pages" class="section">
-                <div class="titli">YOUR CHATS</div>
-                <div class="card">
-                    
-                    {% for key in chat_classes|sort: %}
-                        {% if type == key: %}
-                            {% if key == 'pm': %}
-                                <div class="chat-types">Private</div>
-                            {% elif key == None: %}
-                                <div class="chat-types">All</div>
-                            {% else %}
-                                <div class="chat-types">{{key|capitalize}}</div>
-                            {% endif %}
-                        {% else %}
-                            {% if key == 'pm': %}
-                                <div class="chat-types"><a href="{{url_for('rp_chat_list', type='pm')}}">Private</a></div>
-                            {% elif key == None: %}
-                                <div class="chat-types"><a href="{{url_for('rp_chat_list')}}">All</a></div>
-                            {% else %}
-                                <div class="chat-types"><a href="{{url_for('rp_chat_list', type=key)}}">{{key|capitalize}}</a></div>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    {{ self.pager() }}
-                </div>
-            </div>
-            <div id="new-pages" class="section">
-                <div class="titli">NEW CHATS</div>
-                <div class="card">
-                    <div class="chat-types"><a href="{{url_for('rp_rooms')}}">Rooms</a></div>
-                    <div class="chat-types"><a href="/search">Random</a></div>
-                    <div class="chat-types"><a href="/requests">Request</a></div>
-                </div>
-            </div>
-        </div>
-        <div class="titli">{% if type == None: %}ALL CHATS{% elif type == 'pm' %}PRIVATE MESSAGES{% else %}{{type|upper}} CHATS{% endif %}</div>
-        <div id="under-page"></div>
-    </div>
-</div>
+    <h2>Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats</h2>
+    <nav id="subnav">
+        Show:
+        {% for key in chat_classes|sort: %}
+        {% if type == key: %}
+        {% if key == 'pm': %}
+        PM
+        {% elif key == None: %}
+        All
+        {% else %}
+        {{key|capitalize}}
+        {% endif %}
+        {% else %}
+        {% if key == 'pm': %}
+        <a href="{{url_for('rp_chat_list', type='pm')}}">PM</a>
+        {% elif key == None: %}
+        <a href="{{url_for('rp_chat_list')}}">All</a>
+        {% else %}
+        <a href="{{url_for('rp_chat_list', type=key)}}">{{key|capitalize}}</a>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </nav>
+    {{ pager() }}
+    <ul class="chat_list">
+        {% for chat in chats: %}
+        <li>
+            <h3><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
+            {% if chat.type == "group": %}
+            <p class="subtitle">{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
+            {% if chat.topic != "": %}
+            <p>{{chat.topic}}</p>
+            {% endif %}
+            {% else: %}
+            <p class="subtitle">{{chat.online}} online.</p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {{ pager() }}
 {% endblock %}
 
