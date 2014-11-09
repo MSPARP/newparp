@@ -72,9 +72,10 @@ def chat_list(fmt=None, type=None, page=1):
     if len(chats) == 0 and page != 1:
         abort(404)
 
-    chat_count = g.db.query(func.count('*')).select_from(ChatUser).filter(
+    chat_count = g.db.query(func.count('*')).select_from(ChatUser).filter(and_(
         ChatUser.user_id == g.user.id,
-    )
+        ChatUser.subscribed == True,
+    ))
     if type == "unread":
         chat_count = chat_count.join(ChatClass).filter(
             ChatClass.last_message > ChatUser.last_online,
