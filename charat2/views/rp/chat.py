@@ -68,7 +68,7 @@ def get_chat(f):
                 ).one()
             except NoResultFound:
                 # Only create a new PMChat on the main chat page.
-                if not main_page:
+                if request.endpoint != "rp_chat":
                     abort(404)
                 chat = PMChat(url=pm_url)
                 g.db.add(chat)
@@ -95,7 +95,7 @@ def get_chat(f):
             Ban.chat_id == chat.id,
             Ban.user_id == g.user.id,
         )).scalar() != 0:
-            if not main_page or chat.url == "theoubliette":
+            if request.endpoint != "rp_chat" or chat.url == "theoubliette":
                 abort(403)
             if request.method != "GET":
                 abort(404)
