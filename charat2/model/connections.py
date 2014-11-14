@@ -110,7 +110,10 @@ def use_db_chat(f):
 
 
 def db_commit(response=None):
-    if hasattr(g, "db") and response.status[0] in {"2", "3"}:
+    # Don't commit on 4xx and 5xx.
+    if response is not None and response.status[0] not in {"2", "3"}:
+        return response
+    if hasattr(g, "db"):
         g.db.commit()
     return response
 
