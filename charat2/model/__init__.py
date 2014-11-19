@@ -91,14 +91,28 @@ class User(Base):
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
 
+    # Default character for entering group chats
     default_character_id = Column(Integer, ForeignKey(
         "characters.id",
         name="users_default_character_fkey",
         use_alter=True,
     ))
 
-    search_tags = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
-    search_exclude_tags = Column(ARRAY(String(100)), nullable=False, default=lambda: [])
+    # Character info for searching
+    search_character_id = Column(Integer, ForeignKey(
+        "search_characters.id",
+        name="users_search_character_fkey",
+        use_alter=True,
+    ), nullable=False, default=1)
+    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
+    # Must be a hex code.
+    color = Column(Unicode(6), nullable=False, default=u"000000")
+    quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
+    case = Column(case_options_enum, nullable=False, default=u"normal")
+    replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
@@ -157,6 +171,44 @@ class Character(Base):
             "alias": self.alias,
             "color": self.color,
             "tags": self.tags_by_type(),
+        }
+        if include_options:
+            ucd["quirk_prefix"] = self.quirk_prefix
+            ucd["quirk_suffix"] = self.quirk_suffix
+            ucd["case"] = self.case
+            ucd["replacements"] = json.loads(self.replacements)
+            ucd["regexes"] = json.loads(self.regexes)
+        return ucd
+
+
+class SearchCharacter(Base):
+
+    __tablename__ = "search_characters"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(Unicode(50), nullable=False)
+
+    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    alias = Column(Unicode(15), nullable=False, default=u"??")
+
+    # Must be a hex code.
+    color = Column(Unicode(6), nullable=False, default=u"000000")
+
+    quirk_prefix = Column(Unicode(50), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(50), nullable=False, default=u"")
+
+    case = Column(case_options_enum, nullable=False, default=u"normal")
+
+    replacements = Column(UnicodeText, nullable=False, default=u"[]")
+    regexes = Column(UnicodeText, nullable=False, default=u"[]")
+
+    def to_dict(self, include_options=False):
+        ucd = {
+            "id": self.id,
+            "title": self.title,
+            "name": self.name,
+            "alias": self.alias,
+            "color": self.color,
         }
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
@@ -717,6 +769,7 @@ User.characters = relation(
     primaryjoin=User.id == Character.user_id,
     backref="user",
 )
+User.search_character = relation(SearchCharacter)
 
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
 
