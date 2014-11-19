@@ -99,11 +99,7 @@ class User(Base):
     ))
 
     # Character info for searching
-    search_character_id = Column(Integer, ForeignKey(
-        "search_characters.id",
-        name="users_search_character_fkey",
-        use_alter=True,
-    ), nullable=False, default=1)
+    search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     alias = Column(Unicode(15), nullable=False, default=u"??")
     # Must be a hex code.
@@ -184,9 +180,12 @@ class Character(Base):
 class SearchCharacter(Base):
 
     __tablename__ = "search_characters"
+    __table_args__ = (UniqueConstraint('group_id', 'order', name='search_character_group_order_unique'),)
 
     id = Column(Integer, primary_key=True)
     title = Column(Unicode(50), nullable=False)
+    group_id = Column(Integer, ForeignKey("search_character_groups.id"), nullable=False)
+    order = Column(Integer, nullable=False)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     alias = Column(Unicode(15), nullable=False, default=u"??")
@@ -217,6 +216,14 @@ class SearchCharacter(Base):
             ucd["replacements"] = json.loads(self.replacements)
             ucd["regexes"] = json.loads(self.regexes)
         return ucd
+
+
+class SearchCharacterGroup(Base):
+
+    __tablename__ = "search_character_groups"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(50), nullable=False)
+    order = Column(Integer, nullable=False, unique=True)
 
 
 class Chat(Base):
@@ -772,6 +779,8 @@ User.characters = relation(
 User.search_character = relation(SearchCharacter)
 
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
+
+SearchCharacterGroup.characters = relation(SearchCharacter, backref="group", order_by=SearchCharacter.order)
 
 GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
