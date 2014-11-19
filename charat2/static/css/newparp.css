@@ -10,7 +10,10 @@ Contents:
 	3. Footer
 	4. Announcements
 2. Content
-	1. Toggle box
+	1. Forms
+	2. Toggle box
+	3. Chat list
+3. Front page
 
 */
 
@@ -98,7 +101,19 @@ ul { padding-left: 1em; }
 
 .error { color: #f00; }
 
-/* 2.1. Toggle box */
+/* 2.1. Forms */
+
+input, select, button { vertical-align: middle; }
+
+h2 select { font-size: 10pt; color: #000; }
+
+.input_table { display: table; }
+.input_table p { display: table-row; }
+.input_table p label, .input_table p input, .input_table p select { display: table-cell; }
+.input_table p input, .input_table p select { margin: 2px 0; }
+.input_table p label { padding-right: 5px; }
+
+/* 2.2. Toggle box */
 
 .toggle_box > input:first-child { display: none; }
 .toggle_box > input:first-child:not(:checked) + h2 ~ * { display: none }
@@ -106,7 +121,7 @@ ul { padding-left: 1em; }
 .toggle_box h2 label { cursor: pointer; text-decoration: underline; }
 .toggle_box h2 label:hover { text-decoration: none; }
 
-/* 2.2. Chat list */
+/* 2.3. Chat list */
 
 .chat_list { max-width: none; padding: 0; list-style-type: none; }
 .chat_list { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
@@ -117,4 +132,14 @@ ul { padding-left: 1em; }
 .chat_list h3 { margin: 0; font-size: 12pt; }
 .chat_list p { margin: 5px 5px 0; }
 .chat_list .subtitle { color: #666; }
+
+/* 3. Front page */
+
+#text_preview { background-color: #eee; padding: 3px 5px; }
+
+.character_list { margin: 0; padding: 0; border: 0; }
+.character_list ul { margin: 10px 0; padding: 0 0 0 10px; list-style-type: none; line-height: 1.8em; }
+.character_list li { display: inline-block; }
+
+.character_button { display: none; }
 
