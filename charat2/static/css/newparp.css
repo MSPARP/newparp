@@ -13,7 +13,9 @@ Contents:
 	1. Forms
 	2. Toggle box
 	3. Chat list
-3. Front page
+3. Pages
+	1. Front page
+	2. Searching
 
 */
 
@@ -133,7 +135,9 @@ h2 select { font-size: 10pt; color: #000; }
 .chat_list p { margin: 5px 5px 0; }
 .chat_list .subtitle { color: #666; }
 
-/* 3. Front page */
+/* 3. Pages */
+
+/* 3.1. Front page */
 
 #text_preview { background-color: #eee; padding: 3px 5px; }
 
@@ -142,4 +146,8 @@ h2 select { font-size: 10pt; color: #000; }
 .character_list li { display: inline-block; }
 
 .character_button { display: none; }
+
+/* 3.2. Searching */
+
+#spinner { width: 140px; height: 140px; margin: 0 auto; background-image: url("/static/img/spinner-big.gif") }
 

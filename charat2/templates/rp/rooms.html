@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title%}Group chats - {% endblock %}
-{% block content %}
+{% block title: %}Group chats - {% endblock %}
+{% block content: %}
     <div class="toggle_box">
         <input type="checkbox" id="toggle_create_chat"{% if "create_chat_error" in request.args: %} checked="checked"{% endif %}>
         <h2>&gt; <label for="toggle_create_chat">Create a group chat</label></h2>

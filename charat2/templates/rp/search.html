@@ -1,41 +1,5 @@
-{% extends "rp/base.html" %}
-
-{% block header %}
-        <script src="{{url_for("static", filename="js/rp/search.js")}}" defer></script>
-        <link rel="stylesheet" media="screen" type="text/css" href="{{url_for("static", filename="css/rp/home.css")}}">
-        <style>
-
-        .searching {
-            background-image: url("{{url_for("static", filename="img/rp/throbber.gif")}}");
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .searching .body {
-            display: none;
-        }
-
-        </style>
-{% endblock %}
-
-{% block content %}
-        <div class="body">
-            <div class="section">
-                <div class="titli">RANDOM SEARCH</div>
-                <div class="card">
-                {% if characters %}
-                    <p>Search as: <select id="characterSelect">
-                {% for character in characters: %}
-                        <option value="{{character.id}}"{% if character.id == selected_character: %} selected="selected"{% endif %}>{{character.title}}</option>
-                {% endfor %}
-                    </select></p>
-                {% else %}
-                    <p>Currently searching as anonymous. <a href="{{url_for("rp_character_list")}}">Create a character</a> to customise who you appear as.</p>
-                {% endif %}
-                    <p>Tags (separated by commas): <input id="characterTags" value="{{", ".join(g.user.search_tags)}}"></p>
-                    <p>Exclude tags (separated by commas): <input id="characterExcludeTags" value="{{", ".join(g.user.search_exclude_tags)}}"></p>
-                    <p><button id="searchButton">Search</button></p>
-                </div>
-            </div>
-        </div>
+{% extends "base.html" %}
+{% block title: %}Searching - {% endblock %}
+{% block content: %}
+    <div id="spinner"></div>
 {% endblock %}

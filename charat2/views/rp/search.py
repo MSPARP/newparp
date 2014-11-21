@@ -1,3 +1,5 @@
+import json
+
 from flask import (
     abort, g, jsonify, make_response, redirect, render_template, request,
     url_for
@@ -7,77 +9,28 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
-from charat2.model import Character
+from charat2.model import case_options, Character
 from charat2.model.connections import use_db, db_commit, db_disconnect
+from charat2.model.validators import color_validator
 
 
 @use_db
 @log_in_required
-def search_get(character_id=None):
-
-    characters = g.db.query(Character).filter(
-        Character.user_id == g.user.id,
-    ).order_by(Character.title, Character.id).all()
-
-    # If we have a character ID, make sure that character exists.
-    if character_id is not None:
-        try:
-            character = g.db.query(Character).filter(and_(
-                Character.id == character_id,
-                Character.user_id == g.user.id,
-            )).one()
-        except NoResultFound:
-            abort(404)
-    else:
-        character_id = g.user.default_character_id
-
-    return render_template(
-        "rp/search.html",
-        characters=characters,
-        selected_character=character_id,
-    )
+def search_get():
+    return render_template("rp/search.html")
 
 
 @use_db
 @log_in_required
 def search_post():
-
-    # This is just making sure it's a number, the actual validation happens
-    # after the person is matched to save on database queries.
-    try:
-        character_id = int(request.form["character_id"])
-        g.redis.set("session:%s:character_id" % g.session_id, character_id)
-        g.redis.expire("session:%s:character_id" % g.session_id, 30)
-    except:
-        g.redis.delete("session:%s:character_id" % g.session_id)
-
-    # Tags are a single string separated by commas, so we split and trim it
-    # here.
-    # XXX use several fields like we do for replacements?
-    tags = tags_to_set(request.form["tags"])
-    g.user.search_tags = tags
-    g.redis.delete("session:%s:tags" % g.session_id)
-    if len(tags) > 0:
-        g.redis.sadd("session:%s:tags" % g.session_id, *tags)
-        g.redis.expire("session:%s:tags" % g.session_id, 30)
-
-    exclude_tags = tags_to_set(request.form["exclude_tags"])
-    g.user.search_exclude_tags = exclude_tags
-    g.redis.delete("session:%s:exclude_tags" % g.session_id)
-    if len(exclude_tags) > 0:
-        g.redis.sadd("session:%s:exclude_tags" % g.session_id, *exclude_tags)
-        g.redis.expire("session:%s:exclude_tags" % g.session_id, 30)
-
     # End the database session so the long poll doesn't hang onto it.
+    # XXX don't create a database connection at all if they're already searching?
     db_commit()
     db_disconnect()
-
     pubsub = g.redis.pubsub()
     pubsub.subscribe("searcher:%s" % g.session_id)
-
     # XXX use a different id for each tab?
     g.redis.sadd("searchers", g.session_id)
-
     for msg in pubsub.listen():
         if msg["type"] == "message":
             # The pubsub channel sends us a JSON string, so we return that
@@ -90,11 +43,65 @@ def search_post():
 @use_db
 @log_in_required
 def search_stop():
-
     g.redis.srem("searchers", g.session_id)
-
     # Kill the long poll request.
     g.redis.publish("searcher:%s" % g.session_id, "{\"status\":\"quit\"}")
-
     return "", 204
+
+
+@use_db
+@log_in_required
+def search_save():
+
+    # yeah this is just cut and pasted from chat_api.py
+    # see also helpers/characters.py
+
+    # Don't allow a blank name.
+    if request.form["name"] == "":
+        return redirect(url_for("home", search_error="empty_name"))
+
+    # Validate color.
+    # <input type="color"> always prefixes with a #.
+    if request.form["color"][0] == "#":
+        color = request.form["color"][1:]
+    else:
+        color = request.form["color"]
+    if not color_validator.match(color):
+        return redirect(url_for("home", search_error="bad_color"))
+    g.user.color = color
+
+    # Validate case.
+    if request.form["case"] not in case_options:
+        return redirect(url_for("home", search_error="bad_case"))
+    g.user.case = request.form["case"]
+
+    # There are length limits on the front end so just silently truncate these.
+    g.user.name = request.form["name"][:50]
+    g.user.alias = request.form["alias"][:15]
+    g.user.quirk_prefix = request.form["quirk_prefix"][:50]
+    g.user.quirk_suffix = request.form["quirk_suffix"][:50]
+
+    # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
+    # Zip replacements.
+    replacements = zip(
+        request.form.getlist("quirk_from"),
+        request.form.getlist("quirk_to"),
+    )
+    # Strip out any rows where from is blank or the same as to.
+    replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
+    # And encode as JSON.
+    g.user.replacements = json.dumps(replacements)
+
+    # XXX PUT LENGTH LIMIT ON REGEXES?
+    # Zip regexes.
+    regexes = zip(
+        request.form.getlist("regex_from"),
+        request.form.getlist("regex_to"),
+    )
+    # Strip out any rows where from is blank or the same as to.
+    regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
+    # And encode as JSON.
+    g.user.regexes = json.dumps(regexes)
+
+    return redirect(url_for("rp_search"))
 

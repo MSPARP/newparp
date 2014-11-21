@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content: %}
-    <form action="#" method="post">
+    <form action="{{url_for("rp_search_save")}}" method="post">
         <h2>Roleplay as <select name="search_character_id">
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
@@ -75,5 +75,6 @@
             <button type="button" id="add_regex">Add</button>
             <button type="button" id="clear_regexes">Clear</button>
         </div>
+        <button type="submit">==&gt; Enter</button>
     </form>
 {% endblock %}
