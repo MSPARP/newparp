@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
-from charat2.model import case_options, Character
+from charat2.model import case_options, SearchCharacter, SearchCharacterChoice
 from charat2.model.connections import use_db, db_commit, db_disconnect
 from charat2.model.validators import color_validator
 
@@ -102,6 +102,21 @@ def search_save():
     regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
     # And encode as JSON.
     g.user.regexes = json.dumps(regexes)
+
+    # Picky checkboxes
+    g.db.query(SearchCharacterChoice).filter(SearchCharacterChoice.user_id == g.user.id).delete()
+    if "use_picky" in request.form:
+        all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
+        for key in request.form.keys():
+            if not key.startswith("picky_"):
+                continue
+            try:
+                character_id = int(key[6:])
+            except:
+                continue
+            if not character_id in all_character_ids:
+                continue
+            g.db.add(SearchCharacterChoice(user_id=g.user.id, search_character_id=character_id))
 
     return redirect(url_for("rp_search"))
 

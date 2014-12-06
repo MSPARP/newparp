@@ -118,10 +118,10 @@ h2 select { font-size: 10pt; color: #000; }
 /* 2.2. Toggle box */
 
 .toggle_box > input:first-child { display: none; }
-.toggle_box > input:first-child:not(:checked) + h2 ~ * { display: none }
+.toggle_box > input:first-child:not(:checked) + h2 ~ *, .toggle_box > input:first-child:not(:checked) + h3 ~ * { display: none }
 /* Make these look more clickable. */
-.toggle_box h2 label { cursor: pointer; text-decoration: underline; }
-.toggle_box h2 label:hover { text-decoration: none; }
+.toggle_box h2 label, .toggle_box h3 label { cursor: pointer; text-decoration: underline; }
+.toggle_box h2 label:hover, .toggle_box h3 label:hover { text-decoration: none; }
 
 /* 2.3. Chat list */
 

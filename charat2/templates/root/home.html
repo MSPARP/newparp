@@ -75,6 +75,27 @@
             <button type="button" id="add_regex">Add</button>
             <button type="button" id="clear_regexes">Clear</button>
         </div>
+        <div class="toggle_box">
+            <input type="checkbox" id="toggle_search_for">
+            <h2>&gt; <label for="toggle_search_for">Search for</label></h2>
+            <div class="toggle_box">
+                <input type="checkbox" id="toggle_search_for_characters" name="use_picky"{% if picky: %} checked="checked"{% endif %}>
+                <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>
+                {% for group in search_character_groups: %}
+                <fieldset class="character_list">
+                    <legend><label><input type="checkbox"> {{group.name}}</label></legend>
+                    <ul>
+                        {% for character in group.characters: %}
+                        <li><label>
+                            <input type="checkbox" name="picky_{{character.id}}"{% if character.id in picky: %} checked="checked"{% endif %}>
+                            <span class="character_name">{{character.title}}</span>
+                        </label></li>
+                        {% endfor %}
+                    </ul>
+                </fieldset>
+                {% endfor %}
+            </div>
+        </div>
         <button type="submit">==&gt; Enter</button>
     </form>
 {% endblock %}

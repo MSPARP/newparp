@@ -219,11 +219,16 @@ class SearchCharacter(Base):
 
 
 class SearchCharacterGroup(Base):
-
     __tablename__ = "search_character_groups"
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(50), nullable=False)
     order = Column(Integer, nullable=False, unique=True)
+
+
+class SearchCharacterChoice(Base):
+    __tablename__ = "search_character_choices"
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    search_character_id = Column(Integer, ForeignKey("search_characters.id"), primary_key=True)
 
 
 class Chat(Base):
@@ -781,6 +786,9 @@ User.search_character = relation(SearchCharacter)
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
 
 SearchCharacterGroup.characters = relation(SearchCharacter, backref="group", order_by=SearchCharacter.order)
+
+SearchCharacterChoice.user = relation(User, backref="search_character_choices")
+SearchCharacterChoice.character = relation(SearchCharacter, backref="users")
 
 GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
