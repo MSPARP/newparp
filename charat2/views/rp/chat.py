@@ -192,7 +192,7 @@ def chat(chat, pm_user, url, fmt=None):
         })
 
     return render_template(
-        "rp/chat.html",
+        "rp/chat/chat.html",
         url=url,
         chat=chat_dict,
         chat_user=chat_user,
@@ -224,6 +224,9 @@ def log(chat, pm_user, url, fmt=None, page=None):
     if page is None:
         # Default to last page.
         page = int(ceil(float(message_count) / messages_per_page))
+        # The previous calculation doesn't work if pages have no messages.
+        if page < 1:
+            page = 1
 
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
@@ -248,7 +251,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
     )
 
     return render_template(
-        "rp/log.html",
+        "rp/chat/log.html",
         url=url,
         chat=chat,
         messages=messages,
@@ -278,7 +281,7 @@ def users(url, fmt=None):
         return jsonify({ "users": [_[0].to_dict() for _ in users] })
 
     return render_template(
-        "rp/chat_users.html",
+        "rp/chat/chat_users.html",
         chat=chat,
         users=users,
     )

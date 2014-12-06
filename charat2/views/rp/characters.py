@@ -20,7 +20,7 @@ def character_list(fmt=None):
         return jsonify({ "characters": [_.to_dict() for _ in characters] })
 
     return render_template(
-        "rp/character_list.html",
+        "rp/characters/character_list.html",
         characters=characters,
     )
 
@@ -45,7 +45,7 @@ def character(character_id, fmt=None):
         return jsonify(character.to_dict(include_options=True))
 
     return render_template(
-        "rp/character.html",
+        "rp/characters/character.html",
         character=character.to_dict(include_options=True),
         case_options=case_options,
         character_tags={
@@ -67,7 +67,7 @@ def save_character(character_id):
 @log_in_required
 def delete_character_get(character_id):
     character = character_query(character_id)
-    return render_template("rp/delete_character.html", character_id=character_id)
+    return render_template("rp/characters/delete_character.html", character_id=character_id)
 
 
 @use_db
