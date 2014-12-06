@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import root, account, rp
+from charat2.views import account, rp
 from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search
 
 from flask.ext.babel import Babel, gettext
@@ -45,13 +45,9 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
         app.add_url_rule(path + "/<int:page>.<fmt>", name, func, methods=("GET",))
 
 
-# 1. Root domain (charat.net)
+# 1. Home/account
 
-app.add_url_rule("/", "home", root.home, methods=("GET",))
-
-@app.route("/favicon.ico")
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, "static"), "img/favicons/root/favicon.ico", mimetype="image/vnd.microsoft.icon")
+app.add_url_rule("/", "home", rp.home, methods=("GET",))
 
 app.add_url_rule("/log_in", "log_in", account.log_in_get, methods=("GET",))
 app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",))
