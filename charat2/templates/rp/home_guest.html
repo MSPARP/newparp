@@ -1,44 +1,12 @@
 {% extends "base.html" %}
+{% import "account/forms.html" as forms %}
 {% block content: %}
     <section>
         <h2>Welcome to MSPARP!</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi facilisis lorem sit amet cursus mollis. Duis sit amet lorem ipsum. Nulla fringilla nisi ut lacus tincidunt tempus. Duis eget aliquet risus. Suspendisse odio nisi, gravida a dignissim id, vulputate et libero. Praesent non lorem sed nulla placerat interdum. Donec a elit commodo, pretium dolor et, feugiat velit.</p>
     </section>
     <section>
-        <h2>Register</h2>
-        <form action="{{url_for("register")}}" method="post">
-            {% if "register_error" in request.args: %}
-			{% if request.args["register_error"] == "blank": %}
-            <p class="error">Please enter a username and password.</p>
-			{% elif request.args["register_error"] == "passwords_didnt_match": %}
-            <p class="error">The two passwords didn't match.</p>
-			{% elif request.args["register_error"] == "invalid_username": %}
-            <p class="error">Usernames can only contain letters, numbers, hyphens and underscores.</p>
-			{% elif request.args["register_error"] == "username_taken": %}
-            <p class="error">That username has already been taken.</p>
-			{% endif %}
-            {% endif %}
-            <p><label>Username: <input type="text" name="username" maxlength="50" required></label></p>
-            <p><label>Password: <input type="password" name="password" required></label></p>
-            <p><label>Password again: <input type="password" name="password_again" required></label></p>
-            <p><label>E-mail (optional): <input type="email" name="email" maxlength="100"></label></p>
-            <p><label>Secret question: <input type="text" name="secret_question" maxlength="50" required></label></p>
-            <p><label>Secret answer: <input type="text" name="secret_answer" maxlength="50" required></label></p>
-            <p>Are you a bot? <label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></p>
-            <p><button type="submit">Register</button> <a href="http://help.msparp.com/">Having problems? Get help here.</a></p>
-        </form>
-        <h2>Log in</h2>
-        <form action="{{url_for("log_in")}}" method="post">
-            {% if "log_in_error" in request.args: %}
-			{% if request.args["log_in_error"] == "no_user": %}
-            <p class="error">There doesn't seem to be an account with that username.</p>
-			{% elif request.args["log_in_error"] == "wrong_password": %}
-            <p class="error">That password is incorrect.</p>
-			{% endif %}
-            {% endif %}
-            <p><label>Username: <input type="text" name="username" maxlength="50" required></label></p>
-            <p><label>Password: <input type="password" name="password" required></label></p>
-            <p><button type="submit">Log in</button></p>
-        </form>
+        {{forms.register()}}
+        {{forms.log_in()}}
     </section>
 {% endblock %}

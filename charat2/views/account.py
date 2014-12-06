@@ -17,7 +17,7 @@ def referer_or_home():
 
 @use_db
 def log_in_get():
-    return render_template("root/log_in.html")
+    return render_template("account/log_in.html")
 
 
 @use_db
@@ -56,7 +56,7 @@ def log_out():
 
 @use_db
 def register_get():
-    return render_template("root/register.html")
+    return render_template("account/register.html")
 
 
 @use_db

@@ -13,7 +13,7 @@ from charat2.model.connections import use_db
 def home():
 
     if g.user is None:
-        return render_template("root/home_guest.html")
+        return render_template("rp/home_guest.html")
 
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
         SearchCharacterGroup.order,

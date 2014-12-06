@@ -6,7 +6,7 @@ def log_in_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            return render_template("log_in_required.html")
+            return render_template("account/log_in_required.html")
         return f(*args, **kwargs)
     return decorated_function
 
