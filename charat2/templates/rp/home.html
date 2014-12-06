@@ -83,7 +83,7 @@
                 <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>
                 {% for group in search_character_groups: %}
                 <fieldset class="character_list">
-                    <legend><label><input type="checkbox"> {{group.name}}</label></legend>
+                    <legend><label><input type="checkbox" name="group_{{group.id}}"> {{group.name}}</label></legend>
                     <ul>
                         {% for character in group.characters: %}
                         <li><label>
@@ -98,4 +98,7 @@
         </div>
         <button type="submit">==&gt; Enter</button>
     </form>
+{% endblock %}
+{% block scripts: %}
+<script>msparp.home();</script>
 {% endblock %}
