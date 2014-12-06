@@ -1,11 +1,12 @@
 import os
 import json
-from flask import g, jsonify, render_template, request, redirect, url_for
+from flask import abort, g, jsonify, render_template, request, redirect, url_for
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.model import case_options, GroupChat, SearchCharacterGroup, SearchCharacterChoice
+from charat2.model import case_options, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice
 from charat2.model.connections import use_db
 
 
@@ -53,4 +54,18 @@ def rooms(fmt=None):
         })
 
     return render_template("rp/rooms.html", rooms=chat_dicts)
+
+
+def search_character_list():
+    abort(404)
+
+
+@use_db
+def search_character(id):
+    # XXX put this in redis?
+    try:
+        character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
+    except NoResultFound:
+        abort(404)
+    return jsonify(character.to_dict(include_options=True))
 
