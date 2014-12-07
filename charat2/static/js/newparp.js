@@ -1,5 +1,31 @@
 var msparp = (function() {
 
+	// Character info
+	function update_character(data) {
+		$("#toggle_with_settings").prop("checked", true);
+		$("input[name=name]").val(data["name"]);
+		$("input[name=alias]").val(data["alias"]);
+		$("input[name=color]").val("#"+data["color"]).change();
+		if (data["quirk_prefix"] != "" || data["quirk_suffix"] != "" || data["case"] != "normal" || data["replacements"].length != 0 || data["regexes"].length != 0) {
+			$("#toggle_typing_quirks").prop("checked", true);
+		}
+		$("input[name=quirk_prefix]").val(data["quirk_prefix"]);
+		$("input[name=quirk_suffix]").val(data["quirk_suffix"]);
+		$("select[name=case]").val(data["case"]);
+		clear_replacements();
+		if (data["replacements"].length == 0) {
+			add_replacement();
+		} else {
+			data["replacements"].forEach(function(replacement) { add_replacement(null, replacement[0], replacement[1]); });
+		}
+		clear_regexes();
+		if (data["regexes"].length == 0) {
+			add_regex();
+		} else {
+			data["regexes"].forEach(function(regex) { add_regex(null, regex[0], regex[1]); });
+		}
+	}
+
 	// Replacement list
 	function delete_replacement(e) {
 		$(this.parentNode).remove();
@@ -44,6 +70,15 @@ var msparp = (function() {
 
 	return {
 		"home": function() {
+			// Search character dropdown
+			$("select[name=search_character_id]").change(function() {
+				$.get("/search_characters/"+this.value+".json", {}, update_character);
+			});
+			// Text preview
+			var text_preview = $("#text_preview");
+			$("input[name=color]").change(function() {
+				text_preview.css("color", this.value);
+			});
 			// Replacement list
 			$('.delete_replacement').click(delete_replacement);
 			$('#add_replacement').click(add_replacement);
