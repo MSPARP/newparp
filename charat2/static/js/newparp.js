@@ -2,6 +2,9 @@ var msparp = (function() {
 
 	// Character info
 	function update_character(data) {
+		if (typeof data["search_character"]!= "undefined") {
+			$("select[name=search_character_id]").val(data["search_character"]["id"]);
+		}
 		$("#toggle_with_settings").prop("checked", true);
 		$("input[name=name]").val(data["name"]);
 		$("input[name=alias]").val(data["alias"]);
@@ -70,6 +73,12 @@ var msparp = (function() {
 
 	return {
 		"home": function() {
+			// Saved character dropdown
+			$("select[name=character_id]").change(function() {
+				if (this.value != "") {
+					$.get("/characters/"+this.value+".json", {}, update_character);
+				}
+			});
 			// Search character dropdown
 			$("select[name=search_character_id]").change(function() {
 				$.get("/search_characters/"+this.value+".json", {}, update_character);

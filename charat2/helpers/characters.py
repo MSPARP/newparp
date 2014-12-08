@@ -1,7 +1,7 @@
 import json
 
 from flask import abort, g
-from sqlalchemy.orm import joinedload_all
+from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import and_
 
@@ -17,7 +17,10 @@ def character_query(character_id, join_tags=False):
             Character.user_id == g.user.id,
         ))
         if join_tags:
-            query = query.options(joinedload_all("tags.tag"))
+            query = query.options(
+                joinedload(Character.search_character),
+                joinedload_all("tags.tag"),
+            )
         return query.one()
     except NoResultFound:
         abort(404)

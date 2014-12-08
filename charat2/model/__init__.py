@@ -130,6 +130,7 @@ class Character(Base):
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(Unicode(50), nullable=False)
+    search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     alias = Column(Unicode(15), nullable=False, default=u"??")
@@ -166,7 +167,6 @@ class Character(Base):
             "name": self.name,
             "alias": self.alias,
             "color": self.color,
-            "tags": self.tags_by_type(),
         }
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
@@ -174,6 +174,8 @@ class Character(Base):
             ucd["case"] = self.case
             ucd["replacements"] = json.loads(self.replacements)
             ucd["regexes"] = json.loads(self.regexes)
+            ucd["tags"] = self.tags_by_type()
+            ucd["search_character"] = self.search_character.to_dict()
         return ucd
 
 
@@ -783,6 +785,7 @@ User.characters = relation(
 )
 User.search_character = relation(SearchCharacter)
 
+Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
 
 SearchCharacterGroup.characters = relation(SearchCharacter, backref="group", order_by=SearchCharacter.order)

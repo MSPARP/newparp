@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block content: %}
     <form action="{{url_for("rp_search_save")}}" method="post">
-        <h2>Roleplay as <select name="search_character_id">
+        <h2>Roleplay as {% if characters %}<select name="character_id">
+            <option value="">Saved characters...</option>
+            {% for character in characters: %}
+            <option value="{{character.id}}">{{character.title}}</option>
+            {% endfor %}
+        </select>{% endif %}<select name="search_character_id">
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
                 {% for character in group.characters: %}
