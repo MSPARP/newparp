@@ -32,7 +32,9 @@
                     <input type="color" id="color_input" name="color" size="6" required value="#{{g.user.color}}">
                 </p>
             </div>
-            <p id="text_preview" style="color: #{{g.user.color}};">??: oh god how did this get here I am not good with computer</p>
+            <p id="text_preview_container" style="color: #{{g.user.color}};">
+                <span id="text_preview_alias">{{g.user.alias}}: </span><span id="text_preview">{{g.user.search_character.text_preview}}</span>
+            </p>
         </div>
         <div class="toggle_box">
             <input type="checkbox" id="toggle_typing_quirks">

@@ -203,6 +203,8 @@ class SearchCharacter(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
+    text_preview = Column(UnicodeText, nullable=False, default=u"oh god how did this get here I am not good with computer")
+
     def to_dict(self, include_options=False):
         ucd = {
             "id": self.id,
@@ -210,6 +212,7 @@ class SearchCharacter(Base):
             "name": self.name,
             "alias": self.alias,
             "color": self.color,
+            "text_preview": self.text_preview,
         }
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
