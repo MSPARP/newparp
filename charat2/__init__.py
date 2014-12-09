@@ -82,10 +82,11 @@ app.add_url_rule("/create_chat", "rp_create_chat", chat.create_chat, methods=("P
 
 # 5. Searching
 
+app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
+app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
 app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
-app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 
 # 6. Request searching
 

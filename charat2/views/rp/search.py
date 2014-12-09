@@ -6,47 +6,13 @@ from flask import (
 )
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
 from charat2.model import case_options, SearchCharacter, SearchCharacterChoice
 from charat2.model.connections import use_db, db_commit, db_disconnect
 from charat2.model.validators import color_validator
-
-
-@use_db
-@log_in_required
-def search_get():
-    return render_template("rp/search.html")
-
-
-@use_db
-@log_in_required
-def search_post():
-    # End the database session so the long poll doesn't hang onto it.
-    # XXX don't create a database connection at all if they're already searching?
-    db_commit()
-    db_disconnect()
-    pubsub = g.redis.pubsub()
-    pubsub.subscribe("searcher:%s" % g.session_id)
-    # XXX use a different id for each tab?
-    g.redis.sadd("searchers", g.session_id)
-    for msg in pubsub.listen():
-        if msg["type"] == "message":
-            # The pubsub channel sends us a JSON string, so we return that
-            # instead of using jsonify.
-            resp = make_response(msg["data"])
-            resp.headers["Content-type"] = "application/json"
-            return resp
-
-
-@use_db
-@log_in_required
-def search_stop():
-    g.redis.srem("searchers", g.session_id)
-    # Kill the long poll request.
-    g.redis.publish("searcher:%s" % g.session_id, "{\"status\":\"quit\"}")
-    return "", 204
 
 
 @use_db
@@ -119,4 +85,54 @@ def search_save():
             g.db.add(SearchCharacterChoice(user_id=g.user.id, search_character_id=character_id))
 
     return redirect(url_for("rp_search"))
+
+
+@use_db
+@log_in_required
+def search_get():
+    return render_template("rp/search.html")
+
+
+@use_db
+@log_in_required
+def search_post():
+    searcher_id = str(uuid4())
+    g.redis.set("searcher:%s:session_id" % searcher_id, g.session_id)
+    g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
+    return jsonify({ "id": searcher_id })
+
+
+def search_continue():
+
+    searcher_id = request.form["id"][:36]
+    cached_session_id = g.redis.get("searcher:%s:session_id" % searcher_id)
+
+    # Send people back to /search if we don't have their data cached.
+    if g.user_id is None or cached_session_id != g.session_id:
+        abort(404)
+
+    g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
+
+    pubsub = g.redis.pubsub()
+    pubsub.subscribe("searcher:%s" % searcher_id)
+
+    g.redis.sadd("searchers", searcher_id)
+
+    for msg in pubsub.listen():
+        if msg["type"] == "message":
+            # The pubsub channel sends us a JSON string, so we return that
+            # instead of using jsonify.
+            resp = make_response(msg["data"])
+            resp.headers["Content-type"] = "application/json"
+            return resp
+
+
+@use_db
+@log_in_required
+def search_stop():
+    searcher_id = request.form["id"][:36]
+    g.redis.srem("searchers", searcher_id)
+    # Kill the long poll request.
+    g.redis.publish("searcher:%s" % searcher_id, "{\"status\":\"quit\"}")
+    return "", 204
 

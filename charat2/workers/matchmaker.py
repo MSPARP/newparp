@@ -17,52 +17,9 @@ from charat2.model.connections import redis_pool
 
 
 def check_compatibility(s1, s2):
-
-    # Normal tags.
-    if len(s1["tags"]) == 0 and len(s2["tags"]) == 0:
-        logging.debug("Neither session has tags.")
-        tags_in_common = set()
-    else:
-        tags_in_common = s1["tags"] & s2["tags"]
-        logging.debug("Tags in common: %s" % tags_in_common)
-        if len(tags_in_common) == 0:
-            return None
-
-    s1_exclusions = s1["exclude_tags"] & s2["tags"]
-    s2_exclusions = s2["exclude_tags"] & s1["tags"]
-    if len(s1_exclusions) > 0 or len(s2_exclusions) > 0:
-        logging.debug("Session %s excludes %s" % (s1["id"], s1_exclusions))
-        logging.debug("Session %s excludes %s" % (s2["id"], s2_exclusions))
+    if s1["user_id"] == s2["user_id"]:
         return None
-
-    return { "tags_in_common": tags_in_common }
-
-
-def set_character(chat_id, searcher):
-    if searcher["character_id"] is None:
-        logging.debug("No character ID specified for %s." % searcher["id"])
-        return
-    try:
-        character_id = int(searcher["character_id"])
-        user_id = int(redis.get("session:%s" % searcher["id"]))
-        logging.debug(
-            "Setting character for %s: user %s, character %s."
-            % (searcher["id"], user_id, character_id)
-        )
-        character = db.query(Character).filter(and_(
-            Character.id == character_id,
-            Character.user_id == user_id,
-        )).options(joinedload(Character.user)).one()
-    except ValueError:
-        logging.debug("No character, character ID or user ID not valid.")
-        return
-    except NoResultFound:
-        logging.debug("No character, character not found.")
-        return
-    logging.debug(
-        "Found character %s [%s]." % (character.name, character.alias)
-    )
-    db.add(ChatUser.from_character(character, chat_id=chat_id))
+    return True
 
 
 if __name__ == "__main__":
@@ -74,13 +31,13 @@ if __name__ == "__main__":
     db = sm()
     redis = StrictRedis(connection_pool=redis_pool)
 
-    searchers = redis.smembers("searchers")
+    searcher_ids = redis.smembers("searchers")
 
     while True:
 
         # Reset the searcher list for the next iteration.
         redis.delete("searchers")
-        for searcher in searchers:
+        for searcher in searcher_ids:
             logging.debug("Waking unmatched searcher %s." % searcher)
             redis.publish("searcher:%s" % searcher, "{ \"status\": \"unmatched\" }")
 
@@ -88,29 +45,32 @@ if __name__ == "__main__":
 
         logging.info("Starting match loop.")
 
-        searchers = redis.smembers("searchers")
+        searcher_ids = redis.smembers("searchers")
 
         # We can't do anything with less than 2 people, so don't bother.
-        if len(searchers) < 2:
+        if len(searcher_ids) < 2:
             logging.info("Not enough searchers, skipping.")
             continue
 
-        sessions = [{
-            "id": _,
-            "character_id": redis.get("session:%s:character_id" % _),
-            "tags": redis.smembers("session:%s:tags" % _),
-            "exclude_tags": redis.smembers("session:%s:exclude_tags" % _),
-        } for _ in searchers]
-        logging.debug("Session list: %s" % sessions)
-        shuffle(sessions)
+        searchers = []
+        for searcher in searcher_ids:
+            session_id = redis.get("searcher:%s:session_id" % searcher)
+            # Don't match them if they've logged out since sending the request.
+            try:
+                user_id = int(redis.get("session:%s" % session_id))
+            except ValueError:
+                continue
+            searchers.append({ "id": searcher, "user_id": user_id })
+        logging.debug("Searcher list: %s" % searchers)
+        shuffle(searchers)
 
         already_matched = set()
         # Range hack so we don't check opposite pairs or against itself.
-        for n in range(len(sessions)):
-            s1 = sessions[n]
+        for n in range(len(searchers)):
+            s1 = searchers[n]
 
-            for m in range(n + 1, len(sessions)):
-                s2 = sessions[m]
+            for m in range(n + 1, len(searchers)):
+                s2 = searchers[m]
 
                 if s1["id"] in already_matched or s2["id"] in already_matched:
                     continue
@@ -131,19 +91,6 @@ if __name__ == "__main__":
                 db.add(new_chat)
                 db.flush()
 
-                if len(match["tags_in_common"]) > 0:
-                    send_message(db, redis, Message(
-                        chat_id=new_chat.id,
-                        type="search_info",
-                        text=(
-                            "Tags in common: %s."
-                            % (", ".join(sorted(match["tags_in_common"])))
-                        ),
-                    ))
-
-                set_character(new_chat.id, s1)
-                set_character(new_chat.id, s2)
-
                 db.commit()
 
                 already_matched.add(s1["id"])
@@ -152,6 +99,6 @@ if __name__ == "__main__":
                 match_message = json.dumps({ "status": "matched", "url": new_url })
                 redis.publish("searcher:%s" % s1["id"], match_message)
                 redis.publish("searcher:%s" % s2["id"], match_message)
-                searchers.remove(s1["id"])
-                searchers.remove(s2["id"])
+                searcher_ids.remove(s1["id"])
+                searcher_ids.remove(s2["id"])
 

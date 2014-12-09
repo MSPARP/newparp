@@ -128,5 +128,53 @@ var msparp = (function() {
 				}
 			});
 		},
+		"search": function() {
+			var searching = false;
+			var searcher_id;
+			function start_search() {
+				if (!searching) {
+					searching = true;
+					$(document.body).addClass("searching");
+					$.post("/search", {}, function(data) {
+						searcher_id = data.id;
+						continue_search();
+					}).error(function() {
+						searching = false;
+						$(document.body).removeClass("searching").addClass("search_error");
+					});
+				}
+			}
+			function continue_search() {
+				if (searching) {
+					$.post("/search/continue", { "id": searcher_id }, function(data) {
+						console.log(data);
+						if (data.status == "matched") {
+							searching = false;
+							window.location.href = "/" + data.url;
+						} else if (data.status == "quit") {
+							searching = false;
+						} else {
+							continue_search();
+						}
+					}).error(function() {
+						window.setTimeout(function() {
+							searching = false;
+							start_search();
+						}, 2000);
+					});
+				}
+			}
+			function stop_search() {
+				searching = false;
+				$.ajax("/search/stop", { "type": "POST", data: { "id": searcher_id }, "async": false });
+				$(document.body).removeClass("searching");
+			}
+			$(window).unload(function () {
+				if (searching) {
+					stop_search();
+				}
+			});
+			start_search();
+		},
 	};
 })();

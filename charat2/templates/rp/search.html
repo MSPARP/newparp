@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title: %}Searching - {% endblock %}
 {% block content: %}
-    <div id="spinner"></div>
+    <section id="search_connecting">Connecting...</section>
+    <section id="spinner"><img src="http://newparp.thae.li/static/img/spinner-big.gif" alt="Searching..."></section>
+    <section id="search_error">Sorry, there seems to be a problem with searching. Please refresh or try again later. :(</section>
+{% endblock %}
+{% block scripts: %}
+<script>msparp["search"]();</script>
 {% endblock %}
