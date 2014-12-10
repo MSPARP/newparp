@@ -69,10 +69,19 @@ def search_save():
     # And encode as JSON.
     g.user.regexes = json.dumps(regexes)
 
+    all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
+
+    try:
+        character_id = int(request.form["search_character_id"])
+        if character_id not in all_character_ids:
+            raise ValueError
+        g.user.search_character_id = character_id
+    except ValueError:
+        g.user.search_character_id = 1
+
     # Picky checkboxes
     g.db.query(SearchCharacterChoice).filter(SearchCharacterChoice.user_id == g.user.id).delete()
     if "use_picky" in request.form:
-        all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
         for key in request.form.keys():
             if not key.startswith("picky_"):
                 continue

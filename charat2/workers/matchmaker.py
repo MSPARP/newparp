@@ -12,14 +12,21 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from charat2.helpers.chat import send_message
-from charat2.model import sm, ChatUser, Message, SearchedChat, Character
+from charat2.model import sm, ChatUser, Message, SearchedChat, User
 from charat2.model.connections import redis_pool
 
 
 def check_compatibility(s1, s2):
-    if s1["user_id"] == s2["user_id"]:
-        return None
-    return True
+    # Don't pair people with themselves.
+    if s1["user"].id == s2["user"].id:
+        return False
+    # Match people who both chose wildcard.
+    if not s1["choices"] and not s2["choices"]:
+        return True
+    # Match people who are otherwise compatible.
+    if s1["user"].search_character_id in s2["choices"] and s2["user"].search_character_id in s1["choices"]:
+        return True
+    return False
 
 
 if __name__ == "__main__":
@@ -52,15 +59,23 @@ if __name__ == "__main__":
             logging.info("Not enough searchers, skipping.")
             continue
 
+        # Make sure we have a new transaction for each loop.
+        db.commit()
+
         searchers = []
         for searcher in searcher_ids:
             session_id = redis.get("searcher:%s:session_id" % searcher)
             # Don't match them if they've logged out since sending the request.
             try:
-                user_id = int(redis.get("session:%s" % session_id))
-            except ValueError:
+                user = db.query(User).filter(
+                    User.id == int(redis.get("session:%s" % session_id)),
+                ).options(joinedload(User.search_character_choices)).one()
+            except ValueError, NoResultFound:
                 continue
-            searchers.append({ "id": searcher, "user_id": user_id })
+            searchers.append({
+                "id": searcher, "user": user,
+                "choices": {_.search_character_id for _ in user.search_character_choices},
+            })
         logging.debug("Searcher list: %s" % searchers)
         shuffle(searchers)
 
@@ -78,7 +93,7 @@ if __name__ == "__main__":
                 logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
 
                 match = check_compatibility(s1, s2)
-                if match is None:
+                if not match:
                     logging.debug("No match.")
                     continue
 
