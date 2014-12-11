@@ -18,13 +18,13 @@ from charat2.model.connections import redis_pool
 
 def check_compatibility(s1, s2):
     # Don't pair people with themselves.
-    if s1["user"].id == s2["user"].id:
+    if s1["user_id"] == s2["user_id"]:
         return False
     # Match people who both chose wildcard.
     if not s1["choices"] and not s2["choices"]:
         return True
     # Match people who are otherwise compatible.
-    if s1["user"].search_character_id in s2["choices"] and s2["user"].search_character_id in s1["choices"]:
+    if s1["search_character_id"] in s2["choices"] and s2["search_character_id"] in s1["choices"]:
         return True
     return False
 
@@ -59,22 +59,21 @@ if __name__ == "__main__":
             logging.info("Not enough searchers, skipping.")
             continue
 
-        # Make sure we have a new transaction for each loop.
-        db.commit()
-
         searchers = []
         for searcher in searcher_ids:
             session_id = redis.get("searcher:%s:session_id" % searcher)
             # Don't match them if they've logged out since sending the request.
             try:
-                user = db.query(User).filter(
-                    User.id == int(redis.get("session:%s" % session_id)),
-                ).options(joinedload(User.search_character_choices)).one()
-            except ValueError, NoResultFound:
+                user_id = int(redis.get("session:%s" % session_id))
+                search_character_id = int(redis.get("searcher:%s:search_character_id" % searcher))
+            except ValueError:
                 continue
             searchers.append({
-                "id": searcher, "user": user,
-                "choices": {_.search_character_id for _ in user.search_character_choices},
+                "id": searcher,
+                "user_id": user_id,
+                "search_character_id": search_character_id,
+                "character": redis.hgetall("searcher:%s:character" % searcher),
+                "choices": {int(_) for _ in redis.smembers("searcher:%s:choices" % searcher)},
             })
         logging.debug("Searcher list: %s" % searchers)
         shuffle(searchers)
@@ -105,6 +104,9 @@ if __name__ == "__main__":
                 new_chat = SearchedChat(url=new_url)
                 db.add(new_chat)
                 db.flush()
+
+                db.add(ChatUser(chat_id=new_chat.id, user_id=s1["user_id"], **s1["character"]))
+                db.add(ChatUser(chat_id=new_chat.id, user_id=s2["user_id"], **s2["character"]))
 
                 db.commit()
 

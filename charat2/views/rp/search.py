@@ -105,9 +105,34 @@ def search_get():
 @use_db
 @log_in_required
 def search_post():
+
     searcher_id = str(uuid4())
     g.redis.set("searcher:%s:session_id" % searcher_id, g.session_id)
     g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
+
+    g.redis.set("searcher:%s:search_character_id" % searcher_id, g.user.search_character_id)
+    g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
+
+    g.redis.hmset("searcher:%s:character" % searcher_id, {
+        "name": g.user.name,
+        "alias": g.user.alias,
+        "color": g.user.color,
+        "quirk_prefix": g.user.quirk_prefix,
+        "quirk_suffix": g.user.quirk_suffix,
+        "case": g.user.case,
+        "replacements": g.user.replacements,
+        "regexes": g.user.regexes,
+    })
+    g.redis.expire("searcher:%s:character" % searcher_id, 30)
+
+    g.redis.delete("searcher:%s:choices" % searcher_id)
+    g.redis.sadd("searcher:%s:choices" % searcher_id, *(_[0] for _ in g.db.query(
+        SearchCharacterChoice.search_character_id,
+    ).filter(
+        SearchCharacterChoice.user_id == g.user.id,
+    ).all()))
+    g.redis.expire("searcher:%s:choices" % searcher_id, 30)
+
     return jsonify({ "id": searcher_id })
 
 
@@ -121,6 +146,9 @@ def search_continue():
         abort(404)
 
     g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
+    g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
+    g.redis.expire("searcher:%s:character" % searcher_id, 30)
+    g.redis.expire("searcher:%s:choices" % searcher_id, 30)
 
     pubsub = g.redis.pubsub()
     pubsub.subscribe("searcher:%s" % searcher_id)
