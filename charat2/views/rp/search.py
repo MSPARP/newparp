@@ -126,11 +126,13 @@ def search_post():
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
 
     g.redis.delete("searcher:%s:choices" % searcher_id)
-    g.redis.sadd("searcher:%s:choices" % searcher_id, *(_[0] for _ in g.db.query(
+    choices = [_[0] for _ in g.db.query(
         SearchCharacterChoice.search_character_id,
     ).filter(
         SearchCharacterChoice.user_id == g.user.id,
-    ).all()))
+    ).all()]
+    if choices:
+        g.redis.sadd("searcher:%s:choices" % searcher_id, *choices)
     g.redis.expire("searcher:%s:choices" % searcher_id, 30)
 
     return jsonify({ "id": searcher_id })
