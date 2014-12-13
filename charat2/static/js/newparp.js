@@ -222,6 +222,19 @@ var msparp = (function() {
 				}
 			}
 
+			// Quitting
+			window.onbeforeunload = function(e) {
+				if (status == "chatting" && user.meta.confirm_disconnect) {
+					if (typeof e != "undefined") { e.preventDefault(); }
+					return "";
+				}
+			}
+			$(window).unload(function() {
+				if (status == "chatting") {
+					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+				}
+			});
+
 			// Parsing and rendering messages
 			function receive_messages(data) {
 				if (typeof data.messages != "undefined" && data.messages.length != 0) { data.messages.forEach(render_message); }
