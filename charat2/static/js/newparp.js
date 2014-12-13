@@ -203,7 +203,7 @@ var msparp = (function() {
 
 			// Long polling
 			function launch_long_poll() {
-				$.post("/chat_api/messages", { "chat_id": chat.id, "after": latest_message}, receive_messages).complete(function(jqxhr, text_status) {
+				$.post("/chat_api/messages", { "chat_id": chat.id, "after": latest_message }, receive_messages).complete(function(jqxhr, text_status) {
 					if (status == "chatting") {
 						if (jqxhr.status < 400 && text_status == "success") {
 							launch_long_poll();
@@ -213,6 +213,13 @@ var msparp = (function() {
 						}
 					}
 				});
+			}
+
+			// Ping loop
+			function ping() {
+				if (status == "chatting") {
+					$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
+				}
 			}
 
 			// Parsing and rendering messages
@@ -237,6 +244,7 @@ var msparp = (function() {
 			// Now all that's done, let's connect
 			var status = "chatting";
 			launch_long_poll();
+			window.setTimeout(ping, 10000);
 			conversation.scrollTop(conversation[0].scrollHeight);
 
 		},
