@@ -133,9 +133,9 @@ def disconnect(redis, chat_id, user_id):
 def get_userlist(db, redis, chat):
     online_user_ids = redis.smembers("chat:%s:online" % chat.id)
     # Don't bother querying if the list is empty.
-    # Also delete the message cache.
+    # Also set the message cache to expire.
     if len(online_user_ids) == 0:
-        redis.delete("chat:%s" % chat.id)
+        redis.expire("chat:%s" % chat.id, 30)
         return []
     return [
         _.to_dict() for _ in
