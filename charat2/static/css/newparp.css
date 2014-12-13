@@ -16,6 +16,7 @@ Contents:
 3. Pages
 	1. Front page
 	2. Searching
+4. Chat window
 
 */
 
@@ -151,9 +152,14 @@ h2 select { font-size: 10pt; color: #000; }
 
 #spinner { width: 140px; height: 140px; margin: 0 auto; background-image: url("/static/img/spinner-big.gif") }
 
-
 #search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
 #spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
 .searching #spinner, .search_error #search_error { display: block; }
 #search_error { color: #f00; }
 
+/* 4. Chat window */
+
+body.chat { background-color: #aaa; font-size: 12px; }
+
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+#conversation p { margin: 2px 5px; }

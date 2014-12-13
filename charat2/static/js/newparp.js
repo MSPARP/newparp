@@ -77,17 +77,21 @@ var msparp = (function() {
 	}
 
 	return {
+		// Homepage
 		"home": function() {
+
 			// Saved character dropdown
 			$("select[name=character_id]").change(function() {
 				if (this.value != "") {
 					$.get("/characters/"+this.value+".json", {}, update_character);
 				}
 			});
+
 			// Search character dropdown
 			$("select[name=search_character_id]").change(function() {
 				$.get("/search_characters/"+this.value+".json", {}, update_character);
 			});
+
 			// Text preview
 			var text_preview_container = $("#text_preview_container");
 			var text_preview_alias = $("#text_preview_alias");
@@ -101,14 +105,17 @@ var msparp = (function() {
 			$("input[name=color]").change(function() {
 				text_preview_container.css("color", this.value);
 			});
+
 			// Replacement list
 			$('.delete_replacement').click(delete_replacement);
 			$('#add_replacement').click(add_replacement);
 			$('#clear_replacements').click(clear_replacements);
+
 			// Regex list
 			$('.delete_regex').click(delete_regex);
 			$('#add_regex').click(add_regex);
 			$('#clear_regexes').click(clear_regexes);
+
 			// Picky checkboxes
 			$(".character_list legend input").click(function() {
 				var group = $(this).parentsUntil(".toggle_box").last();
@@ -127,10 +134,14 @@ var msparp = (function() {
 					group_input.prop("checked", false).prop("indeterminate", true);
 				}
 			});
+
 		},
+		// Character search
 		"search": function() {
+
 			var searching = false;
 			var searcher_id;
+
 			function start_search() {
 				if (!searching) {
 					searching = true;
@@ -144,6 +155,7 @@ var msparp = (function() {
 					});
 				}
 			}
+
 			function continue_search() {
 				if (searching) {
 					$.post("/search/continue", { "id": searcher_id }, function(data) {
@@ -164,17 +176,69 @@ var msparp = (function() {
 					});
 				}
 			}
+
 			function stop_search() {
 				searching = false;
 				$.ajax("/search/stop", { "type": "POST", data: { "id": searcher_id }, "async": false });
 				$(document.body).removeClass("searching");
 			}
+
 			$(window).unload(function () {
 				if (searching) {
 					stop_search();
 				}
 			});
+
 			start_search();
+
+		},
+		// Chat window
+		"chat": function(chat, user, latest_message) {
+
+			console.log(chat);
+			console.log(user);
+			console.log(latest_message);
+
+			var conversation = $("#conversation");
+
+			// Long polling
+			function launch_long_poll() {
+				$.post("/chat_api/messages", { "chat_id": chat.id, "after": latest_message}, receive_messages).complete(function(jqxhr, text_status) {
+					if (status == "chatting") {
+						if (jqxhr.status < 400 && text_status == "success") {
+							launch_long_poll();
+						} else {
+							window.setTimeout(launch_long_poll, 2000);
+							// XXX display a message if it still doesn't work after several attempts.
+						}
+					}
+				});
+			}
+
+			// Parsing and rendering messages
+			function receive_messages(data) {
+				if (typeof data.messages != "undefined" && data.messages.length != 0) { data.messages.forEach(render_message); }
+			}
+
+			function render_message(message) {
+				latest_message = message.id;
+				var p = $("<p>").attr("id", "message_"+message.id).addClass("message_"+message.type+" user_"+message.user.id);
+				if (message.type == "me") {
+					p.text("* " + message.name + " " + message.text);
+				} else if (message.alias != "") {
+					p.text(message.alias + ": " + message.text);
+				} else {
+					p.text(message.text);
+				}
+				p.appendTo(conversation);
+				conversation.scrollTop(conversation[0].scrollHeight);
+			}
+
+			// Now all that's done, let's connect
+			var status = "chatting";
+			launch_long_poll();
+			conversation.scrollTop(conversation[0].scrollHeight);
+
 		},
 	};
 })();
