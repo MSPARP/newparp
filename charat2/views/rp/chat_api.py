@@ -160,18 +160,18 @@ def set_group():
         return "", 204
 
     if set_group == "mod":
-        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Magical Mod. They can now silence, kick and ban other users.")
+        message = ("%s [%s] set %s [%s] to Magical Mod. They can now silence, kick and ban other users.")
     elif set_group == "mod2":
-        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Cute-Cute Mod. They can now silence and kick other users.")
+        message = ("%s [%s] set %s [%s] to Cute-Cute Mod. They can now silence and kick other users.")
     elif set_group == "mod3":
-        message = ("[color=#%s]%s[/color] set [color=#%s]%s[/color] to Little Mod. They can now silence other users.")
+        message = ("%s [%s] set %s [%s] to Little Mod. They can now silence other users.")
     elif set_group == "user":
         if set_chat_user.group == "silent":
-            message = ("[color=#%s]%s[/color] unsilenced [color=#%s]%s[/color].")
+            message = ("%s [%s] unsilenced %s [%s].")
         else:
-            message = ("[color=#%s]%s[/color] removed moderator status from [color=#%s]%s[/color].")
+            message = ("%s [%s] removed moderator status from %s [%s].")
     elif set_group == "silent":
-        message = ("[color=#%s]%s[/color] silenced [color=#%s]%s[/color].")
+        message = ("%s [%s] silenced %s [%s].")
 
     set_chat_user.group = set_group
 
@@ -181,8 +181,8 @@ def set_group():
         name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.chat_user.color, g.user.username,
-            set_chat_user.color, set_user.username,
+            g.chat_user.name, g.chat_user.alias,
+            set_chat_user.name, set_chat_user.alias,
         ),
     ))
 
@@ -239,11 +239,10 @@ def user_action():
             type="user_action",
             name=g.chat_user.name,
             text=(
-                "[color=#%s]%s[/color] kicked "
-                "[color=#%s]%s[/color] from the chat."
+                "%s [%s] kicked %s [%s] from the chat."
             ) % (
-                g.chat_user.color, g.user.username,
-                set_chat_user.color, set_user.username,
+                g.chat_user.name, g.chat_user.alias,
+                set_chat_user.name, set_chat_user.alias,
             )
         ))
         return "", 204
@@ -265,24 +264,18 @@ def user_action():
         ))
         if request.form.get("reason") is not None:
             ban_message = (
-                "[color=#%s]%s[/color] banned "
-                "[color=#%s]%s[/color] from the chat. Reason: %s"
+                "%s [%s] banned %s [%s] from the chat. Reason: %s"
             ) % (
-                g.chat_user.color,
-                g.user.username,
-                set_chat_user.color,
-                set_user.username,
+                g.chat_user.name, g.chat_user.alias,
+                set_chat_user.name, set_chat_user.alias,
                 request.form["reason"],
             )
         else:
             ban_message = (
-                "[color=#%s]%s[/color] banned "
-                "[color=#%s]%s[/color] from the chat."
+                "%s [%s] banned %s [%s] from the chat."
             ) % (
-                g.chat_user.color,
-                g.user.username,
-                set_chat_user.color,
-                set_user.username,
+                g.chat_user.name, g.chat_user.alias,
+                set_chat_user.name, set_chat_user.alias,
             )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
@@ -319,18 +312,18 @@ def set_flag():
         if new_value == getattr(g.chat, flag):
             return "", 204
         setattr(g.chat, flag, new_value)
-        message = ("[color=#%%s]%%s[/color] switched %s %s.") % (flag, value)
+        message = ("%%s [%%s] switched %s %s.") % (flag, value)
 
     elif (flag == "level" and value in ("sfw", "nsfw", "nsfw-extreme")):
         if value == g.chat.level:
             return "", 204
         g.chat.level = value
         if g.chat.level == "sfw":
-            message = "[color=#%s]%s[/color] marked the chat as safe for work."
+            message = "%s [%s] marked the chat as safe for work."
         elif g.chat.level == "nsfw":
-            message = "[color=#%s]%s[/color] marked the chat as not safe for work."
+            message = "%s [%s] marked the chat as not safe for work."
         elif g.chat.level == "nsfw-extreme":
-            message = "[color=#%s]%s[/color] marked the chat as NSFW extreme."
+            message = "%s [%s] marked the chat as NSFW extreme."
 
     # Publicity is also an enum because we might add options for password
     # protected or invite only chats in the future.
@@ -339,9 +332,9 @@ def set_flag():
             return "", 204
         g.chat.publicity = value
         if g.chat.publicity == "listed":
-            message = "[color=#%s]%s[/color] listed the chat. It's now listed on the public rooms page."
+            message = "%s [%s] listed the chat. It's now listed on the public rooms page."
         elif g.chat.publicity == "unlisted":
-            message = "[color=#%s]%s[/color] unlisted the chat."
+            message = "%s [%s] unlisted the chat."
 
     else:
         abort(400)
@@ -350,7 +343,7 @@ def set_flag():
         chat_id=g.chat.id,
         user_id=g.user.id,
         type="chat_meta",
-        text=message % (g.chat_user.color, g.user.username),
+        text=message % (g.chat_user.name, g.chat_user.alias),
     ))
 
     return "", 204
@@ -382,8 +375,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color] removed the conversation topic." % (
-                g.chat_user.color, g.user.username,
+            text="%s [%s] removed the conversation topic." % (
+                g.chat_user.name, g.chat_user.alias,
             ),
         ))
     else:
@@ -392,8 +385,8 @@ def set_topic():
             user_id=g.user.id,
             name=g.chat_user.name,
             type="chat_meta",
-            text="[color=#%s]%s[/color] changed the topic to \"%s\"" % (
-                g.chat_user.color, g.user.username, topic,
+            text="%s [%s] changed the topic to \"%s\"" % (
+                g.chat_user.name, g.chat_user.alias, topic,
             ),
         ))
 
@@ -460,18 +453,14 @@ def save():
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
-            alias_string = (
-                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.alias)
-                if len(g.chat_user.alias) > 0 else ""
-            )
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
-                    old_color, g.user.username,
-                    g.chat_user.color, g.chat_user.name, alias_string,
+                text=("%s [%s] is now %s [%s].") % (
+                    old_name, old_alias,
+                    g.chat_user.name, g.chat_user.alias,
                 ),
             ))
 
@@ -512,18 +501,14 @@ def save_from_character():
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
-            alias_string = (
-                " [[color=#%s]%s[/color]]" % (g.chat_user.color, g.chat_user.alias)
-                if len(g.chat_user.alias) > 0 else ""
-            )
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("[color=#%s]%s[/color] is now [color=#%s]%s[/color]%s.") % (
-                    old_color, g.user.username,
-                    g.chat_user.color, g.chat_user.name, alias_string,
+                text=("%s [%s] is now %s [%s].") % (
+                    old_name, old_alias,
+                    g.chat_user.name, g.chat_user.alias,
                 ),
             ))
 
@@ -591,8 +576,8 @@ def quit():
                 user_id=g.user.id,
                 type="disconnect",
                 name=g.chat_user.name,
-                text=("[color=#%s]%s[/color] disconnected.") % (
-                    g.chat_user.color, g.user.username,
+                text=("%s [%s] disconnected.") % (
+                    g.chat_user.name, g.chat_user.alias,
                 ),
             ))
     return "", 204

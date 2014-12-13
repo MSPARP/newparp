@@ -37,9 +37,7 @@ if __name__ == "__main__":
                     user_id=dead_chat_user.user_id,
                     type="timeout",
                     name=dead_chat_user.name,
-                    text="[color=#%s]%s[/color] lost connection." % (
-                        dead_chat_user.color, dead_chat_user.user.username,
-                    ),
+                    text="%s's connection timed out." % dead_chat_user.name,
                 ))
             print current_time, "Reaping ", dead
         db.commit()

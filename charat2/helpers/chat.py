@@ -56,9 +56,7 @@ def mark_alive(f):
                     user_id=g.user.id,
                     type="join",
                     name=g.chat_user.name,
-                    text=("[color=#%s]%s[/color] connected.") % (
-                        g.chat_user.color, g.user.username,
-                    ),
+                    text="%s [%s] joined chat." % (g.chat_user.name, g.chat_user.alias),
                 ))
         g.redis.zadd(
             "chats_alive",
