@@ -13,9 +13,21 @@
     <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}</li>
 {{/each}}
 {% endraw %}</script>
+<script id="action_list_template" type="text/x-handlebars-template">{% raw %}
+    <h1>{{character.name}}</h1>
+    <ul>
+        {{#if (can_set_group "mod")}}<li id="action_mod">Make Professional Wet Blanket</li>{{/if}}
+        {{#if (can_set_group "mod2")}}<li id="action_mod2">Make Bum's Rusher</li>{{/if}}
+        {{#if (can_set_group "mod3")}}<li id="action_mod3">Make Amateur Gavel-Slinger</li>{{/if}}
+        {{#if (can_set_group "user")}}<li id="action_user">{{{set_user_text}}}</li>{{/if}}
+        {{#if (can_set_group "silent")}}<li id="action_silent">Silence</li>{{/if}}
+        <li id="action_close">Close</li>
+    </ul>
+{% endraw %}</script>
 
 <section class="sidebar" id="chat_info">
-	<button type="button" class="close">Close</button>
+    <button type="button" class="close">Close</button>
+    <section id="action_list"></section>
     <h1>Users</h1>
     <ul id="user_list"></ul>
 </section>

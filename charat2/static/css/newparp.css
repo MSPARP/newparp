@@ -183,4 +183,10 @@ h2 select { font-size: 10pt; color: #000; }
 	.chatting #chat_info { display: block; }
 }
 .sidebar ul { margin: 0; padding: 0 0 0 1.5em; }
+.sidebar li { margin: 2px 0; }
+
+#user_list li, #action_list li { cursor: pointer; }
+.group_admin { text-decoration: underline; }
+.group_creator, .group_mod, .group_mod2, .group_mod3 { font-style: italic; }
+.group_silent { text-decoration: line-through; }
 

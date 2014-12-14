@@ -140,6 +140,6 @@ def get_userlist(db, redis, chat):
         db.query(ChatUser).filter(and_(
             ChatUser.user_id.in_(online_user_ids),
             ChatUser.chat_id == chat.id,
-        )).options(joinedload(ChatUser.user))
+        )).order_by(ChatUser.name).options(joinedload(ChatUser.user))
     ]
 

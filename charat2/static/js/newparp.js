@@ -201,6 +201,7 @@ var msparp = (function() {
 
 			var conversation = $("#conversation");
 			var status;
+			var user_data = {};
 
 			// Long polling
 			function launch_long_poll() {
@@ -242,6 +243,11 @@ var msparp = (function() {
 				if (typeof data.messages != "undefined" && data.messages.length != 0) { data.messages.forEach(render_message); }
 				if (typeof data.users != "undefined") {
 					user_list.html(user_list_template(data));
+					user_list.find("li").click(render_action_list);
+					// Store user data so we can look it up for action lists.
+					for (var i = 0; i < data.users.length; i++) {
+						user_data[data.users[i].meta.user_id] = data.users[i];
+					}
 				}
 			}
 			function render_message(message) {
@@ -277,6 +283,37 @@ var msparp = (function() {
 					"silent": "Silenced.",
 				}[group];
 			});
+
+			// Action list
+			var action_user;
+			var action_list = $("#action_list");
+			var action_list_template = Handlebars.compile($("#action_list_template").html());
+			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 4, "mod2": 3, "mod3": 2, "user": 1, "silent": 0 };
+			function render_action_list() {
+				action_user = user_data[parseInt(this.id.substr(5))];
+				action_list.html(action_list_template(action_user));
+				$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
+				action_list.find("li").click(function() { action_list.empty(); action_user = null; });
+			}
+			Handlebars.registerHelper("can_set_group", function(new_group, action_user) {
+				console.log(new_group);
+				// Don't bother if they're already this group.
+				if (ranks[new_group] == ranks[this.meta.group]) { return false; }
+				// You can't set groups at all if you're not a mod.
+				if (ranks[user.meta.group] < 2) { return false; }
+				// You can only set the group to one which is below yours.
+				if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
+				// You can only set the group of people whose group is below yours.
+				if (ranks[this.meta.group] >= ranks[user.meta.group]) { return false; }
+				return true;
+			});
+			Handlebars.registerHelper("set_user_text", function() {
+				if (this.meta.group == "silent") { return "Unsilence"; }
+				return "Unmod";
+			});
+			function set_group() {
+				$.post("/chat_api/set_group", { "chat_id": chat.id, "user_id": action_user.meta.user_id, "group": this.id.substr(7) });
+			}
 
 			// Send form
 			var text_input = $("input[name=text]");
