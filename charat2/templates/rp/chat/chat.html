@@ -8,8 +8,19 @@
 </head>
 <body class="chat">
 
+<script id="user_list_template" type="text/x-handlebars-template">{% raw %}
+{{#each users}}
+    <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}</li>
+{{/each}}
+{% endraw %}</script>
+
+<section class="sidebar" id="chat_info">
+    <h1>Users</h1>
+    <ul id="user_list"></ul>
+</section>
+
 <section id="conversation">
-    {% for message in messages %}
+    {% for message in messages: %}
     <p id="message_{{message.id}}" class="message_{{message.type}} user_{{message.user_id}}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
     {% endfor %}
 </section>
@@ -20,6 +31,7 @@
 </form>
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//cdn.jsdelivr.net/handlebarsjs/2.0.0/handlebars.min.js"></script>
 <script src="/static/js/newparp.js"></script>
 <script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{latest_num|tojson|safe}});</script>
 

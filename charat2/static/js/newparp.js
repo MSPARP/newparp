@@ -238,8 +238,10 @@ var msparp = (function() {
 			// Parsing and rendering messages
 			function receive_messages(data) {
 				if (typeof data.messages != "undefined" && data.messages.length != 0) { data.messages.forEach(render_message); }
+				if (typeof data.users != "undefined") {
+					user_list.html(user_list_template(data));
+				}
 			}
-
 			function render_message(message) {
 				latest_message = message.id;
 				var p = $("<p>").attr("id", "message_" + message.id);
@@ -255,6 +257,21 @@ var msparp = (function() {
 				p.appendTo(conversation);
 				conversation.scrollTop(conversation[0].scrollHeight);
 			}
+
+			// User list
+			var user_list = $("#user_list");
+			var user_list_template = Handlebars.compile($("#user_list_template").html());
+			Handlebars.registerHelper("group_description", function(group) {
+				return {
+					"admin": "God tier moderator - MSPARP staff.",
+					"creator": "Chat creator - can silence, kick and ban other users.",
+					"mod": "Professional Wet Blanket - can silence, kick and ban other users.",
+					"mod2": "Bum's Rusher - can silence and kick other users.",
+					"mod3": "Amateur Gavel-Slinger - can silence other users.",
+					"user": "",
+					"silent": "Silenced.",
+				}[group];
+			});
 
 			// Send form
 			var text_input = $("input[name=text]");
