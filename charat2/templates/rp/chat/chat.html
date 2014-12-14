@@ -10,7 +10,7 @@
 
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each users}}
-    <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}</li>
+    <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
 {{/each}}
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
@@ -39,7 +39,7 @@
 </section>
 
 <form id="send_form">
-    <input type="text" name="text">
+    <input type="text" name="text" autocomplete="off">
     <button type="submit">Send</button>
     <button type="button" id="abscond_button">Abscond</button>
     <button type="button" id="chat_info_button" class="mobile_button">Users</button>

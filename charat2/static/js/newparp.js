@@ -283,6 +283,7 @@ var msparp = (function() {
 					"silent": "Silenced.",
 				}[group];
 			});
+			Handlebars.registerHelper("is_you", function() { return this.meta.user_id == user.meta.user_id; });
 
 			// Action list
 			var action_user;
