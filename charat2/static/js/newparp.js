@@ -260,6 +260,9 @@ var msparp = (function() {
 				conversation.scrollTop(conversation[0].scrollHeight);
 			}
 
+			// Sidebars
+			$(".close").click(function() { $(this.parentNode).hide(); });
+
 			// User list
 			var user_list = $("#user_list");
 			var user_list_template = Handlebars.compile($("#user_list_template").html());
@@ -287,7 +290,7 @@ var msparp = (function() {
 			conversation.css("bottom", send_form.height() + 10 + "px");
 
 			// Abscond/reconnect button
-			var disconnect_button = $("#abscond_button").click(function() {
+			var abscond_button = $("#abscond_button").click(function() {
 				if (status == "chatting") {
 					if (confirm("Are you sure you want to abscond?")) { disconnect(); }
 				} else {
@@ -296,18 +299,23 @@ var msparp = (function() {
 				}
 			});
 
+			// Other buttons
+			$("#chat_info_button").click(function() { $("#chat_info").show(); });
+
 			// Connecting and disconnecting
 			function connect() {
 				status = "chatting";
 				launch_long_poll();
 				window.setTimeout(ping, 10000);
+				$(document.body).addClass("chatting");
 				conversation.scrollTop(conversation[0].scrollHeight);
-				disconnect_button.text("Abscond");
+				abscond_button.text("Abscond");
 			}
 			function disconnect() {
 				status = "disconnected";
 				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
-				disconnect_button.text("Join");
+				$(document.body).removeClass("chatting");
+				abscond_button.text("Join");
 			}
 
 			// Now all that's done, let's connect

@@ -174,11 +174,13 @@ h2 select { font-size: 10pt; color: #000; }
 #abscond_button { margin-left: -2px; }
 
 .sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+.close { float: right; margin: 5px; }
 @media (min-width: 500px) {
-	#conversation, #send_form { right: 230px; }
 	.mobile_button { display: none; }
 	.sidebar { left: auto; width: 220px; }
-	#chat_info { display: block; }
+	.close { display: none; }
+	.chatting #conversation, .chatting #send_form { right: 230px; }
+	.chatting #chat_info { display: block; }
 }
 .sidebar ul { margin: 0; padding: 0 0 0 1.5em; }
 
