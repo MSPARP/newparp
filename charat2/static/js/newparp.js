@@ -200,6 +200,7 @@ var msparp = (function() {
 			console.log(latest_message);
 
 			var conversation = $("#conversation");
+			var status;
 
 			// Long polling
 			function launch_long_poll() {
@@ -231,6 +232,7 @@ var msparp = (function() {
 			}
 			$(window).unload(function() {
 				if (status == "chatting") {
+					status = "disconnected";
 					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 				}
 			});
@@ -284,11 +286,32 @@ var msparp = (function() {
 			});
 			conversation.css("bottom", send_form.height() + 10 + "px");
 
+			// Abscond/reconnect button
+			var disconnect_button = $("#abscond_button").click(function() {
+				if (status == "chatting") {
+					if (confirm("Are you sure you want to abscond?")) { disconnect(); }
+				} else {
+					// XXX make this search again in searched chats.
+					connect();
+				}
+			});
+
+			// Connecting and disconnecting
+			function connect() {
+				status = "chatting";
+				launch_long_poll();
+				window.setTimeout(ping, 10000);
+				conversation.scrollTop(conversation[0].scrollHeight);
+				disconnect_button.text("Abscond");
+			}
+			function disconnect() {
+				status = "disconnected";
+				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+				disconnect_button.text("Join");
+			}
+
 			// Now all that's done, let's connect
-			var status = "chatting";
-			launch_long_poll();
-			window.setTimeout(ping, 10000);
-			conversation.scrollTop(conversation[0].scrollHeight);
+			connect();
 
 		},
 	};
