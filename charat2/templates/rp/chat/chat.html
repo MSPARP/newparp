@@ -10,7 +10,7 @@
 
 <section id="conversation">
     {% for message in messages %}
-    <p id="message_{{message.id}}" class="message_{{message.type}} user_{{message.user_id}}">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+    <p id="message_{{message.id}}" class="message_{{message.type}} user_{{message.user_id}}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
     {% endfor %}
 </section>
 

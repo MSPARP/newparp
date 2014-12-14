@@ -242,7 +242,9 @@ var msparp = (function() {
 
 			function render_message(message) {
 				latest_message = message.id;
-				var p = $("<p>").attr("id", "message_"+message.id).addClass("message_"+message.type+" user_"+message.user.id);
+				var p = $("<p>").attr("id", "message_" + message.id);
+				p.addClass("message_" + message.type + " user_" + message.user.id);
+				p.css("color", "#" + message.color);
 				if (message.type == "me") {
 					p.text("* " + message.name + " " + message.text);
 				} else if (message.alias != "") {
