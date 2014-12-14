@@ -14,6 +14,11 @@
     {% endfor %}
 </section>
 
+<form id="send_form">
+    <input type="text" name="text">
+    <button type="submit">Send</button>
+</form>
+
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="/static/js/newparp.js"></script>
 <script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{latest_num|tojson|safe}});</script>

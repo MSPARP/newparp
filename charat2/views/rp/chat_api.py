@@ -92,10 +92,7 @@ def send():
     if text == "":
         abort(400)
 
-    message_type = request.form["type"]
-
-    if message_type is None:
-        message_type = "ic"
+    message_type = request.form.get("type", "ic")
 
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,

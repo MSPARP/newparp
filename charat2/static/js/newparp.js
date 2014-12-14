@@ -254,6 +254,17 @@ var msparp = (function() {
 				conversation.scrollTop(conversation[0].scrollHeight);
 			}
 
+			// Send form
+			var text_input = $("input[name=text]");
+			var send_form = $("#send_form").submit(function() {
+				var message_text = text_input.val().trim();
+				if (message_text == "") { return false; }
+				$.post("/chat_api/send", { "chat_id": chat.id, "text": message_text });
+				text_input.val("");
+				return false;
+			});
+			conversation.css("bottom", send_form.height() + 10 + "px");
+
 			// Now all that's done, let's connect
 			var status = "chatting";
 			launch_long_poll();

@@ -159,7 +159,15 @@ h2 select { font-size: 10pt; color: #000; }
 
 /* 4. Chat window */
 
-body.chat { background-color: #aaa; font-size: 12px; }
+.chat { background-color: #aaa; font-size: 12px; }
+.chat input, .chat textarea, .chat button { padding: 2px; border: 0; background-color: #f8f8f8; }
+.chat button:hover { background-color: #fff; }
+.chat button { padding: 2px 6px; }
 
-#conversation { position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 53px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 #conversation p { margin: 2px 5px; }
+
+#send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
+input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; }
+#send_form button[type=submit] { float: right; margin-right: -2px; }
+
