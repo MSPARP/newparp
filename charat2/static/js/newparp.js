@@ -245,8 +245,20 @@ var msparp = (function() {
 					user_list.html(user_list_template(data));
 					user_list.find("li").click(render_action_list);
 					// Store user data so we can look it up for action lists.
+					// Also update our own user data.
 					for (var i = 0; i < data.users.length; i++) {
 						user_data[data.users[i].meta.user_id] = data.users[i];
+						if (data.users[i].meta.user_id == user.meta.user_id) {
+							user = data.users[i];
+							text_input.css("color", "#" + user.character.color);
+							if (user.meta.group == "silent") {
+								text_input.prop("disabled", true);
+								send_button.prop("disabled", true);
+							} else {
+								text_input.prop("disabled", false);
+								send_button.prop("disabled", false);
+							}
+						}
 					}
 				}
 			}
@@ -325,6 +337,7 @@ var msparp = (function() {
 				text_input.val("");
 				return false;
 			});
+			var send_button = send_form.find("button[type=submit]");
 			conversation.css("bottom", send_form.height() + 10 + "px");
 
 			// Abscond/reconnect button
