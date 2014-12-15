@@ -244,10 +244,10 @@ var msparp = (function() {
 				if (typeof data.users != "undefined") {
 					user_list.html(user_list_template(data));
 					user_list.find("li").click(render_action_list);
-					// Store user data so we can look it up for action lists.
-					// Also update our own user data.
 					for (var i = 0; i < data.users.length; i++) {
+						// Store user data so we can look it up for action lists.
 						user_data[data.users[i].meta.user_id] = data.users[i];
+						// Also update our own user data.
 						if (data.users[i].meta.user_id == user.meta.user_id) {
 							user = data.users[i];
 							text_input.css("color", "#" + user.character.color);
@@ -258,6 +258,16 @@ var msparp = (function() {
 								text_input.prop("disabled", false);
 								send_button.prop("disabled", false);
 							}
+						}
+					}
+					// Re-render the action list if necessary.
+					if (action_user != null) {
+						var action_user_id = action_user.meta.user_id;
+						var action_user_li = user_list.find("#user_" + action_user_id);
+						// Set to null so it fires the open action rather than the close action.
+						if (action_user_li.length != 0) {
+							action_user = null;
+							action_user_li.click();
 						}
 					}
 				}
@@ -298,18 +308,23 @@ var msparp = (function() {
 			Handlebars.registerHelper("is_you", function() { return this.meta.user_id == user.meta.user_id; });
 
 			// Action list
-			var action_user;
+			var action_user = null;
 			var action_list = $("#action_list");
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
 			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 4, "mod2": 3, "mod3": 2, "user": 1, "silent": 0 };
 			function render_action_list() {
-				action_user = user_data[parseInt(this.id.substr(5))];
-				action_list.html(action_list_template(action_user));
-				$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
-				action_list.find("li").click(function() { action_list.empty(); action_user = null; });
+				var action_user_id = parseInt(this.id.substr(5));
+				if (action_user && action_user_id == action_user.meta.user_id) {
+					action_user = null;
+					action_list.empty();
+				} else {
+					action_user = user_data[action_user_id];
+					action_list.html(action_list_template(action_user));
+					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
+					action_list.appendTo(this);
+				}
 			}
 			Handlebars.registerHelper("can_set_group", function(new_group, action_user) {
-				console.log(new_group);
 				// Don't bother if they're already this group.
 				if (ranks[new_group] == ranks[this.meta.group]) { return false; }
 				// You can't set groups at all if you're not a mod.
