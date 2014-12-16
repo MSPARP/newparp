@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import and_
 
 from charat2.helpers.tags import character_tags_from_form
-from charat2.model import case_options, Character, CharacterTag
+from charat2.model import case_options, Character, CharacterTag, SearchCharacter
 from charat2.model.validators import color_validator
 
 
@@ -33,12 +33,23 @@ def validate_character_form(form):
     # yeah this is just cut and pasted from chat_api.py
     # XXX MAKE chat_api.py USE THIS TOO
 
+    try:
+        search_character_id = int(form["search_character_id"])
+        g.db.query(SearchCharacter).filter(SearchCharacter.id == search_character_id).one()
+    except (ValueError, NoResultFound):
+        abort(400)
+
     # Don't allow a blank name.
     if form["name"] == "":
         abort(400)
 
     # Validate color.
-    if not color_validator.match(form["color"]):
+    # <input type="color"> always prefixes with a #.
+    if form["color"][0] == "#":
+        color = form["color"][1:]
+    else:
+        color = form["color"]
+    if not color_validator.match(color):
         abort(400)
 
     # Validate case.
@@ -69,10 +80,11 @@ def validate_character_form(form):
 
     return {
         # There are length limits on the front end so silently truncate these.
-        "title": form["title"][:50],
+        "title": form["title"][:50] if "title" in form else "",
+        "search_character_id": search_character_id,
         "name": form["name"][:50],
         "alias": form["alias"][:15],
-        "color": form["color"],
+        "color": color,
         "quirk_prefix": form["quirk_prefix"][:50],
         "quirk_suffix": form["quirk_suffix"][:50],
         "case": form["case"],
@@ -91,6 +103,7 @@ def save_character_from_form(character_id, form, new_details=None):
     # Ignore a blank title.
     if new_details["title"] != "":
         character.title = new_details["title"]
+    character.search_character_id = new_details["search_character_id"]
     character.name = new_details["name"]
     character.alias = new_details["alias"]
     character.color = new_details["color"]

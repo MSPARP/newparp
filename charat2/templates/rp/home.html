@@ -67,20 +67,18 @@
                 <li><input type="text" name="quirk_from" size="10"> to <input type="text" name="quirk_to" size="10"> <button type="button" class="delete_replacement">x</button></li>
                 {% endif %}
             </ul>
-            <button type="button" id="add_replacement">Add</button>
-            <button type="button" id="clear_replacements">Clear</button>
+            <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
             <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
             <ul id="regex_list">
                 {% if regexes|length != 0: %}
                 {% for regex in regexes: %}
-                <li><input type="text" name="quirk_from" size="10" value="{{regex[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
+                <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
                 {% endfor %}
                 {% else %}
-                <li><input type="text" name="quirk_from" size="10"> to <input type="text" name="quirk_to" size="10"> <button type="button" class="delete_regex">x</button></li>
+                <li><input type="text" name="regex_from" size="10"> to <input type="text" name="regex_to" size="10"> <button type="button" class="delete_regex">x</button></li>
                 {% endif %}
             </ul>
-            <button type="button" id="add_regex">Add</button>
-            <button type="button" id="clear_regexes">Clear</button>
+            <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
         </div>
         <div class="toggle_box">
             <input type="checkbox" id="toggle_search_for">

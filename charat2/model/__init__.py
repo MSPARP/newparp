@@ -164,6 +164,7 @@ class Character(Base):
         ucd = {
             "id": self.id,
             "title": self.title,
+            "search_character_id": self.search_character_id,
             "name": self.name,
             "alias": self.alias,
             "color": self.color,

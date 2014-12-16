@@ -1,7 +1,10 @@
-<h1>Your characters</h1>
+{% extends "base.html" %}
+{% block title: %}Character creator - {% endblock %}
+{% block content: %}
+    <h2>Delete {{character.title}}?</h2>
+    <p>Are you sure you want to delete this character? Deleting a character is irreversible and cannot be undone.</p>
+    <form action="{{url_for("rp_delete_character_post", character_id=character.id)}}" method="post">
+        <p><button type="submit">Delete {{character.title}}</button></p>
+    </form>
+{% endblock %}
 
-<p>Are you sure you want to delete this character? Deleting a character is irreversible and cannot be undone.</p>
-
-<form action="{{url_for("rp_delete_character_post", character_id=character_id)}}" method="post">
-  <p><button type="submit">Delete character</button></p>
-</form>

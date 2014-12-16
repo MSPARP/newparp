@@ -102,6 +102,8 @@ h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #666; }
 
 ul { padding-left: 1em; }
 
+table { border-collapse: separate; border-spacing: 2px; }
+
 .error { color: #f00; }
 
 /* 2.1. Forms */

@@ -1,34 +1,41 @@
-<h1>Your characters</h1>
+{% extends "base.html" %}
+{% block title: %}Character creator - {% endblock %}
+{% block content: %}
+    <h2>Character creator</h2>
+    {% if characters: %}
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Character</th>
+                <th>Default</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for character in characters: %}
+            <tr>
+                <td>{{character.title}}</td>
+                <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.alias != "": %} [<span style="color: #{{character.color}}">{{character.alias}}</span>]{% endif %}</td>
+                <td>
+                    {% if character != g.user.default_character: %}
+                    <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><button type="submit">Set as default</button></form>
+                    {% else: %}
+                    Default character
+                    {% endif %}
+                </td>
+                <td><a href="{{url_for("rp_character", character_id=character.id)}}">Edit</a></td>
+                <td><a href="{{url_for("rp_delete_character_get", character_id=character.id)}}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>You don't have any saved characters.</p>
+    {% endif %}
+    <form action="{{url_for("rp_new_character")}}" method="post">
+        <p><button type="submit">Create a new character</button></p>
+    </form>
+{% endblock %}
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Character</th>
-      <th>Default</th>
-      <th>Edit</th>
-      <th>Delete</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for character in characters: %}
-    <tr>
-      <td>{{character.title}}</td>
-      <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.alias != "": %} [<span style="color: #{{character.color}}">{{character.alias}}</span>]{% endif %}</td>
-      <td>
-{% if character != g.user.default_character: %}
-        <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><button type="submit">Set as default</button></form>
-{% else: %}
-        Default character
-{% endif %}
-      </td>
-      <td><a href="{{url_for("rp_character", character_id=character.id)}}">Edit</a></td>
-      <td><a href="{{url_for("rp_delete_character_get", character_id=character.id)}}">Delete</a></td>
-    </tr>
-{% endfor %}
-  </tbody>
-</table>
-
-<form action="{{url_for("rp_new_character")}}" method="post">
-  <p><button type="submit">New character</button></p>
-</form>

@@ -76,6 +76,35 @@ var msparp = (function() {
 		return false;
 	}
 
+	// Event handlers for character form
+	function initialize_character_form() {
+		// Search character dropdown
+		$("select[name=search_character_id]").change(function() {
+			$.get("/search_characters/"+this.value+".json", {}, update_character);
+		});
+		// Text preview
+		var text_preview_container = $("#text_preview_container");
+		var text_preview_alias = $("#text_preview_alias");
+		$("input[name=alias]").keyup(function() {
+			if (this.value == "") {
+				text_preview_alias.text("");
+			} else {
+				text_preview_alias.text(this.value + ": ");
+			}
+		});
+		$("input[name=color]").change(function() {
+			text_preview_container.css("color", this.value);
+		});
+		// Replacement list
+		$('.delete_replacement').click(delete_replacement);
+		$('#add_replacement').click(add_replacement);
+		$('#clear_replacements').click(clear_replacements);
+		// Regex list
+		$('.delete_regex').click(delete_regex);
+		$('#add_regex').click(add_regex);
+		$('#clear_regexes').click(clear_regexes);
+	}
+
 	return {
 		// Homepage
 		"home": function() {
@@ -87,34 +116,7 @@ var msparp = (function() {
 				}
 			});
 
-			// Search character dropdown
-			$("select[name=search_character_id]").change(function() {
-				$.get("/search_characters/"+this.value+".json", {}, update_character);
-			});
-
-			// Text preview
-			var text_preview_container = $("#text_preview_container");
-			var text_preview_alias = $("#text_preview_alias");
-			$("input[name=alias]").keyup(function() {
-				if (this.value == "") {
-					text_preview_alias.text("");
-				} else {
-					text_preview_alias.text(this.value + ": ");
-				}
-			});
-			$("input[name=color]").change(function() {
-				text_preview_container.css("color", this.value);
-			});
-
-			// Replacement list
-			$('.delete_replacement').click(delete_replacement);
-			$('#add_replacement').click(add_replacement);
-			$('#clear_replacements').click(clear_replacements);
-
-			// Regex list
-			$('.delete_regex').click(delete_regex);
-			$('#add_regex').click(add_regex);
-			$('#clear_regexes').click(clear_regexes);
+			initialize_character_form();
 
 			// Picky checkboxes
 			$(".character_list legend input").click(function() {
@@ -191,6 +193,10 @@ var msparp = (function() {
 
 			start_search();
 
+		},
+		// Character pages
+		"character": function() {
+			initialize_character_form();
 		},
 		// Chat window
 		"chat": function(chat, user, latest_message) {

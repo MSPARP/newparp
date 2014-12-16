@@ -1,9 +1,10 @@
 from flask import g, jsonify, redirect, request, render_template, url_for
+from sqlalchemy.orm import joinedload
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import character_query, save_character_from_form
-from charat2.model import case_options, Character, CharacterTag, Request
+from charat2.model import case_options, Character, CharacterTag, Request, SearchCharacter, SearchCharacterGroup
 from charat2.model.connections import use_db
 
 
@@ -41,12 +42,17 @@ def character(character_id, fmt=None):
 
     character = character_query(character_id, join_tags=True)
 
+    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
+        SearchCharacterGroup.order,
+    ).options(joinedload(SearchCharacterGroup.characters)).all()
+
     if fmt == "json":
         return jsonify(character.to_dict(include_options=True))
 
     return render_template(
         "rp/characters/character.html",
         character=character.to_dict(include_options=True),
+        search_character_groups=search_character_groups,
         case_options=case_options,
         character_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)
@@ -67,7 +73,7 @@ def save_character(character_id):
 @log_in_required
 def delete_character_get(character_id):
     character = character_query(character_id)
-    return render_template("rp/characters/delete_character.html", character_id=character_id)
+    return render_template("rp/characters/delete_character.html", character=character)
 
 
 @use_db
