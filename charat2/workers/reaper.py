@@ -16,6 +16,16 @@ if __name__ == "__main__":
     redis = StrictRedis(connection_pool=redis_pool)
     while True:
         current_time = int(time.time())
+        # Make sure a message is sent every 25 seconds so the long poll requests
+        # don't time out.
+        # XXX INCREASE THIS TO SEVERAL MINUTES
+        for chat_id in redis.zrangebyscore("longpoll_timeout", 0, current_time):
+            redis.publish("channel:%s" % chat_id, "{\"messages\":[]}")
+            if redis.scard("chat:%s:online" % chat_id) != 0:
+                redis.zadd("longpoll_timeout", time.time() + 25, chat_id)
+            else:
+                redis.zrem("longpoll_timeout", chat_id)
+        # And do the reaping.
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):
             chat_id, user_id = dead.split('/')
             disconnected = disconnect(redis, chat_id, user_id)
