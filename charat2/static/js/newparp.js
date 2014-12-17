@@ -246,7 +246,12 @@ var msparp = (function() {
 
 			// Parsing and rendering messages
 			function receive_messages(data) {
-				if (typeof data.messages != "undefined" && data.messages.length != 0) { data.messages.forEach(render_message); }
+				if (typeof data.messages != "undefined" && data.messages.length != 0) {
+					data.messages.forEach(render_message);
+					if (document.hidden || document.webkitHidden || document.msHidden) {
+						document.title = "New message - " + original_title;
+					}
+				}
 				if (typeof data.users != "undefined") {
 					user_list.html(user_list_template(data));
 					user_list.find("li").click(render_action_list);
@@ -292,6 +297,19 @@ var msparp = (function() {
 				}
 				p.appendTo(conversation);
 				conversation.scrollTop(conversation[0].scrollHeight);
+			}
+
+			// "New message" notification
+			var original_title = document.title;
+			function visibility_handler() {
+				window.setTimeout(function() { document.title = original_title; }, 200);
+			}
+			if (typeof document.hidden !== "undefined") {
+				document.addEventListener("visibilitychange", visibility_handler);
+			} else if (typeof document.msHidden !== "undefined") {
+				document.addEventListener("msvisibilitychange", visibility_handler);
+			} else if (typeof document.webkitHidden !== "undefined") {
+				document.addEventListener("webkitvisibilitychange", visibility_handler);
 			}
 
 			// Sidebars
