@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title: %}Character creator - {% endblock %}
+{% block title: %}{{character.title}} - Character creator - {% endblock %}
 {% block content: %}
     <form action="{{url_for("rp_save_character", character_id=character.id)}}" method="post">
         <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></h2>

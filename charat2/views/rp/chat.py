@@ -91,7 +91,7 @@ def get_chat(f):
             abort(404)
 
         # Redirect them to the oubliette if they're banned.
-        if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+        if g.user is not None and g.db.query(func.count('*')).select_from(Ban).filter(and_(
             Ban.chat_id == chat.id,
             Ban.user_id == g.user.id,
         )).scalar() != 0:
@@ -135,7 +135,7 @@ def create_chat():
         title=url.replace("_", " "),
         creator_id=g.user.id,
     ))
-    return redirect(url_for("rp_chat", url=lower_url))
+    return redirect(url_for("rp_chat", url=lower_u/registerrl))
 
 
 # XXX CUSTOM LOG IN/REGISTER PAGE WITH CHAT INFO
@@ -204,7 +204,6 @@ def chat(chat, pm_user, url, fmt=None):
 
 
 @use_db
-@log_in_required
 @get_chat
 def log(chat, pm_user, url, fmt=None, page=None):
 

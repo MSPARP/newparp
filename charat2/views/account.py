@@ -15,7 +15,6 @@ def referer_or_home():
     return url_for("home")
 
 
-@use_db
 def log_in_get():
     return render_template("account/log_in.html")
 
@@ -47,14 +46,12 @@ def log_in_post():
     return redirect(redirect_url)
 
 
-@use_db
 def log_out():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
     return redirect(referer_or_home())
 
 
-@use_db
 def register_get():
     return render_template("account/register.html")
 
