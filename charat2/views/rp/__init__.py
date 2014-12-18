@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice
+from charat2.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_connect
 
 
@@ -35,6 +35,7 @@ def home():
         case_options=case_options,
         replacements=json.loads(g.user.replacements),
         regexes=json.loads(g.user.regexes),
+        User=User,
         picky=picky,
     )
 

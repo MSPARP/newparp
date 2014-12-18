@@ -16,17 +16,49 @@ from charat2.model import sm, ChatUser, Message, SearchedChat, User
 from charat2.model.connections import redis_pool
 
 
+option_messages = {
+    "script": "This is a script style chat.",
+    "paragraph": "This is a paragraph style chat.",
+    "sfw": "Please keep this chat safe for work.",
+    "nsfw": "NSFW content is allowed.",
+}
+
+
 def check_compatibility(s1, s2):
+
     # Don't pair people with themselves.
     if s1["user_id"] == s2["user_id"]:
-        return False
+        return False, None
+
+    options = []
+
+    # Style options should be matched with themselves or "either".
+    if (
+        s1["options"]["style"] != "either"
+        and s2["options"]["style"] != "either"
+        and s1["options"]["style"] != s2["options"]["style"]
+    ):
+        return False, None
+    if s1["options"]["style"] != "either":
+        options.append(s1["options"]["style"])
+    elif s2["options"]["style"] != "either":
+        options.append(s2["options"]["style"])
+
+    # Level has to be the same.
+    if s1["options"]["level"] != s2["options"]["level"]:
+        return False, None
+    else:
+        options.append(s1["options"]["level"])
+
     # Match people who both chose wildcard.
     if not s1["choices"] and not s2["choices"]:
-        return True
+        return True, options
+
     # Match people who are otherwise compatible.
     if s1["search_character_id"] in s2["choices"] and s2["search_character_id"] in s1["choices"]:
-        return True
-    return False
+        return True, options
+
+    return False, None
 
 
 if __name__ == "__main__":
@@ -73,6 +105,7 @@ if __name__ == "__main__":
                 "user_id": user_id,
                 "search_character_id": search_character_id,
                 "character": redis.hgetall("searcher:%s:character" % searcher),
+                "options": redis.hgetall("searcher:%s:options" % searcher),
                 "choices": {int(_) for _ in redis.smembers("searcher:%s:choices" % searcher)},
             })
         logging.debug("Searcher list: %s" % searchers)
@@ -91,7 +124,7 @@ if __name__ == "__main__":
 
                 logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
 
-                match = check_compatibility(s1, s2)
+                match, options = check_compatibility(s1, s2)
                 if not match:
                     logging.debug("No match.")
                     continue
@@ -107,6 +140,13 @@ if __name__ == "__main__":
 
                 db.add(ChatUser(chat_id=new_chat.id, user_id=s1["user_id"], **s1["character"]))
                 db.add(ChatUser(chat_id=new_chat.id, user_id=s2["user_id"], **s2["character"]))
+
+                if options:
+                    db.add(Message(
+                        chat_id=new_chat.id,
+                        type="search_info",
+                        text=" ".join(option_messages[_] for _ in options),
+                    ))
 
                 db.commit()
 

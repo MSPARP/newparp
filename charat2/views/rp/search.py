@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
-from charat2.model import case_options, SearchCharacter, SearchCharacterChoice
+from charat2.model import case_options, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_commit, db_disconnect
 from charat2.model.validators import color_validator
 
@@ -69,6 +69,12 @@ def search_save():
     # And encode as JSON.
     g.user.regexes = json.dumps(regexes)
 
+    if request.form["style"] in User.search_style.type.enums:
+        g.user.search_style = request.form["style"]
+
+    if request.form["level"] in User.search_level.type.enums:
+        g.user.search_level = request.form["level"]
+
     all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
 
     try:
@@ -125,6 +131,12 @@ def search_post():
     })
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
 
+    g.redis.hmset("searcher:%s:options" % searcher_id, {
+        "style": g.user.search_style,
+        "level": g.user.search_level,
+    })
+    g.redis.expire("searcher:%s:options" % searcher_id, 30)
+
     g.redis.delete("searcher:%s:choices" % searcher_id)
     choices = [_[0] for _ in g.db.query(
         SearchCharacterChoice.search_character_id,
@@ -150,6 +162,7 @@ def search_continue():
     g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
     g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
+    g.redis.expire("searcher:%s:options" % searcher_id, 30)
     g.redis.expire("searcher:%s:choices" % searcher_id, 30)
 
     pubsub = g.redis.pubsub()

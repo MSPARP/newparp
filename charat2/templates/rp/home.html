@@ -83,6 +83,24 @@
         <div class="toggle_box">
             <input type="checkbox" id="toggle_search_for">
             <h2>&gt; <label for="toggle_search_for">Search for</label></h2>
+            <div class="input_table">
+                <p>
+                    <label for="style_select">Script or paragraph?</label>
+                    <select name="style" id="style_select">
+                        {% for value in User.search_style.type.enums: %}
+                        <option value="{{value}}"{% if value == g.user.search_style %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p>
+                    <label for="level_select">SFW or NSFW?</label>
+                    <select name="level" id="level_select">
+                        {% for value in User.search_level.type.enums: %}
+                        <option value="{{value}}"{% if value == g.user.search_level %} selected="selected"{% endif %}>{{value.upper()}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+            </div>
             <div class="toggle_box">
                 <input type="checkbox" id="toggle_search_for_characters" name="use_picky"{% if picky: %} checked="checked"{% endif %}>
                 <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>

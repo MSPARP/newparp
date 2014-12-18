@@ -109,6 +109,14 @@ class User(Base):
     case = Column(case_options_enum, nullable=False, default=u"normal")
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
+    search_style = Column(
+        Enum(u"script", u"paragraph", u"either", name="user_search_style"),
+        nullable=False, default=u"script",
+    )
+    search_level = Column(
+        Enum(u"sfw", u"nsfw", name="user_search_level"),
+        nullable=False, default=u"sfw",
+    )
 
     confirm_disconnect = Column(Boolean, nullable=False, default=False)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
