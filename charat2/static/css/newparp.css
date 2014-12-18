@@ -22,12 +22,19 @@ Contents:
 
 /* 1. Layout */
 
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Roboto Regular"), local("Roboto-Regular"), url("http://fonts.gstatic.com/s/roboto/v14/2UX7WLTfW3W8TclTUvlFyQ.woff") format("woff");
+}
+
 body { background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
 
 /* Header has top corners, main has bottom corners. */
 header, main { background-color: #ccc; }
 header { margin: 20px 20px 0; padding: 20px; border-radius: 10px 10px 0 0; }
-main { margin: 0 20px; padding: 20px; border-radius: 0 0 10px 10px; }
+main { margin: 0 20px; padding: 20px; border-radius: 0 0 10px 10px; font-family: Roboto, Helvetica, Arial, sans-serif; font-weight: normal; }
 
 main > * { max-width: 40rem; }
 
@@ -142,7 +149,7 @@ h2 select { font-size: 10pt; color: #000; }
 
 /* 3.1. Front page */
 
-#text_preview_container { background-color: #eee; padding: 3px 5px; }
+#text_preview_container { background-color: #eee; padding: 3px 5px; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 12px; }
 
 .character_list { margin: 0; padding: 0; border: 0; }
 .character_list ul { margin: 10px 0; padding: 0 0 0 10px; list-style-type: none; line-height: 1.8em; }
