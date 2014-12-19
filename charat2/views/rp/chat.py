@@ -135,7 +135,7 @@ def create_chat():
         title=url.replace("_", " "),
         creator_id=g.user.id,
     ))
-    return redirect(url_for("rp_chat", url=lower_u/registerrl))
+    return redirect(url_for("rp_chat", url=lower_url))
 
 
 # XXX CUSTOM LOG IN/REGISTER PAGE WITH CHAT INFO
