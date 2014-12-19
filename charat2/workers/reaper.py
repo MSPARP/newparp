@@ -15,7 +15,9 @@ if __name__ == "__main__":
     db = sm()
     redis = StrictRedis(connection_pool=redis_pool)
     while True:
+
         current_time = int(time.time())
+
         # Make sure a message is sent every 25 seconds so the long poll requests
         # don't time out.
         # XXX INCREASE THIS TO SEVERAL MINUTES
@@ -25,6 +27,7 @@ if __name__ == "__main__":
                 redis.zadd("longpoll_timeout", time.time() + 25, chat_id)
             else:
                 redis.zrem("longpoll_timeout", chat_id)
+
         # And do the reaping.
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):
             chat_id, user_id = dead.split('/')
@@ -51,5 +54,21 @@ if __name__ == "__main__":
                 ))
             print current_time, "Reaping ", dead
         db.commit()
+
+        # Generate connected/searching counters every 10 seconds.
+        if int(current_time) % 10 == 0:
+            connected_users = set()
+            for chat_user in redis.zrange("chats_alive", 0, -1):
+                chat_id, user_id = chat_user.split("/")
+                connected_users.add(user_id)
+            redis.set("connected_users", len(connected_users))
+            searching_users = set()
+            for searcher_id in redis.smembers("searchers"):
+                session_id = redis.get("searcher:%s:session_id" % searcher_id)
+                user_id = redis.get("session:%s" % session_id)
+                if user_id is not None:
+                    searching_users.add(user_id)
+            redis.set("searching_users", len(searching_users))
+
         time.sleep(1)
 
