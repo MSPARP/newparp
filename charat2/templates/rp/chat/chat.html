@@ -27,14 +27,36 @@
 
 <section class="sidebar" id="chat_info">
     <button type="button" class="close">Close</button>
+    {% if chat.type == "group": %}
+    <section class="toggle_box" id="mod_tools">
+        <input type="checkbox" id="mod_tools_toggle">
+        <h2>&gt; <label for="mod_tools_toggle">Mod tools</label></h2>
+        <ul>
+            <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
+            <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
+            <li><label>This chat is <select id="flag_level">
+                <option value="sfw">SFW</option>
+                <option value="nsfw">NSFW</option>
+                <option value="nsfw-extreme">NSFW extreme</option>
+            </select></label></li>
+        </ul>
+    </section>
+    <section id="flag_messages">
+        <ul>
+            <li id="flag_message_autosilence">New users are auto-silenced.</li>
+            <li id="flag_message_publicity">This chat is listed on the public chats list.</li>
+            <li>This chat is <span id="flag_message_level">SFW</span>.</li>
+        </ul>
+    </section>
+    {% endif %}
     <section id="action_list"></section>
-    <h1>Users</h1>
+    <h2>Users</h2>
     <ul id="user_list"></ul>
 </section>
 
 <section class="sidebar" id="settings">
     <button type="button" class="close">Close</button>
-    <h1>Settings</h1>
+    <h2>Settings</h2>
     <form id="settings_form">
         {% if characters %}
         <p><select name="character_id">

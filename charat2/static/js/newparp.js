@@ -40,7 +40,7 @@ var msparp = (function() {
 		return false;
 	}
 	function add_replacement(e, from, to) {
-		if ($(document.body).hasClass("chat")) { var size = 7; } else { var size = 10; }
+		var size = $(document.body).hasClass("chat") ? 7 : 10;
 		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
@@ -62,7 +62,7 @@ var msparp = (function() {
 		return false;
 	}
 	function add_regex(e, from, to) {
-		if ($(document.body).hasClass("chat")) { var size = 7; } else { var size = 10; }
+		var size = $(document.body).hasClass("chat") ? 7 : 10;
 		new_item = $("<li><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"regex_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_regex\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
@@ -254,6 +254,15 @@ var msparp = (function() {
 						document.title = "New message - " + original_title;
 					}
 				}
+				if (typeof data.chat != "undefined") {
+					chat = data.chat;
+					flag_autosilence.prop("checked", chat.autosilence);
+					flag_publicity.prop("checked", chat.publicity == "listed");
+					flag_level.val(chat.level);
+					chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
+					chat.publicity == "listed" ? flag_message_publicity.show() : flag_message_publicity.hide();
+					flag_message_level.text(level_names[chat.level]);
+				}
 				if (typeof data.users != "undefined") {
 					user_list.html(user_list_template(data));
 					user_list.find("li").click(render_action_list);
@@ -264,6 +273,13 @@ var msparp = (function() {
 						if (data.users[i].meta.user_id == user.meta.user_id) {
 							user = data.users[i];
 							text_input.css("color", "#" + user.character.color);
+							if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
+								mod_tools.show();
+								flag_messages.hide();
+							} else {
+								mod_tools.hide();
+								flag_messages.show();
+							}
 							if (user.meta.group == "silent") {
 								text_input.prop("disabled", true);
 								send_button.prop("disabled", true);
@@ -316,6 +332,23 @@ var msparp = (function() {
 
 			// Sidebars
 			$(".close").click(function() { $(this).parentsUntil("body").last().hide(); });
+
+			// Mod tools
+			var mod_tools = $("#mod_tools");
+			var flag_autosilence = $("#flag_autosilence").change(function() {
+				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
+			});
+			var flag_publicity = $("#flag_publicity").change(function() {
+				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "listed" : "unlisted" });
+			});
+			var flag_level = $("#flag_level").change(function() {
+				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": this.value });
+			});
+			var flag_messages = $("#flag_messages");
+			var flag_message_autosilence = $("#flag_message_autosilence");
+			var flag_message_publicity = $("#flag_message_publicity");
+			var flag_message_level = $("#flag_message_level");
+			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
 
 			// User list
 			var user_list = $("#user_list");

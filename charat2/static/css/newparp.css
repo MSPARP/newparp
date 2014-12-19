@@ -169,7 +169,7 @@ h2 select { font-size: 10pt; color: #000; }
 /* 4. Chat window */
 
 .chat { background-color: #aaa; font-size: 12px; }
-.chat h1 { margin: 5px; font-size: 14pt; }
+.chat h2 { margin: 5px; font-size: 14pt; color: #000; }
 .chat p { margin: 0; padding: 2px 5px; }
 .chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat button:hover { background-color: #fff; }
@@ -191,8 +191,10 @@ h2 select { font-size: 10pt; color: #000; }
 	.chatting #conversation, .chatting #send_form { right: 230px; }
 	.chatting #chat_info { display: block; }
 }
-.sidebar ul { margin: 0; padding: 0 0 0 1.5em; }
+.sidebar ul { margin: 5px 0; padding: 0 0 0 1.5em; }
 .sidebar li { margin: 2px 0; }
+
+#mod_tools { display: none; }
 
 #user_list li, #action_list li { cursor: pointer; }
 .group_admin { text-decoration: underline; }
