@@ -12,12 +12,14 @@ from charat2.model import (
     case_options,
     AnyChat,
     Ban,
+    Character,
     Chat,
+    ChatUser,
     GroupChat,
     Message,
     PMChat,
+    SearchCharacterGroup,
     User,
-    ChatUser,
 )
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
@@ -191,6 +193,12 @@ def chat(chat, pm_user, url, fmt=None):
             "latest_num": latest_num,
         })
 
+    # Character and search character info for settings form.
+    characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
+    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
+        SearchCharacterGroup.order,
+    ).options(joinedload(SearchCharacterGroup.characters)).all()
+
     return render_template(
         "rp/chat/chat.html",
         url=url,
@@ -200,6 +208,8 @@ def chat(chat, pm_user, url, fmt=None):
         messages=messages,
         latest_num=latest_num,
         case_options=case_options,
+        characters=characters,
+        search_character_groups=search_character_groups,
     )
 
 

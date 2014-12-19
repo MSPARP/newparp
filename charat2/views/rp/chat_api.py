@@ -404,9 +404,14 @@ def save():
         abort(400)
 
     # Validate color.
-    if not color_validator.match(request.form["color"]):
+    # <input type="color"> always prefixes with a #.
+    if request.form["color"][0] == "#":
+        color = request.form["color"][1:]
+    else:
+        color = request.form["color"]
+    if not color_validator.match(color):
         abort(400)
-    g.chat_user.color = request.form["color"]
+    g.chat_user.color = color
 
     # Validate case.
     if request.form["case"] not in case_options:

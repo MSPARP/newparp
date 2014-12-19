@@ -15,6 +15,7 @@
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
     <ul>
+        {{#if (is_you)}}<li id="action_settings">Settings</li>{{/if}}
         {{#if (can_set_group "mod")}}<li id="action_mod">Make Professional Wet Blanket</li>{{/if}}
         {{#if (can_set_group "mod2")}}<li id="action_mod2">Make Bum's Rusher</li>{{/if}}
         {{#if (can_set_group "mod3")}}<li id="action_mod3">Make Amateur Gavel-Slinger</li>{{/if}}
@@ -29,6 +30,62 @@
     <section id="action_list"></section>
     <h1>Users</h1>
     <ul id="user_list"></ul>
+</section>
+
+<section class="sidebar" id="settings">
+    <button type="button" class="close">Close</button>
+    <h1>Settings</h1>
+    <form id="settings_form">
+        {% if characters %}
+        <p><select name="character_id">
+            <option value="">Saved characters...</option>
+            {% for character in characters: %}
+            <option value="{{character.id}}">{{character.title}}</option>
+            {% endfor %}
+        </select></p>
+        {% endif %}
+        <p><select name="search_character_id">
+            {% for group in search_character_groups: %}
+            <optgroup label="{{group.name}}">
+                {% for character in group.characters: %}
+                <option value="{{character.id}}"{% if character.id == chat_user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                {% endfor %}
+            </optgroup>
+            {% endfor %}
+        </select></p>
+        <p><input type="text" id="name_input" name="name" maxlength="50" required value="{{chat_user.name}}"></p>
+        <p><input type="text" id="alias_input" name="alias" size="15" maxlength="15" value="{{chat_user.alias}}"> <input type="color" id="color_input" name="color" size="7" required value="#{{chat_user.color}}"></p>
+        <p><label>Prefix: <input type="text" name="quirk_prefix" maxlength="50" value="{{chat_user.quirk_prefix}}"></label></p>
+        <p><label>Suffix: <input type="text" name="quirk_suffix" maxlength="50" value="{{chat_user.quirk_suffix}}"></label></p>
+        <p><label>Case: <select name="case">
+            {% for value, name in case_options.items(): %}
+            <option value="{{value}}"{% if value == chat_user.case %} selected="selected"{% endif %}>{{name}}</option>
+            {% endfor %}
+        </select></label></p>
+        <p>Simple replacements</p>
+        <ul id="replacement_list">
+            {% if chat_user_dict.character.replacements|length != 0: %}
+            {% for replacement in chat_user_dict.character.replacements: %}
+            <li><input type="text" name="quirk_from" size="7" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="7" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
+            {% endfor %}
+            {% else %}
+            <li><input type="text" name="quirk_from" size="7"> to <input type="text" name="quirk_to" size="7"> <button type="button" class="delete_replacement">x</button></li>
+            {% endif %}
+        </ul>
+        <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
+        <p>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</p>
+        <ul id="regex_list">
+            {% if chat_user_dict.character.regexes|length != 0: %}
+            {% for regex in chat_user_dict.character.regexes: %}
+            <li><input type="text" name="regex_from" size="7" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="7" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
+            {% endfor %}
+            {% else %}
+            <li><input type="text" name="regex_from" size="7"> to <input type="text" name="regex_to" size="7"> <button type="button" class="delete_regex">x</button></li>
+            {% endif %}
+        </ul>
+        <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
+        <p><button type="submit">Save</button> <button type="button" class="close">Close</button></p>
+    </form>
 </section>
 
 <section id="conversation">

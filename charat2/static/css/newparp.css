@@ -170,8 +170,8 @@ h2 select { font-size: 10pt; color: #000; }
 
 .chat { background-color: #aaa; font-size: 12px; }
 .chat h1 { margin: 5px; font-size: 14pt; }
-.chat p { margin: 2px 5px; }
-.chat input, .chat textarea, .chat button { padding: 2px; border: 0; background-color: #f8f8f8; }
+.chat p { margin: 0; padding: 2px 5px; }
+.chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat button:hover { background-color: #fff; }
 .chat button { padding: 2px 6px; }
 
@@ -183,11 +183,11 @@ h2 select { font-size: 10pt; color: #000; }
 #abscond_button { margin-left: -2px; }
 
 .sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
-.close { float: right; margin: 5px; }
+.sidebar > .close:first-child { float: right; margin: 5px; }
 @media (min-width: 500px) {
 	.mobile_button { display: none; }
 	.sidebar { left: auto; width: 220px; }
-	.close { display: none; }
+	.sidebar > .close:first-child { display: none; }
 	.chatting #conversation, .chatting #send_form { right: 230px; }
 	.chatting #chat_info { display: block; }
 }

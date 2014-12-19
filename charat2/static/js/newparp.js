@@ -40,7 +40,8 @@ var msparp = (function() {
 		return false;
 	}
 	function add_replacement(e, from, to) {
-		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"10\"> to <input type=\"text\" name=\"quirk_to\" size=\"10\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
+		if ($(document.body).hasClass("chat")) { var size = 7; } else { var size = 10; }
+		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
 			inputs[0].value = from;
@@ -61,7 +62,8 @@ var msparp = (function() {
 		return false;
 	}
 	function add_regex(e, from, to) {
-		new_item = $("<li><input type=\"text\" name=\"regex_from\" size=\"10\"> to <input type=\"text\" name=\"regex_to\" size=\"10\"> <button type=\"button\" class=\"delete_regex\">x</button></li>");
+		if ($(document.body).hasClass("chat")) { var size = 7; } else { var size = 10; }
+		new_item = $("<li><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"regex_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_regex\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
 			inputs[0].value = from;
@@ -313,7 +315,7 @@ var msparp = (function() {
 			}
 
 			// Sidebars
-			$(".close").click(function() { $(this.parentNode).hide(); });
+			$(".close").click(function() { $(this).parentsUntil("body").last().hide(); });
 
 			// User list
 			var user_list = $("#user_list");
@@ -344,6 +346,7 @@ var msparp = (function() {
 				} else {
 					action_user = user_data[action_user_id];
 					action_list.html(action_list_template(action_user));
+					$("#action_settings").click(function() { $("#settings").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
 					action_list.appendTo(this);
 				}
@@ -366,6 +369,28 @@ var msparp = (function() {
 			function set_group() {
 				$.post("/chat_api/set_group", { "chat_id": chat.id, "user_id": action_user.meta.user_id, "group": this.id.substr(7) });
 			}
+
+			// Settings
+			var settings = $("#settings");
+			$("select[name=character_id]").change(function() {
+				if (this.value != "") {
+					$.get("/characters/"+this.value+".json", {}, update_character);
+				}
+			});
+			initialize_character_form();
+			$("#settings_form").submit(function() {
+				if ($("input[name=name]").val().trim() == "") {
+					alert("You can't chat with a blank name!");
+				} else if ($("input[name=color]").val().match(/^#?[0-9a-fA-F]{6}$/) == null) {
+					alert("You entered an invalid hex code.");
+				} else {
+					var form_data = $(this).serializeArray();
+					form_data.push({ name: "chat_id", value: chat.id });
+					$.post("/chat_api/save", form_data);
+				}
+				settings.hide();
+				return false;
+			});
 
 			// Send form
 			var text_input = $("input[name=text]");
@@ -405,6 +430,7 @@ var msparp = (function() {
 				status = "disconnected";
 				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 				$(document.body).removeClass("chatting");
+				settings.hide();
 				abscond_button.text("Join");
 			}
 
