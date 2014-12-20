@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>{% if chat.type == "group": %}{{chat.title}} - {% endif %}MSPARP</title>
+<title>{% if chat.title: %}{{chat.title}}{% else: %}Chat{% endif %} - MSPARP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="/static/css/normalize.css">
 <link rel="stylesheet" href="/static/css/newparp.css">

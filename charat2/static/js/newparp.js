@@ -256,12 +256,14 @@ var msparp = (function() {
 				}
 				if (typeof data.chat != "undefined") {
 					chat = data.chat;
-					flag_autosilence.prop("checked", chat.autosilence);
-					flag_publicity.prop("checked", chat.publicity == "listed");
-					flag_level.val(chat.level);
-					chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
-					chat.publicity == "listed" ? flag_message_publicity.show() : flag_message_publicity.hide();
-					flag_message_level.text(level_names[chat.level]);
+					if (chat.type == "group") {
+						flag_autosilence.prop("checked", chat.autosilence);
+						flag_publicity.prop("checked", chat.publicity == "listed");
+						flag_level.val(chat.level);
+						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
+						chat.publicity == "listed" ? flag_message_publicity.show() : flag_message_publicity.hide();
+						flag_message_level.text(level_names[chat.level]);
+					}
 				}
 				if (typeof data.users != "undefined") {
 					user_list.html(user_list_template(data));
@@ -273,12 +275,14 @@ var msparp = (function() {
 						if (data.users[i].meta.user_id == user.meta.user_id) {
 							user = data.users[i];
 							text_input.css("color", "#" + user.character.color);
-							if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
-								mod_tools.show();
-								flag_messages.hide();
-							} else {
-								mod_tools.hide();
-								flag_messages.show();
+							if (chat.type == "group") {
+								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
+									mod_tools.show();
+									flag_messages.hide();
+								} else {
+									mod_tools.hide();
+									flag_messages.show();
+								}
 							}
 							if (user.meta.group == "silent") {
 								text_input.prop("disabled", true);
@@ -334,21 +338,23 @@ var msparp = (function() {
 			$(".close").click(function() { $(this).parentsUntil("body").last().hide(); });
 
 			// Mod tools
-			var mod_tools = $("#mod_tools");
-			var flag_autosilence = $("#flag_autosilence").change(function() {
-				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
-			});
-			var flag_publicity = $("#flag_publicity").change(function() {
-				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "listed" : "unlisted" });
-			});
-			var flag_level = $("#flag_level").change(function() {
-				$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": this.value });
-			});
-			var flag_messages = $("#flag_messages");
-			var flag_message_autosilence = $("#flag_message_autosilence");
-			var flag_message_publicity = $("#flag_message_publicity");
-			var flag_message_level = $("#flag_message_level");
-			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
+			if (chat.type == "group") {
+				var mod_tools = $("#mod_tools");
+				var flag_autosilence = $("#flag_autosilence").change(function() {
+					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
+				});
+				var flag_publicity = $("#flag_publicity").change(function() {
+					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "listed" : "unlisted" });
+				});
+				var flag_level = $("#flag_level").change(function() {
+					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": this.value });
+				});
+				var flag_messages = $("#flag_messages");
+				var flag_message_autosilence = $("#flag_message_autosilence");
+				var flag_message_publicity = $("#flag_message_publicity");
+				var flag_message_level = $("#flag_message_level");
+				var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
+			}
 
 			// User list
 			var user_list = $("#user_list");
