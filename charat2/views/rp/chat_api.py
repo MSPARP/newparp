@@ -329,7 +329,7 @@ def set_flag():
             return "", 204
         g.chat.publicity = value
         if g.chat.publicity == "listed":
-            message = "%s [%s] listed the chat. It's now listed on the public rooms page."
+            message = "%s [%s] listed the chat. It's now listed on the public chats page."
         elif g.chat.publicity == "unlisted":
             message = "%s [%s] unlisted the chat."
 

@@ -42,13 +42,13 @@ def home():
 
 @alt_formats(set(["json"]))
 @use_db
-def rooms(fmt=None):
+def groups(fmt=None):
 
-    rooms_query = g.db.query(GroupChat).filter(GroupChat.publicity == "listed")
-    rooms = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in rooms_query]
-    rooms.sort(key=lambda _: _[1], reverse=True)
+    groups_query = g.db.query(GroupChat).filter(GroupChat.publicity == "listed")
+    groups = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in groups_query]
+    groups.sort(key=lambda _: _[1], reverse=True)
     chat_dicts = []
-    for chat, online in rooms:
+    for chat, online in groups:
         cd = chat.to_dict()
         cd["online"] = online
         chat_dicts.append(cd)
@@ -57,7 +57,7 @@ def rooms(fmt=None):
             "chats": chat_dicts,
         })
 
-    return render_template("rp/rooms.html", rooms=chat_dicts)
+    return render_template("rp/groups.html", groups=chat_dicts)
 
 
 def search_character_list():

@@ -107,13 +107,13 @@ app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=(
 
 # 7. Rooms
 
-make_rules("rp", "/rooms", rp.rooms, formats=True)
+make_rules("rp", "/groups", rp.groups, formats=True)
 
 # 8. Chats
 
 make_rules("rp", "/<path:url>", chat.chat, formats=True)
 
-# Push the previous rules to the bottom so it doesn't catch /chats.json, /rooms.json etc.
+# Push the previous rules to the bottom so it doesn't catch /chats.json, /groups.json etc.
 app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
