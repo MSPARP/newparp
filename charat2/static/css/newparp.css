@@ -168,12 +168,20 @@ h2 select { font-size: 10pt; color: #000; }
 
 /* 4. Chat window */
 
-.chat { background-color: #aaa; font-size: 12px; }
+.chat { background-color: #aaa; font-size: 12px; word-wrap: break-word; }
 .chat h2 { margin: 5px; font-size: 14pt; color: #000; }
 .chat p { margin: 0; padding: 2px 5px; }
 .chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat button:hover { background-color: #fff; }
 .chat button { padding: 2px 6px; }
+section > .close:first-child { float: right; margin: 5px; }
+
+#topbar { position: fixed; top: 5px; right: 5px; left: 5px; height: 25px; padding-right: 8px; background-color: #eee; line-height: 25px; cursor: pointer; }
+#topbar h1 { float: left; max-width: 100%; margin: 0 8px 0 0; padding: 0 5px; background-color: #f8f8f8; font-size: 14pt; }
+#topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#topbar ~ #conversation, #topbar ~ .sidebar { top: 35px; }
+#info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+.topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 53px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 
@@ -183,12 +191,11 @@ h2 select { font-size: 10pt; color: #000; }
 #abscond_button { margin-left: -2px; }
 
 .sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
-.sidebar > .close:first-child { float: right; margin: 5px; }
 @media (min-width: 500px) {
 	.mobile_button { display: none; }
 	.sidebar { left: auto; width: 220px; }
 	.sidebar > .close:first-child { display: none; }
-	.chatting #conversation, .chatting #send_form { right: 230px; }
+	.chatting #info_panel, .chatting #conversation, .chatting #send_form { right: 230px; }
 	.chatting #chat_info { display: block; }
 }
 .sidebar ul { margin: 5px 0; padding: 0 0 0 1.5em; }

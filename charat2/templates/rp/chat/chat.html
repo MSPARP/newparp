@@ -8,6 +8,19 @@
 </head>
 <body class="chat">
 
+{% if chat.type == "group": %}
+<section id="topbar">
+    <h1>{{chat.title}}</h1>
+    <span class="topic">{{chat.topic}}</span>
+</section>
+
+<section id="info_panel">
+    <button type="button" class="close">Close</button>
+    <h2>{{chat.title}}</h2>
+    <p class="topic">{{chat.topic}}</p>
+</section>
+{% endif %}
+
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each users}}
     <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
@@ -32,6 +45,7 @@
         <input type="checkbox" id="mod_tools_toggle">
         <h2>&gt; <label for="mod_tools_toggle">Mod tools</label></h2>
         <ul>
+            <li><button id="set_topic">Set topic</button></li>
             <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
             <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
             <li><label>This chat is <select id="flag_level">

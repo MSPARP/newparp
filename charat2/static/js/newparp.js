@@ -257,6 +257,7 @@ var msparp = (function() {
 				if (typeof data.chat != "undefined") {
 					chat = data.chat;
 					if (chat.type == "group") {
+						topic.text(chat.topic);
 						flag_autosilence.prop("checked", chat.autosilence);
 						flag_publicity.prop("checked", chat.publicity == "listed");
 						flag_level.val(chat.level);
@@ -334,12 +335,28 @@ var msparp = (function() {
 				document.addEventListener("webkitvisibilitychange", visibility_handler);
 			}
 
+			// Topbar and info panel
+			if (chat.type == "group") {
+				$("#topbar").click(function() {
+					info_panel.show();
+				});
+				// There are several places where we show the topic, so we use this to update them all.
+				var topic = $(".topic");
+				var info_panel = $("#info_panel");
+			}
+
 			// Sidebars
 			$(".close").click(function() { $(this).parentsUntil("body").last().hide(); });
 
 			// Mod tools
 			if (chat.type == "group") {
 				var mod_tools = $("#mod_tools");
+				$("#set_topic").click(function() {
+					var topic = prompt("Please enter a new topic for the chat:");
+					if (topic != null) {
+						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": topic });
+					}
+				});
 				var flag_autosilence = $("#flag_autosilence").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
 				});
