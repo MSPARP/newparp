@@ -39,17 +39,18 @@ def messages():
     except (KeyError, ValueError):
         after = 0
 
+    # Look for stored messages first, and only subscribe if there aren't any.
+    messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
+
     if "joining" in request.form or g.joining:
         db_connect()
         get_chat_user()
         return jsonify({
             "users": get_userlist(g.db, g.redis, g.chat),
             "chat": g.chat.to_dict(),
+            "messages": [json.loads(_) for _ in messages],
         })
-
-    # Look for stored messages first, and only subscribe if there aren't any.
-    messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
-    if len(messages) != 0 or g.joining:
+    elif len(messages) != 0:
         message_dict = { "messages": [json.loads(_) for _ in messages] }
         return jsonify(message_dict)
 
