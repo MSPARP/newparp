@@ -492,7 +492,7 @@ def save():
                 ),
             ))
 
-    return "", 204
+    return jsonify(g.chat_user.to_dict(include_options=True))
 
 
 @use_db_chat
@@ -540,7 +540,7 @@ def save_from_character():
                 ),
             ))
 
-    return "", 204
+    return jsonify(g.chat_user.to_dict(include_options=True))
 
 
 @use_db_chat

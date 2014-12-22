@@ -17,6 +17,9 @@ Contents:
 	1. Front page
 	2. Searching
 4. Chat window
+	1. Topbar and info panel
+	2. Sidebars
+	3. Conversation and send form
 
 */
 
@@ -178,6 +181,8 @@ h2 select { font-size: 10pt; color: #000; }
 .chat button { padding: 2px 6px; }
 section > .close:first-child { float: right; margin: 5px; }
 
+/* 4.1. Topbar and info panel */
+
 #topbar { position: fixed; top: 5px; right: 5px; left: 5px; height: 25px; padding-right: 8px; background-color: #eee; line-height: 25px; cursor: pointer; }
 #topbar h1 { float: left; max-width: 100%; margin: 0 8px 0 0; padding: 0 5px; background-color: #f8f8f8; font-size: 14pt; }
 #topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -186,12 +191,7 @@ section > .close:first-child { float: right; margin: 5px; }
 .topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 #info_panel p { white-space: pre-line; }
 
-#conversation { position: fixed; top: 5px; right: 5px; bottom: 53px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
-
-#send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
-#send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; }
-#send_form button[type=submit] { float: right; margin-right: -2px; }
-#abscond_button { margin-left: -2px; }
+/* 4.2. Sidebars */
 
 .sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
 @media (min-width: 500px) {
@@ -211,4 +211,15 @@ section > .close:first-child { float: right; margin: 5px; }
 .group_creator, .group_mod, .group_mod2, .group_mod3 { font-style: italic; }
 .group_silent { text-decoration: line-through; }
 #action_list { color: #000; text-decoration: none; font-style: normal; }
+
+/* 4.3. Conversation and send form */
+
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 53px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+
+#send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
+#text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
+#text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
+#send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; }
+#send_form button[type=submit] { float: right; margin-right: -2px; }
+#abscond_button { margin-left: -2px; }
 

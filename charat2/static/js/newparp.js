@@ -276,7 +276,8 @@ var msparp = (function() {
 						user_data[data.users[i].meta.user_id] = data.users[i];
 						// Also update our own user data.
 						if (data.users[i].meta.user_id == user.meta.user_id) {
-							user = data.users[i];
+							user.meta.group = data.users[i].meta.group;
+							text_preview.css("color", "#" + user.character.color);
 							text_input.css("color", "#" + user.character.color);
 							if (chat.type == "group") {
 								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
@@ -465,16 +466,19 @@ var msparp = (function() {
 				} else {
 					var form_data = $(this).serializeArray();
 					form_data.push({ name: "chat_id", value: chat.id });
-					$.post("/chat_api/save", form_data);
+					$.post("/chat_api/save", form_data, function(data) { user = data; });
 				}
 				settings.hide();
 				return false;
 			});
 
 			// Send form
-			var text_input = $("input[name=text]");
+			var text_preview = $("#text_preview");
+			var text_input = $("input[name=text]").keyup(function() {
+				text_preview.text(apply_quirks(this.value));
+			});
 			var send_form = $("#send_form").submit(function() {
-				var message_text = text_input.val().trim();
+				var message_text = text_preview.text().trim();
 				if (message_text == "") { return false; }
 				$.post("/chat_api/send", { "chat_id": chat.id, "text": message_text });
 				text_input.val("");
@@ -482,6 +486,11 @@ var msparp = (function() {
 			});
 			var send_button = send_form.find("button[type=submit]");
 			conversation.css("bottom", send_form.height() + 10 + "px");
+
+			// Typing quirks
+			function apply_quirks(text) {
+				return user.character.quirk_prefix + text + user.character.quirk_suffix;
+			}
 
 			// Abscond/reconnect button
 			var abscond_button = $("#abscond_button").click(function() {
