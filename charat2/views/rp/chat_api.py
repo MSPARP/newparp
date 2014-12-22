@@ -305,7 +305,7 @@ def set_flag():
         abort(403)
 
     # Boolean flags.
-    if (flag in ("autosilence", "nsfw") and value in ("on", "off")):
+    if (flag in ("autosilence") and value in ("on", "off")):
         new_value = value == "on"
         if new_value == getattr(g.chat, flag):
             return "", 204
@@ -356,15 +356,10 @@ def set_topic():
     if not g.chat_user.can("set_topic"):
         abort(403)
 
-    if "topic" not in request.form:
-        abort(400)
-
     topic = request.form["topic"].strip()
-
     # If it hasn't changed, don't bother sending a message about it.
     if topic == g.chat.topic:
         return "", 204
-
     g.chat.topic = topic
 
     if topic == "":
@@ -387,6 +382,36 @@ def set_topic():
                 g.chat_user.name, g.chat_user.alias, topic,
             ),
         ))
+
+    return "", 204
+
+
+@use_db_chat
+@group_chat_only
+@mark_alive
+def set_info():
+
+    # Validation: We must be allowed to set the topic.
+    if not g.chat_user.can("set_info"):
+        abort(403)
+
+    description = request.form["description"].strip()
+    rules = request.form["rules"].strip()
+    # If it hasn't changed, don't bother sending a message about it.
+    if (description == g.chat.description and rules == g.chat.rules):
+        return "", 204
+    g.chat.description = description
+    g.chat.rules = rules
+
+    send_message(g.db, g.redis, Message(
+        chat_id=g.chat.id,
+        user_id=g.user.id,
+        name=g.chat_user.name,
+        type="chat_meta",
+        text="%s [%s] edited the chat information." % (
+            g.chat_user.name, g.chat_user.alias,
+        ),
+    ))
 
     return "", 204
 

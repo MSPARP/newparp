@@ -133,6 +133,7 @@ app.add_url_rule("/chat_api/set_group", "set_group", chat_api.set_group, methods
 app.add_url_rule("/chat_api/user_action", "user_action", chat_api.user_action, methods=("POST",))
 app.add_url_rule("/chat_api/set_flag", "set_flag", chat_api.set_flag, methods=("POST",))
 app.add_url_rule("/chat_api/set_topic", "set_topic", chat_api.set_topic, methods=("POST",))
+app.add_url_rule("/chat_api/set_info", "set_info", chat_api.set_info, methods=("POST",))
 app.add_url_rule("/chat_api/save", "save", chat_api.save, methods=("POST",))
 app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_api.save_from_character, methods=("POST",))
 app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, methods=("POST",))

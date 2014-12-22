@@ -18,6 +18,22 @@
     <button type="button" class="close">Close</button>
     <h2>{{chat.title}}</h2>
     <p class="topic">{{chat.topic}}</p>
+    <h2>Description</h2>
+    <p id="description">{{chat.description}}</p>
+    <h2>Rules</h2>
+    <p id="rules">{{chat.rules}}</p>
+    <p><button id="edit_info_button">Edit info</button></p>
+</section>
+
+<section id="edit_info_panel">
+    <button type="button" class="close">Close</button>
+    <form id="edit_info_form">
+        <h2>Description</h2>
+        <p class="textarea_wrapper"><textarea name="description" rows="10"></textarea></p>
+        <h2>Rules</h2>
+        <p class="textarea_wrapper"><textarea name="rules" rows="10"></textarea></p>
+        <p><button type="submit">Save</button></p>
+    </form>
 </section>
 {% endif %}
 
@@ -38,7 +54,7 @@
     </ul>
 {% endraw %}</script>
 
-<section class="sidebar" id="chat_info">
+<section class="sidebar" id="user_list_container">
     <button type="button" class="close">Close</button>
     {% if chat.type == "group": %}
     <section class="toggle_box" id="mod_tools">
@@ -134,7 +150,7 @@
     <input type="text" name="text" autocomplete="off">
     <button type="submit">Send</button>
     <button type="button" id="abscond_button">Abscond</button>
-    <button type="button" id="chat_info_button" class="mobile_button">Users</button>
+    <button type="button" id="user_list_button" class="mobile_button">Users</button>
 </form>
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>

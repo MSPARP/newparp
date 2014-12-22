@@ -258,6 +258,8 @@ var msparp = (function() {
 					chat = data.chat;
 					if (chat.type == "group") {
 						topic.text(chat.topic);
+						description.text(chat.description);
+						rules.text(chat.rules);
 						flag_autosilence.prop("checked", chat.autosilence);
 						flag_publicity.prop("checked", chat.publicity == "listed");
 						flag_level.val(chat.level);
@@ -278,9 +280,11 @@ var msparp = (function() {
 							text_input.css("color", "#" + user.character.color);
 							if (chat.type == "group") {
 								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
+									edit_info_button.show();
 									mod_tools.show();
 									flag_messages.hide();
 								} else {
+									edit_info_button.hide();
 									mod_tools.hide();
 									flag_messages.show();
 								}
@@ -343,6 +347,24 @@ var msparp = (function() {
 				// There are several places where we show the topic, so we use this to update them all.
 				var topic = $(".topic");
 				var info_panel = $("#info_panel");
+				var description = $("#description");
+				var rules = $("#rules");
+				$("#edit_info_button").click(function() {
+					info_panel.hide();
+					// Only set these when we need them.
+					edit_info_panel.find("[name=description]").text(chat.description);
+					edit_info_panel.find("[name=rules]").text(chat.rules);
+					edit_info_panel.show();
+				});
+				var edit_info_button = $("#edit_info_button");
+				var edit_info_panel = $("#edit_info_panel");
+				$("#edit_info_form").submit(function() {
+					var form_data = $(this).serializeArray();
+					form_data.push({ name: "chat_id", value: chat.id });
+					$.post("/chat_api/set_info", form_data);
+					edit_info_panel.hide();
+					return false;
+				});
 			}
 
 			// Sidebars
@@ -471,7 +493,7 @@ var msparp = (function() {
 			});
 
 			// Other buttons
-			$("#chat_info_button").click(function() { $("#chat_info").show(); });
+			$("#user_list_button").click(function() { $("#user_list_container").show(); });
 
 			// Connecting and disconnecting
 			function connect() {

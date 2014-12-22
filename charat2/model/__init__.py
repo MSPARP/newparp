@@ -297,6 +297,8 @@ class GroupChat(Chat):
 
     title = Column(Unicode(50), nullable=False, default=u"")
     topic = Column(UnicodeText, nullable=False, default=u"")
+    description = Column(UnicodeText, nullable=False, default=u"")
+    rules = Column(UnicodeText, nullable=False, default=u"")
 
     autosilence = Column(Boolean, nullable=False, default=False)
 
@@ -323,6 +325,8 @@ class GroupChat(Chat):
             "type": self.type,
             "title": self.title,
             "topic": self.topic,
+            "description": self.description,
+            "rules": self.rules,
             "autosilence": self.autosilence,
             "level": self.level,
             "publicity": self.publicity,
@@ -502,6 +506,7 @@ class ChatUser(Base):
         "set_flag": 1,
         "set_group": 1,
         "set_topic": 1,
+        "set_info": 1,
     }
 
     @property
