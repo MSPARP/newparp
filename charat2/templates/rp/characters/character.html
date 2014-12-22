@@ -27,6 +27,9 @@
                 <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}">
             </p>
         </div>
+        <p id="text_preview_container" style="color: #{{character.color}};">
+            <span id="text_preview_alias">{{character.alias}}: </span><span id="text_preview">{{character.search_character.text_preview}}</span>
+        </p>
         <h2>Typing quirks</h2>
         <div class="input_table">
             <p>

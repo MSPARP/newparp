@@ -343,6 +343,7 @@ var msparp = (function() {
 			if (chat.type == "group") {
 				$("#topbar").click(function() {
 					info_panel.show();
+					edit_info_panel.hide();
 				});
 				// There are several places where we show the topic, so we use this to update them all.
 				var topic = $(".topic");
