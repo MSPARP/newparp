@@ -214,7 +214,7 @@ section > .close:first-child { float: right; margin: 5px; }
 
 /* 4.3. Conversation and send form */
 
-#conversation { position: fixed; top: 5px; right: 5px; bottom: 53px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
 #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }

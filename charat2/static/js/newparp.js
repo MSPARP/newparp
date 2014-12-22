@@ -489,6 +489,14 @@ var msparp = (function() {
 
 			// Typing quirks
 			function apply_quirks(text) {
+				// / to drop quirks.
+				if (text[0] == "/") { return text.substr(1); }
+				// Ordinary replacements. Escape any regex control characters before replacing.
+				user.character.replacements.forEach(function(replacement) {
+					RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
+					var re = new RegExp(RegExp.quote(replacement[0]), "g");
+					text = text.replace(re, replacement[1]);
+				});
 				return user.character.quirk_prefix + text + user.character.quirk_suffix;
 			}
 
