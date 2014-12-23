@@ -44,7 +44,7 @@
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
     <ul>
-        {{#if (is_you)}}<li id="action_settings">Settings</li>{{/if}}
+        {{#if (is_you)}}<li id="action_switch_character">Switch character</li>{{/if}}
         {{#if (can_set_group "mod")}}<li id="action_mod">Make Professional Wet Blanket</li>{{/if}}
         {{#if (can_set_group "mod2")}}<li id="action_mod2">Make Bum's Rusher</li>{{/if}}
         {{#if (can_set_group "mod3")}}<li id="action_mod3">Make Amateur Gavel-Slinger</li>{{/if}}
@@ -84,10 +84,10 @@
     <ul id="user_list"></ul>
 </section>
 
-<section class="sidebar" id="settings">
+<section class="sidebar" id="switch_character">
     <button type="button" class="close">Close</button>
-    <h2>Settings</h2>
-    <form id="settings_form">
+    <h2>Switch character</h2>
+    <form id="switch_character_form">
         {% if characters %}
         <p><select name="character_id">
             <option value="">Saved characters...</option>
@@ -152,6 +152,7 @@
     <button type="submit">Send</button>
     <button type="button" id="abscond_button">Abscond</button>
     <button type="button" id="user_list_button" class="mobile_button">Users</button>
+    <button type="button" id="switch_character_button">Switch char</button>
 </form>
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>

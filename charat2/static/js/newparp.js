@@ -425,7 +425,7 @@ var msparp = (function() {
 				} else {
 					action_user = user_data[action_user_id];
 					action_list.html(action_list_template(action_user));
-					$("#action_settings").click(function() { $("#settings").show(); });
+					$("#action_switch_character").click(function() { $("#switch_character").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
 					action_list.appendTo(this);
 				}
@@ -449,15 +449,15 @@ var msparp = (function() {
 				$.post("/chat_api/set_group", { "chat_id": chat.id, "user_id": action_user.meta.user_id, "group": this.id.substr(7) });
 			}
 
-			// Settings
-			var settings = $("#settings");
+			// Switch character
+			var switch_character = $("#switch_character");
 			$("select[name=character_id]").change(function() {
 				if (this.value != "") {
 					$.get("/characters/"+this.value+".json", {}, update_character);
 				}
 			});
 			initialize_character_form();
-			$("#settings_form").submit(function() {
+			$("#switch_character_form").submit(function() {
 				if ($("input[name=name]").val().trim() == "") {
 					alert("You can't chat with a blank name!");
 				} else if ($("input[name=color]").val().match(/^#?[0-9a-fA-F]{6}$/) == null) {
@@ -467,7 +467,7 @@ var msparp = (function() {
 					form_data.push({ name: "chat_id", value: chat.id });
 					$.post("/chat_api/save", form_data, function(data) { user = data; });
 				}
-				settings.hide();
+				switch_character.hide();
 				return false;
 			});
 
@@ -511,6 +511,7 @@ var msparp = (function() {
 
 			// Other buttons
 			$("#user_list_button").click(function() { $("#user_list_container").show(); });
+			$("#switch_character_button").click(function() { switch_character.show(); });
 
 			// Connecting and disconnecting
 			function connect() {
@@ -525,7 +526,7 @@ var msparp = (function() {
 				status = "disconnected";
 				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 				$(document.body).removeClass("chatting");
-				settings.hide();
+				switch_character.hide();
 				abscond_button.text("Join");
 			}
 
