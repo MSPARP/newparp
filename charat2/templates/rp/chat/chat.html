@@ -18,11 +18,11 @@
     <button type="button" class="close">Close</button>
     <h2>{{chat.title}}</h2>
     <p class="topic">{{chat.topic}}</p>
+    <p id="info_panel_controls"><button class="set_topic_button">Set topic</button> <button id="edit_info_button">Edit info</button></p>
     <h2>Description</h2>
     <p id="description">{{chat.description}}</p>
     <h2>Rules</h2>
     <p id="rules">{{chat.rules}}</p>
-    <p><button id="edit_info_button">Edit info</button></p>
 </section>
 
 <section id="edit_info_panel">
@@ -61,7 +61,7 @@
         <input type="checkbox" id="mod_tools_toggle">
         <h2>&gt; <label for="mod_tools_toggle">Mod tools</label></h2>
         <ul>
-            <li><button id="set_topic">Set topic</button></li>
+            <li><button class="set_topic_button">Set topic</button></li>
             <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
             <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
             <li><label>This chat is <select id="flag_level">

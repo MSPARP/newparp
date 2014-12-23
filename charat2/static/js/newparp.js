@@ -281,12 +281,12 @@ var msparp = (function() {
 							text_input.css("color", "#" + user.character.color);
 							if (chat.type == "group") {
 								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
-									edit_info_button.show();
 									mod_tools.show();
+									info_panel_controls.show();
 									flag_messages.hide();
 								} else {
-									edit_info_button.hide();
 									mod_tools.hide();
+									info_panel_controls.hide();
 									flag_messages.show();
 								}
 							}
@@ -343,14 +343,14 @@ var msparp = (function() {
 			// Topbar and info panel
 			if (chat.type == "group") {
 				$("#topbar").click(function() {
-					info_panel.show();
-					edit_info_panel.hide();
+					edit_info_panel.css("display") == "block" ? edit_info_panel.hide() : info_panel.toggle();
 				});
 				// There are several places where we show the topic, so we use this to update them all.
 				var topic = $(".topic");
 				var info_panel = $("#info_panel");
 				var description = $("#description");
 				var rules = $("#rules");
+				var info_panel_controls = $("#info_panel_controls");
 				$("#edit_info_button").click(function() {
 					info_panel.hide();
 					// Only set these when we need them.
@@ -358,7 +358,12 @@ var msparp = (function() {
 					edit_info_panel.find("[name=rules]").text(chat.rules);
 					edit_info_panel.show();
 				});
-				var edit_info_button = $("#edit_info_button");
+				$(".set_topic_button").click(function() {
+					var topic = prompt("Please enter a new topic for the chat:");
+					if (topic != null) {
+						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": topic });
+					}
+				});
 				var edit_info_panel = $("#edit_info_panel");
 				$("#edit_info_form").submit(function() {
 					var form_data = $(this).serializeArray();
@@ -375,12 +380,6 @@ var msparp = (function() {
 			// Mod tools
 			if (chat.type == "group") {
 				var mod_tools = $("#mod_tools");
-				$("#set_topic").click(function() {
-					var topic = prompt("Please enter a new topic for the chat:");
-					if (topic != null) {
-						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": topic });
-					}
-				});
 				var flag_autosilence = $("#flag_autosilence").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
 				});
