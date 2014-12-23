@@ -124,6 +124,8 @@ h2 select { font-size: 10pt; color: #000; }
 .input_table p input, .input_table p select { margin: 2px 0; }
 .input_table p label { padding-right: 5px; }
 
+textarea { width: 100%; resize: vertical; }
+
 /* 2.2. Toggle box */
 
 .toggle_box > input:first-child { display: none; }
@@ -171,7 +173,7 @@ h2 select { font-size: 10pt; color: #000; }
 .chat h2 { margin: 5px; font-size: 14pt; color: #000; }
 .chat p { margin: 0; padding: 2px 5px; }
 .chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
-.chat textarea { width: 100%; margin: 0 -2px; resize: vertical; }
+.chat textarea { margin: 0 -2px; }
 .chat .textarea_wrapper { padding: 2px 7px; }
 .chat button:hover { background-color: #fff; }
 .chat button { padding: 2px 6px; }

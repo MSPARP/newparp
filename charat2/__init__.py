@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import account, rp
+from charat2.views import account, admin, rp
 from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search
 
 from flask.ext.babel import Babel, gettext
@@ -127,7 +127,7 @@ app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscr
 # 9. Chat API
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
-app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("post",))
+app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("POST",))
 app.add_url_rule("/chat_api/set_state", "set_state", chat_api.set_state, methods=("POST",))
 app.add_url_rule("/chat_api/set_group", "set_group", chat_api.set_group, methods=("POST",))
 app.add_url_rule("/chat_api/user_action", "user_action", chat_api.user_action, methods=("POST",))
@@ -139,6 +139,11 @@ app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_ap
 app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
+
+# 10. Admin
+
+app.add_url_rule("/admin/announcements", "admin_announcements", admin.announcements_get, methods=("GET",))
+app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 
 # XXX dear fucking lord we need traversal
 
