@@ -30,7 +30,7 @@
         <li>
             <h3><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
             {% if chat.type == "group": %}
-            <p class="subtitle">{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
+            <p class="subtitle">{{chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
             {% if chat.topic != "": %}
             <p>{{chat.topic}}</p>
             {% endif %}

@@ -64,6 +64,11 @@
             <li><button class="set_topic_button">Set topic</button></li>
             <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
             <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
+            <li><label><select id="flag_style">
+                <option value="script">Script</option>
+                <option value="paragraph">Paragraph</option>
+                <option value="either">Either</option>
+            </select> style</label></li>
             <li><label>This chat is <select id="flag_level">
                 <option value="sfw">SFW</option>
                 <option value="nsfw">NSFW</option>
@@ -75,6 +80,7 @@
         <ul>
             <li id="flag_message_autosilence">New users are auto-silenced.</li>
             <li id="flag_message_publicity">This chat is listed on the public chats list.</li>
+            <li id="flag_message_style">Please use script stype.</li>
             <li>This chat is <span id="flag_message_level">SFW</span>.</li>
         </ul>
     </section>

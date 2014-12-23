@@ -262,9 +262,11 @@ var msparp = (function() {
 						rules.text(chat.rules);
 						flag_autosilence.prop("checked", chat.autosilence);
 						flag_publicity.prop("checked", chat.publicity == "listed");
+						flag_style.val(chat.style);
 						flag_level.val(chat.level);
 						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
 						chat.publicity == "listed" ? flag_message_publicity.show() : flag_message_publicity.hide();
+						flag_message_style.text(style_messages[chat.style]);
 						flag_message_level.text(level_names[chat.level]);
 					}
 				}
@@ -386,12 +388,17 @@ var msparp = (function() {
 				var flag_publicity = $("#flag_publicity").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "listed" : "unlisted" });
 				});
+				var flag_style = $("#flag_style").change(function() {
+					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "style", "value": this.value });
+				});
 				var flag_level = $("#flag_level").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": this.value });
 				});
 				var flag_messages = $("#flag_messages");
 				var flag_message_autosilence = $("#flag_message_autosilence");
 				var flag_message_publicity = $("#flag_message_publicity");
+				var flag_message_style = $("#flag_message_style");
+				var style_messages = { "script": "Please use script style.", "paragraph": "Please use paragraph style.", "either": "Script and paragraph style are allowed." };
 				var flag_message_level = $("#flag_message_level");
 				var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
 			}

@@ -312,6 +312,17 @@ def set_flag():
         setattr(g.chat, flag, new_value)
         message = ("%%s [%%s] switched %s %s.") % (flag, value)
 
+    elif (flag == "style" and value in ("script", "paragraph", "either")):
+        if value == g.chat.style:
+            return "", 204
+        g.chat.style = value
+        if g.chat.style == "script":
+            message = "%s [%s] marked the chat as script style."
+        elif g.chat.style == "paragraph":
+            message = "%s [%s] marked the chat as paragraph style."
+        elif g.chat.style == "either":
+            message = "%s [%s] marked the chat as either style."
+
     elif (flag == "level" and value in ("sfw", "nsfw", "nsfw-extreme")):
         if value == g.chat.level:
             return "", 204

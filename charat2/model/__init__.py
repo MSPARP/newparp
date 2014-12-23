@@ -302,6 +302,12 @@ class GroupChat(Chat):
 
     autosilence = Column(Boolean, nullable=False, default=False)
 
+    style = Column(Enum(
+        u"script",
+        u"paragraph",
+        u"either",
+        name=u"group_chats_style",
+    ), nullable=False, default=u"script")
     level = Column(Enum(
         u"sfw",
         u"nsfw",
@@ -328,6 +334,7 @@ class GroupChat(Chat):
             "description": self.description,
             "rules": self.rules,
             "autosilence": self.autosilence,
+            "style": self.style,
             "level": self.level,
             "publicity": self.publicity,
         }
