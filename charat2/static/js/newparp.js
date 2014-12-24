@@ -488,21 +488,47 @@ var msparp = (function() {
 				if (message_text == "") { return false; }
 				$.post("/chat_api/send", { "chat_id": chat.id, "text": message_text });
 				text_input.val("");
+				last_alternating_line = !last_alternating_line;
 				return false;
 			});
 			var send_button = send_form.find("button[type=submit]");
 			conversation.css("bottom", send_form.height() + 10 + "px");
 
 			// Typing quirks
+			var last_alternating_line = false;
 			function apply_quirks(text) {
 				// / to drop quirks.
 				if (text[0] == "/") { return text.substr(1); }
+				// Case options.
+				// ["case"] instead of .case because .case breaks some phones and stuff.
+				switch (user.character["case"]) {
+					case "lower":
+						text = text.toLowerCase();
+						break;
+					case "upper":
+						text = text.toUpperCase();
+						break;
+					case "title":
+						text = text.toLowerCase().replace(/(^|\s)[a-z]/g, function(str) { return str.toUpperCase(); })
+						break;
+					case "inverted":
+						text = text.toUpperCase().replace(/^.|[,.]\s*\w|\b[iI]\b/g, function(str){ return str.toLowerCase(); });
+						break;
+					case "alternating":
+						text = text.toLowerCase().replace(/(\w)\W*\w?/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
+						break;
+					case "alt-lines":
+						text = last_alternating_line ? text.toUpperCase() : text.toLowerCase();
+						break;
+				}
 				// Ordinary replacements. Escape any regex control characters before replacing.
 				user.character.replacements.forEach(function(replacement) {
 					RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
 					var re = new RegExp(RegExp.quote(replacement[0]), "g");
 					text = text.replace(re, replacement[1]);
 				});
+				// XXX regex replacements
+				// Prefix and suffix
 				return user.character.quirk_prefix + text + user.character.quirk_suffix;
 			}
 

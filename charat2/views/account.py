@@ -85,6 +85,7 @@ def register_post():
     new_user = User(
         username=username,
         password=hashpw(request.form["password"].encode(), gensalt()),
+        group="active",
     )
     g.db.add(new_user)
     g.db.flush()
