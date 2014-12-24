@@ -503,18 +503,23 @@ var msparp = (function() {
 				// ["case"] instead of .case because .case breaks some phones and stuff.
 				switch (user.character["case"]) {
 					case "lower":
-						text = text.toLowerCase();
+						// Adaptive lower
+						// Part 1: convert words to lower case if they have at least one lower case letter in them.
+						text = text.replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
 						break;
 					case "upper":
 						text = text.toUpperCase();
 						break;
 					case "title":
-						text = text.toLowerCase().replace(/(^|\s)[a-z]/g, function(str) { return str.toUpperCase(); })
+						// Capitalise the first letter at the beginning, and the first character after whitespace.
+						text = text.toLowerCase().replace(/(^|\s)[a-z]/g, function(str) { return str.toUpperCase(); });
 						break;
 					case "inverted":
-						text = text.toUpperCase().replace(/^.|[,.]\s*\w|\b[iI]\b/g, function(str){ return str.toLowerCase(); });
+						// Lower case the first letter at the beginning, the first letter after a comma or full stop, and lone Is.
+						text = text.toUpperCase().replace(/^.|[,.]\s*\w|\bI\b/g, function(str){ return str.toLowerCase(); });
 						break;
 					case "alternating":
+						// Pick up pairs of letters (optionally with whitespace in between) and capitalise the first in each pair.
 						text = text.toLowerCase().replace(/(\w)\W*\w?/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
 						break;
 					case "alt-lines":
