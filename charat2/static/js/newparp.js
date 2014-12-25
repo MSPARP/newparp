@@ -506,6 +506,9 @@ var msparp = (function() {
 						// Adaptive lower
 						// Part 1: convert words to lower case if they have at least one lower case letter in them.
 						text = text.replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
+						// Part 2: convert lone capital letters (eg. I) to lower case.
+						// Find single capital letters with adjacent lower case ones, potentially looping in case they overlap.
+						text = text.replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
 						break;
 					case "upper":
 						text = text.toUpperCase();
