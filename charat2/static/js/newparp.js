@@ -535,7 +535,16 @@ var msparp = (function() {
 					var re = new RegExp(RegExp.quote(replacement[0]), "g");
 					text = text.replace(re, replacement[1]);
 				});
-				// XXX regex replacements
+				// Regex replacements
+				user.character.regexes.forEach(function(replacement) {
+					try {
+						re = new RegExp(replacement[0], "g");
+						text = text.replace(re, replacement[1]);
+					} catch (e) {
+						text = "Regex parsing error :(";
+						return;
+					}
+				});
 				// Prefix and suffix
 				return user.character.quirk_prefix + text + user.character.quirk_suffix;
 			}
