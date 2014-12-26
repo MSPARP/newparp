@@ -518,8 +518,8 @@ var msparp = (function() {
 						text = text.toLowerCase().replace(/(^|\s)[a-z]/g, function(str) { return str.toUpperCase(); });
 						break;
 					case "inverted":
-						// Lower case the first letter at the beginning, the first letter after a comma or full stop, and lone Is.
-						text = text.toUpperCase().replace(/^.|[,.]\s*\w|\bI\b/g, function(str){ return str.toLowerCase(); });
+						// Lower case the first letter at the beginning, the first letter of each sentence, and lone Is.
+						text = text.toUpperCase().replace(/^.|[,.?!]\s+\w|\bI\b/g, function(str){ return str.toLowerCase(); });
 						break;
 					case "alternating":
 						// Pick up pairs of letters (optionally with whitespace in between) and capitalise the first in each pair.
@@ -527,6 +527,17 @@ var msparp = (function() {
 						break;
 					case "alt-lines":
 						text = last_alternating_line ? text.toUpperCase() : text.toLowerCase();
+						break;
+					case "proper":
+						// Capitalise the first letter at the beginning, the first letter of each sentence, and lone Is.
+						text = text.replace(/^.|[.?!]\s+\w|\bi\b/g, function(str) { return str.toUpperCase() });
+						break;
+					case "first-letter":
+						// Part 1: same as adaptive lower.
+						text = text.replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
+						text = text.replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
+						// Part 2: capitalise the first letter at the beginning and the first letter of each sentence.
+						text = text.replace(/^.|[.?!]\s+\w/g, function(str) { return str.toUpperCase() });
 						break;
 				}
 				// Ordinary replacements. Escape any regex control characters before replacing.

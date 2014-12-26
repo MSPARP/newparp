@@ -60,6 +60,8 @@ case_options = {
     u"normal": u"Normal",
     u"title": u"Title Case",
     u"upper": u"UPPER CASE",
+    u"proper": u"Proper grammar",
+    u"first-letter": u"First letter caps",
 }
 
 case_options_enum = Enum(*case_options.keys(), name=u"case")
