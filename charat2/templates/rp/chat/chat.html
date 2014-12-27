@@ -50,6 +50,8 @@
         {{#if (can_set_group "mod3")}}<li id="action_mod3">Make Amateur Gavel-Slinger</li>{{/if}}
         {{#if (can_set_group "user")}}<li id="action_user">{{{set_user_text}}}</li>{{/if}}
         {{#if (can_set_group "silent")}}<li id="action_silent">Silence</li>{{/if}}
+        {{#if (can_perform_action "kick")}}<li id="action_kick">Kick</li>{{/if}}
+        {{#if (can_perform_action "ban")}}<li id="action_ban">Ban</li>{{/if}}
         <li id="action_close">Close</li>
     </ul>
 {% endraw %}</script>
@@ -148,7 +150,7 @@
 
 <section id="conversation">
     {% for message in messages: %}
-    <p id="message_{{message.id}}" class="message_{{message.type}} {% if message.user_id != None: %}unum_{{message.chat_user_number}}{% endif %}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+    <p id="message_{{message.id}}" class="message_{{message.type}}{% if message.user_id != None: %} unum_{{message.chat_user.number}}{% endif %}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
     {% endfor %}
 </section>
 

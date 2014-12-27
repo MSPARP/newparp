@@ -248,6 +248,24 @@ var msparp = (function() {
 
 			// Parsing and rendering messages
 			function receive_messages(data) {
+				if (typeof data.exit != "undefined") {
+					exit();
+					if (data.exit == "kick") {
+						render_message({
+							"alias": "",
+							"color": "000000",
+							"id": null,
+							"name": "",
+							"posted": Math.floor(Date.now() / 1000),
+							"text": "You have been kicked from this chat. Please think long and hard about your behavior before returning.",
+							"type": "exit",
+							"user_number": null,
+						});
+					} else if (data.exit == "ban") {
+						if (chat.url != "theoubliette") { location.replace("/theoubliette") };
+					}
+					return;
+				}
 				if (typeof data.messages != "undefined" && data.messages.length != 0) {
 					data.messages.forEach(render_message);
 					if (document.hidden || document.webkitHidden || document.msHidden) {
@@ -423,7 +441,7 @@ var msparp = (function() {
 			var action_user = null;
 			var action_list = $("#action_list");
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
-			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 4, "mod2": 3, "mod3": 2, "user": 1, "silent": 0 };
+			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 3, "mod2": 2, "mod3": 1, "user": 0, "silent": -1 };
 			function render_action_list() {
 				var action_user_number = parseInt(this.id.substr(5));
 				if (action_user && action_user_number == action_user.meta.number) {
@@ -435,16 +453,26 @@ var msparp = (function() {
 					action_list.appendTo(this);
 					$("#action_switch_character").click(function() { $("#switch_character").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
+					$("#action_kick, #action_ban").click(user_action);
 				}
 			}
-			Handlebars.registerHelper("can_set_group", function(new_group, action_user) {
+			Handlebars.registerHelper("can_set_group", function(new_group) {
 				// Don't bother if they're already this group.
 				if (ranks[new_group] == ranks[this.meta.group]) { return false; }
 				// You can't set groups at all if you're not a mod.
-				if (ranks[user.meta.group] < 2) { return false; }
+				if (ranks[user.meta.group] < 1) { return false; }
 				// You can only set the group to one which is below yours.
 				if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
 				// You can only set the group of people whose group is below yours.
+				if (ranks[this.meta.group] >= ranks[user.meta.group]) { return false; }
+				return true;
+			});
+			Handlebars.registerHelper("can_perform_action", function(action) {
+				// You can only kick if you're a Bum's Rusher or above.
+				if (action == "kick" && ranks[user.meta.group] < 2) { return false; }
+				// You can only ban if you're a Bum's Rusher or above.
+				if (action == "ban" && ranks[user.meta.group] < 3) { return false; }
+				// You can only perform actions on people whose group is below yours.
 				if (ranks[this.meta.group] >= ranks[user.meta.group]) { return false; }
 				return true;
 			});
@@ -454,6 +482,14 @@ var msparp = (function() {
 			});
 			function set_group() {
 				$.post("/chat_api/set_group", { "chat_id": chat.id, "number": action_user.meta.number, "group": this.id.substr(7) });
+			}
+			function user_action() {
+				var data = { "chat_id": chat.id, "number": action_user.meta.number, "action": this.id.substr(7) };
+				if (this.id == "action_ban") {
+					var reason = prompt("Please provide a reason for this ban.");
+					if (reason) { data.reason = reason; }
+				}
+				$.post("/chat_api/user_action", data);
 			}
 
 			// Switch character
@@ -583,12 +619,15 @@ var msparp = (function() {
 				conversation.scrollTop(conversation[0].scrollHeight);
 				abscond_button.text("Abscond");
 			}
-			function disconnect() {
+			function exit() {
 				status = "disconnected";
-				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 				$(document.body).removeClass("chatting");
 				switch_character.hide();
 				abscond_button.text("Join");
+			}
+			function disconnect() {
+				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+				exit();
 			}
 
 			// Now all that's done, let's connect

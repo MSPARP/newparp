@@ -2,7 +2,7 @@ import json
 import time
 
 from datetime import datetime
-from flask import abort, g, request
+from flask import abort, g, jsonify, request
 from functools import wraps
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
@@ -31,7 +31,7 @@ def mark_alive(f):
             # XXX ONLINE USER LIMITS ETC. HERE.
             # If they've been kicked recently, don't let them in.
             if g.redis.exists("kicked:%s:%s" % (g.chat_id, g.user_id)):
-                return "{\"exit\":\"kick\"}"
+                return jsonify({"exit": "kick"})
             # Make sure we're connected to the database for the ban checking.
             db_connect()
             # Check if we're banned.
