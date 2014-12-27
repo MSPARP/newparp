@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% macro pager(): %}
+{% if paginator.page_count!=1 %}
+<p class="pager">
+{{paginator.pager(format='~20~')}}
+</p>
+{% endif %}
+{% endmacro %}
+{% macro render_message(message): %}
+<p id="message_{{message.id}}" class="message_{{message.type}}{% if message.user_id != None: %} unum_{{message.chat_user.number}}{% endif %}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+{% endmacro %}
+<html>
+<head>
+<title>{% if chat.title: %}{{chat.title}}{% else: %}Chat{% endif %} - MSPARP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/css/normalize.css">
+<link rel="stylesheet" href="/static/css/newparp.css">
+</head>
+<body class="chat">
+
+{% block content: %}{% endblock %}
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//cdn.jsdelivr.net/handlebarsjs/2.0.0/handlebars.min.js"></script>
+<script src="/static/js/newparp.js"></script>
+{% block scripts: %}{% endblock %}
+
+</body>
+</html>

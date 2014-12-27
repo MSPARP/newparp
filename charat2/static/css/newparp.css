@@ -20,6 +20,7 @@ Contents:
 	1. Topbar and info panel
 	2. Sidebars
 	3. Conversation and send form
+	4. Log pages
 
 */
 
@@ -220,4 +221,9 @@ section > .close:first-child { float: right; margin: 5px; }
 #send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; }
 #send_form button[type=submit] { float: right; margin-right: -2px; }
 #abscond_button { margin-left: -2px; }
+
+
+/* 4.4. Log pages */
+
+.chat .pager, #archive_conversation { margin: 5px; background-color: #eee; }
 

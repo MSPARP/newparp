@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>{% if chat.title: %}{{chat.title}}{% else: %}Chat{% endif %} - MSPARP</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="/static/css/normalize.css">
-<link rel="stylesheet" href="/static/css/newparp.css">
-</head>
-<body class="chat">
+{% extends "rp/chat/base.html" %}
+{% block content: %}
 
 {% if chat.type == "group": %}
 <section id="topbar">
@@ -150,7 +143,7 @@
 
 <section id="conversation">
     {% for message in messages: %}
-    <p id="message_{{message.id}}" class="message_{{message.type}}{% if message.user_id != None: %} unum_{{message.chat_user.number}}{% endif %}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+    {{render_message(message)}}
     {% endfor %}
 </section>
 
@@ -163,10 +156,8 @@
     <button type="button" id="switch_character_button">Switch char</button>
 </form>
 
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//cdn.jsdelivr.net/handlebarsjs/2.0.0/handlebars.min.js"></script>
-<script src="/static/js/newparp.js"></script>
+{% endblock %}
+{% block scripts: %}
 <script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{latest_num|tojson|safe}});</script>
+{% endblock %}
 
-</body>
-</html>

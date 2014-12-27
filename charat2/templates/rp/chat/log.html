@@ -1,75 +1,18 @@
-{% extends "rp/base.html" %}
-{% block title%}{{chat.title}} Log – Charat RP{% endblock %}
-{% block header %}
-        <link rel="stylesheet" href="{{url_for("static", filename="css/rp/chat.css")}}">
-        <style>
-        #topbar {
-            background-color: rgba(255,255,255,.9);
-            position: fixed;
-        }
+{% extends "rp/chat/base.html" %}
+{% block content: %}
 
-        </style>
-        <script src="{{url_for("static", filename="js/rp/log.js")}}" defer></script>
+{{pager()}}
+
+<section id="archive_conversation">
+    {% for message in messages: %}
+    {{render_message(message)}}
+    {% endfor %}
+	{% if paginator.page == paginator.last_page: %}
+	<p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
+	{% endif %}
+</section>
+
+{{pager()}}
+
 {% endblock %}
 
-{% block topbar %}
-        <div id="topbar">
-            <center>
-               <div id="toptitle"><img src="{{url_for('static', filename='icon.png')}}" /></div>
-                <div id="topmenu">
-                    <a id="goHome" href="{{url_for('home')}}">Home</a>
-                    <div class="topborder"></div>
-                    <a id="goChats" href="{{url_for('rp_chat_list')}}">Chats</a>
-                    <div class="topborder"></div>
-                    <a id="goUser" href="">Guide</a>
-                    <div class="topborder"></div>
-                    <a id="goCharacters" href="{{url_for('rp_character_list')}}">Characters</a>
-                    <div class="topborder"></div>
-                    <a id="goUser" href="">Settings</a>
-                    <div class="topborder"></div>
-                    {% if g.user != None: %}
-                    <form class="log_out_form" action="{{url_for("log_out")}}" method="post"><button type="submit" class="log_out">Logout</button></form>
-                    {% else %}
-                    <a class="log_in" href="">Log in</a>
-                    {% endif %}
-                </div>
-            </center>
-        </div>
-{% endblock %}
-
-{% block pager %}
-        {% if paginator.page_count!=1 %}
-        <div class="pager">
-        {{paginator.pager(format='~20~')}}
-        </div>
-        {% endif %}
-{% endblock %}
-
-{% block content %}
-        {{ self.pager() }}
-        <div id="archiveConversation">
-            {% if messages|length!=0 %}
-            {% set last_date = None %}
-                {% for message in messages %}
-                {% set current_date = message.posted.date() %}
-                {% if current_date!=last_date %}
-                <p class="info"></p>
-                <h1>{{current_date.strftime("%A %d %B %Y")}}</h1>
-                {% set last_date = current_date %}
-                {% endif %}
-                <span id="message{{message.id}}" class="{{message.type}} user{{message.user_id}}">
-                    <p class="info">
-                        <span class="left">{{message.name}}{% if message.type != "ic" %}:{{message.type}}{% endif %}</span>
-                        <span class="right"><span class="username">{{message.user.username}}</span> <span class="post_timestamp">{{message.posted.strftime("%s")}}</span></span> <!-- .strftime("%b %d %H:%M") -->
-                    </p>
-                    <p class="message" style="color: #{{message.color}};">{% if message.alias %}{{message.alias}}: {% endif %}{{message.text}}</p>
-                </span>
-                {% endfor %}
-            {% else %}
-            <p>Log doesn't exist. If this is not supposed to be happening, send an ask to http://charatrp.tumblr.com</p>
-            {% endif %}
-            <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
-        </div>
-
-        {{ self.pager() }}
-{% endblock %}

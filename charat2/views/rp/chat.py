@@ -241,7 +241,9 @@ def log(chat, pm_user, url, fmt=None, page=None):
 
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
-    ).order_by(Message.id).limit(messages_per_page).offset((page - 1) * messages_per_page).all()
+    ).order_by(Message.id).options(
+        joinedload(Message.chat_user),
+    ).limit(messages_per_page).offset((page - 1) * messages_per_page).all()
 
     if len(messages) == 0:
         abort(404)
