@@ -275,9 +275,9 @@ var msparp = (function() {
 					user_list.find("li").click(render_action_list);
 					for (var i = 0; i < data.users.length; i++) {
 						// Store user data so we can look it up for action lists.
-						user_data[data.users[i].meta.user_id] = data.users[i];
+						user_data[data.users[i].meta.number] = data.users[i];
 						// Also update our own user data.
-						if (data.users[i].meta.user_id == user.meta.user_id) {
+						if (data.users[i].meta.number == user.meta.number) {
 							user.meta.group = data.users[i].meta.group;
 							text_preview.css("color", "#" + user.character.color);
 							text_input.css("color", "#" + user.character.color);
@@ -303,8 +303,8 @@ var msparp = (function() {
 					}
 					// Re-render the action list if necessary.
 					if (action_user != null) {
-						var action_user_id = action_user.meta.user_id;
-						var action_user_li = user_list.find("#user_" + action_user_id);
+						var action_user_number = action_user.meta.number;
+						var action_user_li = user_list.find("#unum_" + action_user_number);
 						// Set to null so it fires the open action rather than the close action.
 						if (action_user_li.length != 0) {
 							action_user = null;
@@ -316,7 +316,7 @@ var msparp = (function() {
 			function render_message(message) {
 				latest_message = message.id;
 				var p = $("<p>").attr("id", "message_" + message.id);
-				p.addClass("message_" + message.type + " user_" + message.user.id);
+				p.addClass("message_" + message.type + " unum_" + message.user_number);
 				p.css("color", "#" + message.color);
 				if (message.type == "me") {
 					p.text("* " + message.name + " " + message.text);
@@ -417,7 +417,7 @@ var msparp = (function() {
 					"silent": "Silenced.",
 				}[group];
 			});
-			Handlebars.registerHelper("is_you", function() { return this.meta.user_id == user.meta.user_id; });
+			Handlebars.registerHelper("is_you", function() { return this.meta.number == user.meta.number; });
 
 			// Action list
 			var action_user = null;
@@ -425,16 +425,16 @@ var msparp = (function() {
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
 			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 4, "mod2": 3, "mod3": 2, "user": 1, "silent": 0 };
 			function render_action_list() {
-				var action_user_id = parseInt(this.id.substr(5));
-				if (action_user && action_user_id == action_user.meta.user_id) {
+				var action_user_number = parseInt(this.id.substr(5));
+				if (action_user && action_user_number == action_user.meta.number) {
 					action_user = null;
 					action_list.empty();
 				} else {
-					action_user = user_data[action_user_id];
+					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
+					action_list.appendTo(this);
 					$("#action_switch_character").click(function() { $("#switch_character").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
-					action_list.appendTo(this);
 				}
 			}
 			Handlebars.registerHelper("can_set_group", function(new_group, action_user) {
@@ -453,7 +453,7 @@ var msparp = (function() {
 				return "Unmod";
 			});
 			function set_group() {
-				$.post("/chat_api/set_group", { "chat_id": chat.id, "user_id": action_user.meta.user_id, "group": this.id.substr(7) });
+				$.post("/chat_api/set_group", { "chat_id": chat.id, "number": action_user.meta.number, "group": this.id.substr(7) });
 			}
 
 			// Switch character

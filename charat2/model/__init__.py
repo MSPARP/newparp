@@ -3,7 +3,7 @@ import json
 import os
 import time
 
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
 from sqlalchemy.orm import (
     relation,
@@ -379,6 +379,7 @@ class ChatUser(Base):
 
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    number = Column(Integer, nullable=False)
 
     subscribed = Column(Boolean, nullable=False, default=True)
 
@@ -535,7 +536,7 @@ class ChatUser(Base):
     def can(self, action):
         return self.group_ranks[self.computed_group] >= self.action_ranks[action]
 
-    def to_dict(self, include_user=True, include_options=False):
+    def to_dict(self, include_user=False, include_options=False):
         ucd = {
             "character": {
                 "name": self.name,
@@ -543,6 +544,7 @@ class ChatUser(Base):
                 "color": self.color,
             },
             "meta": {
+                "number": self.number,
                 # Group is overridden by chat creator and user status.
                 # Needs joinedload whenever we're getting these.
                 "group": self.computed_group,
@@ -568,8 +570,10 @@ class ChatUser(Base):
             ucd["meta"]["highlighted_user_ids"] = self.highlighted_user_ids
             ucd["meta"]["blocked_user_ids"] = self.blocked_user_ids
         if include_user:
-            ucd["meta"]["user_id"] = self.user.id
-            ucd["meta"]["username"] = self.user.username
+            ucd["user"] = {
+                "user_id": self.user.id,
+                "username": self.user.username,
+            }
         return ucd
 
 
@@ -611,13 +615,10 @@ class Message(Base):
 
     text = Column(UnicodeText, nullable=False)
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_user=False):
+        md = {
             "id": self.id,
-            "user": {
-                "id": self.user.id,
-                "username": self.user.username,
-            } if self.user is not None else None,
+            "user_number": self.chat_user.number if self.user_id is not None else None,
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,
@@ -625,6 +626,12 @@ class Message(Base):
             "name": self.name,
             "text": self.text,
         }
+        if include_user:
+            md["user"] = {
+                "id": self.user.id,
+                "username": self.user.username,
+            } if self.user is not None else None
+        return md
 
 
 class Ban(Base):
@@ -782,6 +789,9 @@ Index(
 # Index for your chats list.
 Index("chat_users_user_id_subscribed", ChatUser.user_id, ChatUser.subscribed)
 
+# Index for user number lookup.
+Index("chat_users_number_unique", ChatUser.chat_id, ChatUser.number, unique=True)
+
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)
 
@@ -831,6 +841,15 @@ ChatUser.chat = relation(Chat, backref="users")
 
 Message.chat = relation(Chat)
 Message.user = relation(User)
+Message.chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Message.user_id != None,
+        Message.chat_id == ChatUser.chat_id,
+        Message.user_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Message.chat_id, Message.user_id],
+)
 
 Ban.user = relation(
     User,

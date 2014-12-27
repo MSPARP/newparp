@@ -76,8 +76,9 @@ def get_chat(f):
                 g.db.add(chat)
                 g.db.flush()
                 # Create ChatUser for the other user.
-                pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id)
+                pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id, number=1)
                 g.db.add(pm_chat_user)
+                g.db.flush()
 
             return f(chat, pm_user, url, fmt, *args, **kwargs)
 
@@ -161,7 +162,8 @@ def chat(chat, pm_user, url, fmt=None):
             ChatUser.chat_id == chat.id,
         )).one()
     except NoResultFound:
-        chat_user = ChatUser.from_user(g.user, chat_id=chat.id)
+        new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
+        chat_user = ChatUser.from_user(g.user, chat_id=chat.id, number=new_number)
         if chat.type == "group" and g.user.id != chat.creator_id:
             chat_user.subscribed = False
         if (
@@ -175,7 +177,7 @@ def chat(chat, pm_user, url, fmt=None):
     # Show the last 50 messages.
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
-    ).options(joinedload(Message.user)).order_by(
+    ).options(joinedload(Message.chat_user)).order_by(
         Message.posted.desc(),
     ).limit(50).all()
     messages.reverse()

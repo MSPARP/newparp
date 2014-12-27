@@ -39,7 +39,7 @@
 
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each users}}
-    <li style="color: #{{character.color}};" id="user_{{meta.user_id}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
+    <li style="color: #{{character.color}};" id="unum_{{meta.number}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
 {{/each}}
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
@@ -148,7 +148,7 @@
 
 <section id="conversation">
     {% for message in messages: %}
-    <p id="message_{{message.id}}" class="message_{{message.type}} user_{{message.user_id}}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+    <p id="message_{{message.id}}" class="message_{{message.type}} {% if message.user_id != None: %}unum_{{message.chat_user_number}}{% endif %}" style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
     {% endfor %}
 </section>
 

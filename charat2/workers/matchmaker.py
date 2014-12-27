@@ -138,8 +138,8 @@ if __name__ == "__main__":
                 db.add(new_chat)
                 db.flush()
 
-                db.add(ChatUser(chat_id=new_chat.id, user_id=s1["user_id"], **s1["character"]))
-                db.add(ChatUser(chat_id=new_chat.id, user_id=s2["user_id"], **s2["character"]))
+                db.add(ChatUser(chat_id=new_chat.id, user_id=s1["user_id"], number=1, **s1["character"]))
+                db.add(ChatUser(chat_id=new_chat.id, user_id=s2["user_id"], number=2, **s2["character"]))
 
                 if options:
                     db.add(Message(

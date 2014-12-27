@@ -132,20 +132,14 @@ def set_group():
         abort(400)
 
     # Fetch the ChatUser we're trying to change.
-    if "user_id" in request.form:
-        user_condition = ChatUser.user_id == request.form["user_id"]
-    elif "username" in request.form:
-        user_condition = func.lower(User.username) == request.form["username"].lower()
-    else:
-        abort(400)
     try:
         set_chat_user, set_user = g.db.query(ChatUser, User).join(
             User, ChatUser.user_id == User.id,
         ).filter(and_(
-            user_condition,
             ChatUser.chat_id == g.chat.id,
+            ChatUser.number == int(request.form["number"]),
         )).one()
-    except NoResultFound:
+    except (ValueError, NoResultFound):
         abort(404)
 
     # Validation #3: Set user's group must be lower than ours.
@@ -201,20 +195,14 @@ def user_action():
         abort(403)
 
     # Fetch the ChatUser we're trying to act upon.
-    if "user_id" in request.form:
-        user_condition = ChatUser.user_id == request.form["user_id"]
-    elif "username" in request.form:
-        user_condition = func.lower(User.username) == request.form["username"].lower()
-    else:
-        abort(400)
     try:
         set_chat_user, set_user = g.db.query(ChatUser, User).join(
             User, ChatUser.user_id == User.id,
         ).filter(and_(
-            user_condition,
             ChatUser.chat_id == g.chat.id,
+            ChatUser.number == int(request.form["number"]),
         )).one()
-    except NoResultFound:
+    except (ValueError, NoResultFound):
         abort(404)
 
     # Validation #2: Set user's group must be lower than ours.
