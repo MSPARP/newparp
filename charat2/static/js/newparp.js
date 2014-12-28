@@ -261,13 +261,16 @@ var msparp = (function() {
 							"type": "exit",
 							"user_number": null,
 						});
+						scroll_to_bottom();
 					} else if (data.exit == "ban") {
 						if (chat.url != "theoubliette") { location.replace("/theoubliette") };
 					}
 					return;
 				}
 				if (typeof data.messages != "undefined" && data.messages.length != 0) {
+					var scroll_after_render = is_at_bottom();
 					data.messages.forEach(render_message);
+					if (scroll_after_render) { scroll_to_bottom(); }
 					if (document.hidden || document.webkitHidden || document.msHidden) {
 						document.title = "New message - " + original_title;
 					}
@@ -344,7 +347,6 @@ var msparp = (function() {
 					p.text(message.text);
 				}
 				p.appendTo(conversation);
-				conversation.scrollTop(conversation[0].scrollHeight);
 			}
 
 			// "New message" notification
@@ -522,16 +524,35 @@ var msparp = (function() {
 				data[this.id] = this.checked ? "on" : "off";
 				$.post("/chat_api/save_variables", data);
 				user.meta[this.id] = this.checked;
+				parse_variables();
 			});
+			function parse_variables() {
+				user.meta.show_preview ? text_preview.show() : text_preview.hide();
+				resize_conversation();
+			}
 			$("#subscribed").click(function() {
 				$.post("/" + chat.url + "/" + (this.checked ? "subscribe" : "unsubscribe"));
 				user.meta.subscribed = this.checked;
 			});
 
+			// Conversation
+			function is_at_bottom() {
+				var current_scroll = conversation.scrollTop() + conversation.height();
+				var max_scroll = conversation[0].scrollHeight;
+				return max_scroll - current_scroll < 30;
+			}
+			function scroll_to_bottom() { conversation.scrollTop(conversation[0].scrollHeight); }
+			function resize_conversation() {
+				var scroll_after_resize = is_at_bottom();
+				conversation.css("bottom", send_form.height() + 10 + "px");
+				if (scroll_after_resize) { scroll_to_bottom(); }
+			}
+
 			// Send form
 			var text_preview = $("#text_preview");
 			var text_input = $("input[name=text]").keyup(function() {
 				text_preview.text(apply_quirks(this.value));
+				resize_conversation();
 			});
 			var send_form = $("#send_form").submit(function() {
 				var message_text = text_preview.text().trim();
@@ -542,7 +563,6 @@ var msparp = (function() {
 				return false;
 			});
 			var send_button = send_form.find("button[type=submit]");
-			conversation.css("bottom", send_form.height() + 10 + "px");
 
 			// Typing quirks
 			var last_alternating_line = false;
@@ -630,7 +650,8 @@ var msparp = (function() {
 				launch_long_poll();
 				window.setTimeout(ping, 10000);
 				$(document.body).addClass("chatting");
-				conversation.scrollTop(conversation[0].scrollHeight);
+				parse_variables();
+				scroll_to_bottom();
 				abscond_button.text("Abscond");
 			}
 			function exit() {
