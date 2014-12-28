@@ -1,25 +1,24 @@
+{% extends "base.html" %}
+{% block title: %}Users in {{chat.title}} - {% endblock %}
+{% block content: %}
 <h2>Users in {{chat.title}}</h2>
 <table>
   <thead>
     <tr>
-      <th>Username</th>
+      <th>#</th>
       <th>Character</th>
       <th>Group</th>
     </tr>
   </thead>
   <tbody>
-{% for chat_user, user in users: %}
+{% for chat_user in users: %}
     <tr>
-      <td>{{user.username}}</td>
+      <td>{{chat_user.number}}</td>
       <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.alias}}</span>]{% endif %}</td>
-{% if user.group == "admin": %}
-      <td>Adorable Admin</td>
-{% elif chat.creator == user: %}
-      <td>Chat Creator</td>
-{% else: %}
-      <td>{{chat_user.group}}</td>
-{% endif %}
+      <td>{{{"admin": "God tier moderator", "creator": "Chat creator", "mod": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod3": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}</td>
     </tr>
 {% endfor %}
   </tbody>
 </table>
+{% endblock %}
+

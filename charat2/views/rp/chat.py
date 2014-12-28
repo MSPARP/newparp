@@ -284,14 +284,12 @@ def users(url, fmt=None):
     except NoResultFound:
         abort(404)
 
-    users = g.db.query(ChatUser, User).join(
-        User, ChatUser.user_id == User.id,
-    ).filter(and_(
-        ChatUser.chat_id == chat.id,
-    )).order_by(User.username).all()
+    users = g.db.query(ChatUser).filter(
+		ChatUser.chat_id == chat.id,
+    ).options(joinedload(ChatUser.user)).order_by(ChatUser.number).all()
 
     if fmt == "json":
-        return jsonify({ "users": [_[0].to_dict() for _ in users] })
+        return jsonify({ "users": [_.to_dict() for _ in users] })
 
     return render_template(
         "rp/chat/chat_users.html",
