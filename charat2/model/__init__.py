@@ -120,16 +120,11 @@ class User(Base):
         nullable=False, default=u"sfw",
     )
 
-    confirm_disconnect = Column(Boolean, nullable=False, default=False)
+    confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
-    show_description = Column(Boolean, nullable=False, default=True)
     show_connection_messages = Column(Boolean, nullable=False, default=True)
-    show_ic_messages = Column(Boolean, nullable=False, default=True)
-    show_ooc_messages = Column(Boolean, nullable=False, default=True)
-    show_message_info = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
-    show_preview = Column(Boolean, nullable=False, default=False)
-    ooc_on = Column(Boolean, nullable=False, default=False)
+    show_preview = Column(Boolean, nullable=False, default=True)
 
 
 class Character(Base):
@@ -409,16 +404,11 @@ class ChatUser(Base):
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
 
-    confirm_disconnect = Column(Boolean, nullable=False, default=False)
+    confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
-    show_description = Column(Boolean, nullable=False, default=True)
     show_connection_messages = Column(Boolean, nullable=False, default=True)
-    show_ic_messages = Column(Boolean, nullable=False, default=True)
-    show_ooc_messages = Column(Boolean, nullable=False, default=True)
-    show_message_info = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
-    show_preview = Column(Boolean, nullable=False, default=False)
-    ooc_on = Column(Boolean, nullable=False, default=False)
+    show_preview = Column(Boolean, nullable=False, default=True)
 
     # No joins or filtering here so these don't need to be foreign keys.
     highlighted_user_ids = Column(ARRAY(Integer), nullable=False, default=lambda: [])
@@ -440,14 +430,9 @@ class ChatUser(Base):
             regexes=character.regexes,
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
-            show_description=user.show_description,
             show_connection_messages=user.show_connection_messages,
-            show_ic_messages=user.show_ic_messages,
-            show_ooc_messages=user.show_ooc_messages,
-            show_message_info=user.show_message_info,
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
-            ooc_on=user.ooc_on,
             **kwargs
         )
 
@@ -460,14 +445,9 @@ class ChatUser(Base):
                 user_id=user.id,
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
-                show_description=user.show_description,
                 show_connection_messages=user.show_connection_messages,
-                show_ic_messages=user.show_ic_messages,
-                show_ooc_messages=user.show_ooc_messages,
-                show_message_info=user.show_message_info,
                 show_bbcode=user.show_bbcode,
                 show_preview=user.show_preview,
-                ooc_on=user.ooc_on,
                 **kwargs
             )
         dc = user.default_character
@@ -483,14 +463,9 @@ class ChatUser(Base):
             regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
-            show_description=user.show_description,
             show_connection_messages=user.show_connection_messages,
-            show_ic_messages=user.show_ic_messages,
-            show_ooc_messages=user.show_ooc_messages,
-            show_message_info=user.show_message_info,
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
-            ooc_on=user.ooc_on,
             **kwargs
         )
 
@@ -559,14 +534,9 @@ class ChatUser(Base):
             ucd["meta"]["subscribed"] = self.subscribed
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
-            ucd["meta"]["show_description"] = self.show_description
             ucd["meta"]["show_connection_messages"] = self.show_connection_messages
-            ucd["meta"]["show_ic_messages"] = self.show_ic_messages
-            ucd["meta"]["show_ooc_messages"] = self.show_ooc_messages
-            ucd["meta"]["show_message_info"] = self.show_message_info
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
-            ucd["meta"]["ooc_on"] = self.ooc_on
             ucd["meta"]["highlighted_user_ids"] = self.highlighted_user_ids
             ucd["meta"]["blocked_user_ids"] = self.blocked_user_ids
         if include_user:

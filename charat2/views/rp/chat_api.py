@@ -549,14 +549,9 @@ def save_variables():
     for variable in [
         "confirm_disconnect",
         "desktop_notifications",
-        "show_description",
         "show_connection_messages",
-        "show_ic_messages",
-        "show_ooc_messages",
-        "show_message_info",
         "show_bbcode",
         "show_preview",
-        "ooc_on",
     ]:
         if variable not in request.form:
             continue
