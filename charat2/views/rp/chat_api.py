@@ -472,11 +472,7 @@ def save():
     g.chat_user.regexes = json.dumps(regexes)
 
     # Send a message if name or alias has changed.
-    if (
-        g.chat_user.name != old_name
-        or g.chat_user.alias != old_alias
-        or g.chat_user.color != old_color
-    ):
+    if g.chat_user.name != old_name or g.chat_user.alias != old_alias:
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
@@ -490,6 +486,9 @@ def save():
                     g.chat_user.name, g.chat_user.alias,
                 ),
             ))
+    # Just refresh the user list if the color has changed.
+    elif g.chat_user.color != old_color:
+        send_userlist(g.db, g.redis, g.chat)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 
