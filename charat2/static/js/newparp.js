@@ -247,6 +247,7 @@ var msparp = (function() {
 			});
 
 			// Parsing and rendering messages
+			var show_notification = false;
 			function receive_messages(data) {
 				if (typeof data.exit != "undefined") {
 					exit();
@@ -269,9 +270,10 @@ var msparp = (function() {
 				}
 				if (typeof data.messages != "undefined" && data.messages.length != 0) {
 					var scroll_after_render = is_at_bottom();
+					show_notification = false;
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
-					if (document.hidden || document.webkitHidden || document.msHidden) {
+					if (show_notification && (document.hidden || document.webkitHidden || document.msHidden)) {
 						document.title = "New message - " + original_title;
 					}
 				}
@@ -336,6 +338,10 @@ var msparp = (function() {
 			}
 			function render_message(message) {
 				latest_message = message.id;
+				// Skip notifications for system messages if we're hiding them.
+				if (user.meta.show_connection_messages || ["join", "disconnect", "timeout"].indexOf(message.type) == -1) {
+					show_notification = true;
+				}
 				var p = $("<p>").attr("id", "message_" + message.id);
 				p.addClass("message_" + message.type + " unum_" + message.user_number);
 				p.css("color", "#" + message.color);
@@ -528,6 +534,7 @@ var msparp = (function() {
 			});
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
+				user.meta.show_connection_messages ? conversation.removeClass("hide_connection_messages") : conversation.addClass("hide_connection_messages");
 				resize_conversation();
 			}
 			$("#subscribed").click(function() {
