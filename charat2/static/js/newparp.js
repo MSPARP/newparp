@@ -452,6 +452,7 @@ var msparp = (function() {
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
 					$("#action_switch_character").click(function() { $("#switch_character").show(); });
+					$("#action_settings").click(function() { $("#settings").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
 					$("#action_kick, #action_ban").click(user_action);
 				}
@@ -512,6 +513,19 @@ var msparp = (function() {
 				}
 				switch_character.hide();
 				return false;
+			});
+
+			// Settings
+			var settings = $("#settings");
+			$(".variable").click(function() {
+				var data = { "chat_id": chat.id };
+				data[this.id] = this.checked ? "on" : "off";
+				$.post("/chat_api/save_variables", data);
+				user.meta[this.id] = this.checked;
+			});
+			$("#subscribed").click(function() {
+				$.post("/" + chat.url + "/" + (this.checked ? "subscribe" : "unsubscribe"));
+				user.meta.subscribed = this.checked;
 			});
 
 			// Send form
@@ -623,6 +637,7 @@ var msparp = (function() {
 				status = "disconnected";
 				$(document.body).removeClass("chatting");
 				switch_character.hide();
+				settings.hide();
 				abscond_button.text("Join");
 			}
 			function disconnect() {

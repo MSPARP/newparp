@@ -196,9 +196,9 @@ section > .close:first-child { float: right; margin: 5px; }
 @media (min-width: 500px) {
 	.mobile_button { display: none; }
 	.sidebar { left: auto; width: 220px; }
-	.sidebar > .close:first-child { display: none; }
 	.chatting #info_panel, .chatting #edit_info_panel, .chatting #conversation, .chatting #send_form { right: 230px; }
 	.chatting #user_list_container { display: block; }
+	#user_list_container .close:first-child { display: none; }
 }
 .sidebar ul { margin: 5px 0; padding: 0 0 0 1.5em; }
 .sidebar li { margin: 2px 0; }
