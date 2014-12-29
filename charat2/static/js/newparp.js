@@ -465,8 +465,8 @@ var msparp = (function() {
 					"group_chat_only": true,
 					"minimum_rank": 2,
 					"description": function(match) {
-						var set_user = user_data[parseInt(match[1])];
-						if (!set_user || can_perform_action("kick", set_user.meta.group)) {
+						var set_user = user_data[parseInt(match[2])];
+						if (!set_user || can_perform_action(match[1], set_user.meta.group)) {
 							return match[1][0].toUpperCase() + match[1].substr(1) + " " + name_from_user_number(parseInt(match[2])) + " from the chat.";
 						} else {
 							return "Your current privileges don't allow you to " + match[1] + " " + set_user.character.name + ".";
