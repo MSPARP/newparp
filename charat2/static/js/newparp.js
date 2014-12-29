@@ -368,6 +368,50 @@ var msparp = (function() {
 				document.addEventListener("webkitvisibilitychange", visibility_handler);
 			}
 
+			// Text commands
+			var text_commands = [
+				{
+					"regex": /^me (.*\S+.*)/,
+					"minimum_rank": 0,
+					"description": function(match) {
+						return "* " + user.character.name + " " + match[1];
+					},
+					"action": function(match) {
+						$.post("/chat_api/send", { "chat_id": chat.id, "type": "me", "text": match[1] });
+					},
+				},
+				{
+					"regex": /^topic($|\s.*$)/,
+					"minimum_rank": 1,
+					"description": function(match) {
+						var new_topic = match[1].trim();
+						return new_topic ? "Set the topic to \"" + new_topic + "\"" : "Remove the topic.";
+					},
+					"action": function(match) {
+						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": match[1].trim() });
+					},
+				},
+			];
+			function name_from_user_number(number) {
+				return user_data[number] ? user_data[number].character.name : "user " + number;
+			}
+			function get_command_description(text) {
+				for (var i=0; i < text_commands.length; i++) {
+					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
+					var match = text.match(text_commands[i].regex);
+					if (match && match.length > 0) { return text_commands[i].description(match); }
+				}
+				return false;
+			}
+			function execute_command(text) {
+				for (var i=0; i < text_commands.length; i++) {
+					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
+					var match = text.match(text_commands[i].regex);
+					if (match && match.length > 0) { text_commands[i].action(match); return true; }
+				}
+				return false;
+			}
+
 			// Topbar and info panel
 			if (chat.type == "group") {
 				$("#topbar").click(function() {
@@ -558,13 +602,30 @@ var msparp = (function() {
 			// Send form
 			var text_preview = $("#text_preview");
 			var text_input = $("input[name=text]").keyup(function() {
-				text_preview.text(apply_quirks(this.value));
-				resize_conversation();
+				if (user.meta.show_preview) {
+					if (this.value[0] == "/") {
+						var text = this.value.substr(1);
+						text_preview.text(get_command_description(text) || text);
+					} else {
+						text_preview.text(apply_quirks(this.value));
+					}
+					resize_conversation();
+				}
 			});
 			var send_form = $("#send_form").submit(function() {
-				var message_text = text_preview.text().trim();
-				if (message_text == "") { return false; }
-				$.post("/chat_api/send", { "chat_id": chat.id, "text": message_text });
+				var text = text_input.val().trim();
+				if (text == "") { return false; }
+				if (text[0] == "/") {
+					var text = text.substr(1);
+					// Try to parse the text as a command, and skip the rest if we can.
+					var executed = execute_command(text);
+					if (executed) { text_input.val(""); return false; }
+				} else {
+					text = apply_quirks(text).trim();
+				}
+				// Check if it's blank before and after because quirks may make it blank.
+				if (text == "") { return false; }
+				$.post("/chat_api/send", { "chat_id": chat.id, "text": text });
 				text_input.val("");
 				last_alternating_line = !last_alternating_line;
 				return false;
@@ -574,8 +635,6 @@ var msparp = (function() {
 			// Typing quirks
 			var last_alternating_line = false;
 			function apply_quirks(text) {
-				// / to drop quirks.
-				if (text[0] == "/") { return text.substr(1); }
 				// Case options.
 				// ["case"] instead of .case because .case breaks some phones and stuff.
 				switch (user.character["case"]) {
