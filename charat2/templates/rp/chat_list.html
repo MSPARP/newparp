@@ -25,21 +25,30 @@
         {% endfor %}
     </nav>
     {{ pager() }}
-    <ul class="chat_list">
-        {% for chat in chats: %}
-        <li>
-            <h3><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
-            {% if chat.type == "group": %}
-            <p class="subtitle">{{chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
-            {% if chat.topic != "": %}
-            <p>{{chat.topic}}</p>
-            {% endif %}
-            {% else: %}
-            <p class="subtitle">{{chat.online}} online.</p>
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+    {% if chats: %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Style</th>
+                <th>Level</th>
+                <th>Unsubscribe</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chat in chats: %}
+            <tr>
+                <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
+                <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
+                <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
+                <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.url)}}" method="post"><button type="submit">Unsubscribe</button></form></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>No chats.</p>
+    {% endif %}
     {{ pager() }}
 {% endblock %}
 

@@ -412,6 +412,7 @@ var msparp = (function() {
 					return true;
 				}
 				function set_group(number, group) { $.post("/chat_api/set_group", { "chat_id": chat.id, "number": number, "group": group }); }
+				function user_action(number, action, reason) { $.post("/chat_api/user_action", { "chat_id": chat.id, "number": number, "action": action, "reason": reason || "" }); }
 			}
 
 			// Text commands
@@ -446,9 +447,8 @@ var msparp = (function() {
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
 						var group_description = group_descriptions[match[2]] || "regular user.";
-						if (!set_user) { return "Set user " + match[1] + " to " + group_description + " User is unknown, this may not work."; }
-						if (can_set_group(match[2], set_user.meta.group)) {
-							return "Set " + set_user.character.name + " to " + group_descriptions[match[2]];
+						if (!set_user || can_set_group(match[2], set_user.meta.group)) {
+							return "Set " + name_from_user_number(parseInt(match[1])) + " to " + group_descriptions[match[2]];
 						} else if (match[2] == set_user.meta.group) {
 							return set_user.character.name + " is already a member of this group.";
 						} else {
@@ -458,6 +458,23 @@ var msparp = (function() {
 					"action": function(match) {
 						var set_user = user_data[parseInt(match[1])];
 						if (!set_user || can_set_group(match[2], set_user.meta.group)) { set_group(match[1], match[2]); }
+					},
+				},
+				{
+					"regex": /^(kick|ban) (\d+)($|\s.*$)/,
+					"group_chat_only": true,
+					"minimum_rank": 2,
+					"description": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_perform_action("kick", set_user.meta.group)) {
+							return match[1][0].toUpperCase() + match[1].substr(1) + " " + name_from_user_number(parseInt(match[2])) + " from the chat.";
+						} else {
+							return "Your current privileges don't allow you to " + match[1] + " " + set_user.character.name + ".";
+						}
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_perform_action("kick", set_user.meta.group)) { user_action(match[2], match[1], match[3].trim()); }
 					},
 				},
 			];
@@ -567,20 +584,15 @@ var msparp = (function() {
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
-					$("#action_kick, #action_ban").click(user_action);
+					$("#action_kick, #action_ban").click(function() {
+						if (this.id == "action_ban") { var reason = prompt("Please provide a reason for this ban."); }
+						user_action(action_user.meta.number, this.id.substr(7), reason || "");
+					});
 				}
 			}
 			Handlebars.registerHelper("can_set_group", function(new_group) { return can_set_group(new_group, this.meta.group); });
 			Handlebars.registerHelper("can_perform_action", function(action) { return can_perform_action(action, this.meta.group); });
 			Handlebars.registerHelper("set_user_text", function() { return this.meta.group == "silent" ? "Unsilence" : "Unmod"; });
-			function user_action() {
-				var data = { "chat_id": chat.id, "number": action_user.meta.number, "action": this.id.substr(7) };
-				if (this.id == "action_ban") {
-					var reason = prompt("Please provide a reason for this ban.");
-					if (reason) { data.reason = reason; }
-				}
-				$.post("/chat_api/user_action", data);
-			}
 
 			// Switch character
 			var switch_character = $("#switch_character");

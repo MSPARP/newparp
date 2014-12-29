@@ -248,13 +248,13 @@ def user_action():
             alias=set_chat_user.alias,
             reason=request.form.get("reason"),
         ))
-        if request.form.get("reason") is not None:
+        if request.form.get("reason") is not None and request.form["reason"].strip() != "":
             ban_message = (
                 "%s [%s] banned %s [%s] from the chat. Reason: %s"
             ) % (
                 g.chat_user.name, g.chat_user.alias,
                 set_chat_user.name, set_chat_user.alias,
-                request.form["reason"],
+                request.form["reason"].strip(),
             )
         else:
             ban_message = (

@@ -108,10 +108,15 @@ h3 { font-size: 10pt; }
 
 ul { padding-left: 1em; }
 
-table { width: 100%; border-collapse: separate; border-spacing: 2px; }
+table { width: 100%; }
 th { text-align: left; }
+th, td { padding: 2px; }
+tbody tr:nth-child(2n+1) { background-color: #ddd; }
+td a:only-child { display: block; }
 
 .error { color: #f00; }
+
+#subnav { margin: 10px 0; }
 
 /* 2.1. Forms */
 
