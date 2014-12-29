@@ -368,10 +368,57 @@ var msparp = (function() {
 				document.addEventListener("webkitvisibilitychange", visibility_handler);
 			}
 
+			// Names and text
+			var style_messages = {
+				"script": "Please use script style.",
+				"paragraph": "Please use paragraph style.",
+				"either": "Script and paragraph style are allowed.",
+			};
+			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
+			var group_descriptions = {
+				"admin": "God tier moderator - MSPARP staff.",
+				"creator": "Chat creator - can silence, kick and ban other users.",
+				"mod": "Professional Wet Blanket - can silence, kick and ban other users.",
+				"mod2": "Bum's Rusher - can silence and kick other users.",
+				"mod3": "Amateur Gavel-Slinger - can silence other users.",
+				"user": "",
+				"silent": "Silenced.",
+			};
+
+			// Actions and validation
+			if (chat.type == "group") {
+				function can_set_group(new_group, current_group) {
+					// Setting group only works in group chats.
+					if (chat.type != "group") { return false; }
+					// Don't bother if they're already this group.
+					if (ranks[new_group] == ranks[current_group]) { return false; }
+					// You can't set groups at all if you're not a mod.
+					if (ranks[user.meta.group] < 1) { return false; }
+					// You can only set the group to one which is below yours.
+					if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
+					// You can only set the group of people whose group is below yours.
+					if (ranks[current_group] >= ranks[user.meta.group]) { return false; }
+					return true;
+				}
+				function can_perform_action(action, their_group) {
+					// User actions only work in group chats.
+					if (chat.type != "group") { return false; }
+					// You can only kick if you're a Bum's Rusher or above.
+					if (action == "kick" && ranks[user.meta.group] < 2) { return false; }
+					// You can only ban if you're a Bum's Rusher or above.
+					if (action == "ban" && ranks[user.meta.group] < 3) { return false; }
+					// You can only perform actions on people whose group is below yours.
+					if (ranks[their_group] >= ranks[user.meta.group]) { return false; }
+					return true;
+				}
+				function set_group(number, group) { $.post("/chat_api/set_group", { "chat_id": chat.id, "number": number, "group": group }); }
+			}
+
 			// Text commands
 			var text_commands = [
 				{
 					"regex": /^me (.*\S+.*)/,
+					"group_chat_only": false,
 					"minimum_rank": 0,
 					"description": function(match) {
 						return "* " + user.character.name + " " + match[1];
@@ -382,6 +429,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^topic($|\s.*$)/,
+					"group_chat_only": true,
 					"minimum_rank": 1,
 					"description": function(match) {
 						var new_topic = match[1].trim();
@@ -391,12 +439,34 @@ var msparp = (function() {
 						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": match[1].trim() });
 					},
 				},
+				{
+					"regex": /^set (\d+) (mod|mod2|mod3|user|silent)$/,
+					"group_chat_only": true,
+					"minimum_rank": 1,
+					"description": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						var group_description = group_descriptions[match[2]] || "regular user.";
+						if (!set_user) { return "Set user " + match[1] + " to " + group_description + " User is unknown, this may not work."; }
+						if (can_set_group(match[2], set_user.meta.group)) {
+							return "Set " + set_user.character.name + " to " + group_descriptions[match[2]];
+						} else if (match[2] == set_user.meta.group) {
+							return set_user.character.name + " is already a member of this group.";
+						} else {
+							return "Your current privileges don't allow you to set " + set_user.character.name + "'s group.";
+						}
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_set_group(match[2], set_user.meta.group)) { set_group(match[1], match[2]); }
+					},
+				},
 			];
 			function name_from_user_number(number) {
 				return user_data[number] ? user_data[number].character.name : "user " + number;
 			}
 			function get_command_description(text) {
 				for (var i=0; i < text_commands.length; i++) {
+					if (text_commands[i].group_chat_only && chat.type != "group") { continue; }
 					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
 					var match = text.match(text_commands[i].regex);
 					if (match && match.length > 0) { return text_commands[i].description(match); }
@@ -405,6 +475,7 @@ var msparp = (function() {
 			}
 			function execute_command(text) {
 				for (var i=0; i < text_commands.length; i++) {
+					if (text_commands[i].group_chat_only && chat.type != "group") { continue; }
 					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
 					var match = text.match(text_commands[i].regex);
 					if (match && match.length > 0) { text_commands[i].action(match); return true; }
@@ -468,25 +539,13 @@ var msparp = (function() {
 				var flag_message_autosilence = $("#flag_message_autosilence");
 				var flag_message_publicity = $("#flag_message_publicity");
 				var flag_message_style = $("#flag_message_style");
-				var style_messages = { "script": "Please use script style.", "paragraph": "Please use paragraph style.", "either": "Script and paragraph style are allowed." };
 				var flag_message_level = $("#flag_message_level");
-				var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
 			}
 
 			// User list
 			var user_list = $("#user_list");
 			var user_list_template = Handlebars.compile($("#user_list_template").html());
-			Handlebars.registerHelper("group_description", function(group) {
-				return {
-					"admin": "God tier moderator - MSPARP staff.",
-					"creator": "Chat creator - can silence, kick and ban other users.",
-					"mod": "Professional Wet Blanket - can silence, kick and ban other users.",
-					"mod2": "Bum's Rusher - can silence and kick other users.",
-					"mod3": "Amateur Gavel-Slinger - can silence other users.",
-					"user": "",
-					"silent": "Silenced.",
-				}[group];
-			});
+			Handlebars.registerHelper("group_description", function(group) { return group_descriptions[group]; });
 			Handlebars.registerHelper("is_you", function() { return this.meta.number == user.meta.number; });
 
 			// Action list
@@ -505,37 +564,15 @@ var msparp = (function() {
 					action_list.appendTo(this);
 					$("#action_switch_character").click(function() { $("#switch_character").show(); });
 					$("#action_settings").click(function() { $("#settings").show(); });
-					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(set_group);
+					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(function() {
+						set_group(action_user.meta.number, this.id.substr(7));
+					});
 					$("#action_kick, #action_ban").click(user_action);
 				}
 			}
-			Handlebars.registerHelper("can_set_group", function(new_group) {
-				// Don't bother if they're already this group.
-				if (ranks[new_group] == ranks[this.meta.group]) { return false; }
-				// You can't set groups at all if you're not a mod.
-				if (ranks[user.meta.group] < 1) { return false; }
-				// You can only set the group to one which is below yours.
-				if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
-				// You can only set the group of people whose group is below yours.
-				if (ranks[this.meta.group] >= ranks[user.meta.group]) { return false; }
-				return true;
-			});
-			Handlebars.registerHelper("can_perform_action", function(action) {
-				// You can only kick if you're a Bum's Rusher or above.
-				if (action == "kick" && ranks[user.meta.group] < 2) { return false; }
-				// You can only ban if you're a Bum's Rusher or above.
-				if (action == "ban" && ranks[user.meta.group] < 3) { return false; }
-				// You can only perform actions on people whose group is below yours.
-				if (ranks[this.meta.group] >= ranks[user.meta.group]) { return false; }
-				return true;
-			});
-			Handlebars.registerHelper("set_user_text", function() {
-				if (this.meta.group == "silent") { return "Unsilence"; }
-				return "Unmod";
-			});
-			function set_group() {
-				$.post("/chat_api/set_group", { "chat_id": chat.id, "number": action_user.meta.number, "group": this.id.substr(7) });
-			}
+			Handlebars.registerHelper("can_set_group", function(new_group) { return can_set_group(new_group, this.meta.group); });
+			Handlebars.registerHelper("can_perform_action", function(action) { return can_perform_action(action, this.meta.group); });
+			Handlebars.registerHelper("set_user_text", function() { return this.meta.group == "silent" ? "Unsilence" : "Unmod"; });
 			function user_action() {
 				var data = { "chat_id": chat.id, "number": action_user.meta.number, "action": this.id.substr(7) };
 				if (this.id == "action_ban") {
