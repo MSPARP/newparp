@@ -412,7 +412,11 @@ var msparp = (function() {
 					return true;
 				}
 				function set_group(number, group) { $.post("/chat_api/set_group", { "chat_id": chat.id, "number": number, "group": group }); }
-				function user_action(number, action, reason) { $.post("/chat_api/user_action", { "chat_id": chat.id, "number": number, "action": action, "reason": reason || "" }); }
+				function user_action(number, action, reason) {
+					var data = { "chat_id": chat.id, "number": number, "action": action };
+					if (reason) { data["reason"] = reason; }
+					$.post("/chat_api/user_action", data);
+				}
 			}
 
 			// Text commands
@@ -461,20 +465,38 @@ var msparp = (function() {
 					},
 				},
 				{
-					"regex": /^(kick|ban) (\d+)($|\s.*$)/,
+					"regex": /^kick (\d+)$/,
 					"group_chat_only": true,
 					"minimum_rank": 2,
 					"description": function(match) {
-						var set_user = user_data[parseInt(match[2])];
-						if (!set_user || can_perform_action(match[1], set_user.meta.group)) {
-							return match[1][0].toUpperCase() + match[1].substr(1) + " " + name_from_user_number(parseInt(match[2])) + " from the chat.";
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_perform_action("kick", set_user.meta.group)) {
+							return "Kick " + name_from_user_number(parseInt(match[1])) + " from the chat.";
 						} else {
-							return "Your current privileges don't allow you to " + match[1] + " " + set_user.character.name + ".";
+							return "Your current privileges don't allow you to kick " + set_user.character.name + ".";
 						}
 					},
 					"action": function(match) {
 						var set_user = user_data[parseInt(match[1])];
-						if (!set_user || can_perform_action("kick", set_user.meta.group)) { user_action(match[2], match[1], match[3].trim()); }
+						if (!set_user || can_perform_action("kick", set_user.meta.group)) { user_action(match[1], "kick"); }
+					},
+				},
+				{
+					"regex": /^ban (\d+)($|\s.*$)?/,
+					"group_chat_only": true,
+					"minimum_rank": 3,
+					"description": function(match) {
+						console.log(match);
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_perform_action("ban", set_user.meta.group)) {
+							return "Ban " + name_from_user_number(parseInt(match[1])) + " from the chat.";
+						} else {
+							return "Your current privileges don't allow you to ban " + set_user.character.name + ".";
+						}
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || can_perform_action("ban", set_user.meta.group)) { user_action(match[1], "ban", (match[2] || "").trim()); }
 					},
 				},
 			];
