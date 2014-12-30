@@ -218,19 +218,20 @@ def user_action():
         kick_key = "kicked:%s:%s" % (g.chat.id, set_user.id)
         g.redis.set(kick_key, 1)
         g.redis.expire(kick_key, 10)
-        disconnect(g.redis, g.chat.id, set_user.id)
-        send_message(g.db, g.redis, Message(
-            chat_id=g.chat.id,
-            user_id=set_user.id,
-            type="user_action",
-            name=g.chat_user.name,
-            text=(
-                "%s [%s] kicked %s [%s] from the chat."
-            ) % (
-                g.chat_user.name, g.chat_user.alias,
-                set_chat_user.name, set_chat_user.alias,
-            )
-        ))
+        # Only send a kick message if they're currently online.
+        if disconnect(g.redis, g.chat.id, set_user.id):
+            send_message(g.db, g.redis, Message(
+                chat_id=g.chat.id,
+                user_id=set_user.id,
+                type="user_action",
+                name=g.chat_user.name,
+                text=(
+                    "%s [%s] kicked %s [%s] from the chat."
+                ) % (
+                    g.chat_user.name, g.chat_user.alias,
+                    set_chat_user.name, set_chat_user.alias,
+                )
+            ))
         return "", 204
 
     elif action == "ban":
