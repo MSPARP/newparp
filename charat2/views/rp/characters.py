@@ -66,7 +66,7 @@ def character(character_id, fmt=None):
 def save_character(character_id):
     # In a separate function so we can call it from request search.
     character = save_character_from_form(character_id, request.form)
-    return redirect(url_for("rp_character", character_id=character.id))
+    return redirect(url_for("rp_character_list"))
 
 
 @use_db
