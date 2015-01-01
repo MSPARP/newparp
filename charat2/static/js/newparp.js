@@ -346,12 +346,14 @@ var msparp = (function() {
 				p.addClass("message_" + message.type + " unum_" + message.user_number);
 				p.css("color", "#" + message.color);
 				if (message.type == "me") {
-					p.text("* " + message.name + " " + message.text);
+					var text = "* " + message.name + " " + message.text;
 				} else if (message.alias != "") {
-					p.text(message.alias + ": " + message.text);
+					var text = message.alias + ": " + message.text;
 				} else {
-					p.text(message.text);
+					var text = message.text;
 				}
+				if (message.user_number) { text = "<" + message.user_number + "> " + text; }
+				p.text(text);
 				p.appendTo(conversation);
 			}
 
