@@ -154,6 +154,7 @@
 </section>
 
 <section id="conversation">
+    <p><a href="{{url_for("rp_log", url=chat.url)}}">View log</a></p>
     {% for message in messages: %}
     {{render_message(message)}}
     {% endfor %}
