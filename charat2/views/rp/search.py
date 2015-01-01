@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
+from charat2.helpers.characters import validate_character_form
 from charat2.model import case_options, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_commit, db_disconnect
 from charat2.model.validators import color_validator
@@ -19,55 +20,16 @@ from charat2.model.validators import color_validator
 @log_in_required
 def search_save():
 
-    # yeah this is just cut and pasted from chat_api.py
-    # see also helpers/characters.py
-
-    # Don't allow a blank name.
-    if request.form["name"] == "":
-        return redirect(url_for("home", search_error="empty_name"))
-
-    # Validate color.
-    # <input type="color"> always prefixes with a #.
-    if request.form["color"][0] == "#":
-        color = request.form["color"][1:]
-    else:
-        color = request.form["color"]
-    if not color_validator.match(color):
-        return redirect(url_for("home", search_error="bad_color"))
-    g.user.color = color
-
-    # Validate case.
-    if request.form["case"] not in case_options:
-        return redirect(url_for("home", search_error="bad_case"))
-    g.user.case = request.form["case"]
-
-    # There are length limits on the front end so just silently truncate these.
-    g.user.name = request.form["name"][:50]
-    g.user.alias = request.form["alias"][:15]
-    g.user.quirk_prefix = request.form["quirk_prefix"][:50]
-    g.user.quirk_suffix = request.form["quirk_suffix"][:50]
-
-    # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
-    # Zip replacements.
-    replacements = zip(
-        request.form.getlist("quirk_from"),
-        request.form.getlist("quirk_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    g.user.replacements = json.dumps(replacements)
-
-    # XXX PUT LENGTH LIMIT ON REGEXES?
-    # Zip regexes.
-    regexes = zip(
-        request.form.getlist("regex_from"),
-        request.form.getlist("regex_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    g.user.regexes = json.dumps(regexes)
+    new_details = validate_character_form(request.form)
+    g.user.search_character_id = new_details["search_character_id"]
+    g.user.name = new_details["name"]
+    g.user.alias = new_details["alias"]
+    g.user.color = new_details["color"]
+    g.user.quirk_prefix = new_details["quirk_prefix"]
+    g.user.quirk_suffix = new_details["quirk_suffix"]
+    g.user.case = new_details["case"]
+    g.user.replacements = new_details["replacements"]
+    g.user.regexes = new_details["regexes"]
 
     if request.form["style"] in User.search_style.type.enums:
         g.user.search_style = request.form["style"]
@@ -76,14 +38,6 @@ def search_save():
         g.user.search_level = request.form["level"]
 
     all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
-
-    try:
-        character_id = int(request.form["search_character_id"])
-        if character_id not in all_character_ids:
-            raise ValueError
-        g.user.search_character_id = character_id
-    except ValueError:
-        g.user.search_character_id = 1
 
     # Picky checkboxes
     g.db.query(SearchCharacterChoice).filter(SearchCharacterChoice.user_id == g.user.id).delete()

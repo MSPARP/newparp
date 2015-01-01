@@ -299,11 +299,9 @@ var msparp = (function() {
 					for (var i = 0; i < data.users.length; i++) {
 						// Store user data so we can look it up for action lists.
 						user_data[data.users[i].meta.number] = data.users[i];
-						// Also update our own user data.
+						// Also handle group changes.
 						if (data.users[i].meta.number == user.meta.number) {
 							user.meta.group = data.users[i].meta.group;
-							text_preview.css("color", "#" + user.character.color);
-							text_input.css("color", "#" + user.character.color);
 							if (chat.type == "group") {
 								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
 									mod_tools.show();
@@ -634,7 +632,11 @@ var msparp = (function() {
 				} else {
 					var form_data = $(this).serializeArray();
 					form_data.push({ name: "chat_id", value: chat.id });
-					$.post("/chat_api/save", form_data, function(data) { user = data; });
+					$.post("/chat_api/save", form_data, function(data) {
+						user = data;
+						text_preview.css("color", "#" + user.character.color);
+						text_input.css("color", "#" + user.character.color);
+					});
 				}
 				switch_character.hide();
 				return false;

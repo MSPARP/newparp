@@ -5,6 +5,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
+from charat2.helpers.characters import validate_character_form
 from charat2.helpers.chat import (
     group_chat_only,
     mark_alive,
@@ -425,52 +426,16 @@ def save():
     old_alias = g.chat_user.alias
     old_color = g.chat_user.color
 
-    # Don't allow a blank name.
-    if request.form["name"] == "":
-        abort(400)
-
-    # Validate color.
-    # <input type="color"> always prefixes with a #.
-    if request.form["color"][0] == "#":
-        color = request.form["color"][1:]
-    else:
-        color = request.form["color"]
-    if not color_validator.match(color):
-        abort(400)
-    g.chat_user.color = color
-
-    # Validate case.
-    if request.form["case"] not in case_options:
-        abort(400)
-    g.chat_user.case = request.form["case"]
-
-    # There are length limits on the front end so just silently truncate these.
-    g.chat_user.name = request.form["name"][:50]
-    g.chat_user.alias = request.form["alias"][:15]
-    g.chat_user.quirk_prefix = request.form["quirk_prefix"][:50]
-    g.chat_user.quirk_suffix = request.form["quirk_suffix"][:50]
-
-    # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
-    # Zip replacements.
-    replacements = zip(
-        request.form.getlist("quirk_from"),
-        request.form.getlist("quirk_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    g.chat_user.replacements = json.dumps(replacements)
-
-    # XXX PUT LENGTH LIMIT ON REGEXES?
-    # Zip regexes.
-    regexes = zip(
-        request.form.getlist("regex_from"),
-        request.form.getlist("regex_to"),
-    )
-    # Strip out any rows where from is blank or the same as to.
-    regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
-    # And encode as JSON.
-    g.chat_user.regexes = json.dumps(regexes)
+    new_details = validate_character_form(request.form)
+    g.chat_user.search_character_id = new_details["search_character_id"]
+    g.chat_user.name = new_details["name"]
+    g.chat_user.alias = new_details["alias"]
+    g.chat_user.color = new_details["color"]
+    g.chat_user.quirk_prefix = new_details["quirk_prefix"]
+    g.chat_user.quirk_suffix = new_details["quirk_suffix"]
+    g.chat_user.case = new_details["case"]
+    g.chat_user.replacements = new_details["replacements"]
+    g.chat_user.regexes = new_details["regexes"]
 
     # Send a message if name or alias has changed.
     if g.chat_user.name != old_name or g.chat_user.alias != old_alias:

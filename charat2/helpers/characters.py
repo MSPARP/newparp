@@ -30,14 +30,12 @@ def character_query(character_id, join_tags=False):
 
 def validate_character_form(form):
 
-    # yeah this is just cut and pasted from chat_api.py
-    # XXX MAKE chat_api.py USE THIS TOO
-
     try:
         search_character_id = int(form["search_character_id"])
         g.db.query(SearchCharacter).filter(SearchCharacter.id == search_character_id).one()
     except (ValueError, NoResultFound):
-        abort(400)
+        # id 1 always exists so fall back to that.
+        search_character_id = 1
 
     # Don't allow a blank name.
     if form["name"] == "":
