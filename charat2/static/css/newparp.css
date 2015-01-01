@@ -175,7 +175,7 @@ textarea { width: 100%; resize: vertical; }
 
 /* 4. Chat window */
 
-.chat { background-color: #aaa; font-size: 12px; word-wrap: break-word; }
+.chat { background-color: #ccc; font-size: 12px; word-wrap: break-word; }
 .chat h2 { margin: 5px; font-size: 14pt; color: #000; }
 .chat p { margin: 0; padding: 2px 5px; }
 .chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
