@@ -352,7 +352,7 @@ var msparp = (function() {
 				} else {
 					var text = message.text;
 				}
-				if (message.user_number) { text = "<" + message.user_number + "> " + text; }
+				if (message.user_number) { text = "[" + message.user_number + "] " + text; }
 				p.text(text);
 				p.appendTo(conversation);
 			}
