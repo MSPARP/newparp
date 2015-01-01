@@ -791,6 +791,8 @@ var msparp = (function() {
 				launch_long_poll();
 				window.setTimeout(ping, 10000);
 				$(document.body).addClass("chatting");
+				text_preview.css("color", "#" + user.character.color);
+				text_input.css("color", "#" + user.character.color);
 				parse_variables();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");

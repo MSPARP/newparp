@@ -6,7 +6,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
+from charat2.model import case_options, Character, GroupChat, SearchCharacterGroup, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_connect
 
 
@@ -58,27 +58,4 @@ def groups(fmt=None):
         })
 
     return render_template("rp/groups.html", groups=chat_dicts)
-
-
-def search_character_list():
-    abort(404)
-
-
-def search_character(id):
-
-    character_json = g.redis.get("search_character:%s" % id)
-
-    if character_json is None:
-        db_connect()
-        try:
-            character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
-        except NoResultFound:
-            abort(404)
-        character_json = json.dumps(character.to_dict(include_options=True))
-        g.redis.set("search_character:%s" % id, character_json)
-        g.redis.expire("search_character:%s" % id, 3600)
-
-    resp = make_response(character_json)
-    resp.headers["Content-type"] = "application/json"
-    return resp
 

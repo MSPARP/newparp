@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title: %}Search character creator - {% endblock %}
+{% block content: %}
+    <h2>Search character creator</h2>
+    {% for group in search_character_groups: %}
+    <h3>{{group.name}}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Character</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for character in group.characters: %}
+            <tr>
+                <td>{{character.title}}</td>
+                <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.alias != "": %} [<span style="color: #{{character.color}}">{{character.alias}}</span>]{% endif %}</td>
+                <td><a href="{{url_for("rp_search_character", id=character.id)}}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+{% endblock %}
+

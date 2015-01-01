@@ -10,7 +10,7 @@ from charat2.model.connections import (
     set_cookie,
 )
 from charat2.views import account, admin, rp
-from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search
+from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search, search_characters
 
 from flask.ext.babel import Babel, gettext
 
@@ -48,9 +48,10 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
 # 1. Home/account
 
 app.add_url_rule("/", "home", rp.home, methods=("GET",))
-# This isn't really a page, it just prevents people from creating a chat here.
-app.add_url_rule("/search_characters", "search_character_list", rp.search_character_list, methods=("GET",))
-app.add_url_rule("/search_characters/<int:id>.json", "search_character", rp.search_character, methods=("GET",))
+
+app.add_url_rule("/search_characters", "rp_search_character_list", search_characters.search_character_list, methods=("GET",))
+app.add_url_rule("/search_characters/<int:id>", "rp_search_character", search_characters.search_character, methods=("GET",))
+app.add_url_rule("/search_characters/<int:id>.json", "rp_search_character_json", search_characters.search_character_json, methods=("GET",))
 
 app.add_url_rule("/log_in", "log_in", account.log_in_get, methods=("GET",))
 app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",))
