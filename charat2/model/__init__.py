@@ -412,8 +412,8 @@ class ChatUser(Base):
     show_preview = Column(Boolean, nullable=False, default=True)
 
     # No joins or filtering here so these don't need to be foreign keys.
-    highlighted_user_ids = Column(ARRAY(Integer), nullable=False, default=lambda: [])
-    blocked_user_ids = Column(ARRAY(Integer), nullable=False, default=lambda: [])
+    highlighted_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
+    ignored_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
 
     @classmethod
     def from_character(cls, character, **kwargs):
@@ -538,8 +538,8 @@ class ChatUser(Base):
             ucd["meta"]["show_connection_messages"] = self.show_connection_messages
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
-            ucd["meta"]["highlighted_user_ids"] = self.highlighted_user_ids
-            ucd["meta"]["blocked_user_ids"] = self.blocked_user_ids
+            ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
+            ucd["meta"]["ignored_numbers"] = self.ignored_numbers
         if include_user:
             ucd["user"] = {
                 "user_id": self.user.id,

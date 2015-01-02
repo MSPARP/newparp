@@ -529,8 +529,8 @@ def save_variables():
         setattr(g.chat_user, variable, request.form[variable] == "on")
 
     for variable in [
-        "highlighted_user_ids",
-        "blocked_user_ids",
+        "highlighted_numbers",
+        "ignored_numbers",
     ]:
         if variable not in request.form:
             continue
