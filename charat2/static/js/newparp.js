@@ -354,6 +354,7 @@ var msparp = (function() {
 					p.text(message.text);
 				}
 				p.appendTo(div);
+				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				div.appendTo(conversation);
 			}
 
@@ -588,6 +589,7 @@ var msparp = (function() {
 			var user_list_template = Handlebars.compile($("#user_list_template").html());
 			Handlebars.registerHelper("group_description", function(group) { return group_descriptions[group]; });
 			Handlebars.registerHelper("is_you", function() { return this.meta.number == user.meta.number; });
+			Handlebars.registerHelper("is_highlighted", function() { return user.meta.highlighted_numbers.indexOf(this.meta.number) != -1; });
 
 			// Action list
 			var action_user = null;
@@ -603,6 +605,16 @@ var msparp = (function() {
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
+					$("#action_highlight").click(function() {
+						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
+							$(".unum_" + action_user.meta.number).removeClass("highlighted");
+							user.meta.highlighted_numbers = user.meta.highlighted_numbers.filter(function(i) { return i != action_user.meta.number; })
+						} else {
+							$(".unum_" + action_user.meta.number).addClass("highlighted");
+							user.meta.highlighted_numbers.push(action_user.meta.number);
+						}
+						$.post("/chat_api/save_variables", { "chat_id": chat.id, "highlighted_numbers": user.meta.highlighted_numbers.toString() });
+					});
 					$("#action_switch_character").click(function() { $("#switch_character").show(); });
 					$("#action_settings").click(function() { $("#settings").show(); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(function() {

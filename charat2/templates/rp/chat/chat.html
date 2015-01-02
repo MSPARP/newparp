@@ -37,6 +37,7 @@
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
     <ul>
+        <li id="action_highlight">{{#if (is_highlighted)}}Clear highlight{{else}}Highlight{{/if}}</li>
         {{#if (is_you)}}<li id="action_switch_character">Switch character</li>{{/if}}
         {{#if (is_you)}}<li id="action_settings">Settings</li>{{/if}}
         {{#if (can_set_group "mod")}}<li id="action_mod">Make Professional Wet Blanket</li>{{/if}}

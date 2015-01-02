@@ -221,6 +221,7 @@ section > .close:first-child { float: right; margin: 5px; }
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 .hide_connection_messages .message_join, .hide_connection_messages .message_disconnect, .hide_connection_messages .message_timeout { display: none; }
 .unum { float: left; padding: 2px 0 2px 5px; }
+.highlighted { background-color: #fff; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
 #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
