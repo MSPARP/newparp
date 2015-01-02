@@ -340,19 +340,20 @@ var msparp = (function() {
 				if (user.meta.show_connection_messages || ["join", "disconnect", "timeout"].indexOf(message.type) == -1) {
 					show_notification = true;
 				}
-				var p = $("<p>").attr("id", "message_" + message.id);
-				p.addClass("message_" + message.type + " unum_" + message.user_number);
-				p.css("color", "#" + message.color);
+				// XXX yeah you should be using a template here
+				var div = $("<div>").attr("id", "message_" + message.id);
+				div.addClass("message_" + message.type + " unum_" + message.user_number);
+				$("<div>").addClass("unum").text("[" + (message.user_number ? message.user_number : "*") + "]").appendTo(div);
+				var p = $("<p>").css("color", "#" + message.color);
 				if (message.type == "me") {
-					var text = "* " + message.name + " " + message.text;
+					p.text("* " + message.name + " " + message.text);
 				} else if (message.alias != "") {
-					var text = message.alias + ": " + message.text;
+					p.text(message.alias + ": " + message.text);
 				} else {
-					var text = message.text;
+					p.text(message.text);
 				}
-				if (message.user_number) { text = "[" + message.user_number + "] " + text; }
-				p.text(text);
-				p.appendTo(conversation);
+				p.appendTo(div);
+				div.appendTo(conversation);
 			}
 
 			// "New message" notification

@@ -7,7 +7,10 @@
 {% endif %}
 {% endmacro %}
 {% macro render_message(message): %}
-<p id="message_{{message.id}}" class="message_{{message.type}}{% if message.user_id != None: %} unum_{{message.chat_user.number}}{% endif %}" style="color: #{{message.color}};">{% if message.user_id != None: %}[{{message.chat_user.number}}] {% endif %}{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+<div id="message_{{message.id}}" class="message_{{message.type}}{% if message.user_id != None: %} unum_{{message.chat_user.number}}{% endif %}">
+    <div class="unum">[{{message.chat_user.number if message.user_id != None else "*"}}]</div>
+    <p style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% else: %}{% if message.alias != "" %}{{message.alias}}: {% endif %}{{message.text}}{% endif %}</p>
+</div>
 {% endmacro %}
 <html>
 <head>
