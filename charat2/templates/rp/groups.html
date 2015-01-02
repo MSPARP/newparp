@@ -30,7 +30,7 @@
     <ul class="chat_list">
         {% for chat in groups: %}
         <li>
-            <h3><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
+            <h3>{% if chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
             <p class="subtitle">{{chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
             {% if chat.topic != "": %}
             <p>{{chat.topic}}</p>

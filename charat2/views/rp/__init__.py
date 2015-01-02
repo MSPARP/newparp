@@ -44,9 +44,9 @@ def home():
 @use_db
 def groups(fmt=None):
 
-    groups_query = g.db.query(GroupChat).filter(GroupChat.publicity == "listed")
+    groups_query = g.db.query(GroupChat).filter(GroupChat.publicity.in_(("listed", "pinned")))
     groups = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in groups_query]
-    groups.sort(key=lambda _: _[1], reverse=True)
+    groups.sort(key=lambda _: (_[0].publicity, _[1]), reverse=True)
     chat_dicts = []
     for chat, online in groups:
         cd = chat.to_dict()

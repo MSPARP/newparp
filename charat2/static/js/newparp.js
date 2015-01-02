@@ -284,11 +284,12 @@ var msparp = (function() {
 						description.text(chat.description);
 						rules.text(chat.rules);
 						flag_autosilence.prop("checked", chat.autosilence);
-						flag_publicity.prop("checked", chat.publicity == "listed");
+						flag_publicity.prop("checked", chat.publicity == "listed" || chat.publicity == "pinned");
+						flag_publicity.prop("disabled", chat.publicity == "pinned");
 						flag_style.val(chat.style);
 						flag_level.val(chat.level);
 						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
-						chat.publicity == "listed" ? flag_message_publicity.show() : flag_message_publicity.hide();
+						chat.publicity == "listed" || chat.publicity == "pinned" ? flag_message_publicity.show() : flag_message_publicity.hide();
 						flag_message_style.text(style_messages[chat.style]);
 						flag_message_level.text(level_names[chat.level]);
 					}

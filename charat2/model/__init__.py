@@ -315,6 +315,7 @@ class GroupChat(Chat):
     publicity = Column(Enum(
         u"listed",
         u"unlisted",
+        u"pinned",
         name=u"group_chats_publicity",
     ), nullable=False, default=u"unlisted")
 
@@ -753,7 +754,7 @@ Index("characters_user_id", Character.user_id)
 Index(
     "group_chats_publicity_listed",
     GroupChat.publicity,
-    postgresql_where=GroupChat.publicity == u"listed",
+    postgresql_where=GroupChat.publicity.in_((u"unlisted", u"pinned")),
 )
 
 # Index for your chats list.
