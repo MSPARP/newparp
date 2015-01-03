@@ -270,12 +270,8 @@ var msparp = (function() {
 				}
 				if (typeof data.messages != "undefined" && data.messages.length != 0) {
 					var scroll_after_render = is_at_bottom();
-					show_notification = false;
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
-					if (show_notification && (document.hidden || document.webkitHidden || document.msHidden)) {
-						document.title = "New message - " + original_title;
-					}
 				}
 				if (typeof data.chat != "undefined") {
 					chat = data.chat;
@@ -337,26 +333,34 @@ var msparp = (function() {
 			}
 			function render_message(message) {
 				latest_message = message.id;
-				// Skip notifications for system messages if we're hiding them.
-				if (user.meta.show_connection_messages || ["join", "disconnect", "timeout"].indexOf(message.type) == -1) {
-					show_notification = true;
-				}
 				// XXX yeah you should be using a template here
 				var div = $("<div>").attr("id", "message_" + message.id);
 				div.addClass("message_" + message.type + " unum_" + message.user_number);
 				$("<div>").addClass("unum").text("[" + (message.user_number ? message.user_number : "*") + "]").appendTo(div);
 				var p = $("<p>").css("color", "#" + message.color);
 				if (message.type == "me") {
-					p.text("* " + message.name + " " + message.text);
+					var text = "* " + message.name + " " + message.text;
 				} else if (message.alias != "") {
-					p.text(message.alias + ": " + message.text);
+					var text = message.alias + ": " + message.text;
 				} else {
-					p.text(message.text);
+					var text = message.text;
 				}
-				p.appendTo(div);
+				p.text(text).appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.appendTo(conversation);
+				if (
+					(document.hidden || document.webkitHidden || document.msHidden)
+					// Skip notifications for system messages if we're hiding them.
+					&& (user.meta.show_connection_messages || ["join", "disconnect", "timeout"].indexOf(message.type) == -1)
+					// Skip notifications if we're ignoring this person.
+					&& user.meta.ignored_numbers.indexOf(message.user_number) == -1
+				) {
+					document.title = "New message - " + original_title;
+					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
+						new Notification(chat.title || "MSPARP", { "body": text.length <= 50 ? text : text.substr(0, 47) + "..." });
+					}
+				}
 			}
 
 			// "New message" notification
@@ -675,8 +679,12 @@ var msparp = (function() {
 				data[this.id] = this.checked ? "on" : "off";
 				$.post("/chat_api/save_variables", data);
 				user.meta[this.id] = this.checked;
+				if (this.id == "desktop_notifications" && this.checked && typeof Notification != "undefined" && Notification.permission != "granted") {
+					Notification.requestPermission();
+				}
 				parse_variables();
 			});
+			$("#desktop_notifications").prop("disabled", typeof Notification == "undefined");
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
 				user.meta.show_connection_messages ? conversation.removeClass("hide_connection_messages") : conversation.addClass("hide_connection_messages");
