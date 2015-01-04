@@ -1,5 +1,12 @@
 var msparp = (function() {
 
+	// Remember toggle box state
+	toggle_boxes = $(".toggle_box > input:first-child").change(function() {
+		if (this.id) { localStorage.setItem(this.id, this.checked); }
+	}).each(function() {
+		if (this.id && !this.checked) { this.checked = localStorage.getItem(this.id) == "true"; }
+	});
+
 	// Character info
 	function update_character(data) {
 		if (typeof data["search_character"]!= "undefined") {
