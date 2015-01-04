@@ -12,7 +12,7 @@ var msparp = (function() {
 		if (typeof data["search_character"]!= "undefined") {
 			$("select[name=search_character_id]").val(data["search_character"]["id"]);
 		}
-		$("#toggle_with_settings").prop("checked", true);
+		$("#toggle_with_settings").prop("checked", true).change();
 		$("input[name=name]").val(data["name"]);
 		$("input[name=alias]").val(data["alias"]).keyup();
 		$("input[name=color]").val("#"+data["color"]).change();
@@ -22,7 +22,7 @@ var msparp = (function() {
 			$("#text_preview").text(data["search_character"]["text_preview"]);
 		}
 		if (data["quirk_prefix"] != "" || data["quirk_suffix"] != "" || data["case"] != "normal" || data["replacements"].length != 0 || data["regexes"].length != 0) {
-			$("#toggle_typing_quirks").prop("checked", true);
+			$("#toggle_typing_quirks").prop("checked", true).change();
 		}
 		$("input[name=quirk_prefix]").val(data["quirk_prefix"]);
 		$("input[name=quirk_suffix]").val(data["quirk_suffix"]);
