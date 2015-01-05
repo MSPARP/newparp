@@ -62,6 +62,9 @@
             <li><button class="set_topic_button">Set topic</button></li>
             <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
             <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
+            {% if chat_user.computed_group == "admin": %}
+            <li><label><input type="checkbox" id="flag_publicity_pinned"> Pin to top of list</label></li>
+            {% endif %}
             <li><label><select id="flag_style">
                 <option value="script">Script</option>
                 <option value="paragraph">Paragraph</option>

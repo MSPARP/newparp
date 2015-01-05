@@ -326,17 +326,19 @@ def set_flag():
 
     # Publicity is also an enum because we might add options for password
     # protected or invite only chats in the future.
-    elif (flag == "publicity" and value in ("listed", "unlisted")):
-        # Pinned chats have their publicity locked.
-        if g.chat.publicity == "pinned":
+    elif (flag == "publicity" and value in ("unlisted", "listed", "pinned")):
+        # Only admins can pin/unpin.
+        if (value == "pinned" or g.chat.publicity == "pinned") and g.chat_user.computed_group != "admin":
             abort(403)
         if value == g.chat.publicity:
             return "", 204
         g.chat.publicity = value
-        if g.chat.publicity == "listed":
-            message = "%s [%s] listed the chat. It's now listed on the public chats page."
-        elif g.chat.publicity == "unlisted":
+        if g.chat.publicity == "unlisted":
             message = "%s [%s] unlisted the chat."
+        elif g.chat.publicity == "listed":
+            message = "%s [%s] listed the chat. It's now listed on the public chats page."
+        elif g.chat.publicity == "pinned":
+            message = "%s [%s] pinned the chat. It's now listed at the top of the public chats page."
 
     else:
         abort(400)
