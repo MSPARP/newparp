@@ -1,7 +1,8 @@
 import json
 
-from flask import g, make_response, render_template
+from flask import abort, g, make_response, render_template
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import admin_required
 from charat2.model import case_options, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User

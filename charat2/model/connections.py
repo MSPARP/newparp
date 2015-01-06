@@ -1,6 +1,6 @@
 import os
 
-from flask import abort, g, request
+from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
 from sqlalchemy import and_
@@ -72,6 +72,8 @@ def use_db(f):
                 g.user = g.db.query(User).filter(User.id == g.user_id).one()
             except NoResultFound:
                 pass
+            if g.user.group == "banned":
+                return redirect("http://rp.terminallycapricio.us/")
         return f(*args, **kwargs)
     return decorated_function
 
@@ -90,6 +92,8 @@ def get_chat_user():
         )).one()
     except NoResultFound:
         abort(400)
+    if g.user.group == "banned":
+        abort(403)
 
 
 def use_db_chat(f):
