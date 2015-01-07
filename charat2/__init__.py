@@ -147,6 +147,7 @@ app.add_url_rule("/admin/announcements", "admin_announcements", admin.announceme
 app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 
 make_rules("admin", "/admin/user/<username>", admin.user, formats=True)
+app.add_url_rule("/admin/user/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 
 # XXX dear fucking lord we need traversal
 

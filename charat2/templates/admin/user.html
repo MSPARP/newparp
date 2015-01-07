@@ -6,7 +6,11 @@
         <tbody>
             <tr>
                 <td>Group</td>
-                <td>{{user.group.capitalize()}}</td>
+                <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post"><select name="group">
+                    {% for value in User.group.type.enums: %}
+                    <option value="{{value}}"{% if value == user.group %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
+                    {% endfor %}
+                </select><button type="submit">Save</button></form></td>
             </tr>
             <tr>
                 <td>Created</td>
@@ -23,7 +27,7 @@
             </tr>
             {% endif %}
         </tbody>
-    <table>
+    </table>
     <h3>Search info</h3>
     <table>
         <tbody>

@@ -50,3 +50,17 @@ def user(username, fmt=None):
     ))
     return render_template("admin/user.html", User=User, user=user, search_characters=search_characters)
 
+
+@use_db
+@admin_required
+def user_set_group(username):
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
+    except NoResultFound:
+        abort(404)
+    if request.form["group"] in User.group.type.enums:
+        user.group = request.form["group"]
+    else:
+        abort(400)
+    return redirect(url_for("admin_user", username=user.username))
+
