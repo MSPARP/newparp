@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title: %}#{{user.id}} {{user.username}} - {% endblock %}
+{% block content: %}
+    <h2>#{{user.id}} {{user.username}}</h2>
+    <table>
+        <tbody>
+            <tr>
+                <td>Group</td>
+                <td>{{user.group.capitalize()}}</td>
+            </tr>
+            <tr>
+                <td>Created</td>
+                <td>{{user.created}}</td>
+            </tr>
+            <tr>
+                <td>Last online</td>
+                <td>{{user.created}} (not currently updated)</td>
+            </tr>
+            {% if user.default_character %}
+            <tr>
+                <td>Default character</td>
+                <td><span style="color: #{{user.default_character.color}};">{{user.default_character.name}}</span> [<span style="color: #{{user.default_character.color}};">{{user.default_character.alias}}</span>]</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    <table>
+    <h3>Search info</h3>
+    <table>
+        <tbody>
+            <tr>
+                <td>Roleplaying as</td>
+                <td>{{user.search_character.name}}</td>
+            </tr>
+            <tr>
+                <td>Search character</td>
+                <td><span style="color: #{{user.color}};">{{user.name}}</span> [<span style="color: #{{user.color}};">{{user.alias}}</span>]</td>
+            </tr>
+            <tr>
+                <td>Style</td>
+                <td>{{user.search_style.capitalize()}}</td>
+            </tr>
+            <tr>
+                <td>Level</td>
+                <td>{{user.search_level.upper()}}</td>
+            </tr>
+            <tr>
+                <td>Searching for</td>
+                <td>{% if search_characters: %}{{search_characters}}{% else: %}Anyone{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+

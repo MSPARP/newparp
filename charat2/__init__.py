@@ -146,5 +146,7 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 app.add_url_rule("/admin/announcements", "admin_announcements", admin.announcements_get, methods=("GET",))
 app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 
+make_rules("admin", "/admin/user/<username>", admin.user, formats=True)
+
 # XXX dear fucking lord we need traversal
 

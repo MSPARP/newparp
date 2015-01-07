@@ -126,6 +126,29 @@ class User(Base):
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_preview = Column(Boolean, nullable=False, default=True)
 
+    def to_dict(self, include_options=False):
+        ud = {
+            "id": self.id,
+            "username": self.username,
+            "group": self.group,
+            "created": self.created,
+            "last_online": self.last_online,
+            "name": self.name,
+            "alias": self.alias,
+            "color": self.color,
+            "search_style": self.search_style,
+            "search_level": self.search_level,
+        }
+        if include_options:
+            ud["default_character"] = self.default_character.to_dict() if self.default_character is not None else None
+            ud["search_character"] = self.search_character.to_dict()
+            ud["quirk_prefix"] = self.quirk_prefix
+            ud["quirk_suffix"] = self.quirk_suffix
+            ud["case"] = self.case
+            ud["replacements"] = json.loads(self.replacements)
+            ud["regexes"] = json.loads(self.regexes)
+        return ud
+
 
 class Character(Base):
 
