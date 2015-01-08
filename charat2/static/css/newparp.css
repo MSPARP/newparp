@@ -29,9 +29,9 @@ Contents:
 body { background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
 
 /* Header has top corners, main has bottom corners. */
-header, main { background-color: #ccc; }
-header { margin: 20px 20px 0; padding: 20px; border-radius: 10px 10px 0 0; }
-main { margin: 0 20px; padding: 20px; border-radius: 0 0 10px 10px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; }
+header, main { background-color: #ccc; border: 1px solid #999999; }
+header { margin: 20px 20px 0; padding: 20px; border-bottom: 0; }
+main { margin: 0 20px; padding: 20px; border-top: 0; font-family: Helvetica, Arial, sans-serif; font-weight: normal; }
 
 main > * { max-width: 40rem; }
 
@@ -40,8 +40,8 @@ main > :first-child { margin-top: 0; }
 main > :last-child { margin-bottom: 0; }
 
 @media (max-width: 600px) {
-	header { margin: 5px 5px 0; padding: 10px; border-radius: 5px 5px 0 0; }
-	main { margin: 0 5px; padding: 10px; border-radius: 0 0 5px 5px; }
+	header { margin: 5px 5px 0; padding: 10px; }
+	main { margin: 0 5px; padding: 10px; }
 }
 
 /* 1.1. Header */
@@ -60,10 +60,10 @@ h1 img { display: block; max-width: 100%; }
 
 /* 1.2. Navigation */
 
-#global_navigation { margin: 0 20px; background-color: #626262; font-size: 10pt; text-transform: uppercase; }
+#global_navigation { margin: 0 20px; background-color: #ccc;  border-left: 1px solid #999999; border-right: 1px solid #999999; font-size: 10pt; text-transform: uppercase; }
 #global_navigation, #global_navigation a { color: #eee; }
 #global_navigation label, #global_navigation input { display: none; }
-#global_navigation ul { margin: 0; padding: 0 10px; list-style-type: none; }
+#global_navigation ul { margin: 0 20px; padding: 0; list-style-type: none; background-color: #626262; }
 #global_navigation li { display: inline; margin-left: 10px; }
 /* Padding so the whole height of the navbar is clickable */
 #global_navigation a { display: inline-block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
@@ -73,10 +73,11 @@ h1 img { display: block; max-width: 100%; }
 
 @media (max-width: 600px) {
 	#global_navigation { margin: 0 5px; }
-	#global_navigation label { display: block; padding: 7px 10px; cursor: pointer; }
+	#global_navigation label { display: block; margin: 0 10px; padding: 7px 10px; background-color: #626262; cursor: pointer; }
 	#global_navigation label:hover { color: #fff; }
 	#global_navigation input:not(:checked) + ul { display: none; }
-	#global_navigation li { display: block; margin-left: 0; }
+	#global_navigation ul { margin: 0 10px; }
+	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; }
 	#global_navigation a { display: block; }
 }
 
@@ -96,13 +97,15 @@ footer a:hover { color: #fff; }
 
 /* 1.4. Announcements */
 
-#announcements h2, #announcements p { margin: 0 auto; }
+#announcements { max-width: none; padding: 5px; background-color: #eee; }
+#announcements h2 { margin: 0; }
+#announcements p { margin: 0 0 0 8px; }
 
 /* 2. Content */
 
 a:hover { text-decoration: none; }
 
-h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #666; }
+h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #2c2c2c; }
 h2 { font-size: 12pt; }
 h3 { font-size: 10pt; }
 
