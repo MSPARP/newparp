@@ -3,22 +3,26 @@
 {% block content: %}
 <h2>Users in {{chat.title}}</h2>
 <table>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Character</th>
-      <th>Group</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for chat_user in users: %}
-    <tr>
-      <td>{{chat_user.number}}</td>
-      <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.alias}}</span>]{% endif %}</td>
-      <td>{{{"admin": "God tier moderator", "creator": "Chat creator", "mod": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod3": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}</td>
-    </tr>
-{% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Character</th>
+            <th>Group</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for chat_user in users: %}
+        <tr>
+            <td>{{chat_user.number}}</td>
+            <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.alias}}</span>]{% endif %}</td>
+            {% if chat_user.ban == None: %}
+            <td>{{{"admin": "God tier moderator", "creator": "Chat creator", "mod": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod3": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}</td>
+            {% else: %}
+            <td>Banned {{chat_user.ban.created.strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.alias}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}). Reason: {{chat_user.ban.reason}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}
 

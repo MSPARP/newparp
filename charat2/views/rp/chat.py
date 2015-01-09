@@ -2,7 +2,7 @@ from flask import Flask, abort, current_app, g, jsonify, redirect, render_templa
 from functools import wraps
 from math import ceil
 from sqlalchemy import and_, func
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 from webhelpers import paginate
 
@@ -284,9 +284,14 @@ def users(url, fmt=None):
     except NoResultFound:
         abort(404)
 
+    # XXX PAGINATION
+
     users = g.db.query(ChatUser).filter(
 		ChatUser.chat_id == chat.id,
-    ).options(joinedload(ChatUser.user)).order_by(ChatUser.number).all()
+    ).options(
+        joinedload(ChatUser.user),
+        joinedload_all("ban.creator_chat_user"),
+    ).order_by(ChatUser.number).all()
 
     if fmt == "json":
         return jsonify({ "users": [_.to_dict() for _ in users] })
