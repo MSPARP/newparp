@@ -6,6 +6,7 @@ import time
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
 from sqlalchemy.orm import (
+    backref,
     relation,
     scoped_session,
     sessionmaker,
@@ -639,9 +640,6 @@ class Ban(Base):
     created = Column(DateTime(), nullable=False, default=now)
     expires = Column(DateTime())
 
-    name = Column(Unicode(50), nullable=False)
-    alias = Column(Unicode(15), nullable=False)
-
     reason = Column(UnicodeText)
 
 
@@ -845,16 +843,33 @@ Message.chat_user = relation(
     foreign_keys=[Message.chat_id, Message.user_id],
 )
 
+Ban.chat = relation(Chat, backref="bans")
 Ban.user = relation(
     User,
     backref="bans",
     primaryjoin=Ban.user_id == User.id,
 )
-Ban.chat = relation(Chat, backref="bans")
+Ban.chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Ban.chat_id == ChatUser.chat_id,
+        Ban.user_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Ban.chat_id, Ban.user_id],
+    backref=backref("ban", uselist=False),
+)
 Ban.creator = relation(
     User,
     backref="bans_created",
     primaryjoin=Ban.creator_id == User.id,
+)
+Ban.creator_chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Ban.chat_id == ChatUser.chat_id,
+        Ban.creator_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Ban.chat_id, Ban.creator_id],
 )
 
 Request.user = relation(User, backref="requests")

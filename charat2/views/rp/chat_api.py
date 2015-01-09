@@ -246,8 +246,6 @@ def user_action():
             user_id=set_user.id,
             chat_id=g.chat.id,
             creator_id=g.user.id,
-            name=set_chat_user.name,
-            alias=set_chat_user.alias,
             reason=request.form.get("reason"),
         ))
         if request.form.get("reason") is not None and request.form["reason"].strip() != "":
