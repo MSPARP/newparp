@@ -31,9 +31,17 @@
         <li><a href="#">Roulette</a></li>
         <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
         <li><a href="#">Prompts</a></li>
-        <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
         <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
-        <!-- log out button? -->
+        {% if g.user != None: %}
+        <li class="user">
+            <a href="#">{{g.user.username}}</a>
+            <ul>
+                <li><a href="{{url_for("rp_chat_list")}}">Your chats</a></li>
+                <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
+                <li><form action="{{url_for("log_out")}}" method="post"><button type="submit">Log out</button></form></li>
+            </ul>
+        </li>
+        {% endif %}
     </ul>
 </nav>
 

@@ -64,12 +64,22 @@ h1 img { display: block; max-width: 100%; }
 #global_navigation, #global_navigation a { color: #eee; }
 #global_navigation label, #global_navigation input { display: none; }
 #global_navigation ul { margin: 0 20px; padding: 0; list-style-type: none; background-color: #626262; }
-#global_navigation li { display: inline; margin-left: 10px; }
+#global_navigation li { display: inline-block; margin-left: 10px; }
 /* Padding so the whole height of the navbar is clickable */
-#global_navigation a { display: inline-block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
-#global_navigation a:before { content: "> "; visibility: hidden; }
-#global_navigation a:hover { color: #fff; }
-#global_navigation a:hover:before { visibility: visible; }
+#global_navigation a, #global_navigation button { display: block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
+#global_navigation a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
+#global_navigation a:hover, #global_navigation button:hover { color: #fff; }
+#global_navigation a:hover:before, #global_navigation button:hover:before { visibility: visible; }
+#global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
+#global_navigation .user ul { margin: 0 0 0 -10px; }
+
+@media (min-width: 601px) {
+	#global_navigation .user { float: right; position: relative; }
+	#global_navigation .user ul { display: none; }
+	#global_navigation .user:hover ul { display: block; position: absolute; right: 0; }
+	#global_navigation .user li { display: block; }
+	#global_navigation .user a { padding-right: 28px; }
+}
 
 @media (max-width: 600px) {
 	#global_navigation { margin: 0 5px; }
