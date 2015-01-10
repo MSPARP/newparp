@@ -122,6 +122,7 @@ make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True)
 
+app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POST",))
 app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
 app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 

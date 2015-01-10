@@ -116,6 +116,7 @@ th { text-align: left; }
 th, td { padding: 2px; }
 tbody tr:nth-child(2n+1) { background-color: #ddd; }
 td a:only-child { display: block; }
+td form { display: inline; }
 
 .error { color: #f00; }
 

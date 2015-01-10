@@ -18,7 +18,12 @@
             {% if chat_user.ban == None: %}
             <td>{{{"admin": "God tier moderator", "creator": "Chat creator", "mod": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod3": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}</td>
             {% else: %}
-            <td>Banned {{chat_user.ban.created.strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.alias}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}). Reason: {{chat_user.ban.reason}}</td>
+            <td>
+                Banned {{chat_user.ban.created.strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.alias}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}).{% if chat_user.ban.reason: %} Reason: {{chat_user.ban.reason}}{% endif %}
+                {% if own_chat_user != None and own_chat_user.can("ban"): %}
+                <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
+                {% endif %}
+            </td>
             {% endif %}
         </tr>
         {% endfor %}

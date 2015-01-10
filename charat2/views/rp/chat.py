@@ -8,6 +8,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
+from charat2.helpers.chat import send_message
 from charat2.model import (
     case_options,
     AnyChat,
@@ -278,11 +279,17 @@ def log(chat, pm_user, url, fmt=None, page=None):
 def users(url, fmt=None):
 
     try:
-        chat = g.db.query(GroupChat).filter(
-            GroupChat.url == url,
-        ).one()
+        chat = g.db.query(GroupChat).filter(GroupChat.url == url).one()
     except NoResultFound:
         abort(404)
+
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except:
+        own_chat_user = None
 
     # XXX PAGINATION
 
@@ -299,8 +306,49 @@ def users(url, fmt=None):
     return render_template(
         "rp/chat/chat_users.html",
         chat=chat,
+        own_chat_user=own_chat_user,
         users=users,
     )
+
+
+@use_db
+@log_in_required
+def unban(url):
+    try:
+        chat = g.db.query(GroupChat).filter(GroupChat.url == url).one()
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except NoResultFound:
+        abort(404)
+    if not own_chat_user.can("ban"):
+        abort(403)
+    try:
+        unban_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.number == int(request.form["number"]),
+        )).one()
+    except (NoResultFound, ValueError):
+        abort(404)
+    try:
+        ban = g.db.query(Ban).filter(and_(Ban.chat_id == chat.id, Ban.user_id == unban_chat_user.user_id)).one()
+    except NoResultFound:
+        abort(404)
+    g.db.delete(ban)
+    send_message(g.db, g.redis, Message(
+        chat_id=chat.id,
+        user_id=unban_chat_user.user_id,
+        type="user_action",
+        name=own_chat_user.name,
+        text="%s [%s] unbanned %s [%s] from the chat." % (
+            own_chat_user.name, own_chat_user.alias,
+            unban_chat_user.name, unban_chat_user.alias,
+        ),
+    ))
+    if "Referer" in request.headers:
+        return redirect(request.headers["Referer"])
+    return redirect(url_for("rp_chat_users", url=url))
 
 
 def _alter_subscription(chat, pm_user, url, new_value):
