@@ -540,8 +540,9 @@ var msparp = (function() {
 
 			// Topbar and info panel
 			if (chat.type == "group") {
-				$("#topbar").click(function() {
+				$("#topbar, #info_panel_link").click(function() {
 					edit_info_panel.css("display") == "block" ? edit_info_panel.hide() : info_panel.toggle();
+					return false;
 				});
 				// There are several places where we show the topic, so we use this to update them all.
 				var topic = $(".topic");
@@ -830,7 +831,8 @@ var msparp = (function() {
 
 			// Other buttons
 			$("#user_list_button").click(function() { $("#user_list_container").show(); });
-			$("#switch_character_button").click(function() { switch_character.show(); });
+			$("#switch_character_button").click(function() { settings.hide(); switch_character.show(); });
+			$("#settings_button").click(function() { switch_character.hide(); settings.show(); });
 
 			// Connecting and disconnecting
 			function connect() {

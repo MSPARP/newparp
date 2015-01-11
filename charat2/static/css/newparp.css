@@ -190,8 +190,9 @@ textarea { width: 100%; resize: vertical; }
 /* 4. Chat window */
 
 .chat { background-color: #ccc; font-size: 12px; word-wrap: break-word; }
-.chat h2 { margin: 5px; font-size: 14pt; color: #000; }
-.chat p { margin: 0; padding: 2px 5px; overflow: hidden; }
+.chat h2, .chat h3, .chat p { margin: 5px; }
+.chat h2 { font-size: 14pt; }
+.chat h3 { font-size: 12px; }
 .chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat textarea { margin: 0 -2px; }
 .chat .textarea_wrapper { padding: 2px 7px; }
@@ -224,6 +225,7 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #mod_tools, #flag_messages { display: none; }
 
+#user_list_container a { color: #2c2c2c; }
 #user_list li, #action_list li { cursor: pointer; }
 .group_admin { text-decoration: underline; }
 .group_creator, .group_mod, .group_mod2, .group_mod3 { font-style: italic; }
@@ -233,6 +235,7 @@ section > .close:first-child { float: right; margin: 5px; }
 /* 4.3. Conversation and send form */
 
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+#conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 .hide_connection_messages .message_join, .hide_connection_messages .message_disconnect, .hide_connection_messages .message_timeout { display: none; }
 .unum { float: left; padding: 2px 0 2px 5px; }
 .highlighted { background-color: #fff; }

@@ -55,40 +55,40 @@
 <section class="sidebar" id="user_list_container">
     <button type="button" class="close">Close</button>
     {% if chat.type == "group": %}
+    <p>&gt; <a href="#" id="info_panel_link">Description and rules</a></p>
     <section class="toggle_box" id="mod_tools">
         <input type="checkbox" id="mod_tools_toggle">
-        <h2>&gt; <label for="mod_tools_toggle">Mod tools</label></h2>
-        <ul>
-            <li><button class="set_topic_button">Set topic</button></li>
-            <li><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></li>
-            <li><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></li>
-            {% if chat_user.computed_group == "admin": %}
-            <li><label><input type="checkbox" id="flag_publicity_pinned"> Pin to top of list</label></li>
-            {% endif %}
-            <li><label><select id="flag_style">
-                <option value="script">Script</option>
-                <option value="paragraph">Paragraph</option>
-                <option value="either">Either</option>
-            </select> style</label></li>
-            <li><label>This chat is <select id="flag_level">
-                <option value="sfw">SFW</option>
-                <option value="nsfw">NSFW</option>
-                <option value="nsfw-extreme">NSFW extreme</option>
-            </select></label></li>
-        </ul>
+        <h3>&gt; <label for="mod_tools_toggle">Mod tools</label></h3>
+        <p><button class="set_topic_button">Set topic</button></p>
+        <p><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></p>
+        <p><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></p>
+        {% if chat_user.computed_group == "admin": %}
+        <p><label><input type="checkbox" id="flag_publicity_pinned"> Pin to top of list</label></p>
+        {% endif %}
+        <p><label><select id="flag_style">
+            <option value="script">Script</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="either">Either</option>
+        </select> style</label></p>
+        <p><label>This chat is <select id="flag_level">
+            <option value="sfw">SFW</option>
+            <option value="nsfw">NSFW</option>
+            <option value="nsfw-extreme">NSFW extreme</option>
+        </select></label></p>
     </section>
     <section id="flag_messages">
-        <ul>
-            <li id="flag_message_autosilence">New users are auto-silenced.</li>
-            <li id="flag_message_publicity">This chat is listed on the public chats list.</li>
-            <li id="flag_message_style">Please use script stype.</li>
-            <li>This chat is <span id="flag_message_level">SFW</span>.</li>
-        </ul>
+        <p id="flag_message_autosilence">New users are auto-silenced.</p>
+        <p id="flag_message_publicity">This chat is listed on the public chats list.</p>
+        <p id="flag_message_style">Please use script stype.</p>
+        <p>This chat is <span id="flag_message_level">SFW</span>.</p>
     </section>
     {% endif %}
     <section id="action_list"></section>
     <h2>Users</h2>
     <ul id="user_list"></ul>
+    {% if chat.type == "group": %}
+    <p>&gt; <a href="{{url_for("rp_users", url=chat.url)}}" target="_blank">Full user list</a></p>
+    {% endif %}
 </section>
 
 <section class="sidebar" id="switch_character">
@@ -172,6 +172,7 @@
     <button type="button" id="abscond_button">Abscond</button>
     <button type="button" id="user_list_button" class="mobile_button">Users</button>
     <button type="button" id="switch_character_button">Switch char</button>
+    <button type="button" id="settings_button">Settings</button>
 </form>
 
 {% endblock %}
