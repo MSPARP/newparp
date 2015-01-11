@@ -5,6 +5,9 @@
 <table>
     <thead>
         <tr>
+            {% if g.user.group == "admin": %}
+            <th>Username</th>
+            {% endif %}
             <th>#</th>
             <th>Character</th>
             <th>Group</th>
@@ -13,6 +16,9 @@
     <tbody>
         {% for chat_user in users: %}
         <tr>
+            {% if g.user.group == "admin": %}
+            <td><a href="{{url_for("admin_user", username=chat_user.user.username)}}">{{chat_user.user.username}}</a></td>
+            {% endif %}
             <td>{{chat_user.number}}</td>
             <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.alias != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.alias}}</span>]{% endif %}</td>
             {% if chat_user.ban == None: %}
