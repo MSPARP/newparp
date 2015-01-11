@@ -12,13 +12,36 @@
             <p class="error">That username has already been taken.</p>
 			{% endif %}
             {% endif %}
-            <p><label>Username: <input type="text" name="username" maxlength="50" required></label></p>
-            <p><label>Password: <input type="password" name="password" required></label></p>
-            <p><label>Password again: <input type="password" name="password_again" required></label></p>
-            <p><label>E-mail (optional): <input type="email" name="email" maxlength="100"></label></p>
-            <p><label>Secret question: <input type="text" name="secret_question" maxlength="50" required></label></p>
-            <p><label>Secret answer: <input type="text" name="secret_answer" maxlength="50" required></label></p>
-            <p>Are you a bot? <label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></p>
+            <div class="input_table">
+                <p>
+                    <label for="register_username_input">Username:</label>
+                    <input type="text" name="username" id="register_username_input" maxlength="50" required>
+                </p>
+                <p>
+                    <label for="register_password_input">Password:</label>
+                    <input type="password" name="password" id="register_password_input" required>
+                </p>
+                <p>
+                    <label for="register_password_again_input">Password again:</label>
+                    <input type="password" name="password_again" id="register_password_again_input" required>
+                </p>
+                <p>
+                    <label for="register_email_input">E-mail (optional):</label>
+                    <input type="email" name="email" id="register_email_input" maxlength="100">
+                </p>
+                <p>
+                    <label for="register_secret_question_input">Secret question:</label>
+                    <input type="text" name="secret_question" id="register_secret_question_input" maxlength="50" required>
+                </p>
+                <p>
+                    <label for="register_secret_answer_input">Secret answer:</label>
+                    <input type="text" name="secret_answer" id="register_secret_answer_input" maxlength="50" required>
+                </p>
+                <p>
+                    <label>Is Gamquius canon?</label>
+                    <span><label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></span>
+                </p>
+            </div>
             <p><button type="submit">Register</button> <a href="http://help.msparp.com/">Having problems? Get help here.</a></p>
         </form>
 {% endmacro %}
@@ -32,8 +55,16 @@
             <p class="error">That password is incorrect.</p>
 			{% endif %}
             {% endif %}
-            <p><label>Username: <input type="text" name="username" maxlength="50" required></label></p>
-            <p><label>Password: <input type="password" name="password" required></label></p>
+            <div class="input_table">
+                <p>
+                    <label for="log_in_username_input">Username:</label>
+                    <input type="text" name="username" id="log_in_username_input" maxlength="50" required>
+                </p>
+                <p>
+                    <label for="log_in_password_input">Password:</label>
+                    <input type="text" name="password" id="log_in_password_input" required>
+                </p>
+            </div>
             <p><button type="submit">Log in</button></p>
         </form>
 {% endmacro %}

@@ -140,9 +140,9 @@ h2 select { font-size: 10pt; color: #000; }
 
 .input_table { display: table; }
 .input_table p { display: table-row; }
-.input_table p label, .input_table p input, .input_table p select { display: table-cell; }
-.input_table p input, .input_table p select { margin: 2px 0; }
-.input_table p label { padding-right: 5px; }
+.input_table p > label, .input_table p > input, .input_table p > select, .input_table p > span { display: table-cell; }
+.input_table p > input, .input_table p > select { margin: 2px 0; }
+.input_table p > label { padding-right: 5px; }
 
 textarea { width: 100%; resize: vertical; }
 
