@@ -541,6 +541,7 @@ var msparp = (function() {
 			// Topbar and info panel
 			if (chat.type == "group") {
 				$("#topbar, #info_panel_link").click(function() {
+					if (status != "chatting") { return false; }
 					edit_info_panel.css("display") == "block" ? edit_info_panel.hide() : info_panel.toggle();
 					return false;
 				});
@@ -840,6 +841,7 @@ var msparp = (function() {
 				launch_long_poll();
 				window.setTimeout(ping, 10000);
 				$(document.body).addClass("chatting");
+				$("#send_form input, #send_form button").prop("disabled", false);
 				text_preview.css("color", "#" + user.character.color);
 				text_input.css("color", "#" + user.character.color);
 				parse_variables();
@@ -849,13 +851,18 @@ var msparp = (function() {
 			function exit() {
 				status = "disconnected";
 				$(document.body).removeClass("chatting");
+				$("#send_form input, #send_form button:not(#abscond_button)").prop("disabled", true);
+				if (chat.type == "group") {
+					info_panel.hide();
+					edit_info_panel.hide();
+				}
 				switch_character.hide();
 				settings.hide();
 				abscond_button.text("Join");
 			}
 			function disconnect() {
-				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 				exit();
+				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
 			}
 
 			// Now all that's done, let's connect
