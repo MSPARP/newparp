@@ -12,10 +12,10 @@ Contents:
 2. Content
 	1. Forms
 	2. Toggle box
-	3. Chat list
 3. Pages
 	1. Front page
 	2. Searching
+	3. Group chats
 4. Chat window
 	1. Topbar and info panel
 	2. Sidebars
@@ -154,18 +154,6 @@ textarea { width: 100%; resize: vertical; }
 .toggle_box h2 label, .toggle_box h3 label { cursor: pointer; text-decoration: underline; }
 .toggle_box h2 label:hover, .toggle_box h3 label:hover { text-decoration: none; }
 
-/* 2.3. Chat list */
-
-.chat_list { max-width: none; padding: 0; list-style-type: none; }
-.chat_list { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
-.chat_list li { margin:  0 auto 20px; padding: 10px; background-color: #eee; }
-/* overflow:hidden prevents column breaks in Firefox. */
-.chat_list li { overflow: hidden; -webkit-column-break-inside: avoid; }
-.chat_list li:last-child { margin-bottom: 0; }
-.chat_list h3 { margin: 0; font-size: 12pt; }
-.chat_list p { margin: 5px 5px 0; }
-.chat_list .subtitle { color: #666; }
-
 /* 3. Pages */
 
 /* 3.1. Front page */
@@ -199,6 +187,18 @@ textarea { width: 100%; resize: vertical; }
 .chat button:hover { background-color: #fff; }
 .chat button { padding: 2px 6px; }
 section > .close:first-child { float: right; margin: 5px; }
+
+/* 3.3. Group chats */
+
+#group_chats { max-width: none; padding: 0; list-style-type: none; }
+#group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
+#group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #eee; }
+/* overflow:hidden prevents column breaks in Firefox. */
+#group_chats li { overflow: hidden; -webkit-column-break-inside: avoid; }
+#group_chats li:last-child { margin-bottom: 0; }
+#group_chats h3 { margin: 0; font-size: 12pt; }
+#group_chats p { margin: 5px 5px 0; }
+#group_chats .subtitle { color: #666; }
 
 /* 4.1. Topbar and info panel */
 

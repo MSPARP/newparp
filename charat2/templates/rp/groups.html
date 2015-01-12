@@ -27,7 +27,7 @@
             <button type="submit">Show</button>
         </p>
     </form>-->
-    <ul class="chat_list">
+    <ul id="group_chats">
         {% for chat in groups: %}
         <li>
             <h3>{% if chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
