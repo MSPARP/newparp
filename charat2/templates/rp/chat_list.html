@@ -37,7 +37,7 @@
         </thead>
         <tbody>
             {% for chat in chats: %}
-            <tr>
+            <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
                 <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
                 <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
                 <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
