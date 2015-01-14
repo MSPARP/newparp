@@ -824,8 +824,9 @@ var msparp = (function() {
 			var abscond_button = $("#abscond_button").click(function() {
 				if (status == "chatting") {
 					if (confirm("Are you sure you want to abscond?")) { disconnect(); }
+				} else if (chat.type == "searched") {
+					location.href = "/search";
 				} else {
-					// XXX make this search again in searched chats.
 					connect();
 				}
 			});
@@ -858,7 +859,7 @@ var msparp = (function() {
 				}
 				switch_character.hide();
 				settings.hide();
-				abscond_button.text("Join");
+				abscond_button.text(chat.type == "searched" ? "Search again" : "Join");
 			}
 			function disconnect() {
 				exit();
