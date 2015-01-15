@@ -385,7 +385,7 @@ class SearchedChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "searched" }
 
 
-AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, SearchedChat])
+AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, RouletteChat, SearchedChat])
 
 
 class ChatUser(Base):

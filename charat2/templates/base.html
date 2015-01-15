@@ -28,9 +28,8 @@
     <input type="checkbox" id="nav_toggle">
     <ul>
         <li><a href="{{url_for("home")}}">Character search</a></li>
-        <li><a href="#">Roulette</a></li>
+        <li><a href="{{url_for("rp_roulette")}}">Roulette</a></li>
         <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
-        <li><a href="#">Prompts</a></li>
         <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
         {% if g.user != None: %}
         <li class="user">

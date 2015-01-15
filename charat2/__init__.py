@@ -10,7 +10,7 @@ from charat2.model.connections import (
     set_cookie,
 )
 from charat2.views import account, admin, rp
-from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, search, search_characters
+from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, roulette, search, search_characters
 
 from flask.ext.babel import Babel, gettext
 
@@ -88,6 +88,11 @@ app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
 app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
 app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
+
+app.add_url_rule("/roulette", "rp_roulette", roulette.roulette_get, methods=("GET",))
+app.add_url_rule("/roulette", "rp_roulette_post", roulette.roulette_post, methods=("POST",))
+app.add_url_rule("/roulette/continue", "rp_roulette_continue", roulette.roulette_continue, methods=("POST",))
+app.add_url_rule("/roulette/stop", "rp_roulette_stop", roulette.roulette_stop, methods=("POST",))
 
 # 6. Request searching
 
