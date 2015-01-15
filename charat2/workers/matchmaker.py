@@ -98,7 +98,7 @@ if __name__ == "__main__":
             try:
                 user_id = int(redis.get("session:%s" % session_id))
                 search_character_id = int(redis.get("searcher:%s:search_character_id" % searcher))
-            except ValueError:
+            except (TypeError, ValueError):
                 continue
             searchers.append({
                 "id": searcher,

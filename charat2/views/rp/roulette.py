@@ -1,4 +1,4 @@
-from flask import g, jsonify, render_template, request
+from flask import abort, g, jsonify, make_response, render_template, request
 from uuid import uuid4
 
 from charat2.helpers.auth import log_in_required
@@ -26,6 +26,7 @@ def roulette_continue():
     # Send people back to /roulette if we don't have their data cached.
     if g.user_id is None or cached_session_id != g.session_id:
         abort(404)
+    g.redis.expire("roulette:%s:session_id" % searcher_id, 30)
     pubsub = g.redis.pubsub()
     pubsub.subscribe("roulette:%s" % searcher_id)
     g.redis.sadd("roulette_searchers", searcher_id)
