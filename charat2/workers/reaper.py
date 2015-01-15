@@ -68,6 +68,11 @@ if __name__ == "__main__":
                 user_id = redis.get("session:%s" % session_id)
                 if user_id is not None:
                     searching_users.add(user_id)
+            for searcher_id in redis.smembers("roulette_searchers"):
+                session_id = redis.get("roulette:%s:session_id" % searcher_id)
+                user_id = redis.get("session:%s" % session_id)
+                if user_id is not None:
+                    searching_users.add(user_id)
             redis.set("searching_users", len(searching_users))
 
         time.sleep(1)
