@@ -169,7 +169,7 @@ textarea { width: 100%; resize: vertical; }
 
 /* 3.2. Searching */
 
-#spinner { width: 140px; height: 140px; margin: 0 auto; background-image: url("/static/img/spinner-big.gif") }
+#spinner { width: 140px; height: 140px; margin: 0 auto; }
 
 #search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
 #spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
