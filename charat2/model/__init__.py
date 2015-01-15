@@ -288,6 +288,7 @@ class Chat(Base):
         u"group",
         u"pm",
         u"requested",
+        u"roulette",
         u"searched",
         name=u"chats_type",
     ), nullable=False, default=u"group")
@@ -301,6 +302,7 @@ class Chat(Base):
     def to_dict(self):
         return {
             "id": self.id,
+            "url": self.url,
             "type": self.type,
         }
 
@@ -364,30 +366,23 @@ class GroupChat(Chat):
 
 class PMChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "pm" }
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+        }
 
 
 class RequestedChat(Chat):
-
     __mapper_args__ = { "polymorphic_identity": "requested" }
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "url": self.url,
-            "type": self.type,
-        }
+
+class RouletteChat(Chat):
+    __mapper_args__ = { "polymorphic_identity": "roulette" }
 
 
 class SearchedChat(Chat):
-
     __mapper_args__ = { "polymorphic_identity": "searched" }
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "url": self.url,
-            "type": self.type,
-        }
 
 
 AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, SearchedChat])

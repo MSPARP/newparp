@@ -10,6 +10,7 @@ from charat2.model import (
     AnyChat,
     GroupChat,
     RequestedChat,
+    RouletteChat,
     SearchedChat,
     PMChat,
     ChatUser,
@@ -21,6 +22,7 @@ chat_classes = {
     "group": GroupChat,
     "pm": PMChat,
 #    "requested": RequestedChat,
+    "roulette": RouletteChat,
     "searched": SearchedChat,
     "unread": AnyChat,
 }
