@@ -514,6 +514,50 @@ var msparp = (function() {
 						if (!set_user || can_perform_action("ban", set_user.meta.group)) { user_action(match[1], "ban", (match[2] || "").trim()); }
 					},
 				},
+				{
+					"regex": /^autosilence (on|off)/,
+					"group_chat_only": true,
+					"minimum_rank": 1,
+					"description": function(match) {
+						return "Switch autosilence " + match[1] + ".";
+					},
+					"action": function(match) {
+						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": match[1] });
+					},
+				},
+				{
+					"regex": /^publicity (listed|unlisted)/,
+					"group_chat_only": true,
+					"minimum_rank": 1,
+					"description": function(match) {
+						return "Set the publicity to " + match[1] + ".";
+					},
+					"action": function(match) {
+						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": match[1] });
+					},
+				},
+				{
+					"regex": /^publicity pinned/,
+					"group_chat_only": true,
+					"minimum_rank": Infinity,
+					"description": function(match) {
+						return "Set the publicity to pinned.";
+					},
+					"action": function(match) {
+						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": "pinned" });
+					},
+				},
+				{
+					"regex": /^level (sfw|nsfw|nsfw-extreme)$/,
+					"group_chat_only": true,
+					"minimum_rank": 1,
+					"description": function(match) {
+						return "Mark the chat as " + level_names[match[1]] + ".";
+					},
+					"action": function(match) {
+						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": match[1] });
+					},
+				},
 			];
 			function name_from_user_number(number) {
 				return user_data[number] ? user_data[number].character.name : "user " + number;
