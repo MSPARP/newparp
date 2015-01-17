@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 {% block title: %}Roulette - {% endblock %}
 {% block content: %}
-    <section id="search_intro">
-        <h2>Roulette</h2>
-        <p>This is MSPARP's new roulette feature. If you want to use filters to select which characters you connect to, you can use <a href="{{url_for("home")}}">character search</a>. Otherwise, you can select your character (it's optional) and click Enter. You'll be randomly matched with another user but both of you will appear anonymously to each other.</p>
-        <button id="enter_button">==&gt; Enter</button>
-    </section>
+    <section id="search_connecting">Connecting...</section>
     <section id="spinner"><img src="/static/img/spinner-big.gif" alt="Searching..."></section>
     <section id="search_error">Sorry, there seems to be a problem with searching. Please refresh or try again later. :(</section>
 {% endblock %}

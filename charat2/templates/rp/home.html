@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content: %}
-    <form action="{{url_for("rp_search_save")}}" method="post">
-        <h2>Roleplay as {% if characters %}<select name="character_id">
+    <form id="search" action="{{url_for("rp_search_save")}}" method="post">
+        <h2>Roleplay as {% if characters: %}<select name="character_id">
             <option value="">Saved characters...</option>
             {% for character in characters: %}
             <option value="{{character.id}}">{{character.title}}</option>
@@ -119,6 +119,11 @@
                 {% endfor %}
             </div>
         </div>
+        <button type="submit">==&gt; Enter</button>
+    </form>
+    <form id="roulette" action="{{url_for("rp_roulette")}}" method="get">
+        <h2>Roulette</h2>
+        <p>This is MSPARP's new roulette feature. If you want to use filters to select which characters you connect to, you can still do so with <a href="#search">character search</a>. Otherwise, you can select your character (it's optional) and click Enter. You'll be randomly matched with another user but both of you will appear anonymously to each other.</p>
         <button type="submit">==&gt; Enter</button>
     </form>
 {% endblock %}

@@ -200,8 +200,7 @@ var msparp = (function() {
 		"roulette": function() {
 			search_type = "roulette";
 			$(window).unload(function () { if (searching) { stop_search(); }});
-			$("#enter_button").click(start_search);
-			if (localStorage.getItem("auto_enter") == "true") { start_search(); localStorage.removeItem("auto_enter"); }
+			start_search();
 		},
 		// Character pages
 		"character": function() {
@@ -872,7 +871,6 @@ var msparp = (function() {
 					location.href = "/search";
 				} else if (chat.type == "roulette") {
 					location.href = "/roulette";
-					localStorage.setItem("auto_enter", true);
 				} else {
 					connect();
 				}

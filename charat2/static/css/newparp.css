@@ -159,6 +159,9 @@ textarea { width: 100%; resize: vertical; }
 
 /* 3.1. Front page */
 
+#search, #search:target + #roulette { display: none; }
+#search:target { display: block; }
+
 #text_preview_container { background-color: #eee; padding: 3px 5px; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 12px; }
 
 .character_list { margin: 0; padding: 0; border: 0; }
@@ -172,7 +175,7 @@ textarea { width: 100%; resize: vertical; }
 #spinner { width: 140px; height: 140px; margin: 0 auto; }
 
 #search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
-#spinner, #search_error, .searching #search_intro, .searching #search_connecting, .search_error #search_connecting { display: none; }
+#spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
 .searching #spinner, .search_error #search_error { display: block; }
 #search_error { color: #f00; }
 
