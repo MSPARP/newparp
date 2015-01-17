@@ -347,6 +347,8 @@ var msparp = (function() {
 				var p = $("<p>").css("color", "#" + message.color);
 				if (message.type == "me") {
 					var text = "* " + message.name + " " + message.text;
+				} else if (chat.type == "roulette" && ["ic", "ooc"].indexOf(message.type) != -1) {
+					var text = (message.user_number == user.meta.number ? "▲" : "▼") + ": " + message.text;
 				} else if (message.alias != "") {
 					var text = message.alias + ": " + message.text;
 				} else {
