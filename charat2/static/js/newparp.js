@@ -1,7 +1,7 @@
 var msparp = (function() {
 
 	// Remember toggle box state
-	toggle_boxes = $(".toggle_box > input:first-child").change(function() {
+	$(".toggle_box > input:first-child").change(function() {
 		if (this.id) { localStorage.setItem(this.id, this.checked); }
 	}).each(function() {
 		if (this.id && !this.checked) { this.checked = localStorage.getItem(this.id) == "true"; }
@@ -200,7 +200,8 @@ var msparp = (function() {
 		"roulette": function() {
 			search_type = "roulette";
 			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
+			$("#enter_button").click(start_search);
+			if (localStorage.getItem("auto_enter") == "true") { start_search(); localStorage.removeItem("auto_enter"); }
 		},
 		// Character pages
 		"character": function() {
@@ -871,6 +872,7 @@ var msparp = (function() {
 					location.href = "/search";
 				} else if (chat.type == "roulette") {
 					location.href = "/roulette";
+					localStorage.setItem("auto_enter", true);
 				} else {
 					connect();
 				}
