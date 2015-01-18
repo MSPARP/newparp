@@ -17,7 +17,10 @@ option_messages = {
 }
 
 
-def run_matchmaker(get_searcher_info, check_compatibility, ChatClass, get_character_info):
+def run_matchmaker(
+    searchers_key, searcher_prefix, get_searcher_info, check_compatibility,
+    ChatClass, get_character_info,
+):
 
     # XXX get log level from stdin
     root = logging.getLogger()
@@ -26,21 +29,21 @@ def run_matchmaker(get_searcher_info, check_compatibility, ChatClass, get_charac
     db = sm()
     redis = StrictRedis(connection_pool=redis_pool)
 
-    searcher_ids = redis.smembers("searchers")
+    searcher_ids = redis.smembers(searchers_key)
 
     while True:
 
         # Reset the searcher list for the next iteration.
-        redis.delete("searchers")
+        redis.delete(searchers_key)
         for searcher in searcher_ids:
             logging.debug("Waking unmatched searcher %s." % searcher)
-            redis.publish("searcher:%s" % searcher, "{ \"status\": \"unmatched\" }")
+            redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
 
         time.sleep(10)
 
         logging.info("Starting match loop.")
 
-        searcher_ids = redis.smembers("searchers")
+        searcher_ids = redis.smembers(searchers_key)
 
         # We can't do anything with less than 2 people, so don't bother.
         if len(searcher_ids) < 2:
@@ -94,8 +97,8 @@ def run_matchmaker(get_searcher_info, check_compatibility, ChatClass, get_charac
                 already_matched.add(s2["id"])
 
                 match_message = json.dumps({ "status": "matched", "url": new_url })
-                redis.publish("searcher:%s" % s1["id"], match_message)
-                redis.publish("searcher:%s" % s2["id"], match_message)
+                redis.publish("%s:%s" % (searcher_prefix, s1["id"]), match_message)
+                redis.publish("%s:%s" % (searcher_prefix, s2["id"]), match_message)
                 searcher_ids.remove(s1["id"])
                 searcher_ids.remove(s2["id"])
 
