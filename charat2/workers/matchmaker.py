@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import time
+
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import SearchedChat
 
@@ -25,10 +27,17 @@ def get_searcher_info(redis, searcher_ids):
     return searchers
 
 
-def check_compatibility(s1, s2):
+def check_compatibility(redis, s1, s2):
 
     # Don't pair people with themselves.
     if s1["user_id"] == s2["user_id"]:
+        return False, None
+
+    # Don't match if they've already been paired up recently.
+    match_key = "matched:%s:%s" % tuple(sorted([s1["user_id"], s2["user_id"]]))
+    print match_key
+    if redis.exists(match_key):
+        print "MATCHED RECENTLY"
         return False, None
 
     options = []
@@ -51,12 +60,14 @@ def check_compatibility(s1, s2):
     else:
         options.append(s1["options"]["level"])
 
-    # Match people who both chose wildcard.
-    if not s1["choices"] and not s2["choices"]:
-        return True, options
-
-    # Match people who are otherwise compatible.
-    if s1["search_character_id"] in s2["choices"] and s2["search_character_id"] in s1["choices"]:
+    if (
+        # Match people who both chose wildcard.
+        (not s1["choices"] and not s2["choices"])
+        # Match people who are otherwise compatible.
+        or (s1["search_character_id"] in s2["choices"] and s2["search_character_id"] in s1["choices"])
+    ):
+        redis.set(match_key, 1)
+        redis.expire(match_key, 1800)
         return True, options
 
     return False, None

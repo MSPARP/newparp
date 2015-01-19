@@ -19,7 +19,7 @@ def get_searcher_info(redis, searcher_ids):
     return searchers
 
 
-def check_compatibility(s1, s2):
+def check_compatibility(redis, s1, s2):
     if s1["user_id"] == s2["user_id"]:
         return False, None
     return True, None

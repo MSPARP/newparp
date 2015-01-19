@@ -67,7 +67,7 @@ def run_matchmaker(
 
                 logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
 
-                match, options = check_compatibility(s1, s2)
+                match, options = check_compatibility(redis, s1, s2)
                 if not match:
                     logging.debug("No match.")
                     continue
