@@ -30,8 +30,10 @@
         <thead>
             <tr>
                 <th>Name</th>
+                {% if type in (None, "group", "unread"): %}
                 <th>Style</th>
                 <th>Level</th>
+                {% endif %}
                 <th>Unsubscribe</th>
             </tr>
         </thead>
@@ -39,8 +41,10 @@
             {% for chat in chats: %}
             <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
                 <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
+                {% if type in (None, "group", "unread"): %}
                 <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
                 <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
+                {% endif %}
                 <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.url)}}" method="post"><button type="submit">Unsubscribe</button></form></td>
             </tr>
             {% endfor %}
