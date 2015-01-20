@@ -35,9 +35,7 @@ def check_compatibility(redis, s1, s2):
 
     # Don't match if they've already been paired up recently.
     match_key = "matched:%s:%s" % tuple(sorted([s1["user_id"], s2["user_id"]]))
-    print match_key
     if redis.exists(match_key):
-        print "MATCHED RECENTLY"
         return False, None
 
     options = []
