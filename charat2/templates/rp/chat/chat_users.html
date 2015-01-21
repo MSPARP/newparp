@@ -2,6 +2,7 @@
 {% block title: %}Users in {{chat.title}} - {% endblock %}
 {% block content: %}
 <h2>Users in {{chat.title}}</h2>
+{{ pager() }}
 <table>
     <thead>
         <tr>
@@ -35,5 +36,6 @@
         {% endfor %}
     </tbody>
 </table>
+{{ pager() }}
 {% endblock %}
 

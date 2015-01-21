@@ -276,7 +276,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
 @alt_formats(set(["json"]))
 @use_db
 @log_in_required
-def users(url, fmt=None):
+def users(url, fmt=None, page=1):
 
     try:
         chat = g.db.query(GroupChat).filter(GroupChat.url == url).one()
@@ -291,23 +291,40 @@ def users(url, fmt=None):
     except:
         own_chat_user = None
 
-    # XXX PAGINATION
+    user_count = g.db.query(func.count('*')).select_from(ChatUser).filter(
+        ChatUser.chat_id == chat.id,
+    ).scalar()
 
     users = g.db.query(ChatUser).filter(
-		ChatUser.chat_id == chat.id,
+        ChatUser.chat_id == chat.id,
     ).options(
         joinedload(ChatUser.user),
         joinedload_all("ban.creator_chat_user"),
-    ).order_by(ChatUser.number).all()
+    ).order_by(ChatUser.number).limit(20).offset((page - 1) * 20).all()
+
+    if len(users) == 0:
+        abort(404)
 
     if fmt == "json":
-        return jsonify({ "users": [_.to_dict() for _ in users] })
+        return jsonify({
+            "total": user_count,
+            "users": [_.to_dict() for _ in users]
+        })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=20,
+        item_count=user_count,
+        url=lambda page: url_for("rp_users", url=url, page=page),
+    )
 
     return render_template(
         "rp/chat/chat_users.html",
         chat=chat,
         own_chat_user=own_chat_user,
         users=users,
+        paginator=paginator,
     )
 
 
