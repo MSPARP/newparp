@@ -162,7 +162,7 @@ var msparp = (function() {
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family"}
 	function bbencode(text) { return parse_bbcode(Handlebars.escapeExpression(text)); }
 	function parse_bbcode(text) {
-		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*)\[\/\1\]/g, function(str, tag, attribute, content) {
+		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
 			console.log(tag + " / " + attribute + " / " + content)
 			tag = tag.toLowerCase();
 			if (attribute) {
