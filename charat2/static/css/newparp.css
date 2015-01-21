@@ -260,4 +260,5 @@ section > .close:first-child { float: right; margin: 5px; }
 /* 4.4. Log pages */
 
 .chat .pager, #archive_conversation { margin: 5px; background-color: #eee; }
+.chat .pager { padding: 2px 5px; }
 

@@ -158,6 +158,37 @@ var msparp = (function() {
 		$(document.body).removeClass("searching");
 	}
 
+	// BBCode
+	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family"}
+	function bbencode(text) { return parse_bbcode(Handlebars.escapeExpression(text)); }
+	function parse_bbcode(text) {
+		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*)\[\/\1\]/g, function(str, tag, attribute, content) {
+			console.log(tag + " / " + attribute + " / " + content)
+			tag = tag.toLowerCase();
+			if (attribute) {
+				switch (tag) {
+				    case "bgcolor":
+				    case "color":
+				    case "font":
+				        return $("<span>").css(tag_properties[tag], attribute).html(bbencode(content))[0].outerHTML;
+				}
+			} else {
+				switch (tag) {
+				    case "b":
+				    case "del":
+				    case "i":
+				    case "sub":
+				    case "sup":
+				    case "u":
+				        return "<" + tag + ">" + bbencode(content) + "</" + tag + ">";
+				    case "raw":
+				        return content;
+				}
+			}
+			return "[" + tag + "]" + bbencode(content) + "[/" + tag + "]";
+		});
+	}
+
 	return {
 		// Homepage
 		"home": function() {
@@ -354,7 +385,7 @@ var msparp = (function() {
 				} else {
 					var text = message.text;
 				}
-				p.text(text).appendTo(div);
+				p.html(bbencode(text)).appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.appendTo(conversation);
@@ -582,6 +613,9 @@ var msparp = (function() {
 				}
 				return false;
 			}
+
+			// Perform BBCode conversion
+			$("#conversation div p").each(function(line) { this.innerHTML = bbencode(this.innerHTML); });
 
 			// Topbar and info panel
 			if (chat.type == "group") {
@@ -916,6 +950,10 @@ var msparp = (function() {
 			// Now all that's done, let's connect
 			connect();
 
+		},
+		"log": function() {
+			// Perform BBCode conversion
+			$("#archive_conversation div p").each(function(line) { this.innerHTML = bbencode(this.innerHTML); });
 		},
 	};
 })();
