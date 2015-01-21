@@ -160,8 +160,8 @@ var msparp = (function() {
 
 	// BBCode
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family"}
-	function bbencode(text) { return parse_bbcode(Handlebars.escapeExpression(text)); }
-	function parse_bbcode(text) {
+	function bbencode(text) { return raw_bbencode(Handlebars.escapeExpression(text)); }
+	function raw_bbencode(text) {
 		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
 			console.log(tag + " / " + attribute + " / " + content)
 			tag = tag.toLowerCase();
@@ -170,7 +170,7 @@ var msparp = (function() {
 				    case "bgcolor":
 				    case "color":
 				    case "font":
-				        return $("<span>").css(tag_properties[tag], attribute).html(bbencode(content))[0].outerHTML;
+				        return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
 				}
 			} else {
 				switch (tag) {
@@ -180,12 +180,12 @@ var msparp = (function() {
 				    case "sub":
 				    case "sup":
 				    case "u":
-				        return "<" + tag + ">" + bbencode(content) + "</" + tag + ">";
+				        return "<" + tag + ">" + raw_bbencode(content) + "</" + tag + ">";
 				    case "raw":
 				        return content;
 				}
 			}
-			return "[" + tag + "]" + bbencode(content) + "[/" + tag + "]";
+			return "[" + tag + "]" + raw_bbencode(content) + "[/" + tag + "]";
 		});
 	}
 
@@ -615,7 +615,7 @@ var msparp = (function() {
 			}
 
 			// Perform BBCode conversion
-			$("#conversation div p").each(function(line) { this.innerHTML = bbencode(this.innerHTML); });
+			$("#conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML); });
 
 			// Topbar and info panel
 			if (chat.type == "group") {
@@ -953,7 +953,7 @@ var msparp = (function() {
 		},
 		"log": function() {
 			// Perform BBCode conversion
-			$("#archive_conversation div p").each(function(line) { this.innerHTML = bbencode(this.innerHTML); });
+			$("#archive_conversation div p").each(function(line) { this.innerHTML = unsafe_bbencode(this.innerHTML); });
 		},
 	};
 })();
