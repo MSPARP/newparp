@@ -163,7 +163,6 @@ var msparp = (function() {
 	function bbencode(text) { return raw_bbencode(Handlebars.escapeExpression(text)); }
 	function raw_bbencode(text) {
 		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
-			console.log(tag + " / " + attribute + " / " + content)
 			tag = tag.toLowerCase();
 			if (attribute) {
 				switch (tag) {
@@ -171,6 +170,11 @@ var msparp = (function() {
 				    case "color":
 				    case "font":
 				        return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
+					case "url":
+						if ((attribute.startsWith("http://") || attribute.startsWith("https://"))) {
+							return $("<a>").attr({href: attribute, target: "_blank"}).html(raw_bbencode(content))[0].outerHTML;
+						}
+						break;
 				}
 			} else {
 				switch (tag) {
@@ -185,7 +189,7 @@ var msparp = (function() {
 				        return content;
 				}
 			}
-			return "[" + tag + "]" + raw_bbencode(content) + "[/" + tag + "]";
+			return "[" + tag + (attribute ? "=" + attribute : "") + "]" + raw_bbencode(content) + "[/" + tag + "]";
 		});
 	}
 
