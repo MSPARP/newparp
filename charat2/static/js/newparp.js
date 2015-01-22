@@ -171,7 +171,7 @@ var msparp = (function() {
 				    case "font":
 				        return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
 					case "url":
-						if ((attribute.startsWith("http://") || attribute.startsWith("https://"))) {
+						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
 							return $("<a>").attr({href: attribute, target: "_blank"}).html(raw_bbencode(content))[0].outerHTML;
 						}
 						break;
