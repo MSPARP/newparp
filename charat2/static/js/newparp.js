@@ -162,6 +162,7 @@ var msparp = (function() {
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family"}
 	function bbencode(text) { return raw_bbencode(Handlebars.escapeExpression(text)); }
 	function raw_bbencode(text) {
+		text = text.replace(/(\[br\])+/g, "<br>");
 		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
 			tag = tag.toLowerCase();
 			if (attribute) {
