@@ -166,10 +166,10 @@ var msparp = (function() {
 			tag = tag.toLowerCase();
 			if (attribute) {
 				switch (tag) {
-				    case "bgcolor":
-				    case "color":
-				    case "font":
-				        return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
+					case "bgcolor":
+					case "color":
+					case "font":
+						return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
 					case "url":
 						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
 							return $("<a>").attr({href: attribute, target: "_blank"}).html(raw_bbencode(content))[0].outerHTML;
@@ -178,15 +178,17 @@ var msparp = (function() {
 				}
 			} else {
 				switch (tag) {
-				    case "b":
-				    case "del":
-				    case "i":
-				    case "sub":
-				    case "sup":
-				    case "u":
-				        return "<" + tag + ">" + raw_bbencode(content) + "</" + tag + ">";
-				    case "raw":
-				        return content;
+					case "b":
+					case "del":
+					case "i":
+					case "sub":
+					case "sup":
+					case "u":
+						return "<" + tag + ">" + raw_bbencode(content) + "</" + tag + ">";
+					case "spoiler":
+						return "<label class=\"spoiler\">" + raw_bbencode(content) + "<input type=\"checkbox\"><span class=\"cover\"</span></label>";
+					case "raw":
+						return content;
 				}
 			}
 			return "[" + tag + (attribute ? "=" + attribute : "") + "]" + raw_bbencode(content) + "[/" + tag + "]";
