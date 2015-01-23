@@ -249,10 +249,10 @@ section > .close:first-child { float: right; margin: 5px; }
 .highlighted { background-color: #fff; }
 .ignored { display: none; }
 
-.spoiler { position: relative; cursor: pointer; }
+.spoiler { position: relative; padding: 0 2px; border: 1px dashed #ccc; cursor: pointer; }
 .spoiler input { display: none; }
-.spoiler .cover { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-color: #fbfbfb; }
-.spoiler input:checked + .cover { display: none; }
+.spoiler input + span + span, .spoiler input:checked + span { display: none; }
+.spoiler input:checked + span + span { display: inline; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
 #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }

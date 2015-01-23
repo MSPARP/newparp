@@ -187,7 +187,7 @@ var msparp = (function() {
 					case "u":
 						return "<" + tag + ">" + raw_bbencode(content) + "</" + tag + ">";
 					case "spoiler":
-						return "<label class=\"spoiler\">" + raw_bbencode(content) + "<input type=\"checkbox\"><span class=\"cover\"</span></label>";
+						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span> <span>" + raw_bbencode(content) + "</span></label>";
 					case "raw":
 						return content;
 				}
