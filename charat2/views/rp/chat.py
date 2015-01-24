@@ -261,7 +261,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
     messages = messages.limit(messages_per_page).offset((page - 1) * messages_per_page).all()
 
     if len(messages) == 0 and page != 1:
-        return redirect(url_for("rp_log", url=url))
+        return redirect(url_for("rp_log", url=url, fmt=fmt))
 
     if fmt == "json":
 
