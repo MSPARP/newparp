@@ -960,7 +960,7 @@ var msparp = (function() {
 		},
 		"log": function() {
 			// Perform BBCode conversion
-			$("#archive_conversation div p").each(function(line) { this.innerHTML = unsafe_bbencode(this.innerHTML); });
+			$("#archive_conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML); });
 		},
 	};
 })();

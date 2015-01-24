@@ -1,6 +1,6 @@
 import json
 
-from flask import abort, g, jsonify, make_response, request
+from flask import abort, g, jsonify, make_response, redirect, request
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
@@ -511,7 +511,6 @@ def save_from_character():
 
 
 @use_db_chat
-@mark_alive
 def save_variables():
 
     # Boolean variables.
@@ -543,6 +542,9 @@ def save_variables():
                 pass
         # XXX LENGTH LIMIT?
         setattr(g.chat_user, variable, list(temp_set))
+
+    if request.headers.get("X-Requested-With") != "XMLHttpRequest" and "Referer" in request.headers:
+        return redirect(request.headers["Referer"])
 
     return "", 204
 

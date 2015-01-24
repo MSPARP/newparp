@@ -227,9 +227,20 @@ def log(chat, pm_user, url, fmt=None, page=None):
         chat_dict['title'] = "Log with " + pm_user.username
         chat_dict['url'] = url
 
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except:
+        own_chat_user = None
+
     message_count = g.db.query(func.count('*')).select_from(Message).filter(
         Message.chat_id == chat.id,
-    ).scalar()
+    )
+    if own_chat_user is not None and not own_chat_user.show_connection_messages:
+        message_count = message_count.filter(~Message.type.in_(("join", "disconnect", "timeout")))
+    message_count = message_count.scalar()
 
     messages_per_page = 200
 
@@ -244,10 +255,13 @@ def log(chat, pm_user, url, fmt=None, page=None):
         Message.chat_id == chat.id,
     ).order_by(Message.id).options(
         joinedload(Message.chat_user),
-    ).limit(messages_per_page).offset((page - 1) * messages_per_page).all()
+    )
+    if own_chat_user is not None and not own_chat_user.show_connection_messages:
+        messages = messages.filter(~Message.type.in_(("join", "disconnect", "timeout")))
+    messages = messages.limit(messages_per_page).offset((page - 1) * messages_per_page).all()
 
-    if len(messages) == 0:
-        abort(404)
+    if len(messages) == 0 and page != 1:
+        return redirect(url_for("rp_log", url=url))
 
     if fmt == "json":
 
@@ -266,6 +280,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
 
     return render_template(
         "rp/chat/log.html",
+        own_chat_user=own_chat_user,
         url=url,
         chat=chat,
         messages=messages,
