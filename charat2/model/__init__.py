@@ -83,6 +83,8 @@ class User(Base):
     # Bcrypt hash.
     password = Column(String(60), nullable=False)
 
+    email_address = Column(String(100))
+
     group = Column(Enum(
         u"guest",
         u"active",

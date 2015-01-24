@@ -6,7 +6,7 @@ from urlparse import urlparse
 
 from charat2.model import User
 from charat2.model.connections import use_db
-from charat2.model.validators import username_validator, reserved_usernames
+from charat2.model.validators import username_validator, email_validator, reserved_usernames
 
 def referer_or_home():
     if "Referer" in request.headers:
@@ -67,6 +67,12 @@ def register_post():
     if request.form["password"] != request.form["password_again"]:
         return redirect(referer_or_home() + "?register_error=passwords_didnt_match")
 
+    # Check email address against email_validator.
+    # Silently truncate it because the only way it can be longer is if they've hacked the front end.
+    email_address = request.form["email_address"].strip()[:100]
+    if email_address != "" and email_validator.match(email_address) is None:
+        return redirect(referer_or_home() + "?register_error=invalid_email")
+
     # Check username against username_validator.
     # Silently truncate it because the only way it can be longer is if they've hacked the front end.
     username = request.form["username"][:50]
@@ -87,6 +93,7 @@ def register_post():
         password=hashpw(request.form["password"].encode(), gensalt()),
         # XXX uncomment this when we release it to the public.
         #group="active",
+        email_address=email_address if email_address != "" else None,
     )
     g.db.add(new_user)
     g.db.flush()
