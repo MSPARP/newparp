@@ -9,6 +9,7 @@
             <tr>
                 <th>#</th>
                 <th>Username</th>
+                <th>Group</th>
                 <th>Created</th>
             </tr>
         </thead>
@@ -17,6 +18,7 @@
             <tr>
                 <td>{{user.id}}</td>
                 <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
+                <td>{{user.group.capitalize()}}</td>
                 <td>{{user.created}}</td>
             </tr>
             {% endfor %}
