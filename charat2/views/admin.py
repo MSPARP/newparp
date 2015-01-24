@@ -2,6 +2,7 @@ from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
+from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
@@ -20,6 +21,34 @@ def announcements_get():
 def announcements_post():
     g.redis.set("announcements", request.form["announcements"])
     return redirect(url_for("admin_announcements"))
+
+
+@alt_formats(set(["json"]))
+@use_db
+@admin_required
+def user_list(fmt=None, page=1):
+    users = g.db.query(User).order_by(User.id).offset((page - 1) * 50).limit(50).all()
+    if len(users) == 0 and page != 1:
+        abort(404)
+    user_count = g.db.query(func.count('*')).select_from(User).scalar()
+    if fmt == "json":
+        return jsonify({
+            "total": user_count,
+            "users": [_.to_dict(include_options=True) for _ in users],
+        })
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=user_count,
+        url=lambda page: url_for("admin_user_list", page=page),
+    )
+    return render_template(
+        "admin/user_list.html",
+        users=users,
+        paginator=paginator,
+    )
+
 
 
 @alt_formats(set(["json"]))

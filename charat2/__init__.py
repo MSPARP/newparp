@@ -152,8 +152,9 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 app.add_url_rule("/admin/announcements", "admin_announcements", admin.announcements_get, methods=("GET",))
 app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 
-make_rules("admin", "/admin/user/<username>", admin.user, formats=True)
-app.add_url_rule("/admin/user/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
+make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
+make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
+app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 
 # XXX dear fucking lord we need traversal
 
