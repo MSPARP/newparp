@@ -135,7 +135,6 @@ var msparp = (function() {
 	function continue_search() {
 		if (searching) {
 			$.post("/" + search_type + "/continue", { "id": searcher_id }, function(data) {
-				console.log(data);
 				if (data.status == "matched") {
 					searching = false;
 					window.location.href = "/" + data.url;
@@ -198,6 +197,10 @@ var msparp = (function() {
 			return "[" + tag + (attribute ? "=" + attribute : "") + "]" + raw_bbencode(content, admin) + "[/" + tag + "]";
 		});
 	}
+	function bbremove(text) {
+		text = text.replace(/(\[br\])+/g, "");
+		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\](.*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
+	}
 
 	return {
 		// Homepage
@@ -249,10 +252,6 @@ var msparp = (function() {
 		},
 		// Chat window
 		"chat": function(chat, user, latest_message) {
-
-			console.log(chat);
-			console.log(user);
-			console.log(latest_message);
 
 			var conversation = $("#conversation");
 			var status;
@@ -409,7 +408,8 @@ var msparp = (function() {
 				) {
 					document.title = "New message - " + original_title;
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
-						new Notification(chat.title || "MSPARP", { "body": text.length <= 50 ? text : text.substr(0, 47) + "..." });
+						var text_without_bbcode = bbremove(text);
+						new Notification(chat.title || "MSPARP", { "body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "..." });
 					}
 				}
 			}
@@ -545,7 +545,6 @@ var msparp = (function() {
 					"group_chat_only": true,
 					"minimum_rank": 3,
 					"description": function(match) {
-						console.log(match);
 						var set_user = user_data[parseInt(match[1])];
 						if (!set_user || can_perform_action("ban", set_user.meta.group)) {
 							return "Ban " + name_from_user_number(parseInt(match[1])) + " from the chat.";
