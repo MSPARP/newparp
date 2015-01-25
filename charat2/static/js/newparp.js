@@ -395,7 +395,8 @@ var msparp = (function() {
 					var text = message.text;
 				}
 				var admin = (message.user_number && user_data[message.user_number] && user_data[message.user_number].meta.group == "admin");
-				p.html(bbencode(text, admin)).appendTo(div);
+				user.meta.show_bbcode ? p.html(bbencode(text, admin)) : p.text(bbremove(text));
+				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.appendTo(conversation);
@@ -625,7 +626,7 @@ var msparp = (function() {
 			}
 
 			// Perform BBCode conversion
-			$("#conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML, false); });
+			$("#conversation div p").each(function(line) { user.meta.show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).text(bbremove(this.innerHTML)); });
 
 			// Topbar and info panel
 			if (chat.type == "group") {
@@ -961,9 +962,9 @@ var msparp = (function() {
 			connect();
 
 		},
-		"log": function() {
+		"log": function(show_bbcode) {
 			// Perform BBCode conversion
-			$("#archive_conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML, false); });
+			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).text(bbremove(this.innerHTML)); });
 		},
 	};
 })();
