@@ -8,7 +8,8 @@ Contents:
 	1. Header
 	2. Navigation
 	3. Footer
-	4. Announcements
+	4. Responsive widths
+	5. Announcements
 2. Content
 	1. Forms
 	2. Toggle box
@@ -27,12 +28,12 @@ Contents:
 
 /* 1. Layout */
 
-body { background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
+body { margin: 8px; background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
 
 /* Header has top corners, main has bottom corners. */
 header, main { background-color: #ccc; border: 1px solid #999999; }
-header { margin: 20px 20px 0; padding: 20px; border-bottom: 0; }
-main { margin: 0 20px; padding: 20px; border-top: 0; font-family: Helvetica, Arial, sans-serif; font-weight: normal; }
+header { margin: 0 auto; padding: 20px; border-bottom: 0; }
+main { margin: 0 auto; padding: 20px; border-top: 0; font-family: Helvetica, Arial, sans-serif; font-weight: normal; }
 
 main > * { max-width: 40rem; }
 
@@ -40,17 +41,12 @@ main > * { max-width: 40rem; }
 main > :first-child { margin-top: 0; }
 main > :last-child { margin-bottom: 0; }
 
-@media (max-width: 600px) {
-	header { margin: 5px 5px 0; padding: 10px; }
-	main { margin: 0 5px; padding: 10px; }
-}
-
 /* 1.1. Header */
 
 #users_online { float: right; text-align: right; }
 #users_online p { margin: 0; }
 
-@media (max-width: 700px) {
+@media (max-width: 715px) {
 	/* XXX Put this somewhere else rather than hiding it? */
 	#users_online { display: none; }
 }
@@ -61,10 +57,10 @@ h1 img { display: block; max-width: 100%; }
 
 /* 1.2. Navigation */
 
-#global_navigation { margin: 0 20px; background-color: #ccc;  border-left: 1px solid #999999; border-right: 1px solid #999999; font-size: 10pt; text-transform: uppercase; }
+#global_navigation { margin: 0 auto; padding: 0 20px; background-color: #ccc;  border-left: 1px solid #999999; border-right: 1px solid #999999; font-size: 10pt; text-transform: uppercase; }
 #global_navigation, #global_navigation a { color: #eee; }
 #global_navigation label, #global_navigation input { display: none; }
-#global_navigation ul { margin: 0 20px; padding: 0; list-style-type: none; background-color: #626262; }
+#global_navigation ul { margin: 0; padding: 0; list-style-type: none; background-color: #626262; }
 #global_navigation li { display: inline-block; margin-left: 10px; }
 /* Padding so the whole height of the navbar is clickable */
 #global_navigation a, #global_navigation button { display: block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
@@ -74,7 +70,7 @@ h1 img { display: block; max-width: 100%; }
 #global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
 #global_navigation .user ul { margin: 0 0 0 -10px; }
 
-@media (min-width: 601px) {
+@media (min-width: 716px) {
 	#global_navigation .user { float: right; position: relative; }
 	#global_navigation .user ul { display: none; }
 	#global_navigation .user:hover ul { display: block; position: absolute; right: 0; }
@@ -82,31 +78,44 @@ h1 img { display: block; max-width: 100%; }
 	#global_navigation .user a { padding-right: 28px; }
 }
 
-@media (max-width: 600px) {
-	#global_navigation { margin: 0 5px; }
-	#global_navigation label { display: block; margin: 0 10px; padding: 7px 10px; background-color: #626262; cursor: pointer; }
+@media (max-width: 715px) {
+	#global_navigation label { display: block; padding: 7px 10px; background-color: #626262; cursor: pointer; }
 	#global_navigation label:hover { color: #fff; }
 	#global_navigation input:not(:checked) + ul { display: none; }
-	#global_navigation ul { margin: 0 10px; }
 	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; }
 	#global_navigation a { display: block; }
 }
 
 /* 1.3. Footer */
 
-footer { margin: 10px 20px; text-align: right; text-transform: uppercase; font-size: 12pt; }
+footer { margin: 10px auto; padding: 0 20px; text-align: right; text-transform: uppercase; font-size: 12pt; }
 footer, footer a { color: #ddd; }
 footer ul { margin: 0; padding: 0; list-style-type: none; }
-footer li { display: inline; margin-right: 20px; }
+footer li { display: inline; margin-left: 20px; }
 footer a { text-decoration: none; white-space: nowrap; }
 footer a:hover { color: #fff; }
 
-@media (max-width: 700px) {
+@media (max-width: 715px) {
 	footer { margin: 10px 5px; text-align: center; }
 	footer li { margin: 0 5px; }
 }
 
-/* 1.4. Announcements */
+/* 1.4. Responsive widths */
+
+header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
+@media (min-width: 1140px) { header, #global_navigation, main, footer { width: 95%; } }
+@media (min-width: 1250px) { header, #global_navigation, main, footer { width: 92%; } }
+@media (min-width: 1400px) { header, #global_navigation, main, footer { width: 88%; padding-left: 4%; padding-right: 4%; } }
+@media (min-width: 1600px) { header, #global_navigation, main, footer { width: 89%; padding-left: 7%; padding-right: 7%; } }
+@media (min-width: 1900px) { header, #global_navigation, main, footer { width: 90%; padding-left: 10%; padding-right: 10%; } }
+@media (max-width: 715px) {
+	header, #global_navigation, main, footer { width: 100%; padding-left: 10px; padding-right: 10px; border: none; }
+	header, main { padding-top: 10px; padding-bottom: 10px; }
+}
+@media (max-width: 543px) { body { margin: 0; } }
+
+
+/* 1.5. Announcements */
 
 #announcements { max-width: none; padding: 5px; background-color: #eee; }
 #announcements h2 { margin: 0; }
