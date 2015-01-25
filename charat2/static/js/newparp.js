@@ -159,9 +159,9 @@ var msparp = (function() {
 	}
 
 	// BBCode
-	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family"}
-	function bbencode(text) { return raw_bbencode(Handlebars.escapeExpression(text)); }
-	function raw_bbencode(text) {
+	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
+	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
+	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[br\])+/g, "<br>");
 		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
 			tag = tag.toLowerCase();
@@ -170,10 +170,13 @@ var msparp = (function() {
 					case "bgcolor":
 					case "color":
 					case "font":
-						return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content))[0].outerHTML;
+						return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML;
+					case "bshadow":
+					case "tshadow":
+						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
 					case "url":
 						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
-							return $("<a>").attr({href: attribute, target: "_blank"}).html(raw_bbencode(content))[0].outerHTML;
+							return $("<a>").attr({href: attribute, target: "_blank"}).html(raw_bbencode(content, admin))[0].outerHTML;
 						}
 						break;
 				}
@@ -185,14 +188,14 @@ var msparp = (function() {
 					case "sub":
 					case "sup":
 					case "u":
-						return "<" + tag + ">" + raw_bbencode(content) + "</" + tag + ">";
+						return "<" + tag + ">" + raw_bbencode(content, admin) + "</" + tag + ">";
 					case "spoiler":
-						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span> <span>" + raw_bbencode(content) + "</span></label>";
+						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span> <span>" + raw_bbencode(content, admin) + "</span></label>";
 					case "raw":
 						return content;
 				}
 			}
-			return "[" + tag + (attribute ? "=" + attribute : "") + "]" + raw_bbencode(content) + "[/" + tag + "]";
+			return "[" + tag + (attribute ? "=" + attribute : "") + "]" + raw_bbencode(content, admin) + "[/" + tag + "]";
 		});
 	}
 
@@ -312,11 +315,6 @@ var msparp = (function() {
 					}
 					return;
 				}
-				if (typeof data.messages != "undefined" && data.messages.length != 0) {
-					var scroll_after_render = is_at_bottom();
-					data.messages.forEach(render_message);
-					if (scroll_after_render) { scroll_to_bottom(); }
-				}
 				if (typeof data.chat != "undefined") {
 					chat = data.chat;
 					if (chat.type == "group") {
@@ -375,6 +373,11 @@ var msparp = (function() {
 						}
 					}
 				}
+				if (typeof data.messages != "undefined" && data.messages.length != 0) {
+					var scroll_after_render = is_at_bottom();
+					data.messages.forEach(render_message);
+					if (scroll_after_render) { scroll_to_bottom(); }
+				}
 			}
 			function render_message(message) {
 				latest_message = message.id;
@@ -392,7 +395,8 @@ var msparp = (function() {
 				} else {
 					var text = message.text;
 				}
-				p.html(bbencode(text)).appendTo(div);
+				var admin = (message.user_number && user_data[message.user_number] && user_data[message.user_number].meta.group == "admin");
+				p.html(bbencode(text, admin)).appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.appendTo(conversation);
@@ -622,7 +626,7 @@ var msparp = (function() {
 			}
 
 			// Perform BBCode conversion
-			$("#conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML); });
+			$("#conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML, false); });
 
 			// Topbar and info panel
 			if (chat.type == "group") {
@@ -960,7 +964,7 @@ var msparp = (function() {
 		},
 		"log": function() {
 			// Perform BBCode conversion
-			$("#archive_conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML); });
+			$("#archive_conversation div p").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML, false); });
 		},
 	};
 })();
