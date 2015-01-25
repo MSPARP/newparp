@@ -6,7 +6,7 @@ from urlparse import urlparse
 
 from charat2.model import User
 from charat2.model.connections import use_db
-from charat2.model.validators import username_validator, email_validator, reserved_usernames
+from charat2.model.validators import username_validator, email_validator, reserved_usernames, secret_answer_replacer
 
 def referer_or_home():
     if "Referer" in request.headers:
@@ -90,10 +90,15 @@ def register_post():
 
     new_user = User(
         username=username,
-        password=hashpw(request.form["password"].encode(), gensalt()),
+        password=hashpw(request.form["password"].encode("utf8"), gensalt()),
         # XXX uncomment this when we release it to the public.
         #group="active",
         email_address=email_address if email_address != "" else None,
+        secret_question=request.form["secret_question"][:50],
+        secret_answer=hashpw(
+            secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
+            gensalt(),
+        ),
     )
     g.db.add(new_user)
     g.db.flush()
