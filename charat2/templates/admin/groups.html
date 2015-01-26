@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title: %}Group chats - {% endblock %}
+{% block content: %}
+    <h2>Group chats</h2>
+    {{ pager() }}
+    {% if groups: %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Style</th>
+                <th>Level</th>
+                <th>Publicity</th>
+                <th>Creator</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chat in groups: %}
+            <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
+                <td>{{chat.id}}</td>
+                <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
+                <td>{{chat.style.capitalize()}}</td>
+                <td>{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}</td>
+                <td>{{chat.publicity.capitalize()}}</td>
+                <td><a href="{{url_for("admin_user", username=chat.creator.username)}}">{{chat.creator.username}}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>No group chats.</p>
+    {% endif %}
+    {{ pager() }}
+{% endblock %}
+

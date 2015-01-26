@@ -6,7 +6,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
-from charat2.model import SearchCharacter, SearchCharacterChoice, User
+from charat2.model import GroupChat, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 
 
@@ -92,4 +92,36 @@ def user_set_group(username):
     else:
         abort(400)
     return redirect(url_for("admin_user", username=user.username))
+
+
+@alt_formats(set(["json"]))
+@use_db
+@admin_required
+def groups(fmt=None, page=1):
+    groups = (
+        g.db.query(GroupChat)
+        .order_by(GroupChat.id)
+        .options(joinedload(GroupChat.creator))
+        .offset((page - 1) * 50).limit(50).all()
+    )
+    if len(groups) == 0 and page != 1:
+        abort(404)
+    group_count = g.db.query(func.count('*')).select_from(GroupChat).scalar()
+    if fmt == "json":
+        return jsonify({
+            "total": chat_count,
+            "groups": [_.to_dict() for _ in groups],
+        })
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=group_count,
+        url=lambda page: url_for("admin_groups", page=page),
+    )
+    return render_template(
+        "admin/groups.html",
+        groups=groups,
+        paginator=paginator,
+    )
 

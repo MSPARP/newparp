@@ -156,5 +156,7 @@ make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
 make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 
+make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
+
 # XXX dear fucking lord we need traversal
 
