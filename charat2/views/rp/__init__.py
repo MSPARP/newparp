@@ -1,6 +1,7 @@
 import os
 import json
 from flask import abort, g, jsonify, make_response, render_template, request, redirect, url_for
+from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -44,7 +45,25 @@ def home():
 @use_db
 def groups(fmt=None):
 
-    groups_query = g.db.query(GroupChat).filter(GroupChat.publicity.in_(("listed", "pinned")))
+    style_filter = set()
+    for style in ("script", "paragraph", "either"):
+        if style in request.args:
+            style_filter.add(style)
+    if not style_filter:
+        style_filter.add("script")
+
+    level_filter = set()
+    for level in ("sfw", "nsfw", "nsfw-extreme"):
+        if level in request.args:
+            level_filter.add(level)
+    if not level_filter:
+        level_filter.add("sfw")
+
+    groups_query = g.db.query(GroupChat).filter(and_(
+        GroupChat.publicity.in_(("listed", "pinned")),
+        GroupChat.style.in_(style_filter),
+        GroupChat.level.in_(level_filter),
+    ))
     groups = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in groups_query]
     groups.sort(key=lambda _: (_[0].publicity, _[1]), reverse=True)
     chat_dicts = []
@@ -57,5 +76,10 @@ def groups(fmt=None):
             "chats": chat_dicts,
         })
 
-    return render_template("rp/groups.html", groups=chat_dicts)
+    return render_template(
+        "rp/groups.html",
+        groups=chat_dicts,
+        style_filter=style_filter,
+        level_filter=level_filter,
+    )
 

@@ -16,17 +16,19 @@
         </form>
     </div>
     <h2>Existing group chats</h2>
-    <!-- needz moar back end code for filtering by level -->
-    <!--<form action="#" method="get">
-        <p>
-            <label>Show: <select name="level">
-                <option value="sfw">SFW only</option>
-                <option value="all">SFW and NSFW</option>
-                <option value="nsfw">NSFW only</option>
-            </select></label>
-            <button type="submit">Show</button>
-        </p>
-    </form>-->
+    <form action="{{url_for("rp_groups")}}" method="get">
+        <p>Style:
+			<label><input type="checkbox" name="script"{% if "script" in style_filter: %} checked="checked"{% endif %}> Script</label>
+			<label><input type="checkbox" name="paragraph"{% if "paragraph" in style_filter: %} checked="checked"{% endif %}> Paragraph</label>
+			<label><input type="checkbox" name="either"{% if "either" in style_filter: %} checked="checked"{% endif %}> Either</label>
+		</p>
+        <p>Level:
+			<label><input type="checkbox" name="sfw"{% if "sfw" in level_filter: %} checked="checked"{% endif %}> SFW</label>
+			<label><input type="checkbox" name="nsfw"{% if "nsfw" in level_filter: %} checked="checked"{% endif %}> NSFW</label>
+			<label><input type="checkbox" name="nsfw-extreme"{% if "nsfw-extreme" in level_filter: %} checked="checked"{% endif %}> NSFW extreme</label>
+		</p>
+        <p><button type="submit">Apply</button></p>
+    </form>
     <ul id="group_chats">
         {% for chat in groups: %}
         <li>
