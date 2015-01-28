@@ -1,5 +1,7 @@
 var msparp = (function() {
 
+	var body = $(document.body);
+
 	// Remember toggle box state
 	$(".toggle_box > input:first-child").change(function() {
 		if (this.id) { localStorage.setItem(this.id, this.checked); }
@@ -16,10 +18,12 @@ var msparp = (function() {
 		$("input[name=name]").val(data["name"]);
 		$("input[name=alias]").val(data["alias"]).keyup();
 		$("input[name=color]").val("#"+data["color"]).change();
-		if (typeof data["text_preview"]!= "undefined") {
-			$("#text_preview").text(data["text_preview"]);
-		} else if (typeof data["search_character"]!= "undefined") {
-			$("#text_preview").text(data["search_character"]["text_preview"]);
+		if (!body.hasClass("chat")) {
+			if (typeof data["text_preview"]!= "undefined") {
+				$("#text_preview").text(data["text_preview"]);
+			} else if (typeof data["search_character"]!= "undefined") {
+				$("#text_preview").text(data["search_character"]["text_preview"]);
+			}
 		}
 		if (data["quirk_prefix"] != "" || data["quirk_suffix"] != "" || data["case"] != "normal" || data["replacements"].length != 0 || data["regexes"].length != 0) {
 			$("#toggle_typing_quirks").prop("checked", true).change();
@@ -47,7 +51,7 @@ var msparp = (function() {
 		return false;
 	}
 	function add_replacement(e, from, to) {
-		var size = $(document.body).hasClass("chat") ? 7 : 10;
+		var size = body.hasClass("chat") ? 7 : 10;
 		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
@@ -69,7 +73,7 @@ var msparp = (function() {
 		return false;
 	}
 	function add_regex(e, from, to) {
-		var size = $(document.body).hasClass("chat") ? 7 : 10;
+		var size = body.hasClass("chat") ? 7 : 10;
 		new_item = $("<li><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"regex_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_regex\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
@@ -122,13 +126,13 @@ var msparp = (function() {
 	function start_search() {
 		if (!searching) {
 			searching = true;
-			$(document.body).addClass("searching");
+			body.addClass("searching");
 			$.post("/" + search_type, {}, function(data) {
 				searcher_id = data.id;
 				continue_search();
 			}).error(function() {
 				searching = false;
-				$(document.body).removeClass("searching").addClass("search_error");
+				body.removeClass("searching").addClass("search_error");
 			});
 		}
 	}
@@ -154,7 +158,7 @@ var msparp = (function() {
 	function stop_search() {
 		searching = false;
 		$.ajax("/" + search_type + "/stop", { "type": "POST", data: { "id": searcher_id }, "async": false });
-		$(document.body).removeClass("searching");
+		body.removeClass("searching");
 	}
 
 	// BBCode
@@ -933,7 +937,7 @@ var msparp = (function() {
 				status = "chatting";
 				launch_long_poll();
 				window.setTimeout(ping, 10000);
-				$(document.body).addClass("chatting");
+				body.addClass("chatting");
 				$("#send_form input, #send_form button").prop("disabled", false);
 				text_preview.css("color", "#" + user.character.color);
 				text_input.css("color", "#" + user.character.color);
@@ -943,7 +947,7 @@ var msparp = (function() {
 			}
 			function exit() {
 				status = "disconnected";
-				$(document.body).removeClass("chatting");
+				body.removeClass("chatting");
 				$("#send_form input, #send_form button:not(#abscond_button)").prop("disabled", true);
 				if (chat.type == "group") {
 					info_panel.hide();
