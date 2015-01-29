@@ -123,6 +123,11 @@ def create_chat():
     if url_validator.match(lower_url) is None:
         return redirect(url_for("rp_groups", create_chat_error="url_invalid"))
 
+    title = url.replace("_", " ").strip()
+    # Don't allow titles to consist entirely of spaces. #idlersmells
+    if len(title) == 0:
+        title = lower_url
+
     # Check the URL against the routing to make sure it doesn't crash into any
     # of the other routes.
     route, args = current_app.url_map.bind("").match("/" + lower_url)
@@ -136,7 +141,7 @@ def create_chat():
 
     g.db.add(GroupChat(
         url=lower_url,
-        title=url.replace("_", " "),
+        title=title,
         creator_id=g.user.id,
     ))
     return redirect(url_for("rp_chat", url=lower_url))
