@@ -206,7 +206,7 @@ textarea { width: 100%; resize: vertical; }
 
 /* 4. Chat window */
 
-.chat { background-color: #ccc; font-size: 12px; word-wrap: break-word; }
+body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break-word; }
 .chat h2, .chat h3, .chat p { margin: 5px; }
 .chat h2 { font-size: 14pt; }
 .chat h3 { font-size: 12px; }
