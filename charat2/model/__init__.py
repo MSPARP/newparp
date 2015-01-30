@@ -203,7 +203,7 @@ class Character(Base):
             "color": self.color,
         }
         if include_default:
-            ucd["is_default"] = self.id == self.user.default_character_id
+            ucd["default"] = self.id == self.user.default_character_id
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
             ucd["quirk_suffix"] = self.quirk_suffix
