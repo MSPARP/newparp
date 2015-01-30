@@ -166,7 +166,7 @@ var msparp = (function() {
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[br\])+/g, "<br>");
-		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\](.*?)\[\/\1\]/g, function(str, tag, attribute, content) {
+		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, attribute, content) {
 			tag = tag.toLowerCase();
 			if (attribute) {
 				switch (tag) {
@@ -203,7 +203,7 @@ var msparp = (function() {
 	}
 	function bbremove(text) {
 		text = text.replace(/(\[br\])+/g, "");
-		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\](.*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
+		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
 	}
 
 	return {
@@ -322,8 +322,13 @@ var msparp = (function() {
 					chat = data.chat;
 					if (chat.type == "group") {
 						topic.text(chat.topic);
-						description.text(chat.description);
-						rules.text(chat.rules);
+						if (user.meta.show_bbcode) {
+							description.html(bbencode(chat.description, false));
+							rules.html(bbencode(chat.rules, false));
+						} else {
+							description.text(bbremove(chat.description));
+							rules.text(bbremove(chat.rules));
+						}
 						flag_autosilence.prop("checked", chat.autosilence);
 						flag_publicity.prop("checked", chat.publicity == "listed" || chat.publicity == "pinned");
 						flag_publicity.prop("disabled", chat.publicity == "pinned");
