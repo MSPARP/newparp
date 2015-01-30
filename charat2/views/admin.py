@@ -109,7 +109,7 @@ def groups(fmt=None, page=1):
     group_count = g.db.query(func.count('*')).select_from(GroupChat).scalar()
     if fmt == "json":
         return jsonify({
-            "total": chat_count,
+            "total": group_count,
             "groups": [_.to_dict() for _ in groups],
         })
     paginator = paginate.Page(
