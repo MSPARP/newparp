@@ -18,7 +18,7 @@ def character_list(fmt=None):
     ).order_by(Character.title, Character.id).all()
 
     if fmt == "json":
-        return jsonify({ "characters": [_.to_dict() for _ in characters] })
+        return jsonify({ "characters": [_.to_dict(include_default=True) for _ in characters] })
 
     return render_template(
         "rp/characters/character_list.html",
@@ -47,7 +47,7 @@ def character(character_id, fmt=None):
     ).options(joinedload(SearchCharacterGroup.characters)).all()
 
     if fmt == "json":
-        return jsonify(character.to_dict(include_options=True))
+        return jsonify(character.to_dict(include_default=True, include_options=True))
 
     return render_template(
         "rp/characters/character.html",

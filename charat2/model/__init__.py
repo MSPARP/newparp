@@ -193,7 +193,7 @@ class Character(Base):
             })
         return tags
 
-    def to_dict(self, include_options=False):
+    def to_dict(self, include_default=False, include_options=False):
         ucd = {
             "id": self.id,
             "title": self.title,
@@ -202,6 +202,8 @@ class Character(Base):
             "alias": self.alias,
             "color": self.color,
         }
+        if include_default:
+            ucd["is_default"] = self.id == self.user.default_character_id
         if include_options:
             ucd["quirk_prefix"] = self.quirk_prefix
             ucd["quirk_suffix"] = self.quirk_suffix
