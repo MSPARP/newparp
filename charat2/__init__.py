@@ -149,6 +149,8 @@ app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
 # 10. Admin
 
+app.add_url_rule("/admin", "admin_home", admin.home, methods=("GET",))
+
 app.add_url_rule("/admin/announcements", "admin_announcements", admin.announcements_get, methods=("GET",))
 app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 

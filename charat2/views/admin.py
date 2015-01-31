@@ -12,6 +12,12 @@ from charat2.model.connections import use_db
 
 @use_db
 @admin_required
+def home():
+    return render_template("admin/home.html")
+
+
+@use_db
+@admin_required
 def announcements_get():
     return render_template("admin/announcements.html")
 
