@@ -412,7 +412,7 @@ var msparp = (function() {
 				if (
 					(document.hidden || document.webkitHidden || document.msHidden)
 					// Skip notifications for system messages if we're hiding them.
-					&& (user.meta.show_connection_messages || ["join", "disconnect", "timeout"].indexOf(message.type) == -1)
+					&& (user.meta.show_system_messages || ["ic", "ooc", "me", "global"].indexOf(message.type) != -1)
 					// Skip notifications if we're ignoring this person.
 					&& user.meta.ignored_numbers.indexOf(message.user_number) == -1
 				) {
@@ -801,7 +801,7 @@ var msparp = (function() {
 			$("#desktop_notifications").prop("disabled", typeof Notification == "undefined");
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
-				user.meta.show_connection_messages ? conversation.removeClass("hide_connection_messages") : conversation.addClass("hide_connection_messages");
+				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
 				resize_conversation();
 			}
 			$("#subscribed").click(function() {

@@ -517,7 +517,7 @@ def save_variables():
     for variable in [
         "confirm_disconnect",
         "desktop_notifications",
-        "show_connection_messages",
+        "show_system_messages",
         "show_bbcode",
         "show_preview",
     ]:

@@ -243,8 +243,8 @@ def log(chat, pm_user, url, fmt=None, page=None):
     message_count = g.db.query(func.count('*')).select_from(Message).filter(
         Message.chat_id == chat.id,
     )
-    if own_chat_user is not None and not own_chat_user.show_connection_messages:
-        message_count = message_count.filter(~Message.type.in_(("join", "disconnect", "timeout")))
+    if own_chat_user is not None and not own_chat_user.show_system_messages:
+        message_count = message_count.filter(Message.type.in_(("ic", "ooc", "me")))
     message_count = message_count.scalar()
 
     messages_per_page = 200
@@ -261,8 +261,8 @@ def log(chat, pm_user, url, fmt=None, page=None):
     ).order_by(Message.id).options(
         joinedload(Message.chat_user),
     )
-    if own_chat_user is not None and not own_chat_user.show_connection_messages:
-        messages = messages.filter(~Message.type.in_(("join", "disconnect", "timeout")))
+    if own_chat_user is not None and not own_chat_user.show_system_messages:
+        messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
     messages = messages.limit(messages_per_page).offset((page - 1) * messages_per_page).all()
 
     if len(messages) == 0 and page != 1:

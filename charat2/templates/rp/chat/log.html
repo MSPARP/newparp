@@ -6,8 +6,8 @@
 {% if own_chat_user: %}
 <form action="{{url_for("save_variables")}}" method="POST">
     <input type="hidden" name="chat_id" value="{{chat.id}}">
-    <input type="hidden" name="show_connection_messages" value="{{"off" if own_chat_user.show_connection_messages else "on"}}">
-    <p><button>{{"Hide" if own_chat_user.show_connection_messages else "Show"}} connection messages</button></p>
+    <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
+    <p><button>{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
 </form>
 {% endif %}
 

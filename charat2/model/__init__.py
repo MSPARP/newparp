@@ -127,7 +127,7 @@ class User(Base):
 
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
-    show_connection_messages = Column(Boolean, nullable=False, default=True)
+    show_system_messages = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_preview = Column(Boolean, nullable=False, default=True)
 
@@ -432,7 +432,7 @@ class ChatUser(Base):
 
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
-    show_connection_messages = Column(Boolean, nullable=False, default=True)
+    show_system_messages = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_preview = Column(Boolean, nullable=False, default=True)
 
@@ -456,7 +456,7 @@ class ChatUser(Base):
             regexes=character.regexes,
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
-            show_connection_messages=user.show_connection_messages,
+            show_system_messages=user.show_system_messages,
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
             **kwargs
@@ -471,7 +471,7 @@ class ChatUser(Base):
                 user_id=user.id,
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
-                show_connection_messages=user.show_connection_messages,
+                show_system_messages=user.show_system_messages,
                 show_bbcode=user.show_bbcode,
                 show_preview=user.show_preview,
                 **kwargs
@@ -489,7 +489,7 @@ class ChatUser(Base):
             regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
-            show_connection_messages=user.show_connection_messages,
+            show_system_messages=user.show_system_messages,
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
             **kwargs
@@ -560,7 +560,7 @@ class ChatUser(Base):
             ucd["meta"]["subscribed"] = self.subscribed
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
-            ucd["meta"]["show_connection_messages"] = self.show_connection_messages
+            ucd["meta"]["show_system_messages"] = self.show_system_messages
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
             ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
