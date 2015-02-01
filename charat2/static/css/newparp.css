@@ -253,7 +253,8 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
-.hide_connection_messages .message_join, .hide_connection_messages .message_disconnect, .hide_connection_messages .message_timeout { display: none; }
+.hide_system_messages > div { display: none; }
+.hide_system_messages .message_ic, .hide_system_messages .message_ooc, .hide_system_messages .message_me, .hide_system_messages .message_global { display: block; }
 .unum { float: left; padding: 2px 0 2px 5px; }
 .highlighted { background-color: #fff; }
 .ignored { display: none; }
