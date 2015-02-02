@@ -168,6 +168,9 @@ def chat(chat, pm_user, url, fmt=None):
             ChatUser.chat_id == chat.id,
         )).one()
     except NoResultFound:
+        # Don't allow more than 2 people in roulette chats.
+        if chat.type == "roulette":
+            return redirect(url_for("rp_log", url=url))
         new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
         chat_user = ChatUser.from_user(g.user, chat_id=chat.id, number=new_number)
         if chat.type == "group" and g.user.id != chat.creator_id:
