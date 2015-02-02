@@ -48,7 +48,7 @@ def mark_alive(f):
             # Add them to the online list.
             g.redis.sadd("chat:%s:online" % g.chat.id, g.user.id)
             # Send join message. Or not, if they're silent.
-            if g.chat_user.group == "silent":
+            if g.chat_user.group == "silent" or g.chat.type == "roulette":
                 send_userlist(g.db, g.redis, g.chat)
             else:
                 send_message(g.db, g.redis, Message(

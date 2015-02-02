@@ -42,7 +42,7 @@ if __name__ == "__main__":
                 )).options(joinedload(ChatUser.chat), joinedload(ChatUser.user)).one()
             except NoResultFound:
                 pass
-            if dead_chat_user.group == "silent":
+            if dead_chat_user.group == "silent" or dead_chat_user.chat.type == "roulette":
                 send_userlist(db, redis, dead_chat_user.chat)
             else:
                 send_message(db, redis, Message(

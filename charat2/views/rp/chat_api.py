@@ -560,7 +560,7 @@ def quit():
     if disconnect(g.redis, g.chat_id, g.user_id):
         db_connect()
         get_chat_user()
-        if g.chat_user.group == "silent":
+        if g.chat_user.group == "silent" or g.chat.type == "roulette":
             send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
