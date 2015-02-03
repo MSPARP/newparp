@@ -3,6 +3,7 @@
 {% block content: %}
     <h2>Admin tools</h2>
     <ul>
+        <li><a href="{{url_for("rp_search_character_list")}}">Search character creator</a></li>
         <li><a href="{{url_for("admin_announcements")}}">Edit announcements</a></li>
         <li><a href="{{url_for("admin_user_list")}}">Full user list</a></li>
         <li><a href="{{url_for("admin_groups")}}">Full group chat list</a></li>

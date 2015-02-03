@@ -254,6 +254,10 @@ var msparp = (function() {
 		"character": function() {
 			initialize_character_form();
 		},
+		// Search character pages
+		"search_character": function() {
+			initialize_character_form();
+		},
 		// Chat window
 		"chat": function(chat, user, latest_message) {
 

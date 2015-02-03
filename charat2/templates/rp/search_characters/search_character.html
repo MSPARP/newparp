@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title: %}{{character.title}} - Search character creator - {% endblock %}
+{% block content: %}
+    <form action="{{url_for("rp_save_search_character", id=character.id)}}" method="post">
+        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></h2>
+        <h2>With settings</h2>
+        <div class="input_table">
+            <p>
+                <label for="name_input">Name:</label>
+                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name}}">
+            </p>
+            <p>
+                <label for="alias_input">Alias:</label>
+                <input type="text" id="alias_input" name="alias" size="15" maxlength="15" value="{{character.alias}}">
+            </p>
+            <p>
+                <label for="color_input">Color:</label>
+                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}">
+            </p>
+        </div>
+        <h2>Typing quirks</h2>
+        <div class="input_table">
+            <p>
+                <label>Prefix:</label>
+                <input type="text" name="quirk_prefix" size="50" maxlength="50" value="{{character.quirk_prefix}}">
+            </p>
+            <p>
+                <label>Suffix:</label>
+                <input type="text" name="quirk_suffix" size="50" maxlength="50" value="{{character.quirk_suffix}}">
+            </p>
+            <p>
+                <label>Case:</label>
+                <select name="case">
+                    {% for value, name in case_options.items()|sort: %}
+                    <option value="{{value}}"{% if value == character.case %} selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+            </p>
+        </div>
+        <h3>Simple replacements</h3>
+        <ul id="replacement_list">
+            {% if character.replacements|length != 0: %}
+            {% for replacement in character.replacements: %}
+            <li><input type="text" name="quirk_from" size="10" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
+            {% endfor %}
+            {% else %}
+            <li><input type="text" name="quirk_from" size="10"> to <input type="text" name="quirk_to" size="10"> <button type="button" class="delete_replacement">x</button></li>
+            {% endif %}
+        </ul>
+        <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
+        <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
+        <ul id="regex_list">
+            {% if character.regexes|length != 0: %}
+            {% for regex in character.regexes: %}
+            <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
+            {% endfor %}
+            {% else %}
+            <li><input type="text" name="regex_from" size="10"> to <input type="text" name="regex_to" size="10"> <button type="button" class="delete_regex">x</button></li>
+            {% endif %}
+        </ul>
+        <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
+{% block scripts: %}
+<script>msparp.search_character();</script>
+{% endblock %}

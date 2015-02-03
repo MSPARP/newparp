@@ -33,7 +33,7 @@ def validate_character_form(form):
     try:
         search_character_id = int(form["search_character_id"])
         g.db.query(SearchCharacter).filter(SearchCharacter.id == search_character_id).one()
-    except (ValueError, NoResultFound):
+    except (KeyError, ValueError, NoResultFound):
         # id 1 always exists so fall back to that.
         search_character_id = 1
 
