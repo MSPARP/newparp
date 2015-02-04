@@ -90,7 +90,7 @@ def send():
         abort(400)
 
     # Change double spaces to no-break space.
-    text = request.form["text"].replace("  ", u" \u00A0")
+    text = request.form["text"].strip().replace("  ", u" \u00A0")[:5000]
     if text == "":
         abort(400)
 
@@ -242,19 +242,22 @@ def user_action():
             Ban.user_id == set_user.id,
         )).scalar() != 0:
             return "", 204
+        reason = None
+        if "reason" in request.form:
+            reason = request.form["reason"].strip()[:500] or None
         g.db.add(Ban(
             user_id=set_user.id,
             chat_id=g.chat.id,
             creator_id=g.user.id,
-            reason=request.form.get("reason"),
+            reason=reason,
         ))
-        if request.form.get("reason") is not None and request.form["reason"].strip() != "":
+        if request.form.get("reason") is not None:
             ban_message = (
                 "%s [%s] banned %s [%s] from the chat. Reason: %s"
             ) % (
                 g.chat_user.name, g.chat_user.alias,
                 set_chat_user.name, set_chat_user.alias,
-                request.form["reason"].strip(),
+                reason,
             )
         else:
             ban_message = (
@@ -360,7 +363,7 @@ def set_topic():
     if not g.chat_user.can("set_topic"):
         abort(403)
 
-    topic = request.form["topic"].strip()
+    topic = request.form["topic"].strip()[:500]
     # If it hasn't changed, don't bother sending a message about it.
     if topic == g.chat.topic:
         return "", 204
