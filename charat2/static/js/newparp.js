@@ -512,6 +512,7 @@ var msparp = (function() {
 					"minimum_rank": 1,
 					"description": function(match) {
 						var new_topic = match[1].trim();
+						if (new_topic.length > 500) { return "Topics can only be 500 characters long."; }
 						return new_topic ? "Set the topic to \"" + new_topic + "\"" : "Remove the topic.";
 					},
 					"action": function(match) {
@@ -562,6 +563,7 @@ var msparp = (function() {
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
 						if (!set_user || can_perform_action("ban", set_user.meta.group)) {
+							if ((match[2] || "").trim().length > 500) { return "Ban reasons can only be 500 characters long."; }
 							return "Ban " + name_from_user_number(parseInt(match[1])) + " from the chat.";
 						} else {
 							return "Your current privileges don't allow you to ban " + set_user.character.name + ".";
