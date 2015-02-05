@@ -402,8 +402,8 @@ def set_info():
     if not g.chat_user.can("set_info"):
         abort(403)
 
-    description = request.form["description"].strip()
-    rules = request.form["rules"].strip()
+    description = request.form["description"].strip()[:5000]
+    rules = request.form["rules"].strip()[:5000]
     # If it hasn't changed, don't bother sending a message about it.
     if (description == g.chat.description and rules == g.chat.rules):
         return "", 204
