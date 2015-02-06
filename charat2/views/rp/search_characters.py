@@ -73,6 +73,7 @@ def save_search_character(id):
     character.case = new_details["case"]
     character.replacements = new_details["replacements"]
     character.regexes = new_details["regexes"]
+    character.text_preview = request.form["text_preview"]
     # Remember to clear the cache
     g.redis.delete("search_character:%s" % id)
     return redirect(url_for("rp_search_character_list"))

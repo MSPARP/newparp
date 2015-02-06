@@ -258,6 +258,7 @@ var msparp = (function() {
 		// Search character pages
 		"search_character": function() {
 			initialize_character_form();
+			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
 		},
 		// Chat window
 		"chat": function(chat, user, latest_message) {
