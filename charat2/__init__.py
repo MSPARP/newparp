@@ -50,6 +50,8 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
 app.add_url_rule("/", "home", rp.home, methods=("GET",))
 
 app.add_url_rule("/search_characters", "rp_search_character_list", search_characters.search_character_list, methods=("GET",))
+app.add_url_rule("/search_characters/new", "rp_new_search_character_get", search_characters.new_search_character_get, methods=("GET",))
+app.add_url_rule("/search_characters/new", "rp_new_search_character_post", search_characters.new_search_character_post, methods=("POST",))
 app.add_url_rule("/search_characters/<int:id>", "rp_search_character", search_characters.search_character, methods=("GET",))
 app.add_url_rule("/search_characters/<int:id>.json", "rp_search_character_json", search_characters.search_character_json, methods=("GET",))
 app.add_url_rule("/search_characters/<int:id>/save", "rp_save_search_character", search_characters.save_search_character, methods=("POST",))

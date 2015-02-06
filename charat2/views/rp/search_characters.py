@@ -1,6 +1,7 @@
 import json
 
 from flask import abort, g, make_response, redirect, render_template, request, url_for
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -33,6 +34,43 @@ def search_character(id):
         character=character.to_dict(include_options=True),
         case_options=case_options,
     )
+
+
+@use_db
+@admin_required
+def new_search_character_get():
+    groups = g.db.query(SearchCharacterGroup).order_by(SearchCharacterGroup.order).all()
+    return render_template(
+        "rp/search_characters/search_character.html",
+        groups=groups,
+        case_options=case_options,
+    )
+
+
+@use_db
+@admin_required
+def new_search_character_post():
+    new_details = validate_character_form(request.form)
+    del new_details["search_character_id"]
+    try:
+        group = g.db.query(SearchCharacterGroup).filter(
+            SearchCharacterGroup.id == request.form["group_id"],
+        ).one()
+    except NoResultFound:
+        abort(404)
+    order = (
+        g.db.query(func.max(SearchCharacter.order))
+        .filter(SearchCharacter.group_id == group.id)
+        .scalar() or 0
+    ) + 1
+    new_search_character = SearchCharacter(
+        group_id=group.id,
+        order=order,
+        text_preview=request.form["text_preview"],
+        **new_details
+    )
+    g.db.add(new_search_character)
+    return redirect(url_for("rp_search_character_list"))
 
 
 def search_character_json(id):

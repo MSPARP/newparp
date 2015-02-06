@@ -33,7 +33,7 @@
                 </p>
             </div>
             <p id="text_preview_container" style="color: #{{g.user.color}};">
-                <span id="text_preview_alias">{{g.user.alias}}: </span><span id="text_preview">{{g.user.search_character.text_preview}}</span>
+                <span id="text_preview_alias">{% if g.user.alias != "": %}{{g.user.alias}}: {% endif %}</span><span id="text_preview">{{g.user.search_character.text_preview}}</span>
             </p>
         </div>
         <div class="toggle_box">
