@@ -396,9 +396,12 @@ var msparp = (function() {
 				}
 			}
 			function render_message(message) {
-				latest_message = message.id;
 				// XXX yeah you should be using a template here
-				var div = $("<div>").attr("id", "message_" + message.id);
+				var div = $("<div>");
+				if (message.id) {
+					latest_message = message.id;
+					div.attr("id", "message_" + message.id);
+				}
 				div.addClass("message_" + message.type + " unum_" + message.user_number);
 				$("<div>").addClass("unum").text("[" + (message.user_number ? message.user_number : "*") + "]").appendTo(div);
 				var p = $("<p>").css("color", "#" + message.color);
@@ -720,6 +723,7 @@ var msparp = (function() {
 			Handlebars.registerHelper("is_you", function() { return this.meta.number == user.meta.number; });
 			Handlebars.registerHelper("is_highlighted", function() { return user.meta.highlighted_numbers.indexOf(this.meta.number) != -1; });
 			Handlebars.registerHelper("is_ignored", function() { return user.meta.ignored_numbers.indexOf(this.meta.number) != -1; });
+			Handlebars.registerHelper("admin", function() { return user.meta.group == "admin"; });
 
 			// Action list
 			var action_user = null;
@@ -763,6 +767,9 @@ var msparp = (function() {
 					$("#action_kick, #action_ban").click(function() {
 						if (this.id == "action_ban") { var reason = prompt("Please provide a reason for this ban."); }
 						user_action(action_user.meta.number, this.id.substr(7), reason || "");
+					});
+					$("#action_look_up_user").click(function() {
+						$.post("/chat_api/look_up_user", { "chat_id": chat.id, "number": action_user.meta.number });
 					});
 				}
 			}

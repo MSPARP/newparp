@@ -1,6 +1,7 @@
 import json
+import time
 
-from flask import abort, g, jsonify, make_response, redirect, request
+from flask import abort, g, jsonify, make_response, redirect, request, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
@@ -549,6 +550,37 @@ def save_variables():
     if request.headers.get("X-Requested-With") != "XMLHttpRequest" and "Referer" in request.headers:
         return redirect(request.headers["Referer"])
 
+    return "", 204
+
+
+@use_db_chat
+@mark_alive
+def look_up_user():
+    if g.user.group != "admin":
+        abort(403)
+    try:
+        chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == g.chat.id,
+            ChatUser.number == int(request.form["number"]),
+        )).options(joinedload(ChatUser.user)).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+    g.redis.publish("channel:%s:%s" % (g.chat.id, g.user.id), json.dumps({"messages": [{
+        "id": None,
+        "user_number": None,
+        "posted": time.time(),
+        "type": "chat_meta",
+        "color": "000000",
+        "alias": "",
+        "name": "",
+        "text": "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
+            chat_user.number,
+            url_for("admin_user", username=chat_user.user.username, _external=True),
+            chat_user.user.id,
+            chat_user.user.username,
+            chat_user.user.last_ip,
+        ),
+    }]}))
     return "", 204
 
 

@@ -147,6 +147,7 @@ app.add_url_rule("/chat_api/set_info", "set_info", chat_api.set_info, methods=("
 app.add_url_rule("/chat_api/save", "save", chat_api.save, methods=("POST",))
 app.add_url_rule("/chat_api/save_from_character", "save_from_character", chat_api.save_from_character, methods=("POST",))
 app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_variables, methods=("POST",))
+app.add_url_rule("/chat_api/look_up_user", "look_up_user", chat_api.look_up_user, methods=("POST",))
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
