@@ -99,7 +99,7 @@ def register_post():
         email_address=email_address if email_address != "" else None,
         # XXX uncomment this when we release it to the public.
         #group="active",
-        last_ip=request.headers["X-Real-Ip"],
+        last_ip=request.headers["X-Forwarded-For"],
     )
     g.db.add(new_user)
     g.db.flush()

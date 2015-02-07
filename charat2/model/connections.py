@@ -74,7 +74,7 @@ def use_db(f):
             except NoResultFound:
                 pass
             g.user.last_online = datetime.now()
-            g.user.last_ip = request.headers["X-Real-Ip"]
+            g.user.last_ip = request.headers["X-Forwarded-For"]
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
         return f(*args, **kwargs)
@@ -96,7 +96,7 @@ def get_chat_user():
     except NoResultFound:
         abort(400)
     g.user.last_online = datetime.now()
-    g.user.last_ip = request.headers["X-Real-Ip"]
+    g.user.last_ip = request.headers["X-Forwarded-For"]
     if g.user.group == "banned":
         abort(403)
 
