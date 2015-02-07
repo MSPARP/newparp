@@ -1,5 +1,6 @@
 import os
 
+from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
@@ -72,6 +73,7 @@ def use_db(f):
                 g.user = g.db.query(User).filter(User.id == g.user_id).one()
             except NoResultFound:
                 pass
+            g.user.last_online = datetime.now()
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
         return f(*args, **kwargs)
@@ -92,6 +94,7 @@ def get_chat_user():
         )).one()
     except NoResultFound:
         abort(400)
+    g.user.last_online = datetime.now()
     if g.user.group == "banned":
         abort(403)
 
