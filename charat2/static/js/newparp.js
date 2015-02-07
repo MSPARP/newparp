@@ -268,8 +268,10 @@ var msparp = (function() {
 			var user_data = {};
 
 			// Long polling
-			function launch_long_poll() {
-				$.post("/chat_api/messages", { "chat_id": chat.id, "after": latest_message }, receive_messages).complete(function(jqxhr, text_status) {
+			function launch_long_poll(joining) {
+				var data = { "chat_id": chat.id, "after": latest_message };
+				if (joining) { data["joining"] = true; }
+				$.post("/chat_api/messages", data, receive_messages).complete(function(jqxhr, text_status) {
 					if (status == "chatting") {
 						if (jqxhr.status < 400 && text_status == "success") {
 							launch_long_poll();
@@ -948,7 +950,7 @@ var msparp = (function() {
 			// Connecting and disconnecting
 			function connect() {
 				status = "chatting";
-				launch_long_poll();
+				launch_long_poll(true);
 				window.setTimeout(ping, 10000);
 				body.addClass("chatting");
 				$("#send_form input, #send_form button").prop("disabled", false);
