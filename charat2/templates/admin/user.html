@@ -24,6 +24,10 @@
                 <td>Last online</td>
                 <td>{{user.last_online}}</td>
             </tr>
+            <tr>
+                <td>Last IP</td>
+                <td>{{user.last_ip}}</td>
+            </tr>
             {% if user.default_character %}
             <tr>
                 <td>Default character</td>
@@ -37,7 +41,7 @@
         <tbody>
             <tr>
                 <td>Roleplaying as</td>
-                <td>{{user.search_character.name}}</td>
+                <td>{{user.search_character.title}}</td>
             </tr>
             <tr>
                 <td>Search character</td>

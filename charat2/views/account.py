@@ -91,14 +91,15 @@ def register_post():
     new_user = User(
         username=username,
         password=hashpw(request.form["password"].encode("utf8"), gensalt()),
-        # XXX uncomment this when we release it to the public.
-        #group="active",
-        email_address=email_address if email_address != "" else None,
         secret_question=request.form["secret_question"][:50],
         secret_answer=hashpw(
             secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
             gensalt(),
         ),
+        email_address=email_address if email_address != "" else None,
+        # XXX uncomment this when we release it to the public.
+        #group="active",
+        last_ip=request.headers["X-Real-Ip"],
     )
     g.db.add(new_user)
     g.db.flush()

@@ -97,6 +97,7 @@ class User(Base):
 
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
+    last_ip = Column(String(40), nullable=False)
 
     # Default character for entering group chats
     default_character_id = Column(Integer, ForeignKey(
