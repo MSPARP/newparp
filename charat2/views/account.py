@@ -85,7 +85,7 @@ def register_post():
     existing_username = g.db.query(User.id).filter(
         func.lower(User.username) == username.lower()
     ).count()
-    if existing_username == 1 or username in reserved_usernames:
+    if existing_username == 1 or username.lower() in reserved_usernames:
         return redirect(referer_or_home() + "?register_error=username_taken")
 
     new_user = User(
