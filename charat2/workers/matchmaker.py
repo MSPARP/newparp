@@ -59,10 +59,9 @@ def check_compatibility(redis, s1, s2):
         options.append(s1["options"]["level"])
 
     if (
-        # Match people who both chose wildcard.
-        (not s1["choices"] and not s2["choices"])
-        # Match people who are otherwise compatible.
-        or (s1["search_character_id"] in s2["choices"] and s2["search_character_id"] in s1["choices"])
+        # Match if either person has wildcard, or if they're otherwise compatible.
+        (len(s2["choices"]) == 0 or s1["search_character_id"] in s2["choices"])
+        and (len(s1["choices"]) == 0 or s2["search_character_id"] in s1["choices"])
     ):
         redis.set(match_key, 1)
         redis.expire(match_key, 1800)
