@@ -166,7 +166,8 @@ var msparp = (function() {
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[br\])+/g, "<br>");
-		return text.replace(/\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, attribute, content) {
+		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
+			if (url) { return $("<a>").attr({href: url, target: "_blank"}).text(url)[0].outerHTML; }
 			tag = tag.toLowerCase();
 			if (attribute) {
 				switch (tag) {
