@@ -17,28 +17,38 @@ def home():
     if g.user is None:
         return render_template("rp/home_guest.html")
 
-    characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
+    mode = request.args.get("mode", g.user.last_search_mode)
+    g.user.last_search_mode = mode
 
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
 
-    picky = set(_[0] for _ in g.db.query(
-        SearchCharacterChoice.search_character_id,
-    ).filter(
-        SearchCharacterChoice.user_id == g.user.id,
-    ).all())
+    if mode == "roulette":
+        return render_template(
+            "rp/home_roulette.html",
+            search_character_groups=search_character_groups,
+        )
 
-    return render_template(
-        "rp/home.html",
-        characters=characters,
-        search_character_groups=search_character_groups,
-        case_options=case_options,
-        replacements=json.loads(g.user.replacements),
-        regexes=json.loads(g.user.regexes),
-        User=User,
-        picky=picky,
-    )
+    elif mode == "search":
+        characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
+        picky = set(_[0] for _ in g.db.query(
+            SearchCharacterChoice.search_character_id,
+        ).filter(
+            SearchCharacterChoice.user_id == g.user.id,
+        ).all())
+        return render_template(
+            "rp/home_search.html",
+            characters=characters,
+            search_character_groups=search_character_groups,
+            case_options=case_options,
+            replacements=json.loads(g.user.replacements),
+            regexes=json.loads(g.user.regexes),
+            User=User,
+            picky=picky,
+        )
+
+    abort(404)
 
 
 @alt_formats(set(["json"]))

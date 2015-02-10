@@ -27,8 +27,8 @@
     <label for="nav_toggle">Menu</label>
     <input type="checkbox" id="nav_toggle">
     <ul>
-        <li><a href="{{url_for("home")}}#search">Character search</a></li>
-        <li><a href="{{url_for("home")}}#roulette">Roulette</a></li>
+        <li><a href="{{url_for("home", mode="search")}}">Character search</a></li>
+        <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
         <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
         <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
         {% if g.user != None: %}

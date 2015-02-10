@@ -106,6 +106,11 @@ class User(Base):
         use_alter=True,
     ))
 
+    last_search_mode = Column(
+        Enum(u"roulette", u"search", name="user_last_search_mode"),
+        nullable=False, default=u"roulette",
+    )
+
     # Character info for searching
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
