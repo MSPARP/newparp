@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from charat2.helpers.matchmaker import run_matchmaker
-from charat2.model import RouletteChat
+from charat2.model import RouletteChat, SearchCharacter
 
 
 def get_searcher_info(redis, searcher_ids):
@@ -13,6 +13,7 @@ def get_searcher_info(redis, searcher_ids):
             searchers.append({
                 "id": searcher_id,
                 "user_id": int(redis.get("session:%s" % session_id)),
+                "search_character_id": int(redis.get("roulette:%s:search_character_id" % searcher_id))
             })
         except (TypeError, ValueError):
             continue
@@ -33,7 +34,22 @@ def check_compatibility(redis, s1, s2):
 
 
 def get_character_info(db, searcher):
-    return {}
+    try:
+        character = db.query(SearchCharacter).filter(
+            SearchCharacter.id == searcher["search_character_id"],
+        ).one()
+    except NoResultFound:
+        return {}
+    return {
+        "name": character.name,
+        "alias": character.alias,
+        "color": character.color,
+        "quirk_prefix": character.quirk_prefix,
+        "quirk_suffix": character.quirk_suffix,
+        "case": character.case,
+        "replacements": character.replacements,
+        "regexes": character.regexes,
+    }
 
 
 if __name__ == "__main__":

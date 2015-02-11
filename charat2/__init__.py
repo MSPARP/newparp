@@ -92,6 +92,7 @@ app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST
 app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
 app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
 
+app.add_url_rule("/roulette/save", "rp_roulette_save", roulette.roulette_save, methods=("POST",))
 app.add_url_rule("/roulette", "rp_roulette", roulette.roulette_get, methods=("GET",))
 app.add_url_rule("/roulette", "rp_roulette_post", roulette.roulette_post, methods=("POST",))
 app.add_url_rule("/roulette/continue", "rp_roulette_continue", roulette.roulette_continue, methods=("POST",))
