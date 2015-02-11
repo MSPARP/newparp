@@ -66,6 +66,7 @@ def user(username, fmt=None):
             g.db.query(User).filter(func.lower(User.username) == username.lower())
             .options(
                 joinedload(User.default_character),
+                joinedload(User.roulette_character),
                 joinedload(User.search_character),
             ).one()
         )

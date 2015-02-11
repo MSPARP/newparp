@@ -40,11 +40,15 @@
     <table>
         <tbody>
             <tr>
-                <td>Roleplaying as</td>
-                <td>{{user.search_character.title}}</td>
+                <td>Roulette</td>
+                <td><a href="{{url_for("rp_search_character", id=user.roulette_character.id)}}">{{user.roulette_character.title}}</a></td>
             </tr>
             <tr>
-                <td>Search character</td>
+                <td>Roleplaying as</td>
+                <td><a href="{{url_for("rp_search_character", id=user.search_character.id)}}">{{user.search_character.title}}</a></td>
+            </tr>
+            <tr>
+                <td>With settings</td>
                 <td><span style="color: #{{user.color}};">{{user.name}}</span> [<span style="color: #{{user.color}};">{{user.alias}}</span>]</td>
             </tr>
             <tr>
