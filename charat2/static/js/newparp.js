@@ -395,6 +395,10 @@ var msparp = (function() {
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
 				}
+				if (status == "disconnected") {
+					$("#disconnect_links").appendTo(conversation);
+					scroll_to_bottom();
+				}
 			}
 			function render_message(message) {
 				// XXX yeah you should be using a template here
