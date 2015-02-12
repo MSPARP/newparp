@@ -467,31 +467,31 @@ var msparp = (function() {
 			};
 
 			// Actions and validation
+			function can_set_group(new_group, current_group) {
+				// Setting group only works in group chats.
+				if (chat.type != "group") { return false; }
+				// Don't bother if they're already this group.
+				if (ranks[new_group] == ranks[current_group]) { return false; }
+				// You can't set groups at all if you're not a mod.
+				if (ranks[user.meta.group] < 1) { return false; }
+				// You can only set the group to one which is below yours.
+				if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
+				// You can only set the group of people whose group is below yours.
+				if (ranks[current_group] >= ranks[user.meta.group]) { return false; }
+				return true;
+			}
+			function can_perform_action(action, their_group) {
+				// User actions only work in group chats.
+				if (chat.type != "group") { return false; }
+				// You can only kick if you're a Bum's Rusher or above.
+				if (action == "kick" && ranks[user.meta.group] < 2) { return false; }
+				// You can only ban if you're a Bum's Rusher or above.
+				if (action == "ban" && ranks[user.meta.group] < 3) { return false; }
+				// You can only perform actions on people whose group is below yours.
+				if (ranks[their_group] >= ranks[user.meta.group]) { return false; }
+				return true;
+			}
 			if (chat.type == "group") {
-				function can_set_group(new_group, current_group) {
-					// Setting group only works in group chats.
-					if (chat.type != "group") { return false; }
-					// Don't bother if they're already this group.
-					if (ranks[new_group] == ranks[current_group]) { return false; }
-					// You can't set groups at all if you're not a mod.
-					if (ranks[user.meta.group] < 1) { return false; }
-					// You can only set the group to one which is below yours.
-					if (ranks[new_group] >= ranks[user.meta.group]) { return false; }
-					// You can only set the group of people whose group is below yours.
-					if (ranks[current_group] >= ranks[user.meta.group]) { return false; }
-					return true;
-				}
-				function can_perform_action(action, their_group) {
-					// User actions only work in group chats.
-					if (chat.type != "group") { return false; }
-					// You can only kick if you're a Bum's Rusher or above.
-					if (action == "kick" && ranks[user.meta.group] < 2) { return false; }
-					// You can only ban if you're a Bum's Rusher or above.
-					if (action == "ban" && ranks[user.meta.group] < 3) { return false; }
-					// You can only perform actions on people whose group is below yours.
-					if (ranks[their_group] >= ranks[user.meta.group]) { return false; }
-					return true;
-				}
 				function set_group(number, group) { $.post("/chat_api/set_group", { "chat_id": chat.id, "number": number, "group": group }); }
 				function user_action(number, action, reason) {
 					var data = { "chat_id": chat.id, "number": number, "action": action };
