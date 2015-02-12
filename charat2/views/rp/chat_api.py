@@ -216,10 +216,10 @@ def user_action():
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"kick\"}",
         )
-        # Don't allow them back in for 10 seconds.
+        # Don't allow them back in for 30 seconds.
         kick_key = "kicked:%s:%s" % (g.chat.id, set_user.id)
         g.redis.set(kick_key, 1)
-        g.redis.expire(kick_key, 10)
+        g.redis.expire(kick_key, 30)
         # Only send a kick message if they're currently online.
         if disconnect(g.redis, g.chat.id, set_user.id):
             send_message(g.db, g.redis, Message(
