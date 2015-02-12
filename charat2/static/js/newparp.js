@@ -963,6 +963,7 @@ var msparp = (function() {
 			function connect() {
 				status = "chatting";
 				launch_long_poll(true);
+				$("#disconnect_links").appendTo(document.body);
 				window.setTimeout(ping, 10000);
 				body.addClass("chatting");
 				$("#send_form input, #send_form button").prop("disabled", false);
