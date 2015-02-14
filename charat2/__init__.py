@@ -61,6 +61,8 @@ app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",
 app.add_url_rule("/log_out", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register_get, methods=("GET",))
 app.add_url_rule("/register", "register_post", account.register_post, methods=("POST",))
+app.add_url_rule("/reset_password", "reset_password", account.reset_password_get, methods=("GET",))
+app.add_url_rule("/reset_password", "reset_password_post", account.reset_password_post, methods=("POST",))
 
 # 2. Chats list
 

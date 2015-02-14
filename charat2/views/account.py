@@ -1,5 +1,5 @@
 from bcrypt import gensalt, hashpw
-from flask import g, render_template, redirect, request, url_for
+from flask import abort, g, render_template, redirect, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from urlparse import urlparse
@@ -32,7 +32,7 @@ def log_in_post():
 
     # Check password.
     if hashpw(
-        request.form["password"].encode(),
+        request.form["password"].encode("utf8"),
         user.password.encode()
     ) != user.password:
         return redirect(referer_or_home() + "?log_in_error=wrong_password")
@@ -111,4 +111,51 @@ def register_post():
     if redirect_url == url_for("register", _external=True):
         return redirect(url_for("home"))
     return redirect(redirect_url)
+
+
+@use_db
+def reset_password_get():
+    if g.user is not None:
+        abort(403)
+    username = request.args.get("username", "").strip()[:50].lower()
+    if not username:
+        return render_template("account/reset_password.html")
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username).one()
+    except NoResultFound:
+        return render_template("account/reset_password.html", error="no_user")
+    return render_template("account/secret_question.html", user=user)
+
+
+@use_db
+def reset_password_post():
+
+    if g.user is not None:
+        abort(403)
+
+    try:
+        user = g.db.query(User).filter(
+            func.lower(User.username) == request.form["username"].lower(),
+        ).one()
+    except NoResultFound:
+        abort(404)
+
+    # Verify secret answer.
+    if hashpw(
+        secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
+        user.secret_answer.encode(),
+    ) != user.secret_answer:
+        return render_template("account/secret_question.html", user=user, error="wrong_answer")
+
+    # Don't accept a blank password.
+    if request.form["password"] == "":
+        return render_template("account/secret_question.html", user=user, error="blank")
+
+    # Make sure the two passwords match.
+    if request.form["password"] != request.form["password_again"]:
+        return render_template("account/secret_question.html", user=user, error="passwords_didnt_match")
+
+    user.password = hashpw(request.form["password"].encode("utf8"), gensalt())
+
+    return redirect(url_for("log_in"))
 
