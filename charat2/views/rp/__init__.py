@@ -74,7 +74,11 @@ def groups(fmt=None):
         GroupChat.style.in_(style_filter),
         GroupChat.level.in_(level_filter),
     ))
-    groups = [(_, g.redis.scard("chat:%s:online" % _.id)) for _ in groups_query]
+    groups = []
+    for group in groups_query:
+        online_users = g.redis.scard("chat:%s:online" % group.id)
+        if online_users > 0:
+            groups.append((group, online_users))
     groups.sort(key=lambda _: (_[0].publicity, _[1]), reverse=True)
     chat_dicts = []
     for chat, online in groups:
