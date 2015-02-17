@@ -132,6 +132,10 @@ class User(Base):
         nullable=False, default=u"sfw",
     )
 
+    # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
+    group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=[u"script"])
+    group_chat_levels = Column(ARRAY(Unicode(50)), nullable=False, default=[u"sfw"])
+
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)

@@ -56,18 +56,28 @@ def home():
 def groups(fmt=None):
 
     style_filter = set()
-    for style in ("script", "paragraph", "either"):
+    for style in GroupChat.style.type.enums:
         if style in request.args:
             style_filter.add(style)
     if not style_filter:
-        style_filter.add("script")
+        if g.user is not None:
+            style_filter = g.user.group_chat_styles
+        else:
+            style_filter.add("script")
 
     level_filter = set()
-    for level in ("sfw", "nsfw", "nsfw-extreme"):
+    for level in GroupChat.level.type.enums:
         if level in request.args:
             level_filter.add(level)
     if not level_filter:
-        level_filter.add("sfw")
+        if g.user is not None:
+            level_filter = g.user.group_chat_levels
+        else:
+            level_filter.add("sfw")
+
+    if g.user is not None:
+        g.user.group_chat_styles = style_filter
+        g.user.group_chat_levels = level_filter
 
     groups_query = g.db.query(GroupChat).filter(and_(
         GroupChat.publicity.in_(("listed", "pinned")),
