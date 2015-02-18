@@ -114,7 +114,8 @@
             {% endfor %}
         </select></p>
         <p><input type="text" id="name_input" name="name" maxlength="50" required value="{{chat_user.name}}"></p>
-        <p><input type="text" id="alias_input" name="alias" size="15" maxlength="15" value="{{chat_user.alias}}"> <input type="color" id="color_input" name="color" size="7" required value="#{{chat_user.color}}"></p>
+        <p><input type="text" id="alias_input" name="alias" size="15" maxlength="15" value="{{chat_user.alias}}"></p>
+        <p><input type="color" id="color_input" name="color" size="7" required value="#{{chat_user.color}}"> <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{chat_user.color}}"></p>
         <p><label>Prefix: <input type="text" name="quirk_prefix" maxlength="50" value="{{chat_user.quirk_prefix}}"></label></p>
         <p><label>Suffix: <input type="text" name="quirk_suffix" maxlength="50" value="{{chat_user.quirk_suffix}}"></label></p>
         <p><label>Case: <select name="case">

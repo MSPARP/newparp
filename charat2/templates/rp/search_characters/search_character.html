@@ -26,7 +26,7 @@
             </p>
             <p>
                 <label for="color_input">Color:</label>
-                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color if character else "000000"}}">
+                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color if character else "000000"}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color if character else "000000"}}">
             </p>
             <p>
                 <label for="text_preview_input">Preview:</label>

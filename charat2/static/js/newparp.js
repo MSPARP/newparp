@@ -105,8 +105,13 @@ var msparp = (function() {
 				text_preview_alias.text(this.value + ": ");
 			}
 		});
-		$("input[name=color]").change(function() {
+		// Color and color_hex
+		var color_input = $("input[name=color]").change(function() {
+			color_hex_input.val(this.value.substr(1));
 			text_preview_container.css("color", this.value);
+		});
+		var color_hex_input = $("#color_hex_input").keyup(function() {
+			color_input.val("#" + this.value);
 		});
 		// Replacement list
 		$('.delete_replacement').click(delete_replacement);

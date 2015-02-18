@@ -29,7 +29,7 @@
                 </p>
                 <p>
                     <label for="color_input">Color:</label>
-                    <input type="color" id="color_input" name="color" size="7" required value="#{{g.user.color}}">
+                    <input type="color" id="color_input" name="color" size="7" required value="#{{g.user.color}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{g.user.color}}">
                 </p>
             </div>
             <p id="text_preview_container" style="color: #{{g.user.color}};">
