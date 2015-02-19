@@ -24,5 +24,9 @@
     </table>
     <p><a href="{{url_for("rp_new_search_character_get", group_id=group.id)}}">New character in {{group.name}}</a></p>
     {% endfor %}
+    <h3>New group</h3>
+    <form action="{{url_for("rp_new_search_character_group_post")}}" method="post">
+        <p><input type="text" name="name" required> <button type="submit">Create</button></p>
+    </form>
 {% endblock %}
 

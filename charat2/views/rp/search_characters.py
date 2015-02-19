@@ -24,6 +24,17 @@ def search_character_list():
 
 @use_db
 @admin_required
+def new_search_character_group_post():
+    name = request.form["name"].strip()
+    if len(name) == 0:
+        abort(400)
+    order = (g.db.query(func.max(SearchCharacterGroup.order)).scalar() or 0) + 1
+    g.db.add(SearchCharacterGroup(name=name, order=order))
+    return redirect(url_for("rp_search_character_list"))
+
+
+@use_db
+@admin_required
 def search_character(id):
     try:
         character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
