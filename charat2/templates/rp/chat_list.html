@@ -30,6 +30,9 @@
         <thead>
             <tr>
                 <th>Name</th>
+                {% if type == None: %}
+                <th>Type</th>
+                {% endif %}
                 {% if type in (None, "group", "unread"): %}
                 <th>Style</th>
                 <th>Level</th>
@@ -41,6 +44,9 @@
             {% for chat in chats: %}
             <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
                 <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
+                {% if type == None: %}
+                <td><a href="{{url_for("rp_chat_list", type=chat.type)}}">{{"PM" if chat.type == "pm" else chat.type.capitalize()}}</a></td>
+                {% endif %}
                 {% if type in (None, "group", "unread"): %}
                 <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
                 <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
