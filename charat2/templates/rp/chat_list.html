@@ -30,7 +30,8 @@
         <thead>
             <tr>
                 <th>Name</th>
-                {% if type == None: %}
+                <th>Log</th>
+                {% if type in (None, "unread"): %}
                 <th>Type</th>
                 {% endif %}
                 {% if type in (None, "group", "unread"): %}
@@ -44,7 +45,8 @@
             {% for chat in chats: %}
             <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
                 <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></td>
-                {% if type == None: %}
+                <td><a href="{{url_for("rp_log", url=chat.url)}}">View log</a></td>
+                {% if type in (None, "unread"): %}
                 <td><a href="{{url_for("rp_chat_list", type=chat.type)}}">{{"PM" if chat.type == "pm" else chat.type.capitalize()}}</a></td>
                 {% endif %}
                 {% if type in (None, "group", "unread"): %}
