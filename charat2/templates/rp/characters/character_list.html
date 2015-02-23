@@ -34,8 +34,6 @@
     {% else: %}
     <p>You don't have any saved characters.</p>
     {% endif %}
-    <form action="{{url_for("rp_new_character")}}" method="post">
-        <p><button type="submit">Create a new character</button></p>
-    </form>
+    <p><a href="{{url_for("rp_new_character_get")}}">Create a new character</a></p>
 {% endblock %}
 

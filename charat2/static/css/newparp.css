@@ -131,7 +131,7 @@ h3 { font-size: 10pt; }
 
 ul { padding-left: 1em; }
 
-table { display: block; max-width: 100%; overflow-x: scroll; }
+table { display: block; max-width: 100%; overflow-x: auto; }
 th { text-align: left; }
 th, td { padding: 5px 8px; }
 tbody tr:nth-child(2n+1) { background-color: #ddd; }

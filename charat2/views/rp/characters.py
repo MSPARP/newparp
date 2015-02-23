@@ -3,7 +3,7 @@ from sqlalchemy.orm import joinedload
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.helpers.characters import character_query, save_character_from_form
+from charat2.helpers.characters import character_query, save_character_from_form, validate_character_form
 from charat2.model import case_options, Character, CharacterTag, Request, SearchCharacter, SearchCharacterGroup
 from charat2.model.connections import use_db
 
@@ -28,11 +28,23 @@ def character_list(fmt=None):
 
 @use_db
 @log_in_required
-def new_character():
-    character = Character(user_id=g.user.id, title="Untitled character")
-    g.db.add(character)
-    g.db.flush()
-    return redirect(url_for("rp_character", character_id=character.id))
+def new_character_get():
+    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
+        SearchCharacterGroup.order,
+    ).options(joinedload(SearchCharacterGroup.characters)).all()
+    return render_template(
+        "rp/characters/character.html",
+        search_character_groups=search_character_groups,
+        case_options=case_options,
+    )
+
+
+@use_db
+@log_in_required
+def new_character_post():
+    new_details = validate_character_form(request.form)
+    g.db.add(Character(user_id=g.user.id, **new_details))
+    return redirect(url_for("rp_character_list"))
 
 
 @alt_formats(set(["json"]))

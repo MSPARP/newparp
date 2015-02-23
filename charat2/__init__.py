@@ -74,7 +74,8 @@ make_rules("rp", "/chats/<type>", chat_list.chat_list, formats=True, paging=True
 
 make_rules("rp", "/characters", characters.character_list, formats=True)
 
-app.add_url_rule("/characters/new", "rp_new_character", characters.new_character, methods=("POST",))
+app.add_url_rule("/characters/new", "rp_new_character_get", characters.new_character_get, methods=("GET",))
+app.add_url_rule("/characters/new", "rp_new_character_post", characters.new_character_post, methods=("POST",))
 
 make_rules("rp", "/characters/<int:character_id>", characters.character, formats=True)
 
