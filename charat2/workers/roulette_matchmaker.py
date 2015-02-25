@@ -1,22 +1,28 @@
 #!/usr/bin/python
 
+from sqlalchemy.orm.exc import NoResultFound
+
 from charat2.helpers.matchmaker import run_matchmaker
-from charat2.model import RouletteChat, SearchCharacter
+from charat2.model import Character, RouletteChat, SearchCharacter
 
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
     for searcher_id in searcher_ids:
         session_id = redis.get("roulette:%s:session_id" % searcher_id)
-        # This will fail they've logged out since sending the request.
+        # This will fail if they've logged out since sending the request.
         try:
-            searchers.append({
+            searcher = {
                 "id": searcher_id,
                 "user_id": int(redis.get("session:%s" % session_id)),
                 "search_character_id": int(redis.get("roulette:%s:search_character_id" % searcher_id))
-            })
+            }
+            character_id = redis.get("roulette:%s:character_id" % searcher_id)
+            if character_id is not None:
+                searcher["character_id"] = int(character_id)
         except (TypeError, ValueError):
             continue
+        searchers.append(searcher)
     return searchers
 
 
@@ -34,21 +40,41 @@ def check_compatibility(redis, s1, s2):
 
 
 def get_character_info(db, searcher):
+    # Use character if it exists.
+    if "character_id" in searcher:
+        try:
+            character = db.query(Character).filter(
+                Character.id == searcher["character_id"],
+                Character.user_id == searcher["user_id"],
+            ).one()
+        except NoResultFound:
+            return {}
+        return {
+            "name": character.name,
+            "alias": character.alias,
+            "color": character.color,
+            "quirk_prefix": character.quirk_prefix,
+            "quirk_suffix": character.quirk_suffix,
+            "case": character.case,
+            "replacements": character.replacements,
+            "regexes": character.regexes,
+        }
+    # Otherwise use search character.
     try:
-        character = db.query(SearchCharacter).filter(
+        search_character = db.query(SearchCharacter).filter(
             SearchCharacter.id == searcher["search_character_id"],
         ).one()
     except NoResultFound:
         return {}
     return {
-        "name": character.name,
-        "alias": character.alias,
-        "color": character.color,
-        "quirk_prefix": character.quirk_prefix,
-        "quirk_suffix": character.quirk_suffix,
-        "case": character.case,
-        "replacements": character.replacements,
-        "regexes": character.regexes,
+        "name": search_character.name,
+        "alias": search_character.alias,
+        "color": search_character.color,
+        "quirk_prefix": search_character.quirk_prefix,
+        "quirk_suffix": search_character.quirk_suffix,
+        "case": search_character.case,
+        "replacements": search_character.replacements,
+        "regexes": search_character.regexes,
     }
 
 

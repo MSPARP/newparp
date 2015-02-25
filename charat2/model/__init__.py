@@ -112,7 +112,8 @@ class User(Base):
     )
 
     # Character info for searching
-    roulette_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
+    roulette_search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
+    roulette_character_id = Column(Integer, ForeignKey("characters.id"))
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     alias = Column(Unicode(15), nullable=False, default=u"??")
@@ -824,7 +825,8 @@ User.characters = relation(
     backref="user",
 )
 User.search_character = relation(SearchCharacter, foreign_keys=User.search_character_id)
-User.roulette_character = relation(SearchCharacter, foreign_keys=User.roulette_character_id)
+User.roulette_search_character = relation(SearchCharacter, foreign_keys=User.roulette_search_character_id)
+User.roulette_character = relation(Character, foreign_keys=User.roulette_character_id)
 
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)

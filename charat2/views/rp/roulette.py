@@ -3,7 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from charat2.helpers.auth import log_in_required
-from charat2.model import SearchCharacter
+from charat2.model import Character, SearchCharacter
 from charat2.model.connections import use_db
 
 
@@ -11,12 +11,31 @@ from charat2.model.connections import use_db
 @log_in_required
 def roulette_save():
     try:
-        character = g.db.query(SearchCharacter).filter(
-            SearchCharacter.id == int(request.form["search_character_id"]),
-        ).one()
-    except (ValueError, NoResultFound):
+        form_id = int(request.form["id"][2:])
+    except ValueError:
         abort(404)
-    g.user.roulette_character = character
+    # Character
+    if request.form["id"][0] == "c":
+        try:
+            character = g.db.query(Character).filter(
+                Character.id == form_id,
+            ).one()
+        except NoResultFound:
+            abort(404)
+        g.user.roulette_search_character_id = 1
+        g.user.roulette_character = character
+    # Search character
+    elif request.form["id"][0] == "s":
+        try:
+            search_character = g.db.query(SearchCharacter).filter(
+                SearchCharacter.id == form_id,
+            ).one()
+        except NoResultFound:
+            abort(404)
+        g.user.roulette_search_character = search_character
+        g.user.roulette_character = None
+    else:
+        abort(400)
     return redirect(url_for("rp_roulette"))
 
 
@@ -31,9 +50,12 @@ def roulette_get():
 def roulette_post():
     searcher_id = str(uuid4())
     g.redis.set("roulette:%s:session_id" % searcher_id, g.session_id)
-    g.redis.set("roulette:%s:search_character_id" % searcher_id, g.user.roulette_character_id)
+    g.redis.set("roulette:%s:search_character_id" % searcher_id, g.user.roulette_search_character_id)
+    if g.user.roulette_character_id is not None:
+        g.redis.set("roulette:%s:character_id" % searcher_id, g.user.roulette_character_id)
     g.redis.expire("roulette:%s:session_id" % searcher_id, 30)
     g.redis.expire("roulette:%s:search_character_id" % searcher_id, 30)
+    g.redis.expire("roulette:%s:character_id" % searcher_id, 30)
     return jsonify({ "id": searcher_id })
 
 
@@ -45,6 +67,7 @@ def roulette_continue():
         abort(404)
     g.redis.expire("roulette:%s:session_id" % searcher_id, 30)
     g.redis.expire("roulette:%s:search_character_id" % searcher_id, 30)
+    g.redis.expire("roulette:%s:character_id" % searcher_id, 30)
     pubsub = g.redis.pubsub()
     pubsub.subscribe("roulette:%s" % searcher_id)
     g.redis.sadd("roulette_searchers", searcher_id)

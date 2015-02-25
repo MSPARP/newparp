@@ -20,6 +20,8 @@ def home():
     mode = request.args.get("mode", g.user.last_search_mode)
     g.user.last_search_mode = mode
 
+    characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
+
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
@@ -27,11 +29,11 @@ def home():
     if mode == "roulette":
         return render_template(
             "rp/home_roulette.html",
+            characters=characters,
             search_character_groups=search_character_groups,
         )
 
     elif mode == "search":
-        characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
         picky = set(_[0] for _ in g.db.query(
             SearchCharacterChoice.search_character_id,
         ).filter(
