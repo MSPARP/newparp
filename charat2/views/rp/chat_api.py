@@ -13,6 +13,7 @@ from charat2.helpers.chat import (
     send_message,
     send_userlist,
     disconnect,
+    disconnect_user,
     get_userlist,
 )
 from charat2.model import (
@@ -221,7 +222,7 @@ def user_action():
         g.redis.set(kick_key, 1)
         g.redis.expire(kick_key, 30)
         # Only send a kick message if they're currently online.
-        if disconnect(g.redis, g.chat.id, set_user.id):
+        if disconnect_user(g.redis, g.chat.id, set_user.id):
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=set_user.id,
@@ -271,7 +272,7 @@ def user_action():
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"ban\"}",
         )
-        disconnect(g.redis, g.chat.id, set_user.id)
+        disconnect_user(g.redis, g.chat.id, set_user.id)
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=set_user.id,
@@ -592,7 +593,7 @@ def quit():
         g.chat_id = int(request.form["chat_id"])
     except ValueError:
         abort(400)
-    if disconnect(g.redis, g.chat_id, g.user_id):
+    if disconnect(g.redis, g.chat_id, g.session_id):
         db_connect()
         get_chat_user()
         if g.chat_user.group == "silent" or g.chat.type == "roulette":

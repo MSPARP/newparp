@@ -23,17 +23,20 @@ if __name__ == "__main__":
         # XXX INCREASE THIS TO SEVERAL MINUTES
         for chat_id in redis.zrangebyscore("longpoll_timeout", 0, current_time):
             redis.publish("channel:%s" % chat_id, "{\"messages\":[]}")
-            if redis.scard("chat:%s:online" % chat_id) != 0:
+            if redis.hlen("chat:%s:online" % chat_id) != 0:
                 redis.zadd("longpoll_timeout", time.time() + 25, chat_id)
             else:
                 redis.zrem("longpoll_timeout", chat_id)
 
         # And do the reaping.
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):
-            chat_id, user_id = dead.split('/')
-            disconnected = disconnect(redis, chat_id, user_id)
+            print current_time, "Reaping ", dead
+            chat_id, session_id = dead.split('/')
+            user_id = redis.hget("chat:%s:online" % chat_id, session_id)
+            disconnected = disconnect(redis, chat_id, session_id)
             # Only send a timeout message if they were already online.
             if not disconnected:
+                print "Not sending timeout message."
                 continue
             try:
                 dead_chat_user = db.query(ChatUser).filter(and_(
@@ -41,7 +44,8 @@ if __name__ == "__main__":
                     ChatUser.chat_id == chat_id,
                 )).options(joinedload(ChatUser.chat), joinedload(ChatUser.user)).one()
             except NoResultFound:
-                pass
+                print "Unable to find ChatUser (chat %s, user %s)." % (chat_id, user_id)
+                continue
             if dead_chat_user.group == "silent" or dead_chat_user.chat.type == "roulette":
                 send_userlist(db, redis, dead_chat_user.chat)
             else:
@@ -52,15 +56,17 @@ if __name__ == "__main__":
                     name=dead_chat_user.name,
                     text="%s's connection timed out." % dead_chat_user.name,
                 ))
-            print current_time, "Reaping ", dead
+            print "Sent timeout message."
         db.commit()
 
         # Generate connected/searching counters every 10 seconds.
         if int(current_time) % 10 == 0:
             connected_users = set()
             for chat_user in redis.zrange("chats_alive", 0, -1):
-                chat_id, user_id = chat_user.split("/")
-                connected_users.add(user_id)
+                chat_id, session_id = chat_user.split("/")
+                user_id = redis.hget("chat:%s:online" % chat_id, session_id)
+                if user_id is not None:
+                    connected_users.add(user_id)
             redis.set("connected_users", len(connected_users))
             searching_users = set()
             for searcher_id in redis.smembers("searchers"):

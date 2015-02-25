@@ -86,7 +86,7 @@ def groups(fmt=None):
     ))
     groups = []
     for group in groups_query:
-        online_users = g.redis.scard("chat:%s:online" % group.id)
+        online_users = len(set(g.redis.hvals("chat:%s:online" % group.id)))
         if online_users > 0:
             groups.append((group, online_users))
     groups.sort(key=lambda _: (_[0].publicity, _[1]), reverse=True)
