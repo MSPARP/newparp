@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "account/forms.html" as forms %}
 {% block content: %}
-    {% if request.headers.get("Referer").startswith(url_for("reset_password", _external=True)): %}
+    {% if request.headers.get("Referer", "").startswith(url_for("reset_password", _external=True)): %}
     <p>Your password has been reset. You can now log in again.</p>
     {% endif %}
     <section>

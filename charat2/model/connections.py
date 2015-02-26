@@ -4,11 +4,11 @@ from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
-from charat2.model import sm, AnyChat, User, ChatUser
+from charat2.model import sm, AnyChat, Chat, ChatUser, User
 
 redis_pool = ConnectionPool(
     host=os.environ['REDIS_HOST'],
@@ -77,6 +77,11 @@ def use_db(f):
             g.user.last_ip = request.headers["X-Forwarded-For"]
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
+            g.unread_chats = g.db.query(func.count('*')).select_from(ChatUser).join(Chat).filter(and_(
+                ChatUser.user_id == g.user.id,
+                ChatUser.subscribed == True,
+                Chat.last_message > ChatUser.last_online,
+            )).scalar()
         return f(*args, **kwargs)
     return decorated_function
 

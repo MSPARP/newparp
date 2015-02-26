@@ -64,11 +64,12 @@ h1 img { display: block; max-width: 100%; }
 #global_navigation li { display: inline-block; margin-left: 10px; }
 /* Padding so the whole height of the navbar is clickable */
 #global_navigation a, #global_navigation button { display: block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
-#global_navigation a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
 #global_navigation a:hover, #global_navigation button:hover { color: #fff; }
-#global_navigation a:hover:before, #global_navigation button:hover:before { visibility: visible; }
+#global_navigation li a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
+#global_navigation li a:hover:before, #global_navigation button:hover:before { visibility: visible; }
 #global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
 #global_navigation .user ul { margin: 0 0 0 -10px; }
+#global_navigation #unread_counter { float: right; padding: 7px 14px; background-color: #a10000; }
 
 @media (min-width: 716px) {
 	#global_navigation .user { float: right; position: relative; }
