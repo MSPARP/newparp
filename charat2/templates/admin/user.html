@@ -41,7 +41,7 @@
         <tbody>
             <tr>
                 <td>Roulette</td>
-                <td><a href="{{url_for("rp_search_character", id=user.roulette_character.id)}}">{{user.roulette_character.title}}</a></td>
+                <td>{% if user.roulette_character_id != None: %}Custom character{% else: %}<a href="{{url_for("rp_search_character", id=user.roulette_search_character.id)}}">{{user.roulette_search_character.title}}</a>{% endif %}</td>
             </tr>
             <tr>
                 <td>Roleplaying as</td>
