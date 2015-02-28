@@ -14,6 +14,7 @@ from charat2.helpers.chat import (
     send_userlist,
     disconnect,
     disconnect_user,
+    send_quit_message,
     get_userlist,
 )
 from charat2.model import (
@@ -596,17 +597,6 @@ def quit():
     if disconnect(g.redis, g.chat_id, g.session_id):
         db_connect()
         get_chat_user()
-        if g.chat_user.group == "silent" or g.chat.type == "roulette":
-            send_userlist(g.db, g.redis, g.chat)
-        else:
-            send_message(g.db, g.redis, Message(
-                chat_id=g.chat.id,
-                user_id=g.user.id,
-                type="disconnect",
-                name=g.chat_user.name,
-                text=("%s [%s] disconnected.") % (
-                    g.chat_user.name, g.chat_user.alias,
-                ),
-            ))
+        send_quit_message(g.db, g.redis, g.chat_user, g.user, g.chat)
     return "", 204
 

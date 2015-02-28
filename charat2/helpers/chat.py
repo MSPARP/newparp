@@ -11,6 +11,10 @@ from charat2.model import AnyChat, Ban, Message, ChatUser
 from charat2.model.connections import db_connect, get_chat_user
 
 
+class KickedException(Exception):
+    pass
+
+
 def group_chat_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -28,12 +32,8 @@ def mark_alive(f):
         session_online = g.redis.hexists("chat:%s:online" % g.chat_id, g.session_id)
         if not session_online:
             g.joining = True
-            # XXX ONLINE USER LIMITS ETC. HERE.
-            # If they've been kicked recently, don't let them in.
-            if g.redis.exists("kicked:%s:%s" % (g.chat_id, g.user_id)):
-                return jsonify({"exit": "kick"})
-            # Make sure we're connected to the database for the ban checking.
             db_connect()
+            # Make sure we're connected to the database for the ban checking.
             # Check if we're banned.
             if g.db.query(func.count('*')).select_from(Ban).filter(and_(
                 Ban.chat_id == g.chat_id,
@@ -43,23 +43,10 @@ def mark_alive(f):
             # Get ChatUser if we haven't got it already.
             if not hasattr(g, "chat_user"):
                 get_chat_user()
-            # Update their last_online.
-            g.chat_user.last_online = datetime.now()
-            user_online = str(g.user_id) in g.redis.hvals("chat:%s:online" % g.chat_id)
-            # Add them to the online list.
-            g.redis.hset("chat:%s:online" % g.chat.id, g.session_id, g.user.id)
-            # Send join message if user isn't already online. Or not, if they're silent.
-            if not user_online:
-                if g.chat_user.group == "silent" or g.chat.type == "roulette":
-                    send_userlist(g.db, g.redis, g.chat)
-                else:
-                    send_message(g.db, g.redis, Message(
-                        chat_id=g.chat.id,
-                        user_id=g.user.id,
-                        type="join",
-                        name=g.chat_user.name,
-                        text="%s [%s] joined chat." % (g.chat_user.name, g.chat_user.alias),
-                    ))
+            try:
+                join(g.redis, g.db, g)
+            except KickedException:
+                return jsonify({"exit": "kick"})
         g.redis.zadd(
             "chats_alive",
             time.time() + 60,
@@ -67,6 +54,32 @@ def mark_alive(f):
         )
         return f(*args, **kwargs)
     return decorated_function
+
+
+def join(redis, db, context):
+    # XXX ONLINE USER LIMITS ETC. HERE.
+    # If they've been kicked recently, don't let them in.
+    if redis.exists("kicked:%s:%s" % (context.chat.id, context.user.id)):
+        raise KickedException
+    # Update their last_online.
+    context.chat_user.last_online = datetime.now()
+    user_online = str(context.user.id) in redis.hvals("chat:%s:online" % context.chat.id)
+    # Add them to the online list.
+    # Use socket id for websockets or session id for long polling.
+    online_id = context.id if hasattr(context, "id") else context.session_id
+    redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
+    # Send join message if user isn't already online. Or not, if they're silent.
+    if not user_online:
+        if context.chat_user.group == "silent" or context.chat.type == "roulette":
+            send_userlist(db, redis, context.chat)
+        else:
+            send_message(db, redis, Message(
+                chat_id=context.chat.id,
+                user_id=context.user.id,
+                type="join",
+                name=context.chat_user.name,
+                text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.alias),
+            ))
 
 
 def send_message(db, redis, message):
@@ -117,40 +130,6 @@ def send_message(db, redis, message):
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
 
-def send_userlist(db, redis, chat):
-    # Update the userlist without sending a message.
-    redis.publish("channel:%s" % chat.id, json.dumps({
-        "messages": [],
-        "users": get_userlist(db, redis, chat),
-    }))
-
-
-def disconnect(redis, chat_id, session_id):
-    redis.zrem("chats_alive", "%s/%s" % (chat_id, session_id))
-    # Return True if they were in the userlist when we tried to remove them, so
-    # we can avoid sending disconnection messages if someone gratuitously sends
-    # quit requests.
-    user_id = redis.hget("chat:%s:online" % chat_id, session_id)
-    if user_id is None:
-        return False
-    redis.hdel("chat:%s:online" % chat_id, session_id)
-    return user_id not in redis.hvals("chat:%s:online" % chat_id)
-
-
-def disconnect_user(redis, chat_id, user_id):
-    user_id = str(user_id)
-    session_ids = []
-    for online_session_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).iteritems():
-        if online_user_id == user_id:
-            session_ids.append(online_session_id)
-    if not session_ids:
-        return False
-    for session_id in session_ids:
-        redis.zrem("chats_alive", "%s/%s" % (chat_id, session_id))
-        redis.hdel("chat:%s:online" % chat_id, session_id)
-    return True
-
-
 def get_userlist(db, redis, chat):
     online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat.id))
     # Don't bother querying if the list is empty.
@@ -165,4 +144,53 @@ def get_userlist(db, redis, chat):
             ChatUser.chat_id == chat.id,
         )).order_by(ChatUser.name).options(joinedload(ChatUser.user))
     ]
+
+
+def send_userlist(db, redis, chat):
+    # Update the userlist without sending a message.
+    redis.publish("channel:%s" % chat.id, json.dumps({
+        "messages": [],
+        "users": get_userlist(db, redis, chat),
+    }))
+
+
+def disconnect(redis, chat_id, online_id):
+    redis.zrem("chats_alive", "%s/%s" % (chat_id, online_id))
+    # Return True if they were in the userlist when we tried to remove them, so
+    # we can avoid sending disconnection messages if someone gratuitously sends
+    # quit requests.
+    user_id = redis.hget("chat:%s:online" % chat_id, online_id)
+    if user_id is None:
+        return False
+    redis.hdel("chat:%s:online" % chat_id, online_id)
+    return user_id not in redis.hvals("chat:%s:online" % chat_id)
+
+
+def disconnect_user(redis, chat_id, user_id):
+    user_id = str(user_id)
+    online_ids = []
+    for online_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).iteritems():
+        if online_user_id == user_id:
+            online_ids.append(online_id)
+    if not online_ids:
+        return False
+    for online_id in online_ids:
+        redis.zrem("chats_alive", "%s/%s" % (chat_id, online_id))
+        redis.hdel("chat:%s:online" % chat_id, online_id)
+    return True
+
+
+def send_quit_message(db, redis, chat_user, user, chat):
+    if chat_user.group == "silent" or chat.type == "roulette":
+        send_userlist(db, redis, chat)
+    else:
+        send_message(db, redis, Message(
+            chat_id=chat.id,
+            user_id=user.id,
+            type="disconnect",
+            name=chat_user.name,
+            text=("%s [%s] disconnected.") % (
+                chat_user.name, chat_user.alias,
+            ),
+        ))
 
