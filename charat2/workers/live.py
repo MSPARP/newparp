@@ -1,13 +1,16 @@
 import json
+import os
 
 from datetime import datetime
 from redis import StrictRedis
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
+from tornado.gen import engine, Task
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 from tornado.websocket import WebSocketHandler
+from tornadoredis import Client
 from uuid import uuid4
 
 from charat2.helpers.chat import disconnect, join, KickedException, send_quit_message
@@ -69,11 +72,15 @@ class ChatHandler(WebSocketHandler):
             self.close()
             return
         self.db.commit()
+        self.redis_listen()
 
     def on_message(self, message):
         print "message:", message
 
     def on_close(self):
+        # Unsubscribe here and let the exit callback handle disconnecting.
+        if hasattr(self, "redis_client"):
+            self.redis_client.unsubscribe(self.redis_client.subscribed)
         if self.joined:
             if disconnect(redis, self.chat_id, self.id):
                 try:
@@ -88,6 +95,27 @@ class ChatHandler(WebSocketHandler):
             self.db.close()
             del self.db
         super(ChatHandler, self).finish(*args, **kwargs)
+
+    @engine
+    def redis_listen(self):
+        self.redis_client = Client(
+            host=os.environ["REDIS_HOST"],
+            port=int(os.environ["REDIS_PORT"]),
+            selected_db=int(os.environ["REDIS_DB"]),
+        )
+        yield Task(
+            self.redis_client.subscribe,
+            ("channel:%s" % self.chat_id, "channel:%s:%s" % (self.chat_id, self.user_id)),
+        )
+        self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
+
+    def on_redis_message(self, message):
+        print "redis message:", message
+        if message.kind == "message":
+            self.write_message(message.body)
+
+    def on_redis_unsubscribe(self, callback):
+        self.redis_client.disconnect()
 
 if __name__ == "__main__":
     application = Application([(r"/(\d+)", ChatHandler)])
