@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 from datetime import datetime
 from redis import StrictRedis
@@ -20,6 +21,9 @@ from charat2.model.connections import redis_pool
 redis = StrictRedis(connection_pool=redis_pool)
 
 
+origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(".", "\."))
+
+
 class ChatHandler(WebSocketHandler):
 
     def get_chat_user(self):
@@ -33,6 +37,9 @@ class ChatHandler(WebSocketHandler):
             ChatUser.user_id == self.user_id,
             ChatUser.chat_id == self.chat_id,
         )).one()
+
+    def check_origin(self, origin):
+        return origin_regex.match(origin) is not None
 
     def prepare(self):
         self.id = str(uuid4())
