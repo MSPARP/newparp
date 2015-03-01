@@ -75,10 +75,14 @@ class ChatHandler(WebSocketHandler):
             join(redis, self.db, self)
             self.joined = True
         except KickedException:
-            self.send(json.dumps({"exit": "kick"}))
+            self.write_message(json.dumps({"exit": "kick"}))
             self.close()
             return
         self.db.commit()
+        self.channels = {
+            "chat": "channel:%s" % self.chat_id,
+            "user": "channel:%s:%s" % (self.chat_id, self.user_id),
+        }
         self.redis_listen()
 
     def on_message(self, message):
@@ -110,16 +114,19 @@ class ChatHandler(WebSocketHandler):
             port=int(os.environ["REDIS_PORT"]),
             selected_db=int(os.environ["REDIS_DB"]),
         )
-        yield Task(
-            self.redis_client.subscribe,
-            ("channel:%s" % self.chat_id, "channel:%s:%s" % (self.chat_id, self.user_id)),
-        )
+        yield Task(self.redis_client.subscribe, self.channels.values())
         self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
 
     def on_redis_message(self, message):
         print "redis message:", message
-        if message.kind == "message":
-            self.write_message(message.body)
+        if message.kind != "message":
+            return
+        self.write_message(message.body)
+        if message.channel == self.channels["user"]:
+            data = json.loads(message.body)
+            if "exit" in data:
+                self.joined = False
+                self.close()
 
     def on_redis_unsubscribe(self, callback):
         self.redis_client.disconnect()
