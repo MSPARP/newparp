@@ -64,6 +64,11 @@ def messages():
     # Channel for messages aimed specifically at you - kicks, bans etc.
     pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
 
+    # Get rid of the database connection here so we're not hanging onto it
+    # while waiting for the redis message.
+    db_commit()
+    db_disconnect()
+
     for msg in pubsub.listen():
         if msg["type"] == "message":
             # The pubsub channel sends us a JSON string, so we return that
