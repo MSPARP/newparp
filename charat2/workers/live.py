@@ -14,7 +14,7 @@ from tornado.websocket import WebSocketHandler
 from tornadoredis import Client
 from uuid import uuid4
 
-from charat2.helpers.chat import disconnect, join, KickedException, send_quit_message
+from charat2.helpers.chat import disconnect, get_userlist, join, KickedException, send_quit_message
 from charat2.model import sm, AnyChat, Ban, ChatUser, Message, User
 from charat2.model.connections import redis_pool
 
@@ -78,6 +78,17 @@ class ChatHandler(WebSocketHandler):
             self.write_message(json.dumps({"exit": "kick"}))
             self.close()
             return
+        # Send backlog.
+        try:
+            after = int(self.request.query_arguments["after"][0])
+        except (KeyError, IndexError, ValueError):
+            after = 0
+        messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
+        self.write_message(json.dumps({
+            "users": get_userlist(self.db, redis, self.chat),
+            "chat": self.chat.to_dict(),
+            "messages": [json.loads(_) for _ in messages],
+        }))
         self.db.commit()
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
