@@ -1,6 +1,8 @@
 import json
 import os
 import re
+import signal
+import time
 
 from datetime import datetime
 from redis import StrictRedis
@@ -22,6 +24,9 @@ redis = StrictRedis(connection_pool=redis_pool)
 
 
 origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(".", "\."))
+
+
+sockets = set()
 
 
 class ChatHandler(WebSocketHandler):
@@ -70,6 +75,7 @@ class ChatHandler(WebSocketHandler):
             return
 
     def open(self, chat_id):
+        sockets.add(self)
         print "socket opened:", self.id, self.chat.url, self.user.username
         try:
             join(redis, self.db, self)
@@ -111,6 +117,7 @@ class ChatHandler(WebSocketHandler):
                     send_userlist(self.db, redis, self.chat)
                 self.db.commit()
         print "socket closed:", self.id
+        sockets.remove(self)
 
     def finish(self, *args, **kwargs):
         if hasattr(self, "db"):
@@ -142,9 +149,37 @@ class ChatHandler(WebSocketHandler):
     def on_redis_unsubscribe(self, callback):
         self.redis_client.disconnect()
 
+
+def sig_handler(sig, frame):
+    print "Caught signal %s." % sig
+    ioloop.add_callback_from_signal(shutdown)
+
+
+def shutdown():
+    print "Shutting down."
+    for socket in sockets:
+        ioloop.add_callback(socket.close)
+    deadline = time.time() + 10
+    def stop_loop():
+        now = time.time()
+        if now < deadline and (ioloop._callbacks or ioloop._timeouts):
+            ioloop.add_timeout(now + 0.1, stop_loop)
+        else:
+            ioloop.stop()
+    stop_loop()
+
+
 if __name__ == "__main__":
+
     application = Application([(r"/(\d+)", ChatHandler)])
+
     http_server = HTTPServer(application)
     http_server.listen(8000)
-    IOLoop.instance().start()
+
+    ioloop = IOLoop.instance()
+
+    signal.signal(signal.SIGTERM, sig_handler)
+    signal.signal(signal.SIGINT, sig_handler)
+
+    ioloop.start()
 
