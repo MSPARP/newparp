@@ -4,11 +4,13 @@
         <h2>Roulette</h2>
         <p>This is MSPARP's new roulette feature. If you want to use filters to select which characters you connect to, you can still do so with <a href="{{url_for("home", mode="search")}}">character search</a>. Otherwise, you can select your character (it's optional) and click Enter. You'll be randomly matched with another user but both of you will appear anonymously to each other.</p>
         <select name="id">
+            {% if characters: %}
             <optgroup label="Saved characters">
                 {% for character in characters: %}
                 <option value="c_{{character.id}}"{% if character.id == g.user.roulette_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
                 {% endfor %}
             </optgroup>
+            {% endif %}
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
                 {% for character in group.characters: %}

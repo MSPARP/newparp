@@ -12,7 +12,9 @@ var msparp = (function() {
 	// Character info
 	function update_character(data) {
 		if (typeof data["search_character"]!= "undefined") {
-			$("select[name=search_character_id]").val(data["search_character"]["id"]);
+			$("[name=search_character_id]").val(data["search_character"]["id"]);
+		} else {
+			$("[name=search_character_id]").val(data["id"]);
 		}
 		$("#toggle_with_settings").prop("checked", true).change();
 		$("input[name=name]").val(data["name"]);
@@ -94,6 +96,10 @@ var msparp = (function() {
 		// Search character dropdown
 		$("select[name=search_character_id]").change(function() {
 			$.get("/search_characters/"+this.value+".json", {}, update_character);
+		});
+		$("select[name=id]").change(function() {
+			var url = this.value[0] == "s" ? "search_characters" : "characters";
+			$.get("/" + url + "/" + this.value.substr(2) + ".json", {}, update_character);
 		});
 		// Text preview
 		var text_preview_container = $("#text_preview_container");

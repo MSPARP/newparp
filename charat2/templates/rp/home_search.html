@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% block content: %}
     <form action="{{url_for("rp_search_save")}}" method="post">
-        <h2>Roleplay as {% if characters: %}<select name="character_id">
-            <option value="">Saved characters...</option>
-            {% for character in characters: %}
-            <option value="{{character.id}}">{{character.title}}</option>
-            {% endfor %}
-        </select>{% endif %}<select name="search_character_id">
+        <h2>Roleplay as <select name="id">
+            {% if characters: %}
+            <optgroup label="Saved characters">
+                {% for character in characters: %}
+                <option value="c_{{character.id}}">{{character.title}}</option>
+                {% endfor %}
+            </optgroup>
+            {% endif %}
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
                 {% for character in group.characters: %}
-                <option value="{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                <option value="s_{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
                 {% endfor %}
             </optgroup>
             {% endfor %}
         </select></h2>
+        <input type="hidden" name="search_character_id" value="{{g.user.search_character_id}}">
         <div class="toggle_box">
             <input type="checkbox" id="toggle_with_settings">
             <h2>&gt; <label for="toggle_with_settings">With settings</label></h2>
