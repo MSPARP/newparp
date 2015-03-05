@@ -29,6 +29,10 @@ def mark_alive(f):
     def decorated_function(*args, **kwargs):
         g.joining = False
         g.chat_id = int(request.form["chat_id"])
+        # Don't bother with any of this if we have a socket open, because the
+        # request is probably from that window.
+        if g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) != 0:
+            return f(*args, **kwargs)
         session_online = g.redis.hexists("chat:%s:online" % g.chat_id, g.session_id)
         if not session_online:
             g.joining = True

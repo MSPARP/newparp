@@ -76,6 +76,7 @@ class ChatHandler(WebSocketHandler):
 
     def open(self, chat_id):
         sockets.add(self)
+        redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         print "socket opened:", self.id, self.chat.url, self.user.username
         try:
             join(redis, self.db, self)
@@ -117,6 +118,7 @@ class ChatHandler(WebSocketHandler):
                     send_userlist(self.db, redis, self.chat)
                 self.db.commit()
         print "socket closed:", self.id
+        redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         sockets.remove(self)
 
     def finish(self, *args, **kwargs):
