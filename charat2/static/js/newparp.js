@@ -279,6 +279,13 @@ var msparp = (function() {
 			var status;
 			var user_data = {};
 
+			// Websockets
+			var ws;
+			function launch_websocket() {
+				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
+				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
+			}
+
 			// Long polling
 			function launch_long_poll(joining) {
 				var data = { "chat_id": chat.id, "after": latest_message };
@@ -298,8 +305,48 @@ var msparp = (function() {
 			// Ping loop
 			function ping() {
 				if (status == "chatting") {
-					$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
+					if (ws && ws.readyState == 1) {
+						ws.send("ping");
+						window.setTimeout(ping, 10000);
+					} else {
+						$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
+					}
 				}
+			}
+
+			// Connecting and disconnecting
+			function connect() {
+				status = "chatting";
+
+				//launch_long_poll(true);
+				launch_websocket();
+				window.setTimeout(ping, 10000);
+
+				$("#disconnect_links").appendTo(document.body);
+				body.addClass("chatting");
+				$("#send_form input, #send_form button").prop("disabled", false);
+				text_preview.css("color", "#" + user.character.color);
+				text_input.css("color", "#" + user.character.color);
+				parse_variables();
+				scroll_to_bottom();
+				abscond_button.text("Abscond");
+			}
+			function exit() {
+				status = "disconnected";
+				body.removeClass("chatting");
+				$("#send_form input, #send_form button:not(#abscond_button)").prop("disabled", true);
+				if (chat.type == "group") {
+					info_panel.hide();
+					edit_info_panel.hide();
+				}
+				switch_character.hide();
+				settings.hide();
+				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
+			}
+			function disconnect() {
+				exit();
+				//$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+				if (ws) { ws.close(); }
 			}
 
 			// Quitting
@@ -312,7 +359,8 @@ var msparp = (function() {
 			$(window).unload(function() {
 				if (status == "chatting") {
 					status = "disconnected";
-					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+					//$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
+					if (ws) { ws.close(); }
 				}
 			});
 
@@ -969,37 +1017,6 @@ var msparp = (function() {
 			$("#user_list_button").click(function() { $("#user_list_container").show(); });
 			$("#switch_character_button").click(function() { settings.hide(); switch_character.show(); });
 			$("#settings_button").click(function() { switch_character.hide(); settings.show(); });
-
-			// Connecting and disconnecting
-			function connect() {
-				status = "chatting";
-				launch_long_poll(true);
-				$("#disconnect_links").appendTo(document.body);
-				window.setTimeout(ping, 10000);
-				body.addClass("chatting");
-				$("#send_form input, #send_form button").prop("disabled", false);
-				text_preview.css("color", "#" + user.character.color);
-				text_input.css("color", "#" + user.character.color);
-				parse_variables();
-				scroll_to_bottom();
-				abscond_button.text("Abscond");
-			}
-			function exit() {
-				status = "disconnected";
-				body.removeClass("chatting");
-				$("#send_form input, #send_form button:not(#abscond_button)").prop("disabled", true);
-				if (chat.type == "group") {
-					info_panel.hide();
-					edit_info_panel.hide();
-				}
-				switch_character.hide();
-				settings.hide();
-				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
-			}
-			function disconnect() {
-				exit();
-				$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
-			}
 
 			// Now all that's done, let's connect
 			connect();
