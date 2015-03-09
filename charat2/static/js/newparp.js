@@ -280,6 +280,7 @@ var msparp = (function() {
 			var user_data = {};
 
 			// Websockets
+			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
 			var ws;
 			function launch_websocket() {
 				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
@@ -305,9 +306,11 @@ var msparp = (function() {
 			// Ping loop
 			function ping() {
 				if (status == "chatting") {
-					if (ws && ws.readyState == 1) {
-						ws.send("ping");
-						window.setTimeout(ping, 10000);
+					if (messages_method == "websocket") {
+						if (ws.readyState == 1) {
+							ws.send("ping");
+							window.setTimeout(ping, 10000);
+						}
 					} else {
 						$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
 					}
@@ -317,11 +320,12 @@ var msparp = (function() {
 			// Connecting and disconnecting
 			function connect() {
 				status = "chatting";
-
-				//launch_long_poll(true);
-				launch_websocket();
+				if (messages_method == "websocket") {
+					launch_websocket();
+				} else {
+					launch_long_poll(true);
+				}
 				window.setTimeout(ping, 10000);
-
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
 				$("#send_form input, #send_form button").prop("disabled", false);
@@ -345,8 +349,11 @@ var msparp = (function() {
 			}
 			function disconnect() {
 				exit();
-				//$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
-				if (ws) { ws.close(); }
+				if (messages_method == "websocket") {
+					ws.close();
+				} else {
+					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id } });
+				}
 			}
 
 			// Quitting
@@ -359,8 +366,11 @@ var msparp = (function() {
 			$(window).unload(function() {
 				if (status == "chatting") {
 					status = "disconnected";
-					//$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false});
-					if (ws) { ws.close(); }
+					if (messages_method == "websocket") {
+						ws.close();
+					} else {
+						$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false });
+					}
 				}
 			});
 
