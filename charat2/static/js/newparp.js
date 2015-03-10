@@ -285,6 +285,11 @@ var msparp = (function() {
 			function launch_websocket() {
 				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
+				ws.onclose = function(e) {
+					if (status == "chatting") {
+						console.log(e);
+					}
+				}
 			}
 
 			// Long polling
@@ -350,7 +355,7 @@ var msparp = (function() {
 			function disconnect() {
 				exit();
 				if (messages_method == "websocket") {
-					ws.close();
+					ws.close(); receive_messages({});
 				} else {
 					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id } });
 				}
@@ -366,9 +371,7 @@ var msparp = (function() {
 			$(window).unload(function() {
 				if (status == "chatting") {
 					status = "disconnected";
-					if (messages_method == "websocket") {
-						ws.close();
-					} else {
+					if (messages_method != "websocket") {
 						$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false });
 					}
 				}

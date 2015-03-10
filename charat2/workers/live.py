@@ -110,13 +110,12 @@ class ChatHandler(WebSocketHandler):
         # Unsubscribe here and let the exit callback handle disconnecting.
         if hasattr(self, "redis_client"):
             self.redis_client.unsubscribe(self.redis_client.subscribed)
-        if self.joined:
-            if disconnect(redis, self.chat_id, self.id):
-                try:
-                    send_quit_message(self.db, redis, *self.get_chat_user())
-                except NoResultFound:
-                    send_userlist(self.db, redis, self.chat)
-                self.db.commit()
+        if self.joined and disconnect(redis, self.chat_id, self.id):
+            try:
+                send_quit_message(self.db, redis, *self.get_chat_user())
+            except NoResultFound:
+                send_userlist(self.db, redis, self.chat)
+            self.db.commit()
         print "socket closed:", self.id
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         sockets.remove(self)
