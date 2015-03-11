@@ -356,7 +356,6 @@ var msparp = (function() {
 				} else {
 					launch_long_poll(true);
 				}
-
 			}
 			function enter() {
 				status = "chatting";
@@ -369,6 +368,7 @@ var msparp = (function() {
 				parse_variables();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
+				$("#messages_method").text(messages_method);
 			}
 			function exit() {
 				status = "disconnected";
