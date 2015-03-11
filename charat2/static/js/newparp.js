@@ -282,12 +282,39 @@ var msparp = (function() {
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
 			var ws;
+			var ws_works = false;
 			function launch_websocket() {
+				// Don't create a new websocket unless the previous one is closed.
+				// This prevents problems with eg. double clicking the join button.
+				if (ws && ws.readyState != 3) { return; }
+				status = "connecting";
 				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
+				ws.onopen = function(e) { ws_works = true; enter(); }
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
 				ws.onclose = function(e) {
-					if (status == "chatting") {
-						console.log(e);
+					if (status == "connecting" || status == "chatting") {
+						// Fall back to long polling if we've never managed to connect.
+						if (!ws_works) {
+							messages_method = "long_poll";
+							launch_long_poll(true);
+							return;
+						}
+						// Otherwise try to reconnect.
+						exit();
+						if (!$("#conversation > :last-child").hasClass("message_connection_lost")) {
+							render_message({
+								"alias": "",
+								"color": "ff0000",
+								"id": null,
+								"name": "",
+								"posted": Math.floor(Date.now() / 1000),
+								"text": "Sorry, the connection to the server has been lost. Attempting to reconnect...",
+								"type": "connection_lost",
+								"user_number": null,
+							});
+							scroll_to_bottom();
+						}
+						window.setTimeout(launch_websocket, 2000);
 					}
 				}
 			}
@@ -295,7 +322,7 @@ var msparp = (function() {
 			// Long polling
 			function launch_long_poll(joining) {
 				var data = { "chat_id": chat.id, "after": latest_message };
-				if (joining) { data["joining"] = true; }
+				if (joining) { enter(); data["joining"] = true; }
 				$.post("/chat_api/messages", data, receive_messages).complete(function(jqxhr, text_status) {
 					if (status == "chatting") {
 						if (jqxhr.status < 400 && text_status == "success") {
@@ -324,12 +351,15 @@ var msparp = (function() {
 
 			// Connecting and disconnecting
 			function connect() {
-				status = "chatting";
 				if (messages_method == "websocket") {
 					launch_websocket();
 				} else {
 					launch_long_poll(true);
 				}
+
+			}
+			function enter() {
+				status = "chatting";
 				window.setTimeout(ping, 10000);
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
