@@ -220,6 +220,12 @@ var msparp = (function() {
 	}
 
 	return {
+		// Registration
+		"register": function() {
+			$("#register_show_password_input").change(function(e) {
+				$("#register_password_input, #register_password_again_input").attr("type", this.checked ? "text" : "password")
+			});
+		},
 		// Homepage
 		"home": function() {
 
