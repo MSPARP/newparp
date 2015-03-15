@@ -226,6 +226,12 @@ var msparp = (function() {
 				$("#register_password_input, #register_password_again_input").attr("type", this.checked ? "text" : "password")
 			});
 		},
+		// Logging in
+		"log_in": function() {
+			$("#log_in_show_password_input").change(function(e) {
+				$("#log_in_password_input").attr("type", this.checked ? "text" : "password")
+			});
+		},
 		// Homepage
 		"home": function() {
 
