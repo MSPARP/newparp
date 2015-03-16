@@ -23,7 +23,7 @@ def search_save():
     new_details = validate_character_form(request.form)
     g.user.search_character_id = new_details["search_character_id"]
     g.user.name = new_details["name"]
-    g.user.alias = new_details["alias"]
+    g.user.acronym = new_details["acronym"]
     g.user.color = new_details["color"]
     g.user.quirk_prefix = new_details["quirk_prefix"]
     g.user.quirk_suffix = new_details["quirk_suffix"]
@@ -75,7 +75,7 @@ def search_post():
 
     g.redis.hmset("searcher:%s:character" % searcher_id, {
         "name": g.user.name,
-        "alias": g.user.alias,
+        "acronym": g.user.acronym,
         "color": g.user.color,
         "quirk_prefix": g.user.quirk_prefix,
         "quirk_suffix": g.user.quirk_suffix,

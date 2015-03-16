@@ -116,7 +116,7 @@ class User(Base):
     roulette_character_id = Column(Integer, ForeignKey("characters.id"))
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    alias = Column(Unicode(15), nullable=False, default=u"??")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
     quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
@@ -151,7 +151,7 @@ class User(Base):
             "created": self.created,
             "last_online": self.last_online,
             "name": self.name,
-            "alias": self.alias,
+            "acronym": self.acronym,
             "color": self.color,
             "search_style": self.search_style,
             "search_level": self.search_level,
@@ -178,7 +178,7 @@ class Character(Base):
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    alias = Column(Unicode(15), nullable=False, default=u"??")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -201,7 +201,7 @@ class Character(Base):
             tags[request_tag.tag.type].append({
                 "type": request_tag.tag.type,
                 "name": request_tag.tag.name,
-                "alias": request_tag.alias,
+                "acronym": request_tag.acronym,
             })
         return tags
 
@@ -211,7 +211,7 @@ class Character(Base):
             "title": self.title,
             "search_character_id": self.search_character_id,
             "name": self.name,
-            "alias": self.alias,
+            "acronym": self.acronym,
             "color": self.color,
         }
         if include_default:
@@ -238,7 +238,7 @@ class SearchCharacter(Base):
     order = Column(Integer, nullable=False)
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    alias = Column(Unicode(15), nullable=False, default=u"??")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -258,7 +258,7 @@ class SearchCharacter(Base):
             "id": self.id,
             "title": self.title,
             "name": self.name,
-            "alias": self.alias,
+            "acronym": self.acronym,
             "color": self.color,
             "text_preview": self.text_preview,
         }
@@ -429,7 +429,7 @@ class ChatUser(Base):
     ), nullable=False, default=u"user")
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    alias = Column(Unicode(15), nullable=False, default=u"??")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -459,7 +459,7 @@ class ChatUser(Base):
         return cls(
             user_id=character.user.id,
             name=character.name,
-            alias=character.alias,
+            acronym=character.acronym,
             color=character.color,
             quirk_prefix=character.quirk_prefix,
             quirk_suffix=character.quirk_suffix,
@@ -492,7 +492,7 @@ class ChatUser(Base):
         return cls(
             user_id=user.id,
             name=dc.name,
-            alias=dc.alias,
+            acronym=dc.acronym,
             color=dc.color,
             quirk_prefix=dc.quirk_prefix,
             quirk_suffix=dc.quirk_suffix,
@@ -553,7 +553,7 @@ class ChatUser(Base):
         ucd = {
             "character": {
                 "name": self.name,
-                "alias": self.alias,
+                "acronym": self.acronym,
                 "color": self.color,
             },
             "meta": {
@@ -617,7 +617,7 @@ class Message(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    alias = Column(Unicode(15), nullable=False, default=u"")
+    acronym = Column(Unicode(15), nullable=False, default=u"")
 
     name = Column(Unicode(50), nullable=False, default=u"")
 
@@ -630,7 +630,7 @@ class Message(Base):
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,
-            "alias": self.alias,
+            "acronym": self.acronym,
             "name": self.name,
             "text": self.text,
         }
@@ -675,7 +675,7 @@ class Request(Base):
     character_id = Column(Integer, ForeignKey("characters.id"))
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
-    alias = Column(Unicode(15), nullable=False, default=u"??")
+    acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -708,7 +708,7 @@ class Request(Base):
             "posted": time.mktime(self.posted.timetuple()),
             "tags": self.tags_by_type(),
             "name": self.name,
-            "alias": self.alias,
+            "acronym": self.acronym,
             "color": self.color,
             "scenario": self.scenario,
             "prompt": self.prompt,

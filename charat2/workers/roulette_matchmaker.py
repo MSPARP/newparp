@@ -51,7 +51,7 @@ def get_character_info(db, searcher):
             return {}
         return {
             "name": character.name,
-            "alias": character.alias,
+            "acronym": character.acronym,
             "color": character.color,
             "quirk_prefix": character.quirk_prefix,
             "quirk_suffix": character.quirk_suffix,
@@ -68,7 +68,7 @@ def get_character_info(db, searcher):
         return {}
     return {
         "name": search_character.name,
-        "alias": search_character.alias,
+        "acronym": search_character.acronym,
         "color": search_character.color,
         "quirk_prefix": search_character.quirk_prefix,
         "quirk_suffix": search_character.quirk_suffix,

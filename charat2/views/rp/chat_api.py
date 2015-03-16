@@ -109,7 +109,7 @@ def send():
         user_id=g.user.id,
         type=message_type,
         color=g.chat_user.color,
-        alias=g.chat_user.alias,
+        acronym=g.chat_user.acronym,
         name=g.chat_user.name,
         text=text,
     ))
@@ -182,8 +182,8 @@ def set_group():
         name=set_chat_user.name,
         type="user_group",
         text=message % (
-            g.chat_user.name, g.chat_user.alias,
-            set_chat_user.name, set_chat_user.alias,
+            g.chat_user.name, g.chat_user.acronym,
+            set_chat_user.name, set_chat_user.acronym,
         ),
     ))
 
@@ -237,8 +237,8 @@ def user_action():
                 text=(
                     "%s [%s] kicked %s [%s] from the chat."
                 ) % (
-                    g.chat_user.name, g.chat_user.alias,
-                    set_chat_user.name, set_chat_user.alias,
+                    g.chat_user.name, g.chat_user.acronym,
+                    set_chat_user.name, set_chat_user.acronym,
                 )
             ))
         return "", 204
@@ -263,16 +263,16 @@ def user_action():
             ban_message = (
                 "%s [%s] banned %s [%s] from the chat. Reason: %s"
             ) % (
-                g.chat_user.name, g.chat_user.alias,
-                set_chat_user.name, set_chat_user.alias,
+                g.chat_user.name, g.chat_user.acronym,
+                set_chat_user.name, set_chat_user.acronym,
                 reason,
             )
         else:
             ban_message = (
                 "%s [%s] banned %s [%s] from the chat."
             ) % (
-                g.chat_user.name, g.chat_user.alias,
-                set_chat_user.name, set_chat_user.alias,
+                g.chat_user.name, g.chat_user.acronym,
+                set_chat_user.name, set_chat_user.acronym,
             )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
@@ -356,7 +356,7 @@ def set_flag():
         chat_id=g.chat.id,
         user_id=g.user.id,
         type="chat_meta",
-        text=message % (g.chat_user.name, g.chat_user.alias),
+        text=message % (g.chat_user.name, g.chat_user.acronym),
     ))
 
     return "", 204
@@ -384,7 +384,7 @@ def set_topic():
             name=g.chat_user.name,
             type="chat_meta",
             text="%s [%s] removed the conversation topic." % (
-                g.chat_user.name, g.chat_user.alias,
+                g.chat_user.name, g.chat_user.acronym,
             ),
         ))
     else:
@@ -394,7 +394,7 @@ def set_topic():
             name=g.chat_user.name,
             type="chat_meta",
             text="%s [%s] changed the topic to \"%s\"" % (
-                g.chat_user.name, g.chat_user.alias, topic,
+                g.chat_user.name, g.chat_user.acronym, topic,
             ),
         ))
 
@@ -424,7 +424,7 @@ def set_info():
         name=g.chat_user.name,
         type="chat_meta",
         text="%s [%s] edited the chat information." % (
-            g.chat_user.name, g.chat_user.alias,
+            g.chat_user.name, g.chat_user.acronym,
         ),
     ))
 
@@ -437,13 +437,13 @@ def save():
 
     # Remember old values so we can check if they've changed later.
     old_name = g.chat_user.name
-    old_alias = g.chat_user.alias
+    old_acronym = g.chat_user.acronym
     old_color = g.chat_user.color
 
     new_details = validate_character_form(request.form)
     g.chat_user.search_character_id = new_details["search_character_id"]
     g.chat_user.name = new_details["name"]
-    g.chat_user.alias = new_details["alias"]
+    g.chat_user.acronym = new_details["acronym"]
     g.chat_user.color = new_details["color"]
     g.chat_user.quirk_prefix = new_details["quirk_prefix"]
     g.chat_user.quirk_suffix = new_details["quirk_suffix"]
@@ -451,8 +451,8 @@ def save():
     g.chat_user.replacements = new_details["replacements"]
     g.chat_user.regexes = new_details["regexes"]
 
-    # Send a message if name or alias has changed.
-    if g.chat_user.name != old_name or g.chat_user.alias != old_alias:
+    # Send a message if name or acronym has changed.
+    if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym:
         if g.chat_user.group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
@@ -462,8 +462,8 @@ def save():
                 type="user_info",
                 name=g.chat_user.name,
                 text=("%s [%s] is now %s [%s].") % (
-                    old_name, old_alias,
-                    g.chat_user.name, g.chat_user.alias,
+                    old_name, old_acronym,
+                    g.chat_user.name, g.chat_user.acronym,
                 ),
             ))
     # Just refresh the user list if the color has changed.
@@ -487,15 +487,15 @@ def save_from_character():
 
     old_color = g.chat_user.color
 
-    # Send a message if name, alias or color has changed.
+    # Send a message if name, acronym or color has changed.
     changed = (
         g.chat_user.name != character.name
-        or g.chat_user.alias != character.alias
+        or g.chat_user.acronym != character.acronym
         or g.chat_user.color != character.color
     )
 
     g.chat_user.name = character.name
-    g.chat_user.alias = character.alias
+    g.chat_user.acronym = character.acronym
     g.chat_user.color = character.color
     g.chat_user.quirk_prefix = character.quirk_prefix
     g.chat_user.quirk_suffix = character.quirk_suffix
@@ -513,8 +513,8 @@ def save_from_character():
                 type="user_info",
                 name=g.chat_user.name,
                 text=("%s [%s] is now %s [%s].") % (
-                    old_name, old_alias,
-                    g.chat_user.name, g.chat_user.alias,
+                    old_name, old_acronym,
+                    g.chat_user.name, g.chat_user.acronym,
                 ),
             ))
 
@@ -578,7 +578,7 @@ def look_up_user():
         "posted": time.time(),
         "type": "chat_meta",
         "color": "000000",
-        "alias": "",
+        "acronym": "",
         "name": "",
         "text": "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
             chat_user.number,

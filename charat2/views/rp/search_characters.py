@@ -115,7 +115,7 @@ def save_search_character(id):
     if new_details["title"] != "":
         character.title = new_details["title"]
     character.name = new_details["name"]
-    character.alias = new_details["alias"]
+    character.acronym = new_details["acronym"]
     character.color = new_details["color"]
     character.quirk_prefix = new_details["quirk_prefix"]
     character.quirk_suffix = new_details["quirk_suffix"]

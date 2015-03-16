@@ -18,7 +18,7 @@ var msparp = (function() {
 		}
 		$("#toggle_with_settings").prop("checked", true).change();
 		$("input[name=name]").val(data["name"]);
-		$("input[name=alias]").val(data["alias"]).keyup();
+		$("input[name=acronym]").val(data["acronym"]).keyup();
 		$("input[name=color]").val("#"+data["color"]).change();
 		if (!body.hasClass("chat")) {
 			if (typeof data["text_preview"]!= "undefined") {
@@ -103,12 +103,12 @@ var msparp = (function() {
 		});
 		// Text preview
 		var text_preview_container = $("#text_preview_container");
-		var text_preview_alias = $("#text_preview_alias");
-		$("input[name=alias]").keyup(function() {
+		var text_preview_acronym = $("#text_preview_acronym");
+		$("input[name=acronym]").keyup(function() {
 			if (this.value == "") {
-				text_preview_alias.text("");
+				text_preview_acronym.text("");
 			} else {
-				text_preview_alias.text(this.value + ": ");
+				text_preview_acronym.text(this.value + ": ");
 			}
 		});
 		// Color and color_hex
@@ -315,7 +315,7 @@ var msparp = (function() {
 						exit();
 						if (!$("#conversation > :last-child").hasClass("message_connection_lost")) {
 							render_message({
-								"alias": "",
+								"acronym": "",
 								"color": "ff0000",
 								"id": null,
 								"name": "",
@@ -426,7 +426,7 @@ var msparp = (function() {
 					exit();
 					if (data.exit == "kick") {
 						render_message({
-							"alias": "",
+							"acronym": "",
 							"color": "000000",
 							"id": null,
 							"name": "",
@@ -528,8 +528,8 @@ var msparp = (function() {
 					var text = "* " + message.name + " " + message.text;
 				} else if (chat.type == "roulette" && ["ic", "ooc"].indexOf(message.type) != -1) {
 					var text = (message.user_number == user.meta.number ? "▲" : "▼") + ": " + message.text;
-				} else if (message.alias != "") {
-					var text = message.alias + ": " + message.text;
+				} else if (message.acronym != "") {
+					var text = message.acronym + ": " + message.text;
 				} else {
 					var text = message.text;
 				}

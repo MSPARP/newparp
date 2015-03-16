@@ -382,8 +382,8 @@ def unban(url):
         type="user_action",
         name=own_chat_user.name,
         text="%s [%s] unbanned %s [%s] from the chat." % (
-            own_chat_user.name, own_chat_user.alias,
-            unban_chat_user.name, unban_chat_user.alias,
+            own_chat_user.name, own_chat_user.acronym,
+            unban_chat_user.name, unban_chat_user.acronym,
         ),
     ))
     if "Referer" in request.headers:

@@ -81,7 +81,7 @@ def validate_character_form(form):
         "title": form["title"][:50] if "title" in form else "",
         "search_character_id": search_character_id,
         "name": form["name"][:50],
-        "alias": form["alias"][:15],
+        "acronym": form["acronym"][:15],
         "color": color,
         "quirk_prefix": form["quirk_prefix"][:100],
         "quirk_suffix": form["quirk_suffix"][:100],
@@ -103,7 +103,7 @@ def save_character_from_form(character_id, form, new_details=None):
         character.title = new_details["title"]
     character.search_character_id = new_details["search_character_id"]
     character.name = new_details["name"]
-    character.alias = new_details["alias"]
+    character.acronym = new_details["acronym"]
     character.color = new_details["color"]
     character.quirk_prefix = new_details["quirk_prefix"]
     character.quirk_suffix = new_details["quirk_suffix"]

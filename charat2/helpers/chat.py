@@ -82,7 +82,7 @@ def join(redis, db, context):
                 user_id=context.user.id,
                 type="join",
                 name=context.chat_user.name,
-                text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.alias),
+                text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.acronym),
             ))
 
 
@@ -194,7 +194,7 @@ def send_quit_message(db, redis, chat_user, user, chat):
             type="disconnect",
             name=chat_user.name,
             text=("%s [%s] disconnected.") % (
-                chat_user.name, chat_user.alias,
+                chat_user.name, chat_user.acronym,
             ),
         ))
 

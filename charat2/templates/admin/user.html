@@ -31,7 +31,7 @@
             {% if user.default_character %}
             <tr>
                 <td>Default character</td>
-                <td><span style="color: #{{user.default_character.color}};">{{user.default_character.name}}</span> [<span style="color: #{{user.default_character.color}};">{{user.default_character.alias}}</span>]</td>
+                <td><span style="color: #{{user.default_character.color}};">{{user.default_character.name}}</span> [<span style="color: #{{user.default_character.color}};">{{user.default_character.acronym}}</span>]</td>
             </tr>
             {% endif %}
         </tbody>
@@ -49,7 +49,7 @@
             </tr>
             <tr>
                 <td>With settings</td>
-                <td><span style="color: #{{user.color}};">{{user.name}}</span> [<span style="color: #{{user.color}};">{{user.alias}}</span>]</td>
+                <td><span style="color: #{{user.color}};">{{user.name}}</span> [<span style="color: #{{user.color}};">{{user.acronym}}</span>]</td>
             </tr>
             <tr>
                 <td>Style</td>

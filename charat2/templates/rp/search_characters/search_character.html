@@ -21,8 +21,8 @@
                 <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name if character else ""}}">
             </p>
             <p>
-                <label for="alias_input">Alias:</label>
-                <input type="text" id="alias_input" name="alias" size="15" maxlength="15" value="{{character.alias if character else ""}}">
+                <label for="acronym_input">Acronym:</label>
+                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym if character else ""}}">
             </p>
             <p>
                 <label for="color_input">Color:</label>
@@ -34,7 +34,7 @@
             </p>
         </div>
         <p id="text_preview_container" style="color: #{{character.color if character else "000000"}};">
-            <span id="text_preview_alias">{% if character and character.alias != "": %}{{character.alias}}: {% endif %}</span><span id="text_preview">{{character.text_preview if character else ""}}</span>
+            <span id="text_preview_acronym">{% if character and character.acronym != "": %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.text_preview if character else ""}}</span>
         </p>
         <h2>Typing quirks</h2>
         <div class="input_table">
