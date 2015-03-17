@@ -965,6 +965,8 @@ var msparp = (function() {
 					if (this.value[0] == "/") {
 						var text = this.value.substr(1);
 						text_preview.text(get_command_description(text) || text);
+					} else if (this.value.substr(0, 7) == "http://" || this.value.substr(0, 8) == "https://") {
+						text_preview.text(this.value);
 					} else {
 						text_preview.text(apply_quirks(this.value));
 					}
@@ -979,6 +981,8 @@ var msparp = (function() {
 					// Try to parse the text as a command, and skip the rest if we can.
 					var executed = execute_command(text);
 					if (executed) { text_input.val(""); return false; }
+				} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://") {
+					// Don't apply quirks if the message starts with a link.
 				} else {
 					text = apply_quirks(text).trim();
 				}
