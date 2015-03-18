@@ -962,18 +962,20 @@ var msparp = (function() {
 			var text_preview = $("#text_preview");
 			var text_input = $("input[name=text]").keyup(function() {
 				if (user.meta.show_preview) {
-					if (this.value[0] == "/") {
-						var text = this.value.substr(1);
+					text = this.value.trim()
+					if (text[0] == "/") {
+						var text = text.substr(1);
 						text_preview.text(get_command_description(text) || text);
-					} else if (this.value.substr(0, 7) == "http://" || this.value.substr(0, 8) == "https://") {
-						text_preview.text(this.value);
+					} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || ["((", "[[", "{{"].indexOf(text.substr(0, 2)) != -1) {
+						text_preview.text(text);
 					} else {
-						text_preview.text(apply_quirks(this.value));
+						text_preview.text(apply_quirks(text));
 					}
 					resize_conversation();
 				}
 			});
 			var send_form = $("#send_form").submit(function() {
+				var message_type = "ic";
 				var text = text_input.val().trim();
 				if (text == "") { return false; }
 				if (text[0] == "/") {
@@ -983,12 +985,15 @@ var msparp = (function() {
 					if (executed) { text_input.val(""); return false; }
 				} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://") {
 					// Don't apply quirks if the message starts with a link.
+				} else if (["((", "[[", "{{"].indexOf(text.substr(0, 2)) != -1) {
+					// Don't apply quirks to OOC messages
+					message_type = "ooc";
 				} else {
 					text = apply_quirks(text).trim();
 				}
 				// Check if it's blank before and after because quirks may make it blank.
 				if (text == "") { return false; }
-				$.post("/chat_api/send", { "chat_id": chat.id, "text": text });
+				$.post("/chat_api/send", { "chat_id": chat.id, "text": text, "type": message_type });
 				text_input.val("");
 				last_alternating_line = !last_alternating_line;
 				return false;
