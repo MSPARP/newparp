@@ -217,6 +217,7 @@ def chat(chat, pm_user, url, fmt=None):
         PMChatUser = aliased(ChatUser)
         pm_chats = g.db.query(ChatUser, PMChat, PMChatUser).filter(
             ChatUser.user_id == g.user.id,
+            ChatUser.subscribed == True,
         ).join(
             PMChat,
             and_(

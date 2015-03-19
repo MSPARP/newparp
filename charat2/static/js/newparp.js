@@ -441,7 +441,7 @@ var msparp = (function() {
 					}
 					return;
 				}
-				if (typeof data.chat != "undefined") {
+				if (typeof data.chat != "undefined" && chat.type != "pm") {
 					chat = data.chat;
 					if (chat.type == "group") {
 						topic.text(chat.topic);
