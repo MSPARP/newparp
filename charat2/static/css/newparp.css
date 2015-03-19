@@ -20,9 +20,10 @@ Contents:
 	4. Your chats
 4. Chat window
 	1. Topbar and info panel
-	2. Sidebars
-	3. Conversation and send form
-	4. Log pages
+	2. PM chat list
+	3. Sidebars
+	4. Conversation and send form
+	5. Log pages
 
 */
 
@@ -229,7 +230,16 @@ section > .close:first-child { float: right; margin: 5px; }
 .topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 #info_panel p { white-space: pre-line; }
 
-/* 4.2. Sidebars */
+/* 4.2. PM chat list */
+
+#pm_chat_list { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+@media (min-width: 700px) {
+	#pm_chat_list { display: block; right: auto; width: 150px; }
+	#pm_chat_list .close:first-child { display: none; }
+	#pm_chat_list ~ #conversation, #pm_chat_list ~ #send_form { left: 160px; }
+}
+
+/* 4.3. Sidebars */
 
 .sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
 @media (min-width: 500px) {
@@ -249,7 +259,7 @@ section > .close:first-child { float: right; margin: 5px; }
 .group_silent { text-decoration: line-through; }
 #action_list { color: #000; text-decoration: none; font-style: normal; }
 
-/* 4.3. Conversation and send form */
+/* 4.4. Conversation and send form */
 
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
@@ -284,7 +294,7 @@ section > .close:first-child { float: right; margin: 5px; }
 #disconnect_links { display: none; }
 #conversation #disconnect_links { display: block; }
 
-/* 4.4. Log pages */
+/* 4.5. Log pages */
 
 .chat .pager, #archive_conversation { margin: 5px; padding: 2px 0; background-color: #eee; }
 .chat .pager { padding: 2px 5px; }

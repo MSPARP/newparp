@@ -43,8 +43,8 @@ def chat_list(fmt=None, type=None, page=1):
         # Join opposing ChatUser on PM chats so we know who the other person is.
         PMChatUser = aliased(ChatUser)
         chats = g.db.query(ChatUser, ChatClass, PMChatUser).filter(
-                ChatUser.subscribed == True,
-            ).join(ChatClass).outerjoin(
+            ChatUser.subscribed == True,
+        ).join(ChatClass).outerjoin(
             PMChatUser,
             and_(
                 ChatClass.type == "pm",

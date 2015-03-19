@@ -28,6 +28,19 @@
         <p><button type="submit">Save</button></p>
     </form>
 </section>
+{% elif chat.type == "pm": %}
+<section id="pm_chat_list">
+    <h2>PM chats</h2>
+    <ul>
+{% for pm_chat in pm_chats: %}
+{% if pm_chat[1].id == chat.id: %}
+        <li>{{pm_chat[2].user.username}}</li>
+{% else: %}
+        <li><a href="{{url_for("rp_chat", url="pm/" + pm_chat[2].user.username.lower())}}">{{pm_chat[2].user.username}}</a></li>
+{% endif %}
+{% endfor %}
+    </ul>
+</section>
 {% endif %}
 
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
@@ -187,10 +200,10 @@
 {% elif chat.type == "group": %}
         <li><a href="http://www.tumblr.com/share/link?name=Check+out+this+chat+I+just+had+on+MSPARP!&url={{url_for("rp_chat", url=chat.url, _external=True)}}&tags=msparp" target="_blank">Share this chat on Tumblr</a></li>
 {% endif %}
-		<li><a href="{{url_for("home", mode="search" if g.user.last_search_mode != "search" else None)}}">Character search</a></li>
-		<li><a href="{{url_for("home", mode="roulette" if g.user.last_search_mode != "roulette" else None)}}">Roulette</a></li>
-		<li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
-	</ul>
+        <li><a href="{{url_for("home", mode="search" if g.user.last_search_mode != "search" else None)}}">Character search</a></li>
+        <li><a href="{{url_for("home", mode="roulette" if g.user.last_search_mode != "roulette" else None)}}">Roulette</a></li>
+        <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
+    </ul>
 </section>
 
 {% endblock %}
