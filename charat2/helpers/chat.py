@@ -74,7 +74,7 @@ def join(redis, db, context):
     redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:
-        if context.chat_user.group == "silent" or context.chat.type == "roulette":
+        if context.chat_user.group == "silent" or context.chat.type in ("pm", "roulette"):
             send_userlist(db, redis, context.chat)
         else:
             send_message(db, redis, Message(
@@ -185,7 +185,7 @@ def disconnect_user(redis, chat_id, user_id):
 
 
 def send_quit_message(db, redis, chat_user, user, chat):
-    if chat_user.group == "silent" or chat.type == "roulette":
+    if chat_user.group == "silent" or chat.type in ("pm", "roulette"):
         send_userlist(db, redis, chat)
     else:
         send_message(db, redis, Message(
