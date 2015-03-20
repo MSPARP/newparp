@@ -33,11 +33,7 @@
     <h2>PM chats</h2>
     <ul>
 {% for pm_chat in pm_chats: %}
-{% if pm_chat[1].id == chat.id: %}
-        <li>{{pm_chat[2].user.username}}</li>
-{% else: %}
-        <li><a href="{{url_for("rp_chat", url="pm/" + pm_chat[2].user.username.lower())}}">{{pm_chat[2].user.username}}</a></li>
-{% endif %}
+        <li><a href="{{url_for("rp_chat", url="pm/" + pm_chat[2].user.username.lower())}}"{% if pm_chat[1].id == chat.id: %} class="active"{% endif %}>{{pm_chat[2].user.username}}</a></li>
 {% endfor %}
     </ul>
 </section>

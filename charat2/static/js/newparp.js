@@ -289,6 +289,7 @@ var msparp = (function() {
 
 			var conversation = $("#conversation");
 			var status;
+			var next_chat_url;
 			var user_data = {};
 
 			// Websockets
@@ -510,8 +511,22 @@ var msparp = (function() {
 					if (scroll_after_render) { scroll_to_bottom(); }
 				}
 				if (status == "disconnected") {
-					$("#disconnect_links").appendTo(conversation);
-					scroll_to_bottom();
+					if (next_chat_url) {
+						$.get("/" + next_chat_url + ".json", {}, function(data) {
+							chat = data.chat;
+							document.title = chat.title + " - MSPARP";
+							history.replaceState({}, chat.url, "/" + chat.url);
+							user = data.chat_user;
+							latest_message = data.latest_num;
+							conversation.html("<p><a href=\"/" + chat.url + "/log\" target=\"_blank\">View log</a></p>");
+							data.messages.forEach(render_message);
+							connect();
+						});
+						next_chat_url = null;
+					} else {
+						$("#disconnect_links").appendTo(conversation);
+						scroll_to_bottom();
+					}
 				}
 			}
 			function render_message(message) {
@@ -801,6 +816,15 @@ var msparp = (function() {
 					form_data.push({ name: "chat_id", value: chat.id });
 					$.post("/chat_api/set_info", form_data);
 					edit_info_panel.hide();
+					return false;
+				});
+			}
+
+			// PM chat list
+			if (chat.type == "pm") {
+				$("#pm_chat_list a").click(function() {
+					next_chat_url = "pm/" + this.innerHTML;
+					disconnect();
 					return false;
 				});
 			}
