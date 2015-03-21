@@ -236,6 +236,7 @@ section > .close:first-child { float: right; margin: 5px; }
 @media (min-width: 700px) {
 	#pm_chat_list { display: block; right: auto; width: 150px; }
 	#pm_chat_list .close:first-child { display: none; }
+	#pm_chat_list .active { color: #000; text-decoration: none; }
 	#pm_chat_list ~ #conversation, #pm_chat_list ~ #send_form { left: 160px; }
 }
 

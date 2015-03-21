@@ -822,9 +822,12 @@ var msparp = (function() {
 
 			// PM chat list
 			if (chat.type == "pm") {
-				$("#pm_chat_list a").click(function() {
+				var pm_chat_links = $("#pm_chat_list a").click(function() {
+					if (chat.url == "pm/" + this.innerHTML) { return false; }
 					next_chat_url = "pm/" + this.innerHTML;
 					disconnect();
+					pm_chat_links.removeClass("active");
+					$(this).addClass("active")
 					return false;
 				});
 			}
