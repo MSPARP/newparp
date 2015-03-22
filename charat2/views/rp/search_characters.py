@@ -63,6 +63,7 @@ def new_search_character_get():
 def new_search_character_post():
     new_details = validate_character_form(request.form)
     del new_details["search_character_id"]
+    del new_details["shortcut"]
     try:
         group = g.db.query(SearchCharacterGroup).filter(
             SearchCharacterGroup.id == request.form["group_id"],

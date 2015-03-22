@@ -8,6 +8,7 @@
             <tr>
                 <th>Title</th>
                 <th>Character</th>
+                <th>Shortcut</th>
                 <th>Default</th>
                 <th>Edit</th>
                 <th>Delete</th>
@@ -18,6 +19,7 @@
             <tr>
                 <td>{{character.title}}</td>
                 <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
+                <td>{% if character.shortcut: %}/{{character.shortcut}}{% endif %}</td>
                 <td>
                     {% if character != g.user.default_character: %}
                     <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><button type="submit">Set as default</button></form>

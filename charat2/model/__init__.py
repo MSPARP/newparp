@@ -176,6 +176,7 @@ class Character(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(Unicode(50), nullable=False)
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
+    shortcut = Column(Unicode(15))
 
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
@@ -210,6 +211,7 @@ class Character(Base):
             "id": self.id,
             "title": self.title,
             "search_character_id": self.search_character_id,
+            "shortcut": self.shortcut,
             "name": self.name,
             "acronym": self.acronym,
             "color": self.color,

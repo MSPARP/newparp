@@ -278,6 +278,11 @@ var msparp = (function() {
 		// Character pages
 		"character": function() {
 			initialize_character_form();
+			var shortcut_preview = $("#shortcut_preview");
+			$("#shortcut_input").keyup(function() {
+				var new_shortcut = this.value.trim();
+				shortcut_preview.text(new_shortcut ? "\"/" + this.value + "\"" : "the shortcut");
+			});
 		},
 		// Search character pages
 		"search_character": function() {

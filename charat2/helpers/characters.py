@@ -37,6 +37,8 @@ def validate_character_form(form):
         # id 1 always exists so fall back to that.
         search_character_id = 1
 
+    shortcut = form.get("shortcut", "").strip()
+
     # Don't allow a blank name.
     if form["name"] == "":
         abort(400)
@@ -80,6 +82,7 @@ def validate_character_form(form):
         # There are length limits on the front end so silently truncate these.
         "title": form["title"][:50] if "title" in form else "",
         "search_character_id": search_character_id,
+        "shortcut": shortcut if len(shortcut) != 0 else None,
         "name": form["name"][:50],
         "acronym": form["acronym"][:15],
         "color": color,
@@ -102,6 +105,7 @@ def save_character_from_form(character_id, form, new_details=None):
     if new_details["title"] != "":
         character.title = new_details["title"]
     character.search_character_id = new_details["search_character_id"]
+    character.shortcut = new_details["shortcut"]
     character.name = new_details["name"]
     character.acronym = new_details["acronym"]
     character.color = new_details["color"]
