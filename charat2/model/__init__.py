@@ -194,15 +194,15 @@ class Character(Base):
 
     def tags_by_type(self):
         tags = { "fandom": [], "character": [], "gender": [] }
-        for request_tag in self.tags:
+        for character_tag in self.tags:
             # Characters should only have fandom, character and gender tags,
             # so ignore any others.
-            if request_tag.tag.type not in tags:
+            if character_tag.tag.type not in tags:
                 continue
-            tags[request_tag.tag.type].append({
-                "type": request_tag.tag.type,
-                "name": request_tag.tag.name,
-                "acronym": request_tag.acronym,
+            tags[character_tag.tag.type].append({
+                "type": character_tag.tag.type,
+                "name": character_tag.tag.name,
+                "alias": character_tag.alias,
             })
         return tags
 
