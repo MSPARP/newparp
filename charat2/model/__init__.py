@@ -113,7 +113,11 @@ class User(Base):
 
     # Character info for searching
     roulette_search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
-    roulette_character_id = Column(Integer, ForeignKey("characters.id"))
+    roulette_character_id = Column(Integer, ForeignKey(
+        "characters.id",
+        name="users_roulette_character_fkey",
+        use_alter=True,
+    ))
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     name = Column(Unicode(50), nullable=False, default=u"Anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
