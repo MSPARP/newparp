@@ -61,12 +61,16 @@ if __name__ == "__main__":
 
         # Generate connected/searching counters every 10 seconds.
         if int(current_time) % 10 == 0:
+            print "Generating user counters."
             connected_users = set()
-            for chat_user in redis.zrange("chats_alive", 0, -1):
-                chat_id, session_id = chat_user.split("/")
-                user_id = redis.hget("chat:%s:online" % chat_id, session_id)
-                if user_id is not None:
-                    connected_users.add(user_id)
+            next_index = 0
+            while True:
+                next_index, keys = redis.scan(next_index,"chat:*:online")
+                for key in keys:
+                    for user_id in redis.hvals(key):
+                        connected_users.add(user_id)
+                if next_index == 0:
+                    break
             redis.set("connected_users", len(connected_users))
             searching_users = set()
             for searcher_id in redis.smembers("searchers"):
