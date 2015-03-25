@@ -117,7 +117,10 @@ var msparp = (function() {
 			text_preview_container.css("color", this.value);
 		});
 		var color_hex_input = $("#color_hex_input").keyup(function() {
-			color_input.val("#" + this.value);
+			if (this.value.length == 6) {
+				color_input.val("#" + this.value);
+				text_preview_container.css("color", "#" + this.value);
+			}
 		});
 		// Replacement list
 		$('.delete_replacement').click(delete_replacement);
