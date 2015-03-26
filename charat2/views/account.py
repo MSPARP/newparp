@@ -1,9 +1,10 @@
 from bcrypt import gensalt, hashpw
-from flask import abort, g, render_template, redirect, request, url_for
+from flask import abort, g, jsonify, render_template, redirect, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 from urlparse import urlparse
 
+from charat2.helpers import alt_formats
 from charat2.model import User
 from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, email_validator, reserved_usernames, secret_answer_replacer
@@ -19,8 +20,9 @@ def log_in_get():
     return render_template("account/log_in.html")
 
 
+@alt_formats(set(["json"]))
 @use_db
-def log_in_post():
+def log_in_post(fmt=None):
 
     # Check username, lowercase to make it case-insensitive.
     try:
@@ -28,6 +30,8 @@ def log_in_post():
             func.lower(User.username) == request.form["username"].lower()
         ).one()
     except NoResultFound:
+        if fmt == "json":
+            return jsonify({"error": "no_user"}), 400
         return redirect(referer_or_home() + "?log_in_error=no_user")
 
     # Check password.
@@ -35,9 +39,14 @@ def log_in_post():
         request.form["password"].encode("utf8"),
         user.password.encode()
     ) != user.password:
+        if fmt == "json":
+            return jsonify({"error": "wrong_password"}), 400
         return redirect(referer_or_home() + "?log_in_error=wrong_password")
 
     g.redis.set("session:" + g.session_id, user.id)
+
+    if fmt == "json":
+        return jsonify(user.to_dict(include_options=True))
 
     redirect_url = referer_or_home()
     # Make sure we don't go back to the log in page.
