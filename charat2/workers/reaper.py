@@ -69,7 +69,7 @@ if __name__ == "__main__":
                 for key in keys:
                     for user_id in redis.hvals(key):
                         connected_users.add(user_id)
-                if next_index == 0:
+                if int(next_index) == 0:
                     break
             redis.set("connected_users", len(connected_users))
             searching_users = set()
