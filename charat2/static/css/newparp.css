@@ -160,6 +160,9 @@ h2 select { font-size: 10pt; color: #000; }
 
 textarea { width: 100%; resize: vertical; }
 
+.pattern_error { display: none; }
+input:invalid + .pattern_error { display: inline; color: #f00; }
+
 /* 2.2. Toggle box */
 
 .toggle_box > input:first-child { display: none; }

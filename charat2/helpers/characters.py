@@ -7,7 +7,7 @@ from sqlalchemy import and_
 
 from charat2.helpers.tags import character_tags_from_form
 from charat2.model import case_options, Character, CharacterTag, SearchCharacter
-from charat2.model.validators import color_validator
+from charat2.model.validators import color_validator, username_validator
 
 
 def character_query(character_id, join_tags=False):
@@ -38,6 +38,8 @@ def validate_character_form(form):
         search_character_id = 1
 
     shortcut = form.get("shortcut", "").strip()
+    if shortcut and not username_validator.match(shortcut):
+        abort(400)
 
     # Don't allow a blank name.
     if form["name"] == "":

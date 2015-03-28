@@ -16,7 +16,7 @@
             </optgroup>
             {% endfor %}
         </select></h2>
-        <p><label for="shortcut_input">Shortcut: /<input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut if character and character.shortcut else ""}}"></label></p>
+        <p><label for="shortcut_input">Shortcut: /<input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut if character and character.shortcut else ""}}" pattern="^[-a-zA-Z0-9_]+$"><span class="pattern_error"> (shortcuts can only contain letters, numbers, hyphens and underscores)</span></label></p>
         <p>Type <span id="shortcut_preview">{% if character and character.shortcut: %}"/{{character.shortcut}}"{% else: %}the shortcut{% endif %}</span> to use this character's name and typing quirks for a single line.</p>
         <h2>With settings</h2>
         <div class="input_table">
