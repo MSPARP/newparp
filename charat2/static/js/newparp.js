@@ -790,7 +790,7 @@ var msparp = (function() {
 			}
 
 			// Perform BBCode conversion
-			$("#conversation div p").each(function(line) { user.meta.show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).text(bbremove(this.innerHTML)); });
+			$("#conversation div p").each(function(line) { user.meta.show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
 
 			// Topbar and info panel
 			if (chat.type == "group") {
@@ -1123,7 +1123,7 @@ var msparp = (function() {
 		},
 		"log": function(show_bbcode) {
 			// Perform BBCode conversion
-			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).text(bbremove(this.innerHTML)); });
+			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
 		},
 	};
 })();
