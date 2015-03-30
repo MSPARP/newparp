@@ -808,8 +808,8 @@ var msparp = (function() {
 				$("#edit_info_button").click(function() {
 					info_panel.hide();
 					// Only set these when we need them.
-					edit_info_panel.find("[name=description]").text(chat.description);
-					edit_info_panel.find("[name=rules]").text(chat.rules);
+					$("#edit_info_description").val(chat.description);
+					$("#edit_info_rules").val(chat.rules);
 					edit_info_panel.show();
 				});
 				$(".set_topic_button").click(function() {
