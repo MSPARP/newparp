@@ -1046,10 +1046,12 @@ var msparp = (function() {
 					// If the current temporary character matches, apply their quirks.
 					if (temporary_character && data.text.lastIndexOf(temporary_character.shortcut + " ", 0) == 0) {
 						data.text = apply_quirks(data.text.substr(temporary_character.shortcut.length + 1)).trim();
+						data.character_id = temporary_character.id;
 					} else {
 						// If not, look up another saved character.
 						for (var shortcut in character_shortcuts) {
 							if (data.text.lastIndexOf(shortcut + " ", 0) == 0) {
+								// XXX HANDLE CHARACTERS THAT DON'T EXIST.
 								$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
 									set_temporary_character(data);
 									send_form.submit();

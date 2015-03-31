@@ -104,13 +104,24 @@ def send():
 
     message_type = request.form.get("type", "ic")
 
+    # Set color, name and acronym based on a saved character.
+    character = None
+    if "character_id" in request.form:
+        try:
+            character = g.db.query(Character).filter(and_(
+                Character.id == request.form["character_id"],
+                Character.user_id == g.user.id,
+            )).order_by(Character.title).one()
+        except NoResultFound:
+            pass
+
     send_message(g.db, g.redis, Message(
         chat_id=g.chat.id,
         user_id=g.user.id,
         type=message_type,
-        color=g.chat_user.color,
-        acronym=g.chat_user.acronym,
-        name=g.chat_user.name,
+        color=character.color if character is not None else g.chat_user.color,
+        acronym=character.acronym if character is not None else g.chat_user.acronym,
+        name=character.name if character is not None else g.chat_user.name,
         text=text,
     ))
 
