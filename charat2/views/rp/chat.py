@@ -206,6 +206,7 @@ def chat(chat, pm_user, url, fmt=None):
 
     # Character and search character info for settings form.
     characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
+    character_shortcuts = {_.shortcut: _.id for _ in characters if _.shortcut is not None}
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
@@ -244,6 +245,7 @@ def chat(chat, pm_user, url, fmt=None):
         latest_num=latest_num,
         case_options=case_options,
         characters=characters,
+        character_shortcuts=character_shortcuts,
         search_character_groups=search_character_groups,
         pm_chats=pm_chats,
     )

@@ -293,7 +293,7 @@ var msparp = (function() {
 			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
 		},
 		// Chat window
-		"chat": function(chat, user, latest_message) {
+		"chat": function(chat, user, character_shortcuts, latest_message) {
 
 			var conversation = $("#conversation");
 			var status;
@@ -384,8 +384,7 @@ var msparp = (function() {
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
 				$("#send_form input, #send_form button").prop("disabled", false);
-				text_preview.css("color", "#" + user.character.color);
-				text_input.css("color", "#" + user.character.color);
+				set_temporary_character(null);
 				parse_variables();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
@@ -789,6 +788,14 @@ var msparp = (function() {
 				return false;
 			}
 
+			// Temporary characters
+			var temporary_character = null;
+			function set_temporary_character(data) {
+				temporary_character = data;
+				text_preview.css("color", "#" + (data || user.character).color);
+				text_input.css("color", "#" + (data || user.character).color);
+			}
+
 			// Perform BBCode conversion
 			$("#conversation div p").each(function(line) { user.meta.show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
 
@@ -949,8 +956,7 @@ var msparp = (function() {
 					form_data.push({ name: "chat_id", value: chat.id });
 					$.post("/chat_api/save", form_data, function(data) {
 						user = data;
-						text_preview.css("color", "#" + user.character.color);
-						text_input.css("color", "#" + user.character.color);
+						set_temporary_character(null);
 					});
 				}
 				switch_character.hide();
@@ -1000,37 +1006,74 @@ var msparp = (function() {
 					text = this.value.trim()
 					if (text[0] == "/") {
 						var text = text.substr(1);
-						text_preview.text(get_command_description(text) || text);
+						var command_description = get_command_description(text);
+						// Look up a saved character.
+						if (!command_description) {
+							// Skip all this if it's the same character as last time.
+							if (temporary_character && text.lastIndexOf(temporary_character.shortcut + " ", 0) == 0) {
+								text_preview.text(apply_quirks(text.substr(temporary_character.shortcut.length + 1)));
+								return;
+							}
+							for (var shortcut in character_shortcuts) {
+								if (text.lastIndexOf(shortcut + " ", 0) == 0) {
+									$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
+										set_temporary_character(data);
+										text_preview.text(apply_quirks(text.substr(shortcut.length + 1)));
+									});
+									return;
+								}
+							}
+						}
+						text_preview.text(command_description || text);
 					} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || ["((", "[[", "{{"].indexOf(text.substr(0, 2)) != -1) {
 						text_preview.text(text);
 					} else {
 						text_preview.text(apply_quirks(text));
 					}
+					// Clear the temporary character if necessary.
+					if (temporary_character) { set_temporary_character(null); }
 					resize_conversation();
 				}
 			});
 			var send_form = $("#send_form").submit(function() {
-				var message_type = "ic";
-				var text = text_input.val().trim();
-				if (text == "") { return false; }
-				if (text[0] == "/") {
-					var text = text.substr(1);
+				var data = { "chat_id": chat.id, "text": text_input.val().trim(), "type": "ic" };
+				if (data.text == "") { return false; }
+				if (data.text[0] == "/") {
+					data.text = data.text.substr(1);
 					// Try to parse the text as a command, and skip the rest if we can.
-					var executed = execute_command(text);
+					var executed = execute_command(data.text);
 					if (executed) { text_input.val(""); return false; }
-				} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://") {
+					// If the current temporary character matches, apply their quirks.
+					if (temporary_character && data.text.lastIndexOf(temporary_character.shortcut + " ", 0) == 0) {
+						data.text = apply_quirks(data.text.substr(temporary_character.shortcut.length + 1)).trim();
+					} else {
+						// If not, look up another saved character.
+						for (var shortcut in character_shortcuts) {
+							if (data.text.lastIndexOf(shortcut + " ", 0) == 0) {
+								$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
+									set_temporary_character(data);
+									send_form.submit();
+								});
+								return false;
+							}
+						}
+						// If that doesn't work, make sure the temporary character is cleared.
+						if (temporary_character) { set_temporary_character(null); }
+					}
+				} else if (data.text.substr(0, 7) == "http://" || data.text.substr(0, 8) == "https://") {
 					// Don't apply quirks if the message starts with a link.
-				} else if (["((", "[[", "{{"].indexOf(text.substr(0, 2)) != -1) {
+				} else if (["((", "[[", "{{"].indexOf(data.text.substr(0, 2)) != -1) {
 					// Don't apply quirks to OOC messages
-					message_type = "ooc";
+					data.type = "ooc";
 				} else {
-					text = apply_quirks(text).trim();
+					data.text = apply_quirks(data.text).trim();
 				}
 				// Check if it's blank before and after because quirks may make it blank.
-				if (text == "") { return false; }
-				$.post("/chat_api/send", { "chat_id": chat.id, "text": text, "type": message_type });
+				if (data.text == "") { return false; }
+				$.post("/chat_api/send", data);
 				text_input.val("");
 				last_alternating_line = !last_alternating_line;
+				if (temporary_character) { set_temporary_character(null); }
 				return false;
 			});
 			var send_button = send_form.find("button[type=submit]");
@@ -1038,9 +1081,10 @@ var msparp = (function() {
 			// Typing quirks
 			var last_alternating_line = false;
 			function apply_quirks(text) {
+				var character = (temporary_character || user.character);
 				// Case options.
 				// ["case"] instead of .case because .case breaks some phones and stuff.
-				switch (user.character["case"]) {
+				switch (character["case"]) {
 					case "lower":
 						// Adaptive lower
 						// Part 1: convert words to lower case if they have at least one lower case letter in them.
@@ -1080,13 +1124,13 @@ var msparp = (function() {
 						break;
 				}
 				// Ordinary replacements. Escape any regex control characters before replacing.
-				user.character.replacements.forEach(function(replacement) {
+				character.replacements.forEach(function(replacement) {
 					RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
 					var re = new RegExp(RegExp.quote(replacement[0]), "g");
 					text = text.replace(re, replacement[1]);
 				});
 				// Regex replacements
-				user.character.regexes.forEach(function(replacement) {
+				character.regexes.forEach(function(replacement) {
 					try {
 						re = new RegExp(replacement[0], "g");
 						text = text.replace(re, replacement[1]);
@@ -1096,7 +1140,7 @@ var msparp = (function() {
 					}
 				});
 				// Prefix and suffix
-				return user.character.quirk_prefix + text + user.character.quirk_suffix;
+				return character.quirk_prefix + text + character.quirk_suffix;
 			}
 
 			// Abscond/reconnect button
