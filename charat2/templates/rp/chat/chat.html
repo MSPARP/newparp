@@ -72,10 +72,13 @@
         <h3>&gt; <label for="mod_tools_toggle">Mod tools</label></h3>
         <p><button class="set_topic_button">Set topic</button></p>
         <p><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></p>
-        <p><label><input type="checkbox" id="flag_publicity"> Show in public chat list</label></p>
-        {% if chat_user.computed_group == "admin": %}
-        <p><label><input type="checkbox" id="flag_publicity_pinned"> Pin to top of list</label></p>
-        {% endif %}
+        <p><label>Publicity: <select id="flag_publicity">
+            <option value="unlisted">Unlisted</option>
+            <option value="listed">Listed</option>
+            {% if g.user.group == "admin": %}
+            <option value="pinned">Pinned</option>
+            {% endif %}
+        </select></p>
         <p><label><select id="flag_style">
             <option value="script">Script</option>
             <option value="paragraph">Paragraph</option>

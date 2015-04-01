@@ -461,9 +461,13 @@ var msparp = (function() {
 							rules.text(bbremove(chat.rules));
 						}
 						flag_autosilence.prop("checked", chat.autosilence);
-						flag_publicity.prop("checked", chat.publicity == "listed" || chat.publicity == "pinned");
-						flag_publicity.prop("disabled", chat.publicity == "pinned");
-						if (user.meta.group == "admin") { flag_publicity_pinned.prop("checked", chat.publicity == "pinned"); }
+						if (chat.publicity == "pinned" && user.meta.group != "admin") {
+							flag_publicity.val("listed");
+							flag_publicity.prop("disabled", true);
+						} else {
+							flag_publicity.val(chat.publicity);
+							flag_publicity.prop("disabled", false);
+						}
 						flag_style.val(chat.style);
 						flag_level.val(chat.level);
 						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
@@ -857,13 +861,8 @@ var msparp = (function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "autosilence", "value": this.checked ? "on" : "off" });
 				});
 				var flag_publicity = $("#flag_publicity").change(function() {
-					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "listed" : "unlisted" });
+					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.value });
 				});
-				if (user.meta.group == "admin") {
-					var flag_publicity_pinned = $("#flag_publicity_pinned").change(function() {
-						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.checked ? "pinned" : "listed" });
-					});
-				}
 				var flag_style = $("#flag_style").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "style", "value": this.value });
 				});
