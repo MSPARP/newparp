@@ -16,7 +16,15 @@ from tornado.websocket import WebSocketHandler
 from tornadoredis import Client
 from uuid import uuid4
 
-from charat2.helpers.chat import disconnect, get_userlist, join, KickedException, send_quit_message
+from charat2.helpers.chat import (
+    UnauthorizedException,
+    KickedException,
+    authorize_joining,
+    join,
+    get_userlist,
+    disconnect,
+    send_quit_message,
+)
 from charat2.model import sm, AnyChat, Ban, ChatUser, Message, User
 from charat2.model.connections import redis_pool
 
@@ -57,12 +65,6 @@ class ChatHandler(WebSocketHandler):
             self.send_error(400)
             return
         self.db = sm()
-        if self.db.query(func.count('*')).select_from(Ban).filter(and_(
-            Ban.chat_id == self.chat_id,
-            Ban.user_id == self.user_id,
-        )).scalar() != 0:
-            self.send_error(403)
-            return
         try:
             self.chat_user, self.user, self.chat = self.get_chat_user()
         except NoResultFound:
@@ -71,6 +73,11 @@ class ChatHandler(WebSocketHandler):
         self.user.last_online = datetime.now()
         self.user.last_ip = self.request.headers["X-Forwarded-For"]
         if self.user.group == "banned":
+            self.send_error(403)
+            return
+        try:
+            authorize_joining(redis, self.db, self)
+        except UnauthorizedException:
             self.send_error(403)
             return
 

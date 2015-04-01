@@ -11,6 +11,10 @@ from charat2.model import AnyChat, Ban, Message, ChatUser
 from charat2.model.connections import db_connect, get_chat_user
 
 
+class UnauthorizedException(Exception):
+    pass
+
+
 class KickedException(Exception):
     pass
 
@@ -36,17 +40,15 @@ def mark_alive(f):
         session_online = g.redis.hexists("chat:%s:online" % g.chat_id, g.session_id)
         if not session_online:
             g.joining = True
+            # Make sure we're connected to the database.
             db_connect()
-            # Make sure we're connected to the database for the ban checking.
-            # Check if we're banned.
-            if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-                Ban.chat_id == g.chat_id,
-                Ban.user_id == g.user_id,
-            )).scalar() != 0:
-                abort(403)
             # Get ChatUser if we haven't got it already.
             if not hasattr(g, "chat_user"):
                 get_chat_user()
+            try:
+                authorize_joining(g.redis, g.db, g)
+            except UnauthorizedException:
+                abort(403)
             try:
                 join(g.redis, g.db, g)
             except KickedException:
@@ -60,18 +62,41 @@ def mark_alive(f):
     return decorated_function
 
 
-def join(redis, db, context):
+def authorize_joining(redis, db, context):
+    """Stuff to be verified before a person can join a chat.
+
+    This includes checking whether they're banned, whether the chat is private,
+    and whether there are already too many people in the chat.
+
+    These checks are run before a socket is opened, so the kick check can't
+    happen here because it needs to send a message back to the client rather
+    than just 403ing.
+    """
+
     # XXX ONLINE USER LIMITS ETC. HERE.
+
+    if db.query(func.count('*')).select_from(Ban).filter(and_(
+        Ban.chat_id == context.chat_id,
+        Ban.user_id == context.user_id,
+    )).scalar() != 0:
+        raise UnauthorizedException
+
+
+def join(redis, db, context):
+
     # If they've been kicked recently, don't let them in.
     if redis.exists("kicked:%s:%s" % (context.chat.id, context.user.id)):
         raise KickedException
+
     # Update their last_online.
     context.chat_user.last_online = datetime.now()
     user_online = str(context.user.id) in redis.hvals("chat:%s:online" % context.chat.id)
+
     # Add them to the online list.
     # Use socket id for websockets or session id for long polling.
     online_id = context.id if hasattr(context, "id") else context.session_id
     redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
+
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:
         if context.chat_user.group == "silent" or context.chat.type in ("pm", "roulette"):
