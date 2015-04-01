@@ -1019,6 +1019,10 @@ var msparp = (function() {
 									$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
 										set_temporary_character(data);
 										text_preview.text(apply_quirks(text.substr(shortcut.length + 1)));
+									}).error(function() {
+										set_temporary_character(null);
+										delete character_shortcuts[shortcut];
+										text_input.keyup();
 									});
 									return;
 								}
@@ -1051,9 +1055,12 @@ var msparp = (function() {
 						// If not, look up another saved character.
 						for (var shortcut in character_shortcuts) {
 							if (data.text.lastIndexOf(shortcut + " ", 0) == 0) {
-								// XXX HANDLE CHARACTERS THAT DON'T EXIST.
 								$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
 									set_temporary_character(data);
+									send_form.submit();
+								}).error(function() {
+									set_temporary_character(null);
+									delete character_shortcuts[shortcut];
 									send_form.submit();
 								});
 								return false;
