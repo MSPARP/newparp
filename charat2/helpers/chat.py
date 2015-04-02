@@ -79,6 +79,9 @@ def authorize_joining(redis, db, context):
 
     # XXX ONLINE USER LIMITS ETC. HERE.
 
+    if context.chat.type == "group" and context.chat.publicity == "admin_only" and context.user.group != "admin":
+        raise UnauthorizedException
+
     if db.query(func.count('*')).select_from(Ban).filter(and_(
         Ban.chat_id == context.chat_id,
         Ban.user_id == context.user_id,

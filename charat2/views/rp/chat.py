@@ -104,6 +104,8 @@ def get_chat(f):
             if request.method != "GET":
                 abort(404)
             return redirect(url_for(request.endpoint, url="theoubliette", fmt=fmt))
+        except UnauthorizedException:
+            abort(403)
 
         return f(chat, None, url, fmt, *args, **kwargs)
 

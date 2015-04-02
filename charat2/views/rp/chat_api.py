@@ -20,6 +20,7 @@ from charat2.helpers.chat import (
 from charat2.model import (
     case_options,
     Ban,
+    GroupChat,
     ChatUser,
     Message,
     User,
@@ -346,9 +347,10 @@ def set_flag():
 
     # Publicity is also an enum because we might add options for password
     # protected or invite only chats in the future.
-    elif (flag == "publicity" and value in ("unlisted", "listed", "pinned")):
-        # Only admins can pin/unpin.
-        if (value == "pinned" or g.chat.publicity == "pinned") and g.chat_user.computed_group != "admin":
+    elif (flag == "publicity" and value in GroupChat.publicity.type.enums):
+        # Only admins can set/unset pinned and admin_only.
+        admin_values = ("pinned", "admin_only")
+        if (value in admin_values or g.chat.publicity in admin_values) and g.chat_user.computed_group != "admin":
             abort(403)
         if value == g.chat.publicity:
             return "", 204
@@ -359,6 +361,8 @@ def set_flag():
             message = "%s [%s] listed the chat. It's now listed on the public chats page."
         elif g.chat.publicity == "pinned":
             message = "%s [%s] pinned the chat. It's now listed at the top of the public chats page."
+        elif g.chat.publicity == "admin_only":
+            message = "%s [%s] restricted the chat to admins."
 
     else:
         abort(400)

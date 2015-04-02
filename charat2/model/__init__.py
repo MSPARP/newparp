@@ -366,6 +366,7 @@ class GroupChat(Chat):
         u"listed",
         u"unlisted",
         u"pinned",
+        u"admin_only",
         name=u"group_chats_publicity",
     ), nullable=False, default=u"unlisted")
 
@@ -794,7 +795,7 @@ Index("characters_user_id", Character.user_id)
 Index(
     "group_chats_publicity_listed",
     GroupChat.publicity,
-    postgresql_where=GroupChat.publicity.in_((u"unlisted", u"pinned")),
+    postgresql_where=GroupChat.publicity.in_((u"listed", u"pinned")),
 )
 
 # Index for your chats list.
