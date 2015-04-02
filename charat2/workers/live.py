@@ -18,6 +18,7 @@ from uuid import uuid4
 
 from charat2.helpers.chat import (
     UnauthorizedException,
+    BannedException,
     KickedException,
     authorize_joining,
     join,
@@ -77,7 +78,7 @@ class ChatHandler(WebSocketHandler):
             return
         try:
             authorize_joining(redis, self.db, self)
-        except UnauthorizedException:
+        except (UnauthorizedException, BannedException):
             self.send_error(403)
             return
 

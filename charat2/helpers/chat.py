@@ -15,6 +15,10 @@ class UnauthorizedException(Exception):
     pass
 
 
+class BannedException(Exception):
+    pass
+
+
 class KickedException(Exception):
     pass
 
@@ -79,7 +83,7 @@ def authorize_joining(redis, db, context):
         Ban.chat_id == context.chat_id,
         Ban.user_id == context.user_id,
     )).scalar() != 0:
-        raise UnauthorizedException
+        raise BannedException
 
 
 def join(redis, db, context):

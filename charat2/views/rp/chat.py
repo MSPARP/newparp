@@ -8,7 +8,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.helpers.chat import send_message
+from charat2.helpers.chat import UnauthorizedException, BannedException, authorize_joining, send_message
 from charat2.model import (
     case_options,
     AnyChat,
@@ -94,11 +94,11 @@ def get_chat(f):
         except NoResultFound:
             abort(404)
 
-        # Redirect them to the oubliette if they're banned.
-        if g.user is not None and g.db.query(func.count('*')).select_from(Ban).filter(and_(
-            Ban.chat_id == chat.id,
-            Ban.user_id == g.user.id,
-        )).scalar() != 0:
+        g.chat = chat
+        g.chat_id = chat.id
+        try:
+            authorize_joining(g.redis, g.db, g)
+        except BannedException:
             if request.endpoint != "rp_chat" or chat.url == "theoubliette":
                 abort(403)
             if request.method != "GET":
@@ -326,11 +326,10 @@ def log(chat, pm_user, url, fmt=None, page=None):
 @alt_formats(set(["json"]))
 @use_db
 @log_in_required
-def users(url, fmt=None, page=1):
+@get_chat
+def users(chat, pm_user, url, fmt=None, page=1):
 
-    try:
-        chat = g.db.query(GroupChat).filter(GroupChat.url == url).one()
-    except NoResultFound:
+    if chat.type != "group":
         abort(404)
 
     try:
