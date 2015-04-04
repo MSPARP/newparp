@@ -298,6 +298,7 @@ def user_action():
             name=g.chat_user.name,
             text=ban_message,
         ))
+        set_chat_user.subscribed = False
         return "", 204
 
 
