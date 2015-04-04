@@ -73,6 +73,7 @@
         <p><button class="set_topic_button">Set topic</button></p>
         <p><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></p>
         <p><label>Publicity: <select id="flag_publicity">
+            <option value="private">Private</option>
             <option value="unlisted">Unlisted</option>
             <option value="listed">Listed</option>
             {% if g.user.group == "admin": %}

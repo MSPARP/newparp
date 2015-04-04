@@ -367,6 +367,7 @@ class GroupChat(Chat):
         u"unlisted",
         u"pinned",
         u"admin_only",
+        u"private",
         name=u"group_chats_publicity",
     ), nullable=False, default=u"unlisted")
 
@@ -649,6 +650,17 @@ class Message(Base):
         return md
 
 
+class Invite(Base):
+
+    __tablename__ = "invites"
+
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+
+    creator_id = Column(Integer, ForeignKey("users.id"))
+    created = Column(DateTime(), nullable=False, default=now)
+
+
 class Ban(Base):
 
     __tablename__ = "bans"
@@ -863,6 +875,35 @@ Message.chat_user = relation(
         Message.user_id == ChatUser.user_id,
     ),
     foreign_keys=[Message.chat_id, Message.user_id],
+)
+
+Invite.chat = relation(Chat, backref="invites")
+Invite.user = relation(
+    User,
+    backref="invites",
+    primaryjoin=Invite.user_id == User.id,
+)
+Invite.chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Invite.chat_id == ChatUser.chat_id,
+        Invite.user_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Invite.chat_id, Invite.user_id],
+    backref=backref("invite", uselist=False),
+)
+Invite.creator = relation(
+    User,
+    backref="invites_created",
+    primaryjoin=Invite.creator_id == User.id,
+)
+Invite.creator_chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Invite.chat_id == ChatUser.chat_id,
+        Invite.creator_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Invite.chat_id, Invite.creator_id],
 )
 
 Ban.chat = relation(Chat, backref="bans")

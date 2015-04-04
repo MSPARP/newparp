@@ -355,8 +355,10 @@ def set_flag():
         if value == g.chat.publicity:
             return "", 204
         g.chat.publicity = value
-        if g.chat.publicity == "unlisted":
-            message = "%s [%s] unlisted the chat."
+        if g.chat.publicity == "private":
+            message = "%s [%s] set the chat to private. Only users who have been invited can enter."
+        elif g.chat.publicity == "unlisted":
+            message = "%s [%s] unlisted the chat. Anyone can visit this chat, but only if they have the URL."
         elif g.chat.publicity == "listed":
             message = "%s [%s] listed the chat. It's now listed on the public chats page."
         elif g.chat.publicity == "pinned":

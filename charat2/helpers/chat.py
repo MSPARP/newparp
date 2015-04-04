@@ -7,7 +7,7 @@ from functools import wraps
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
-from charat2.model import AnyChat, Ban, Message, ChatUser
+from charat2.model import AnyChat, Ban, Invite, ChatUser, Message
 from charat2.model.connections import db_connect, get_chat_user
 
 
@@ -77,10 +77,24 @@ def authorize_joining(redis, db, context):
     than just 403ing.
     """
 
+    # Admins bypass all restrictions.
+    if context.user is not None and context.user.group == "admin":
+        return
+
     # XXX ONLINE USER LIMITS ETC. HERE.
 
-    if context.chat.type == "group" and context.chat.publicity == "admin_only" and context.user.group != "admin":
-        raise UnauthorizedException
+    if context.chat.type == "group":
+        if context.chat.publicity == "admin_only":
+            raise UnauthorizedException
+        elif context.chat.publicity == "private":
+            if context.user is None:
+                raise UnauthorizedException
+            # Creators bypass invite check.
+            if context.user.id != context.chat.creator_id and db.query(func.count('*')).select_from(Invite).filter(and_(
+                Invite.chat_id == context.chat_id,
+                Invite.user_id == context.user_id,
+            )).scalar() != 1:
+                raise UnauthorizedException
 
     if db.query(func.count('*')).select_from(Ban).filter(and_(
         Ban.chat_id == context.chat_id,
