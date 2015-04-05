@@ -350,6 +350,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
         ChatUser.chat_id == chat.id,
     ).options(
         joinedload(ChatUser.user),
+        joinedload_all("invite.creator_chat_user"),
         joinedload_all("ban.creator_chat_user"),
     ).order_by(ChatUser.number).limit(20).offset((page - 1) * 20).all()
 
