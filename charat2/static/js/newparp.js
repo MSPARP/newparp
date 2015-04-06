@@ -383,6 +383,7 @@ var msparp = (function() {
 				window.setTimeout(ping, 10000);
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
+				set_sidebar(null);
 				$("#send_form input, #send_form button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
@@ -398,8 +399,7 @@ var msparp = (function() {
 					info_panel.hide();
 					edit_info_panel.hide();
 				}
-				switch_character.hide();
-				settings.hide();
+				set_sidebar(null);
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 			}
 			function disconnect() {
@@ -852,7 +852,13 @@ var msparp = (function() {
 			}
 
 			// Sidebars
-			$(".close").click(function() { $(this).parentsUntil("body").last().hide(); });
+			var sidebars = $(".sidebar");
+			function set_sidebar(sidebar_id) {
+				sidebars.css("display", "none");
+				if (status == "chatting" && !sidebar_id && window.innerWidth >= 500) { sidebar_id = "user_list_container"; }
+				if (sidebar_id) { $("#" + sidebar_id).css("display", "block"); }
+			}
+			$(".sidebar .close").click(function() { set_sidebar(null); });
 
 			// Mod tools
 			if (chat.type == "group") {
@@ -919,8 +925,8 @@ var msparp = (function() {
 						}
 						$.post("/chat_api/save_variables", { "chat_id": chat.id, "ignored_numbers": user.meta.ignored_numbers.toString() });
 					});
-					$("#action_switch_character").click(function() { $("#switch_character").show(); });
-					$("#action_settings").click(function() { $("#settings").show(); });
+					$("#action_switch_character").click(function() { set_sidebar("switch_character"); });
+					$("#action_settings").click(function() { set_sidebar("settings"); });
 					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
@@ -958,7 +964,7 @@ var msparp = (function() {
 						set_temporary_character(null);
 					});
 				}
-				switch_character.hide();
+				set_sidebar(null);
 				return false;
 			});
 
@@ -1165,9 +1171,9 @@ var msparp = (function() {
 			});
 
 			// Other buttons
-			$("#user_list_button").click(function() { $("#user_list_container").show(); });
-			$("#switch_character_button").click(function() { settings.hide(); switch_character.show(); });
-			$("#settings_button").click(function() { switch_character.hide(); settings.show(); });
+			$("#user_list_button").click(function() { set_sidebar("user_list_container"); });
+			$("#switch_character_button").click(function() { set_sidebar("switch_character"); });
+			$("#settings_button").click(function() { set_sidebar("settings"); });
 
 			// Now all that's done, let's connect
 			connect();
