@@ -130,6 +130,10 @@ def create_chat():
     if len(title) == 0:
         title = lower_url
 
+    # Don't allow the URL to collide with the chat_api route
+    if lower_url == "chat_api":
+        return redirect(url_for("rp_groups", create_chat_error="url_taken"))
+
     # Check the URL against the routing to make sure it doesn't crash into any
     # of the other routes.
     route, args = current_app.url_map.bind("").match("/" + lower_url)
