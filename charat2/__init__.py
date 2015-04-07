@@ -9,7 +9,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import account, admin, rp
+from charat2.views import account, admin, errors, rp
 from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, roulette, search, search_characters
 
 from flask.ext.babel import Babel, gettext
@@ -169,6 +169,12 @@ make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 
 make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
+
+# 11. Error handlers
+
+app.error_handler_spec[None][403] = errors.error_403
+app.error_handler_spec[None][404] = errors.error_404
+app.error_handler_spec[None][500] = errors.error_500
 
 # XXX dear fucking lord we need traversal
 
