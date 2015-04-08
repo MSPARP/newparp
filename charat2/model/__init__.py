@@ -531,6 +531,7 @@ class ChatUser(Base):
 
     # Minimum ranks for actions.
     action_ranks = {
+        "invite": 3,
         "ban": 3,
         "kick": 2,
         # XXX different ranks for each flag?

@@ -17,6 +17,7 @@ from charat2.model import (
     Chat,
     ChatUser,
     GroupChat,
+    Invite,
     Message,
     PMChat,
     SearchCharacterGroup,
@@ -382,6 +383,61 @@ def users(chat, pm_user, url, fmt=None, page=1):
         users=users,
         paginator=paginator,
     )
+
+
+@use_db
+@log_in_required
+@get_chat
+def invite(chat, pm_user, url, fmt):
+
+    if request.form["username"] == g.user.username:
+        abort(404)
+
+    if chat.type != "group" or chat.publicity != "private":
+        abort(404)
+
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except NoResultFound:
+        abort(404)
+
+    if not own_chat_user.can("invite"):
+        abort(403)
+
+    try:
+        invite_user = g.db.query(User).filter(
+            func.lower(User.username) == request.form["username"].lower(),
+        ).one()
+    except NoResultFound:
+        abort(404)
+
+    if g.db.query(func.count("*")).select_from(Invite).filter(and_(
+        Invite.chat_id == chat.id, Invite.user_id == invite_user.id,
+    )).scalar() != 0:
+        abort(404)
+
+    g.db.add(Invite(chat_id=chat.id, user_id=invite_user.id, creator_id=g.user.id))
+
+    send_message(g.db, g.redis, Message(
+        chat_id=chat.id,
+        user_id=invite_user.id,
+        type="user_action",
+        name=own_chat_user.name,
+        text="%s [%s] invited %s to the chat." % (
+            own_chat_user.name, own_chat_user.acronym,
+            invite_user.username,
+        ),
+    ))
+
+    if "X-Requested-With" in request.headers and request.headers["X-Requested-With"] == "XMLHttpRequest":
+        return "", 204
+
+    if "Referer" in request.headers:
+        return redirect(request.headers["Referer"])
+    return redirect(url_for("rp_chat_users", url=url))
 
 
 @use_db
