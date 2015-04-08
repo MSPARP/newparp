@@ -119,7 +119,7 @@ class User(Base):
         use_alter=True,
     ))
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
-    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    name = Column(Unicode(50), nullable=False, default=u"anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
@@ -182,7 +182,7 @@ class Character(Base):
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     shortcut = Column(Unicode(15))
 
-    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    name = Column(Unicode(50), nullable=False, default=u"anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
@@ -243,7 +243,7 @@ class SearchCharacter(Base):
     group_id = Column(Integer, ForeignKey("search_character_groups.id"), nullable=False)
     order = Column(Integer, nullable=False)
 
-    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    name = Column(Unicode(50), nullable=False, default=u"anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
@@ -436,7 +436,7 @@ class ChatUser(Base):
         name=u"chat_users_group",
     ), nullable=False, default=u"user")
 
-    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    name = Column(Unicode(50), nullable=False, default=u"anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
@@ -694,7 +694,7 @@ class Request(Base):
 
     character_id = Column(Integer, ForeignKey("characters.id"))
 
-    name = Column(Unicode(50), nullable=False, default=u"Anonymous")
+    name = Column(Unicode(50), nullable=False, default=u"anonymous")
     acronym = Column(Unicode(15), nullable=False, default=u"??")
 
     # Must be a hex code.
