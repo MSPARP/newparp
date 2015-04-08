@@ -386,17 +386,23 @@ def users(chat, pm_user, url, fmt=None, page=1):
 
 @use_db
 @log_in_required
-def unban(url):
+@get_chat
+def unban(chat, pm_user, url, fmt):
+
+    if chat.type != "group":
+        abort(404)
+
     try:
-        chat = g.db.query(GroupChat).filter(GroupChat.url == url).one()
         own_chat_user = g.db.query(ChatUser).filter(and_(
             ChatUser.chat_id == chat.id,
             ChatUser.user_id == g.user.id,
         )).one()
     except NoResultFound:
         abort(404)
+
     if not own_chat_user.can("ban"):
         abort(403)
+
     try:
         unban_chat_user = g.db.query(ChatUser).filter(and_(
             ChatUser.chat_id == chat.id,
@@ -404,11 +410,14 @@ def unban(url):
         )).one()
     except (NoResultFound, ValueError):
         abort(404)
+
     try:
         ban = g.db.query(Ban).filter(and_(Ban.chat_id == chat.id, Ban.user_id == unban_chat_user.user_id)).one()
     except NoResultFound:
         abort(404)
+
     g.db.delete(ban)
+
     send_message(g.db, g.redis, Message(
         chat_id=chat.id,
         user_id=unban_chat_user.user_id,
@@ -419,6 +428,7 @@ def unban(url):
             unban_chat_user.name, unban_chat_user.acronym,
         ),
     ))
+
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"])
     return redirect(url_for("rp_chat_users", url=url))
