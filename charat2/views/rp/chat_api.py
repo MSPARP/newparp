@@ -20,11 +20,12 @@ from charat2.helpers.chat import (
 from charat2.model import (
     case_options,
     Ban,
-    GroupChat,
+    Character,
     ChatUser,
+    GroupChat,
+    Invite,
     Message,
     User,
-    Character,
 )
 from charat2.model.connections import (
     get_chat_user,
@@ -256,36 +257,52 @@ def user_action():
         return "", 204
 
     elif action == "ban":
-        # Skip if they're already banned.
-        if g.db.query(func.count('*')).select_from(Ban).filter(and_(
-            Ban.chat_id == g.chat.id,
-            Ban.user_id == set_user.id,
-        )).scalar() != 0:
-            return "", 204
-        reason = None
-        if "reason" in request.form:
-            reason = request.form["reason"].strip()[:500] or None
-        g.db.add(Ban(
-            user_id=set_user.id,
-            chat_id=g.chat.id,
-            creator_id=g.user.id,
-            reason=reason,
-        ))
-        if request.form.get("reason") is not None:
+        # In private chats, this un-invites someone instead of banning them.
+        if g.chat.publicity == "private":
+            deleted = g.db.query(Invite).filter(and_(
+                Invite.chat_id == g.chat.id,
+                Invite.user_id == set_user.id,
+            )).delete()
+            # Don't send a message if there wasn't an invite.
+            if not deleted:
+                return "", 204
             ban_message = (
-                "%s [%s] banned %s [%s] from the chat. Reason: %s"
+                "%s [%s] un-invited %s [%s] from the chat."
             ) % (
                 g.chat_user.name, g.chat_user.acronym,
                 set_chat_user.name, set_chat_user.acronym,
-                reason,
             )
         else:
-            ban_message = (
-                "%s [%s] banned %s [%s] from the chat."
-            ) % (
-                g.chat_user.name, g.chat_user.acronym,
-                set_chat_user.name, set_chat_user.acronym,
-            )
+            # Skip if they're already banned.
+            if g.db.query(func.count('*')).select_from(Ban).filter(and_(
+                Ban.chat_id == g.chat.id,
+                Ban.user_id == set_user.id,
+            )).scalar() != 0:
+                return "", 204
+            reason = None
+            if "reason" in request.form:
+                reason = request.form["reason"].strip()[:500] or None
+            g.db.add(Ban(
+                user_id=set_user.id,
+                chat_id=g.chat.id,
+                creator_id=g.user.id,
+                reason=reason,
+            ))
+            if request.form.get("reason") is not None:
+                ban_message = (
+                    "%s [%s] banned %s [%s] from the chat. Reason: %s"
+                ) % (
+                    g.chat_user.name, g.chat_user.acronym,
+                    set_chat_user.name, set_chat_user.acronym,
+                    reason,
+                )
+            else:
+                ban_message = (
+                    "%s [%s] banned %s [%s] from the chat."
+                ) % (
+                    g.chat_user.name, g.chat_user.acronym,
+                    set_chat_user.name, set_chat_user.acronym,
+                )
         g.redis.publish(
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"ban\"}",
