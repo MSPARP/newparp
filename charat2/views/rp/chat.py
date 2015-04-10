@@ -385,6 +385,60 @@ def users(chat, pm_user, url, fmt=None, page=1):
     )
 
 
+@alt_formats(set(["json"]))
+@use_db
+@log_in_required
+@get_chat
+def invites(chat, pm_user, url, fmt=None, page=1):
+
+    if chat.type != "group" or chat.publicity != "private":
+        abort(404)
+
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except NoResultFound:
+        abort(404)
+
+    if not own_chat_user.can("invite"):
+        abort(403)
+
+    invite_count = g.db.query(func.count('*')).select_from(Invite).filter(
+        Invite.chat_id == chat.id,
+    ).scalar()
+
+    invites = g.db.query(Invite, User).filter(
+        Invite.chat_id == chat.id,
+    ).join(Invite.user).options(
+        joinedload(Invite.chat_user),
+        joinedload(Invite.creator_chat_user),
+    ).order_by(User.username).limit(20).offset((page - 1) * 20).all()
+
+    if len(invites) == 0 and page != 1:
+        abort(404)
+
+    if fmt == "json":
+        raise NotImplementedError
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=20,
+        item_count=invite_count,
+        url=lambda page: url_for("rp_invites", url=url, page=page),
+    )
+
+    return render_template(
+        "rp/chat/chat_invites.html",
+        chat=chat,
+        own_chat_user=own_chat_user,
+        invites=invites,
+        paginator=paginator,
+    )
+
+
 @use_db
 @log_in_required
 @get_chat

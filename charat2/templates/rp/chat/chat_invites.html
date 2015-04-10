@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title: %}Invitations to {{chat.title}} - {% endblock %}
+{% block content: %}
+<h2>Invitations to {{chat.title}}</h2>
+{% if invites: %}
+{{pager()}}
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>#</th>
+            <th>Character</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invite, user in invites: %}
+        <tr>
+            <td>{{user.username}}</td>
+            <td>{% if invite.chat_user %}{{invite.chat_user.number}}{% endif %}</td>
+            <td>{% if invite.chat_user %}<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.name}}</span>{% if invite.chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.acronym}}</span>]{% endif %}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{{pager()}}
+{% else: %}
+<p>Nobody has been invited to this chat.</p>
+{% endif %}
+{% endblock %}
+

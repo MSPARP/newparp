@@ -135,6 +135,7 @@ app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
+make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
 
 app.add_url_rule("/<path:url>/invite", "rp_chat_invite", chat.invite, methods=("POST",))
 app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POST",))
