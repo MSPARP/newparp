@@ -72,7 +72,7 @@ def use_db(f):
             try:
                 g.user = g.db.query(User).filter(User.id == g.user_id).one()
             except NoResultFound:
-                pass
+                return f(*args, **kwargs)
             g.user.last_online = datetime.now()
             g.user.last_ip = request.headers["X-Forwarded-For"]
             if g.user.group == "banned":
