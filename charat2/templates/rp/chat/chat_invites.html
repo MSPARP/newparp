@@ -11,6 +11,7 @@
             <th>#</th>
             <th>Character</th>
             <th>Invited by</th>
+            <th>Un-invite</th>
         </tr>
     </thead>
     <tbody>
@@ -20,6 +21,10 @@
             <td>{% if invite.chat_user %}{{invite.chat_user.number}}{% endif %}</td>
             <td>{% if invite.chat_user %}<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.name}}</span>{% if invite.chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.acronym}}</span>]{% endif %}{% endif %}</td>
             <td>{% if invite.creator_chat_user %}<span style="color: #{{invite.creator_chat_user.color}}">{{invite.creator_chat_user.name}}</span>{% if invite.creator_chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{invite.creator_chat_user.number}}){% endif %}</td>
+            <td>{% if user != g.user: %}<form action="{{url_for("rp_chat_uninvite", url=chat.url)}}" method="post">
+                <input type="hidden" name="username" value="{{user.username}}">
+                <button type="submit">Un-invite</button>
+            </form>{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -29,6 +34,9 @@
 <p>Nobody has been invited to this chat.</p>
 {% endif %}
 <form action="{{url_for("rp_chat_invite", url=chat.url)}}" method="post">
+{% if "invite_error" in request.args and request.args["invite_error"] == "no_user": %}
+    <p class="error">There doesn't seem to be an account with that username.</p>
+{% endif %}
     <p>Username: <input type="text" name="username" required> <button type="submit">Invite</button></p>
 </form>
 {% endblock %}
