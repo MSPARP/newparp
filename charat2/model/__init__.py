@@ -635,7 +635,7 @@ class Message(Base):
     def to_dict(self, include_user=False):
         md = {
             "id": self.id,
-            "user_number": self.chat_user.number if self.user_id is not None else None,
+            "user_number": self.chat_user.number if self.chat_user is not None else None,
             "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,

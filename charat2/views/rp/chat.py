@@ -466,32 +466,39 @@ def invite(chat, pm_user, url, fmt):
             func.lower(User.username) == request.form["username"].lower(),
         ).one()
     except NoResultFound:
-        abort(404)
+        if (
+            "X-Requested-With" in request.headers
+            and request.headers["X-Requested-With"] == "XMLHttpRequest"
+        ):
+            abort(404)
+        return redirect((
+            request.headers.get("Referer") or url_for("rp_invites", url=url)
+        ).split("?")[0] + "?invite_error=user_not_found")
 
     if g.db.query(func.count("*")).select_from(Invite).filter(and_(
         Invite.chat_id == chat.id, Invite.user_id == invite_user.id,
-    )).scalar() != 0:
-        abort(404)
+    )).scalar() == 0:
+        g.db.add(Invite(chat_id=chat.id, user_id=invite_user.id, creator_id=g.user.id))
+        send_message(g.db, g.redis, Message(
+            chat_id=chat.id,
+            user_id=invite_user.id,
+            type="user_action",
+            name=own_chat_user.name,
+            text="%s [%s] invited %s to the chat." % (
+                own_chat_user.name, own_chat_user.acronym,
+                invite_user.username,
+            ),
+        ))
 
-    g.db.add(Invite(chat_id=chat.id, user_id=invite_user.id, creator_id=g.user.id))
-
-    send_message(g.db, g.redis, Message(
-        chat_id=chat.id,
-        user_id=invite_user.id,
-        type="user_action",
-        name=own_chat_user.name,
-        text="%s [%s] invited %s to the chat." % (
-            own_chat_user.name, own_chat_user.acronym,
-            invite_user.username,
-        ),
-    ))
-
-    if "X-Requested-With" in request.headers and request.headers["X-Requested-With"] == "XMLHttpRequest":
+    if (
+        "X-Requested-With" in request.headers
+        and request.headers["X-Requested-With"] == "XMLHttpRequest"
+    ):
         return "", 204
 
     if "Referer" in request.headers:
-        return redirect(request.headers["Referer"])
-    return redirect(url_for("rp_chat_users", url=url))
+        return redirect(request.headers["Referer"].split("?")[0])
+    return redirect(url_for("rp_chat_invites", url=url))
 
 
 @use_db
