@@ -296,6 +296,7 @@ var msparp = (function() {
 		"chat": function(chat, user, character_shortcuts, latest_message) {
 
 			var conversation = $("#conversation");
+			var status_bar = $("#status_bar");
 			var status;
 			var next_chat_url;
 			var user_data = {};
@@ -477,8 +478,7 @@ var msparp = (function() {
 					}
 				}
 				if (typeof data.users != "undefined") {
-					user_list.html(user_list_template(data));
-					user_list.find("li").click(render_action_list);
+					var others_online = false;
 					for (var i = 0; i < data.users.length; i++) {
 						// Store user data so we can look it up for action lists.
 						user_data[data.users[i].meta.number] = data.users[i];
@@ -503,16 +503,24 @@ var msparp = (function() {
 								text_input.prop("disabled", false);
 								send_button.prop("disabled", false);
 							}
+						} else {
+							others_online = true;
 						}
 					}
-					// Re-render the action list if necessary.
-					if (action_user != null) {
-						var action_user_number = action_user.meta.number;
-						var action_user_li = user_list.find("#unum_" + action_user_number);
-						// Set to null so it fires the open action rather than the close action.
-						if (action_user_li.length != 0) {
-							action_user = null;
-							action_user_li.click();
+					if (chat.type == "roulette") {
+						status_bar.text("▼ is " + (others_online ? "online." : "offline."));
+					} else {
+						user_list.html(user_list_template(data));
+						user_list.find("li").click(render_action_list);
+						// Re-render the action list if necessary.
+						if (action_user != null) {
+							var action_user_number = action_user.meta.number;
+							var action_user_li = user_list.find("#unum_" + action_user_number);
+							// Set to null so it fires the open action rather than the close action.
+							if (action_user_li.length != 0) {
+								action_user = null;
+								action_user_li.click();
+							}
 						}
 					}
 				}
@@ -564,7 +572,7 @@ var msparp = (function() {
 				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
-				div.appendTo(conversation);
+				div.insertBefore(status_bar);
 				if (
 					(document.hidden || document.webkitHidden || document.msHidden)
 					// Skip notifications for system messages if we're hiding them.
@@ -855,8 +863,13 @@ var msparp = (function() {
 			var sidebars = $(".sidebar");
 			function set_sidebar(sidebar_id) {
 				sidebars.css("display", "none");
-				if (status == "chatting" && !sidebar_id && window.innerWidth >= 500) { sidebar_id = "user_list_container"; }
-				if (sidebar_id) { $("#" + sidebar_id).css("display", "block"); }
+				if (!sidebar_id && status == "chatting" && chat.type != "roulette" && window.innerWidth >= 500) { sidebar_id = "user_list_container"; }
+				if (sidebar_id) {
+					$(body).addClass("with_sidebar");
+					$("#" + sidebar_id).css("display", "block");
+				} else {
+					$(body).removeClass("with_sidebar");
+				}
 			}
 			$(".sidebar .close").click(function() { set_sidebar(null); });
 

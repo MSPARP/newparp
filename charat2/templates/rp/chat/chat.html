@@ -180,6 +180,7 @@
     {% for message in messages: %}
     {{render_message(message)}}
     {% endfor %}
+    <p id="status_bar">{% if chat.type == "roulette": %}&nbsp;{% endif %}</p>
 </section>
 
 <form id="send_form">
