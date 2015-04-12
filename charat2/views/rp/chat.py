@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from functools import wraps
 from math import ceil
@@ -479,6 +480,17 @@ def invite(chat, pm_user, url, fmt):
         Invite.chat_id == chat.id, Invite.user_id == invite_user.id,
     )).scalar() == 0:
         g.db.add(Invite(chat_id=chat.id, user_id=invite_user.id, creator_id=g.user.id))
+        # Subscribe them to the chat and make it unread so they get a notification about it.
+        try:
+            invite_chat_user = g.db.query(ChatUser).filter(and_(
+                ChatUser.chat_id == chat.id, ChatUser.user_id == invite_user.id,
+            )).one()
+        except NoResultFound:
+            new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
+            invite_chat_user = ChatUser(user_id=invite_user.id, chat_id=chat.id, number=new_number)
+            g.db.add(invite_chat_user)
+        invite_chat_user.subscribed = True
+        invite_chat_user.last_online = chat.last_message - timedelta(0, 1)
         send_message(g.db, g.redis, Message(
             chat_id=chat.id,
             user_id=invite_user.id,
@@ -536,6 +548,15 @@ def uninvite(chat, pm_user, url, fmt):
         g.db.query(Invite).filter(and_(
            Invite.chat_id == chat.id, Invite.user_id == invite_user.id,
         )).delete()
+        # Unsubscribing is impossible if they don't have access to the chat, so
+        # we need to force-unsubscribe them here.
+        try:
+            invite_chat_user = g.db.query(ChatUser).filter(and_(
+                ChatUser.chat_id == chat.id, ChatUser.user_id == invite_user.id,
+            )).one()
+            invite_chat_user.subscribed = False
+        except NoResultFound:
+            pass
         send_message(g.db, g.redis, Message(
             chat_id=chat.id,
             user_id=invite_user.id,

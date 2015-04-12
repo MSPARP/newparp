@@ -19,7 +19,7 @@
         <tr>
             <td>{{user.username}}</td>
             <td>{% if invite.chat_user %}{{invite.chat_user.number}}{% endif %}</td>
-            <td>{% if invite.chat_user %}<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.name}}</span>{% if invite.chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.acronym}}</span>]{% endif %}{% endif %}</td>
+            <td><span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.name}}</span>{% if invite.chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.chat_user.acronym}}</span>]{% endif %}</td>
             <td>{% if invite.creator_chat_user %}<span style="color: #{{invite.creator_chat_user.color}}">{{invite.creator_chat_user.name}}</span>{% if invite.creator_chat_user.acronym != "": %} [<span style="color: #{{invite.chat_user.color}}">{{invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{invite.creator_chat_user.number}}){% endif %}</td>
             <td>{% if user != g.user: %}<form action="{{url_for("rp_chat_uninvite", url=chat.url)}}" method="post">
                 <input type="hidden" name="username" value="{{user.username}}">
