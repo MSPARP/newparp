@@ -507,7 +507,9 @@ var msparp = (function() {
 							others_online = true;
 						}
 					}
-					if (chat.type == "roulette") {
+					if (chat.type == "pm") {
+						status_bar.text(chat.url.substr(3) + " is " + (others_online ? "online." : "offline."));
+					} else if (chat.type == "roulette") {
 						status_bar.text("▼ is " + (others_online ? "online." : "offline."));
 					} else {
 						user_list.html(user_list_template(data));
@@ -538,6 +540,7 @@ var msparp = (function() {
 							user = data.chat_user;
 							latest_message = data.latest_num;
 							conversation.html("<p><a href=\"/" + chat.url + "/log\" target=\"_blank\">View log</a></p>");
+							status_bar = $("<p>").attr("id", "status_bar").appendTo(conversation);
 							data.messages.forEach(render_message);
 							connect();
 						});
@@ -863,7 +866,11 @@ var msparp = (function() {
 			var sidebars = $(".sidebar");
 			function set_sidebar(sidebar_id) {
 				sidebars.css("display", "none");
-				if (!sidebar_id && status == "chatting" && chat.type != "roulette" && window.innerWidth >= 500) { sidebar_id = "user_list_container"; }
+				if (
+					!sidebar_id && status == "chatting"
+					&& chat.type != "pm" && chat.type != "roulette"
+					&& window.innerWidth >= 500
+				) { sidebar_id = "user_list_container"; }
 				if (sidebar_id) {
 					$(body).addClass("with_sidebar");
 					$("#" + sidebar_id).css("display", "block");
