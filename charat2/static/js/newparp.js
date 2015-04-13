@@ -486,7 +486,7 @@ var msparp = (function() {
 						if (data.users[i].meta.number == user.meta.number) {
 							user.meta.group = data.users[i].meta.group;
 							if (chat.type == "group") {
-								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod" || user.meta.group == "mod2" || user.meta.group == "mod3") {
+								if (user.meta.group == "admin" || user.meta.group == "creator" || user.meta.group == "mod3" || user.meta.group == "mod2" || user.meta.group == "mod1") {
 									mod_tools.show();
 									info_panel_controls.show();
 									flag_messages.hide();
@@ -614,9 +614,9 @@ var msparp = (function() {
 			var group_descriptions = {
 				"admin": "God tier moderator - MSPARP staff.",
 				"creator": "Chat creator - can silence, kick and ban other users.",
-				"mod": "Professional Wet Blanket - can silence, kick and ban other users.",
+				"mod3": "Professional Wet Blanket - can silence, kick and ban other users.",
 				"mod2": "Bum's Rusher - can silence and kick other users.",
-				"mod3": "Amateur Gavel-Slinger - can silence other users.",
+				"mod1": "Amateur Gavel-Slinger - can silence other users.",
 				"user": "",
 				"silent": "Silenced.",
 			};
@@ -682,7 +682,7 @@ var msparp = (function() {
 					},
 				},
 				{
-					"regex": /^set (\d+) (mod|mod2|mod3|user|silent)$/,
+					"regex": /^set (\d+) (mod3|mod2|mod1|user|silent)$/,
 					"group_chat_only": true,
 					"minimum_rank": 1,
 					"description": function(match) {
@@ -915,7 +915,7 @@ var msparp = (function() {
 			var action_user = null;
 			var action_list = $("#action_list");
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
-			var ranks = { "admin": Infinity, "creator": Infinity, "mod": 3, "mod2": 2, "mod3": 1, "user": 0, "silent": -1 };
+			var ranks = { "admin": Infinity, "creator": Infinity, "mod3": 3, "mod2": 2, "mod1": 1, "user": 0, "silent": -1 };
 			function render_action_list() {
 				var action_user_number = parseInt(this.id.substr(5));
 				if (action_user && action_user_number == action_user.meta.number) {
@@ -947,7 +947,7 @@ var msparp = (function() {
 					});
 					$("#action_switch_character").click(function() { set_sidebar("switch_character"); });
 					$("#action_settings").click(function() { set_sidebar("settings"); });
-					$("#action_mod, #action_mod2, #action_mod3, #action_user, #action_silent").click(function() {
+					$("#action_mod3, #action_mod2, #action_mod1, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
 					$("#action_kick, #action_ban").click(function() {

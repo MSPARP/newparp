@@ -173,11 +173,11 @@ def set_group():
     if set_group == set_chat_user.group:
         return "", 204
 
-    if set_group == "mod":
+    if set_group == "mod3":
         message = ("%s [%s] set %s [%s] to Professional Wet Blanket. They can now silence, kick and ban other users.")
     elif set_group == "mod2":
         message = ("%s [%s] set %s [%s] to Bum's Rusher. They can now silence and kick other users.")
-    elif set_group == "mod3":
+    elif set_group == "mod1":
         message = ("%s [%s] set %s [%s] to Amateur Gavel-Slinger. They can now silence other users.")
     elif set_group == "user":
         if set_chat_user.group == "silent":

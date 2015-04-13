@@ -428,9 +428,9 @@ class ChatUser(Base):
 
     # Ignored if the user is an admin or the chat's creator.
     group = Column(Enum(
-        u"mod",
-        u"mod2",
         u"mod3",
+        u"mod2",
+        u"mod1",
         u"silent",
         u"user",
         name=u"chat_users_group",
@@ -522,9 +522,9 @@ class ChatUser(Base):
     group_ranks = {
         "admin": float("inf"),
         "creator": float("inf"),
-        "mod": 3,
+        "mod3": 3,
         "mod2": 2,
-        "mod3": 1,
+        "mod1": 1,
         "user": 0,
         "silent": -1,
     }
