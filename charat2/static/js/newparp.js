@@ -323,7 +323,8 @@ var msparp = (function() {
 						}
 						// Otherwise try to reconnect.
 						exit();
-						if (!$("#conversation > :last-child").hasClass("message_connection_lost")) {
+						console.log($("#conversation > div:last-of-type"));
+						if (!$("#conversation > div:last-of-type").hasClass("message_connection_lost")) {
 							render_message({
 								"acronym": "",
 								"color": "ff0000",
@@ -952,7 +953,10 @@ var msparp = (function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
 					$("#action_kick, #action_ban").click(function() {
-						if (this.id == "action_ban") { var reason = prompt("Please provide a reason for this ban."); }
+						if (this.id == "action_ban") {
+							var reason = prompt("Please provide a reason for this ban.");
+							if (reason == null) { return; }
+						}
 						user_action(action_user.meta.number, this.id.substr(7), reason || "");
 					});
 					$("#action_look_up_user").click(function() {
