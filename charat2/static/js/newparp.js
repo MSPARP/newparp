@@ -305,18 +305,19 @@ var msparp = (function() {
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
 			var ws;
 			var ws_works = false;
+			var ws_connected_time = 0;
 			function launch_websocket() {
 				// Don't create a new websocket unless the previous one is closed.
 				// This prevents problems with eg. double clicking the join button.
 				if (ws && ws.readyState != 3) { return; }
 				status = "connecting";
 				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
-				ws.onopen = function(e) { ws_works = true; enter(); }
+				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); }
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
 				ws.onclose = function(e) {
 					if (status == "connecting" || status == "chatting") {
 						// Fall back to long polling if we've never managed to connect.
-						if (!ws_works) {
+						if (!ws_works || (Date.now() - ws_connected_time) < 5000) {
 							messages_method = "long_poll";
 							launch_long_poll(true);
 							return;
