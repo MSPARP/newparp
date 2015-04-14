@@ -50,7 +50,7 @@
                 <label>Case:</label>
                 <select name="case">
                     {% for value, name in case_options.items()|sort: %}
-                    <option value="{{value}}"{% if character and value == character.case %} selected="selected"{% endif %}>{{name}}</option>
+                    <option value="{{value}}"{% if (character and value == character.case) or (value == "normal" and not character) %} selected="selected"{% endif %}>{{name}}</option>
                     {% endfor %}
                 </select>
             </p>
