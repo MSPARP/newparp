@@ -848,6 +848,7 @@ var msparp = (function() {
 					edit_info_panel.hide();
 					return false;
 				});
+				$("#info_panel .close, #edit_info_panel .close").click(function() { info_panel.hide(); edit_info_panel.hide(); });
 			}
 
 			// PM chat list
