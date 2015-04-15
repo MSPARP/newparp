@@ -52,6 +52,14 @@ class ChatHandler(WebSocketHandler):
             ChatUser.chat_id == self.chat_id,
         )).one()
 
+    def set_typing(self, is_typing):
+        command = redis.sadd if is_typing else redis.srem
+        typing_key = "chat:%s:typing" % self.chat_id
+        if command(typing_key, self.user_number):
+            redis.publish(self.channels["typing"], json.dumps({
+                "typing": list(int(_) for _ in redis.smembers(typing_key)),
+            }))
+
     def check_origin(self, origin):
         return origin_regex.match(origin) is not None
 
@@ -118,12 +126,7 @@ class ChatHandler(WebSocketHandler):
     def on_message(self, message):
         print "message:", message
         if message in ("typing", "stopped_typing"):
-            command = redis.sadd if message == "typing" else redis.srem
-            typing_key = "chat:%s:typing" % self.chat_id
-            if command(typing_key, self.user_number):
-                redis.publish(self.channels["typing"], json.dumps({
-                    "typing": list(int(_) for _ in redis.smembers(typing_key)),
-                }))
+            self.set_typing(message == "typing")
 
     def on_close(self):
         # Unsubscribe here and let the exit callback handle disconnecting.
@@ -135,6 +138,7 @@ class ChatHandler(WebSocketHandler):
             except NoResultFound:
                 send_userlist(self.db, redis, self.chat)
             self.db.commit()
+        self.set_typing(False)
         print "socket closed:", self.id
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         sockets.remove(self)

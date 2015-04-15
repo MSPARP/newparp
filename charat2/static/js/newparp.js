@@ -540,7 +540,7 @@ var msparp = (function() {
 					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
 						status_bar.text("No-one is typing.");
 					} else {
-						status_bar.text("Someone is typing.");
+						status_bar.text("Someone is typing...");
 					}
 				}
 				if (status == "disconnected") {
