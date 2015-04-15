@@ -127,6 +127,14 @@ def send():
         text=text,
     ))
 
+    # Clear typing status so the front end doesn't have to.
+    if g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)):
+        typing_key = "chat:%s:typing" % g.chat.id
+        if g.redis.srem(typing_key, g.chat_user.number):
+            g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
+                "typing": list(int(_) for _ in g.redis.smembers(typing_key)),
+            }))
+
     return "", 204
 
 

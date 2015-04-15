@@ -1101,7 +1101,11 @@ var msparp = (function() {
 					data.text = data.text.substr(1);
 					// Try to parse the text as a command, and skip the rest if we can.
 					var executed = execute_command(data.text);
-					if (executed) { text_input.val(""); return false; }
+					if (executed) {
+						text_input.val("");
+						if (messages_method == "websocket") { ws.send("stopped_typing"); }
+						return false;
+					}
 					// If the current temporary character matches, apply their quirks.
 					if (temporary_character && data.text.lastIndexOf(temporary_character.shortcut + " ", 0) == 0) {
 						data.text = apply_quirks(data.text.substr(temporary_character.shortcut.length + 1)).trim();
