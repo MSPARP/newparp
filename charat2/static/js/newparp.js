@@ -390,6 +390,7 @@ var msparp = (function() {
 				$("#send_form input, #send_form button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
+				status_bar.text(messages_method == "websocket" ? "No-one is typing." : " ");
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
 				$("#messages_method").text(messages_method);
@@ -403,6 +404,7 @@ var msparp = (function() {
 					edit_info_panel.hide();
 				}
 				set_sidebar(null);
+				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 			}
 			function disconnect() {
@@ -532,6 +534,14 @@ var msparp = (function() {
 					var scroll_after_render = is_at_bottom();
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
+				}
+				// XXX typing notifications need some more work in pm and roulette chats so they don't collide with the online/offline messages
+				if (typeof data.typing != "undefined" && chat.type != "pm" && chat.type != "roulette") {
+					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
+						status_bar.text("No-one is typing.");
+					} else {
+						status_bar.text("Someone is typing.");
+					}
 				}
 				if (status == "disconnected") {
 					if (next_chat_url) {
@@ -1031,8 +1041,22 @@ var msparp = (function() {
 			}
 
 			// Send form
+			var typing;
+			var typing_timeout;
 			var text_preview = $("#text_preview");
-			var text_input = $("input[name=text]").keyup(function() {
+			var text_input = $("input[name=text]").keydown(function() {
+				if (messages_method == "websocket") {
+					window.clearTimeout(typing_timeout);
+					if (!typing) {
+						typing = true;
+						ws.send("typing");
+					}
+					typing_timeout = window.setTimeout(function() {
+						typing = false;
+						ws.send("stopped_typing");
+					}, 1000);
+				}
+			}).keyup(function() {
 				if (user.meta.show_preview) {
 					text = this.value.trim()
 					if (text[0] == "/") {

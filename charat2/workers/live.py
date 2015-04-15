@@ -104,15 +104,26 @@ class ChatHandler(WebSocketHandler):
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
+        # Remember the user number so typing notifications can refer to it
+        # without reopening the database session.
+        self.user_number = self.chat_user.number
         self.db.commit()
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
             "user": "channel:%s:%s" % (self.chat_id, self.user_id),
+            "typing": "channel:%s:typing" % self.chat_id,
         }
         self.redis_listen()
 
     def on_message(self, message):
         print "message:", message
+        if message in ("typing", "stopped_typing"):
+            command = redis.sadd if message == "typing" else redis.srem
+            typing_key = "chat:%s:typing" % self.chat_id
+            if command(typing_key, self.user_number):
+                redis.publish(self.channels["typing"], json.dumps({
+                    "typing": list(int(_) for _ in redis.smembers(typing_key)),
+                }))
 
     def on_close(self):
         # Unsubscribe here and let the exit callback handle disconnecting.
