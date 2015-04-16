@@ -323,20 +323,7 @@ var msparp = (function() {
 						}
 						// Otherwise try to reconnect.
 						exit();
-						console.log($("#conversation > div:last-of-type"));
-						if (!$("#conversation > div:last-of-type").hasClass("message_connection_lost")) {
-							render_message({
-								"acronym": "",
-								"color": "ff0000",
-								"id": null,
-								"name": "",
-								"posted": Math.floor(Date.now() / 1000),
-								"text": "Sorry, the connection to the server has been lost. Attempting to reconnect...",
-								"type": "connection_lost",
-								"user_number": null,
-							});
-							scroll_to_bottom();
-						}
+						status_bar.css("color", "#f00").text("Sorry, the connection to the server has been lost. Attempting to reconnect...");
 						window.setTimeout(launch_websocket, 2000);
 					}
 				}
@@ -389,7 +376,7 @@ var msparp = (function() {
 				$("#send_form input, #send_form button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
-				status_bar.text((
+				status_bar.css("color", "").text((
 					// Show status bar if typing notifications are available.
 					messages_method == "websocket"
 					// Also always show it in PM and roulette chats for online status.
