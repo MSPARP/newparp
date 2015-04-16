@@ -296,7 +296,6 @@ var msparp = (function() {
 		"chat": function(chat, user, character_shortcuts, latest_message) {
 
 			var conversation = $("#conversation");
-			var status_bar = $("#status_bar");
 			var status;
 			var next_chat_url;
 			var user_data = {};
@@ -390,7 +389,12 @@ var msparp = (function() {
 				$("#send_form input, #send_form button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
-				status_bar.text(messages_method == "websocket" ? "No-one is typing." : " ");
+				status_bar.text((
+					// Show status bar if typing notifications are available.
+					messages_method == "websocket"
+					// Also always show it in PM and roulette chats for online status.
+					|| chat.type == "pm" || chat.type == "roulette"
+				) ? " " : "");
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
 				$("#messages_method").text(messages_method);
@@ -511,10 +515,13 @@ var msparp = (function() {
 							others_online = true;
 						}
 					}
-					if (chat.type == "pm") {
-						status_bar.text(chat.url.substr(3) + " is " + (others_online ? "online." : "offline."));
-					} else if (chat.type == "roulette") {
-						status_bar.text("▼ is " + (others_online ? "online." : "offline."));
+					if (chat.type == "pm" || chat.type == "roulette") {
+						var status_message = (chat.type == "pm" ? chat.url.substr(3) : "▼") + " is " + (others_online ? "online." : "offline.");
+						if (previous_status_message) {
+							previous_status_message = status_message;
+						} else {
+							status_bar.text(status_message);
+						}
 					} else {
 						user_list.html(user_list_template(data));
 						user_list.find("li").click(render_action_list);
@@ -536,11 +543,16 @@ var msparp = (function() {
 					if (scroll_after_render) { scroll_to_bottom(); }
 				}
 				// XXX typing notifications need some more work in pm and roulette chats so they don't collide with the online/offline messages
-				if (typeof data.typing != "undefined" && chat.type != "pm" && chat.type != "roulette") {
+				if (typeof data.typing != "undefined") {
 					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
-						status_bar.text("No-one is typing.");
+						if (previous_status_message) {
+							status_bar.text(previous_status_message);
+							previous_status_message = null;
+						}
 					} else {
-						status_bar.text("Someone is typing...");
+						previous_status_message = status_bar.text();
+						var name = chat.type == "pm" ? chat.url.substr(3) : chat.type == "roulette" ? "▼" : "Someone";
+						status_bar.text(name + " is typing...");
 					}
 				}
 				if (status == "disconnected") {
@@ -1039,6 +1051,8 @@ var msparp = (function() {
 				conversation.css("bottom", send_form.height() + 10 + "px");
 				if (scroll_after_resize) { scroll_to_bottom(); }
 			}
+			var status_bar = $("#status_bar");
+			var previous_status_message;
 
 			// Send form
 			var typing;
@@ -1103,7 +1117,7 @@ var msparp = (function() {
 					var executed = execute_command(data.text);
 					if (executed) {
 						text_input.val("");
-						if (messages_method == "websocket") { ws.send("stopped_typing"); }
+						if (messages_method == "websocket") { typing = false; ws.send("stopped_typing"); }
 						return false;
 					}
 					// If the current temporary character matches, apply their quirks.
@@ -1142,6 +1156,7 @@ var msparp = (function() {
 				text_input.val("");
 				last_alternating_line = !last_alternating_line;
 				if (temporary_character) { set_temporary_character(null); }
+				typing = false;
 				return false;
 			});
 			var send_button = send_form.find("button[type=submit]");
