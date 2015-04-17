@@ -30,6 +30,7 @@
 </section>
 {% elif chat.type == "pm": %}
 <section id="pm_chat_list">
+    <button type="button" class="close">Close</button>
     <h2>PM chats</h2>
     <ul>
 {% for pm_chat in pm_chats: %}
@@ -188,7 +189,9 @@
     <input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="5000">
     <button type="submit" disabled="disabled">Send</button>
     <button type="button" disabled="disabled" id="abscond_button">Abscond</button>
+{% if chat.type != "roulette": %}
     <button type="button" disabled="disabled" id="user_list_button" class="mobile_button">Users</button>
+{% endif %}
     <button type="button" disabled="disabled" id="switch_character_button">Switch char</button>
     <button type="button" disabled="disabled" id="settings_button">Settings</button>
 </form>
