@@ -537,7 +537,7 @@ var msparp = (function() {
 							previous_status_message = null;
 						}
 					} else {
-						previous_status_message = status_bar.text();
+						if (!previous_status_message) { previous_status_message = status_bar.text(); }
 						var name = chat.type == "pm" ? chat.url.substr(3) : chat.type == "roulette" ? "▼" : "Someone";
 						status_bar.text(name + " is typing...");
 					}
