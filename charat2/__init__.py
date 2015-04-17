@@ -167,6 +167,9 @@ app.add_url_rule("/admin", "admin_home", admin.home, methods=("GET",))
 app.add_url_rule("/admin/announcements", "admin_announcements", admin.announcements_get, methods=("GET",))
 app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.announcements_post, methods=("POST",))
 
+app.add_url_rule("/admin/broadcast", "admin_broadcast", admin.broadcast_get, methods=("GET",))
+app.add_url_rule("/admin/broadcast", "admin_broadcast_post", admin.broadcast_post, methods=("POST",))
+
 make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
 make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))

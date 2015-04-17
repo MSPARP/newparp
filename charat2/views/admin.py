@@ -1,3 +1,6 @@
+import json
+import time
+
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
@@ -8,6 +11,7 @@ from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
 from charat2.model import GroupChat, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
+from charat2.model.validators import color_validator
 
 
 @use_db
@@ -27,6 +31,52 @@ def announcements_get():
 def announcements_post():
     g.redis.set("announcements", request.form["announcements"])
     return redirect(url_for("admin_announcements"))
+
+
+@use_db
+@admin_required
+def broadcast_get():
+    return render_template("admin/broadcast.html")
+
+
+@use_db
+@admin_required
+def broadcast_post():
+
+    text = request.form["text"].strip()
+    if not text:
+        abort(400)
+
+    if request.form["color"][0] == "#":
+        color = request.form["color"][1:]
+    else:
+        color = request.form["color"]
+    if not color_validator.match(color):
+        abort(400)
+
+    message_json = json.dumps({
+        "messages": [{
+            "id": None,
+            "user_number": None,
+            "posted": time.time(),
+            "type": "global",
+            "color": color,
+            "acronym": "",
+            "name": "",
+            "text": text,
+        }]
+    })
+
+    next_index = 0
+    while True:
+        next_index, keys = g.redis.scan(next_index,"chat:*:online")
+        for key in keys:
+            chat_id = key[5:-7]
+            g.redis.publish("channel:%s" % chat_id, message_json)
+        if int(next_index) == 0:
+            break
+
+    return redirect(url_for("admin_broadcast"))
 
 
 @alt_formats(set(["json"]))
