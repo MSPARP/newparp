@@ -7,8 +7,15 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.auth import admin_required
 from charat2.helpers.characters import validate_character_form
-from charat2.model import case_options, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
+from charat2.model import case_options, Character, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_connect
+
+
+def search_character_query(id):
+    try:
+        return g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
+    except:
+        abort(404)
 
 
 @use_db
@@ -36,10 +43,7 @@ def new_search_character_group_post():
 @use_db
 @admin_required
 def search_character(id):
-    try:
-        character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
-    except NoResultFound:
-        abort(404)
+    character = search_character_query(id)
     return render_template(
         "rp/search_characters/search_character.html",
         character=character.to_dict(include_options=True),
@@ -91,10 +95,7 @@ def search_character_json(id):
 
     if character_json is None:
         db_connect()
-        try:
-            character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
-        except NoResultFound:
-            abort(404)
+        character = search_character_query(id)
         character_json = json.dumps(character.to_dict(include_options=True))
         g.redis.set("search_character:%s" % id, character_json)
         g.redis.expire("search_character:%s" % id, 3600)
@@ -107,10 +108,7 @@ def search_character_json(id):
 @use_db
 @admin_required
 def save_search_character(id):
-    try:
-        character = g.db.query(SearchCharacter).filter(SearchCharacter.id == id).one()
-    except NoResultFound:
-        abort(404)
+    character = search_character_query(id)
     new_details = validate_character_form(request.form)
     # Ignore a blank title.
     if new_details["title"] != "":
@@ -126,5 +124,38 @@ def save_search_character(id):
     character.text_preview = request.form["text_preview"]
     # Remember to clear the cache
     g.redis.delete("search_character:%s" % id)
+    return redirect(url_for("rp_search_character_list"))
+
+
+@use_db
+@admin_required
+def delete_search_character_get(id):
+    # Anon/other is the default character so it can't be deleted.
+    if id == 1:
+        abort(404)
+    character = search_character_query(id)
+    return render_template("rp/search_characters/delete_search_character.html", character=character)
+
+
+@use_db
+@admin_required
+def delete_search_character_post(id):
+    # Anon/other is the default character so it can't be deleted.
+    if id == 1:
+        abort(404)
+    character = search_character_query(id)
+    # Set all references to anon/other first.
+    g.db.query(User).filter(User.roulette_search_character_id == character.id).update({
+        "roulette_search_character_id": 1,
+    })
+    g.db.query(User).filter(User.search_character_id == character.id).update({
+        "search_character_id": 1,
+    })
+    g.db.query(Character).filter(Character.search_character_id == character.id).update({
+        "search_character_id": 1,
+    })
+    # Don't use g.db.delete(character) because it does a load of extra queries
+    # for foreign keys and stuff.
+    g.db.query(SearchCharacter).filter(SearchCharacter.id == id).delete()
     return redirect(url_for("rp_search_character_list"))
 
