@@ -181,13 +181,13 @@ def chat(chat, pm_user, url, fmt=None):
             return redirect(url_for("rp_log", url=url))
         new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
         chat_user = ChatUser.from_user(g.user, chat_id=chat.id, number=new_number)
-        if chat.type == "group" and g.user.id != chat.creator_id:
-            chat_user.subscribed = False
-        if (
-            chat.type == "group" and chat.autosilence
-            and g.user.group != "admin" and g.user.id != chat.creator_id
-        ):
-            chat_user.group = "silent"
+        if chat.type == "group":
+            # Disable typing notifications by default in group chats.
+            chat_user.typing_notifications = False
+            if g.user.id != chat.creator_id:
+                chat_user.subscribed = False
+            if chat.autosilence and g.user.group != "admin" and g.user.id != chat.creator_id:
+                chat_user.group = "silent"
         g.db.add(chat_user)
         g.db.flush()
 
@@ -488,6 +488,8 @@ def invite(chat, pm_user, url, fmt):
         except NoResultFound:
             new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
             invite_chat_user = ChatUser(user_id=invite_user.id, chat_id=chat.id, number=new_number)
+            # Disable typing notifications by default in group chats.
+            invite_chat_user.typing_notifications = False
             g.db.add(invite_chat_user)
         invite_chat_user.subscribed = True
         invite_chat_user.last_online = chat.last_message - timedelta(0, 1)
