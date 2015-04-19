@@ -576,6 +576,7 @@ def save_variables():
         "show_system_messages",
         "show_bbcode",
         "show_preview",
+        "typing_notifications",
     ]:
         if variable not in request.form:
             continue
