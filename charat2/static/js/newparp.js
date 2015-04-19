@@ -377,8 +377,8 @@ var msparp = (function() {
 				set_temporary_character(null);
 				parse_variables();
 				status_bar.css("color", "").text((
-					// Show status bar if typing notifications are available.
-					messages_method == "websocket"
+					// Show status bar if typing notifications are available and switched on.
+					(messages_method == "websocket" && user.meta.typing_notifications)
 					// Also always show it in PM and roulette chats for online status.
 					|| chat.type == "pm" || chat.type == "roulette"
 				) ? " " : "");
@@ -529,8 +529,7 @@ var msparp = (function() {
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
 				}
-				// XXX typing notifications need some more work in pm and roulette chats so they don't collide with the online/offline messages
-				if (typeof data.typing != "undefined") {
+				if (user.meta.typing_notifications && typeof data.typing != "undefined") {
 					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
 						if (previous_status_message) {
 							status_bar.text(previous_status_message);
@@ -1016,6 +1015,15 @@ var msparp = (function() {
 				user.meta[this.id] = this.checked;
 				if (this.id == "desktop_notifications" && this.checked && typeof Notification != "undefined" && Notification.permission != "granted") {
 					Notification.requestPermission();
+				} else if (this.id == "typing_notifications") {
+					if (chat.type == "pm" || chat.type == "roulette") {
+						if (previous_status_message) {
+							status_bar.text(previous_status_message);
+							previous_status_message = null;
+						}
+					} else {
+						status_bar.text(messages_method == "websocket" && this.checked ? " " : "");
+					}
 				}
 				parse_variables();
 			});
