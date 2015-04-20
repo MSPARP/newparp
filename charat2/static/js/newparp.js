@@ -1057,6 +1057,10 @@ var msparp = (function() {
 			var typing;
 			var typing_timeout;
 			var text_preview = $("#text_preview");
+			function set_text_preview(text) {
+				text_preview.text(text);
+				resize_conversation();
+			}
 			var text_input = $("input[name=text]").keydown(function() {
 				if (messages_method == "websocket") {
 					window.clearTimeout(typing_timeout);
@@ -1079,14 +1083,14 @@ var msparp = (function() {
 						if (!command_description) {
 							// Skip all this if it's the same character as last time.
 							if (temporary_character && text.lastIndexOf(temporary_character.shortcut + " ", 0) == 0) {
-								text_preview.text(apply_quirks(text.substr(temporary_character.shortcut.length + 1)));
+								set_text_preview(apply_quirks(text.substr(temporary_character.shortcut.length + 1)));
 								return;
 							}
 							for (var shortcut in character_shortcuts) {
 								if (text.lastIndexOf(shortcut + " ", 0) == 0) {
 									$.get("/characters/" + character_shortcuts[shortcut] + ".json", {}, function(data) {
 										set_temporary_character(data);
-										text_preview.text(apply_quirks(text.substr(shortcut.length + 1)));
+										set_text_preview(apply_quirks(text.substr(shortcut.length + 1)));
 									}).error(function() {
 										set_temporary_character(null);
 										delete character_shortcuts[shortcut];
@@ -1096,15 +1100,14 @@ var msparp = (function() {
 								}
 							}
 						}
-						text_preview.text(command_description || text);
+						set_text_preview(command_description || text);
 					} else if (text.substr(0, 7) == "http://" || text.substr(0, 8) == "https://" || ["((", "[[", "{{"].indexOf(text.substr(0, 2)) != -1) {
-						text_preview.text(text);
+						set_text_preview(text);
 					} else {
-						text_preview.text(apply_quirks(text));
+						set_text_preview(apply_quirks(text));
 					}
 					// Clear the temporary character if necessary.
 					if (temporary_character) { set_temporary_character(null); }
-					resize_conversation();
 				}
 			});
 			var send_form = $("#send_form").submit(function() {
