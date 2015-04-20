@@ -879,6 +879,7 @@ var msparp = (function() {
 
 			// Sidebars
 			var sidebars = $(".sidebar");
+			var current_sidebar = null;
 			function set_sidebar(sidebar_id) {
 				sidebars.css("display", "none");
 				if (
@@ -892,6 +893,7 @@ var msparp = (function() {
 				} else {
 					$(body).removeClass("with_sidebar");
 				}
+				current_sidebar = sidebar_id;
 			}
 			$(".sidebar .close").click(function() { set_sidebar(null); });
 
@@ -1245,8 +1247,8 @@ var msparp = (function() {
 			$("#user_list_button").click(function() {
 				chat.type == "pm" ? $("#pm_chat_list").show() : set_sidebar("user_list_container");
 			});
-			$("#switch_character_button").click(function() { set_sidebar("switch_character"); });
-			$("#settings_button").click(function() { set_sidebar("settings"); });
+			$("#switch_character_button").click(function() { set_sidebar(current_sidebar != "switch_character" ? "switch_character" : null); });
+			$("#settings_button").click(function() { set_sidebar(current_sidebar != "settings" ? "settings" : null); });
 
 			// Now all that's done, let's connect
 			connect();
