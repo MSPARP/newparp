@@ -667,6 +667,12 @@ class Invite(Base):
     creator_id = Column(Integer, ForeignKey("users.id"))
     created = Column(DateTime(), nullable=False, default=now)
 
+    def to_dict(self):
+        return {
+            "invited": self.chat_user.to_dict(include_user=True),
+            "creator": self.creator_chat_user.to_dict(include_user=True),
+        }
+
 
 class Ban(Base):
 

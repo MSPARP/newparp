@@ -421,7 +421,10 @@ def invites(chat, pm_user, url, fmt=None, page=1):
         abort(404)
 
     if fmt == "json":
-        raise NotImplementedError
+        return jsonify({
+            "total": invite_count,
+            "invites": [invite.to_dict() for invite, user in invites],
+        })
 
     paginator = paginate.Page(
         [],
