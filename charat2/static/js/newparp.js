@@ -55,7 +55,7 @@ var msparp = (function() {
 	function add_replacement(e, from, to) {
 		var size = body.hasClass("chat") ? 7 : 10;
 		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
-		if (from && to) {
+		if (from || to) {
 			var inputs = $(new_item).find('input');
 			inputs[0].value = from;
 			inputs[1].value = to;
