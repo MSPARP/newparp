@@ -20,6 +20,7 @@ from charat2.helpers.chat import (
 from charat2.model import (
     case_options,
     Ban,
+    Block,
     Character,
     ChatUser,
     GroupChat,
@@ -134,6 +135,39 @@ def send():
             g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
                 "typing": list(int(_) for _ in g.redis.smembers(typing_key)),
             }))
+
+    return "", 204
+
+
+@use_db_chat
+@mark_alive
+def block():
+
+    if g.chat.type not in ("roulette", "searched"):
+        abort(404)
+
+    # Fetch the ChatUser we're trying to block.
+    try:
+        blocked_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == g.chat.id,
+            ChatUser.user_id != g.user.id,
+            ChatUser.number == int(request.form["number"]),
+        )).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+
+    reason = request.form.get("reason", "").strip()[:500]
+
+    # Skip without doing anything if they're already blocked.
+    if g.db.query(func.count("*")).select_from(Block).filter(and_(
+        Block.blocking_user_id == g.user.id,
+        Block.blocked_user_id == blocked_chat_user.user_id,
+    )).scalar() == 0:
+        g.db.add(Block(
+            blocking_user_id=g.user.id,
+            blocked_user_id=blocked_chat_user.user_id,
+            reason=reason if reason else None,
+        ))
 
     return "", 204
 

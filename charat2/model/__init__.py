@@ -172,6 +172,14 @@ class User(Base):
         return ud
 
 
+class Block(Base):
+    __tablename__ = "blocks"
+    blocking_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    blocked_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    created = Column(DateTime(), nullable=False, default=now)
+    reason = Column(UnicodeText)
+
+
 class Character(Base):
 
     __tablename__ = "characters"
@@ -859,6 +867,9 @@ User.characters = relation(
 User.search_character = relation(SearchCharacter, foreign_keys=User.search_character_id)
 User.roulette_search_character = relation(SearchCharacter, foreign_keys=User.roulette_search_character_id)
 User.roulette_character = relation(Character, foreign_keys=User.roulette_character_id)
+
+Block.blocking_user = relation(User, primaryjoin=Block.blocking_user_id == User.id)
+Block.blocked_user = relation(User, primaryjoin=Block.blocked_user_id == User.id)
 
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)

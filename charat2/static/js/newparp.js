@@ -632,6 +632,9 @@ var msparp = (function() {
 			};
 
 			// Actions and validation
+			function can_block(their_number) {
+				return (chat.type == "searched" || chat.type == "roulette") && their_number != user.meta.number;
+			}
 			function can_set_group(new_group, current_group) {
 				// Setting group only works in group chats.
 				if (chat.type != "group") { return false; }
@@ -942,6 +945,9 @@ var msparp = (function() {
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
+					$("#action_block").click(function() {
+						$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number });
+					});
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
 							$(".unum_" + action_user.meta.number).removeClass("highlighted");
@@ -979,6 +985,7 @@ var msparp = (function() {
 					});
 				}
 			}
+			Handlebars.registerHelper("can_block", function(new_group) { return can_block(this.meta.number); });
 			Handlebars.registerHelper("can_set_group", function(new_group) { return can_set_group(new_group, this.meta.group); });
 			Handlebars.registerHelper("can_perform_action", function(action) { return can_perform_action(action, this.meta.group); });
 			Handlebars.registerHelper("set_user_text", function() { return this.meta.group == "silent" ? "Unsilence" : "Unmod"; });

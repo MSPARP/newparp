@@ -47,6 +47,7 @@
 {% endraw %}</script>
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
     <ul>
+        {{#if (can_block)}}<li id="action_block">Block</li>{{/if}}
         <li id="action_highlight">{{#if (is_highlighted)}}Clear highlight{{else}}Highlight{{/if}}</li>
         <li id="action_ignore">{{#if (is_ignored)}}Clear ignore{{else}}Ignore{{/if}}</li>
         {{#if (is_you)}}<li id="action_switch_character">Switch character</li>{{/if}}

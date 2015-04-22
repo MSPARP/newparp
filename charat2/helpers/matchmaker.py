@@ -4,9 +4,10 @@ import logging
 
 from random import shuffle
 from redis import StrictRedis
+from sqlalchemy import and_, func
 from uuid import uuid4
 
-from charat2.model import sm, ChatUser, Message
+from charat2.model import sm, Block, ChatUser, Message
 from charat2.model.connections import redis_pool
 
 option_messages = {
@@ -71,6 +72,20 @@ def run_matchmaker(
                 match, options = check_compatibility(redis, s1, s2)
                 if not match:
                     logging.debug("No match.")
+                    continue
+
+                blocked = (
+                    db.query(func.count("*")).select_from(Block).filter(and_(
+                        Block.blocking_user_id == s1["user_id"],
+                        Block.blocked_user_id == s2["user_id"]
+                    )).scalar() != 0
+                    or db.query(func.count("*")).select_from(Block).filter(and_(
+                        Block.blocking_user_id == s2["user_id"],
+                        Block.blocked_user_id == s1["user_id"]
+                    )).scalar() != 0
+                )
+                if blocked:
+                    logging.debug("Blocked.")
                     continue
 
                 new_url = str(uuid4()).replace("-", "")
