@@ -946,7 +946,9 @@ var msparp = (function() {
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
 					$("#action_block").click(function() {
-						$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number });
+						var reason = prompt("If you block this person, you will never be connected to them again. Optionally, you can also provide a reason below.");
+						if (reason == null) { return; }
+						$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number, "reason": reason });
 					});
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
