@@ -582,6 +582,9 @@ var msparp = (function() {
 				}
 				var admin = (message.user_number && user_data[message.user_number] && user_data[message.user_number].meta.group == "admin");
 				user.meta.show_bbcode ? p.html(bbencode(text, admin)) : p.text(bbremove(text));
+				if (chat.type == "searched" && (message.type == "disconnect" || message.type == "timeout") && message.user_number != user.meta.number) {
+					$("<a>").attr("href", "#").addClass("message_action").text("Block").click(function() { block(message.user_number); return false; }).appendTo(p);
+				}
 				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
@@ -635,10 +638,10 @@ var msparp = (function() {
 			function can_block(their_number) {
 				return (chat.type == "searched" || chat.type == "roulette") && their_number != user.meta.number;
 			}
-			function block() {
+			function block(number) {
 				var reason = prompt("If you block this person, you will never encounter them in random chats. Optionally, you can also provide a reason below.");
 				if (reason == null) { return; }
-				$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number, "reason": reason });
+				$.post("/chat_api/block", { "chat_id": chat.id, "number": number, "reason": reason });
 			}
 			function can_set_group(new_group, current_group) {
 				// Setting group only works in group chats.
@@ -972,7 +975,7 @@ var msparp = (function() {
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
-					$("#action_block").click(block);
+					$("#action_block").click(function() { block(action_user.meta.number); });
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
 							$(".unum_" + action_user.meta.number).removeClass("highlighted");

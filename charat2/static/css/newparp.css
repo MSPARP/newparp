@@ -278,6 +278,8 @@ section > .close:first-child { float: right; margin: 5px; }
 .spoiler input + span + span, .spoiler input:checked + span { display: none; }
 .spoiler input:checked + span + span { display: inline; }
 
+.message_action { margin-left: 0.5em; }
+
 #conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
