@@ -635,6 +635,11 @@ var msparp = (function() {
 			function can_block(their_number) {
 				return (chat.type == "searched" || chat.type == "roulette") && their_number != user.meta.number;
 			}
+			function block() {
+				var reason = prompt("If you block this person, you will never encounter them in random chats. Optionally, you can also provide a reason below.");
+				if (reason == null) { return; }
+				$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number, "reason": reason });
+			}
 			function can_set_group(new_group, current_group) {
 				// Setting group only works in group chats.
 				if (chat.type != "group") { return false; }
@@ -672,7 +677,7 @@ var msparp = (function() {
 			var text_commands = [
 				{
 					"regex": /^me (.*\S+.*)/,
-					"group_chat_only": false,
+					"chat_types": "all",
 					"minimum_rank": 0,
 					"description": function(match) {
 						return "* " + user.character.name + " " + match[1];
@@ -682,8 +687,28 @@ var msparp = (function() {
 					},
 				},
 				{
+					"regex": /^block (\d+)($|\s.*$)?/,
+					"chat_types": "searched_and_roulette",
+					"minimum_rank": 0,
+					"description": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || set_user.meta.number != user.meta.number) {
+							if ((match[2] || "").trim().length > 500) { return "Block reasons can only be 500 characters long."; }
+							return "Block " + name_from_user_number(parseInt(match[1])) + ". You will no longer encounter them in random chats.";
+						} else {
+							return "You can't block yourself.";
+						}
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (!set_user || set_user.meta.number != user.meta.number) {
+							$.post("/chat_api/block", { "chat_id": chat.id, "number": match[1], "reason": (match[2] || "").trim() });
+						}
+					},
+				},
+				{
 					"regex": /^topic($|\s.*$)/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
 						var new_topic = match[1].trim();
@@ -696,7 +721,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^set (\d+) (mod3|mod2|mod1|user|silent)$/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
@@ -716,7 +741,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^kick (\d+)$/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 2,
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
@@ -733,7 +758,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^ban (\d+)($|\s.*$)?/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 3,
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
@@ -751,7 +776,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^autosilence (on|off)/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
 						return "Switch autosilence " + match[1] + ".";
@@ -762,7 +787,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^publicity (listed|unlisted)/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
 						return "Set the publicity to " + match[1] + ".";
@@ -773,7 +798,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^publicity pinned/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": Infinity,
 					"description": function(match) {
 						return "Set the publicity to pinned.";
@@ -784,7 +809,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^level (sfw|nsfw|nsfw-extreme)$/,
-					"group_chat_only": true,
+					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
 						return "Mark the chat as " + level_names[match[1]] + ".";
@@ -799,7 +824,8 @@ var msparp = (function() {
 			}
 			function get_command_description(text) {
 				for (var i=0; i < text_commands.length; i++) {
-					if (text_commands[i].group_chat_only && chat.type != "group") { continue; }
+					if (text_commands[i].chat_types == "group" && chat.type != "group") { continue; }
+					if (text_commands[i].chat_types == "searched_and_roulette" && chat.type != "searched" && chat.type != "roulette") { continue; }
 					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
 					var match = text.match(text_commands[i].regex);
 					if (match && match.length > 0) { return text_commands[i].description(match); }
@@ -808,7 +834,8 @@ var msparp = (function() {
 			}
 			function execute_command(text) {
 				for (var i=0; i < text_commands.length; i++) {
-					if (text_commands[i].group_chat_only && chat.type != "group") { continue; }
+					if (text_commands[i].chat_types == "group" && chat.type != "group") { continue; }
+					if (text_commands[i].chat_types == "searched_and_roulette" && chat.type != "searched" && chat.type != "roulette") { continue; }
 					if (text_commands[i].minimum_rank > ranks[user.meta.group]) { continue; }
 					var match = text.match(text_commands[i].regex);
 					if (match && match.length > 0) { text_commands[i].action(match); return true; }
@@ -945,11 +972,7 @@ var msparp = (function() {
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
-					$("#action_block").click(function() {
-						var reason = prompt("If you block this person, you will never be connected to them again. Optionally, you can also provide a reason below.");
-						if (reason == null) { return; }
-						$.post("/chat_api/block", { "chat_id": chat.id, "number": action_user.meta.number, "reason": reason });
-					});
+					$("#action_block").click(block);
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
 							$(".unum_" + action_user.meta.number).removeClass("highlighted");
