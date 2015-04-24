@@ -100,8 +100,8 @@ def send():
     if "text" not in request.form:
         abort(400)
 
-    # Change double spaces to no-break space.
-    text = request.form["text"].strip().replace("  ", u" \u00A0")[:5000]
+    text = request.form["text"].strip()[:5000]
+
     if text == "":
         abort(400)
 
