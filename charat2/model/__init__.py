@@ -33,8 +33,7 @@ engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
     pool_recycle=3600,
-    # XXX REMEMBER TO REMOVE THIS BEFORE LAUNCH
-    echo=True,
+    echo='ECHO' in os.environ,
 )
 
 sm = sessionmaker(
