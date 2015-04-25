@@ -156,7 +156,7 @@ def create_chat():
 
 
 # XXX CUSTOM LOG IN/REGISTER PAGE WITH CHAT INFO
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 @get_chat
@@ -331,7 +331,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
     )
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 @get_chat
@@ -386,7 +386,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
     )
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 @get_chat

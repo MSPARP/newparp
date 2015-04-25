@@ -79,7 +79,7 @@ def broadcast_post():
     return redirect(url_for("admin_broadcast"))
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @admin_required
 def user_list(fmt=None, page=1):
@@ -107,7 +107,7 @@ def user_list(fmt=None, page=1):
 
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @admin_required
 def user(username, fmt=None):
@@ -151,7 +151,7 @@ def user_set_group(username):
     return redirect(url_for("admin_user", username=user.username))
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @admin_required
 def groups(fmt=None, page=1):

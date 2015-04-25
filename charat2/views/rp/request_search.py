@@ -41,7 +41,7 @@ def _own_request_query(request_id):
     return search_request
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def request_list(fmt=None, page=1):
@@ -83,7 +83,7 @@ def request_list(fmt=None, page=1):
     )
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def your_request_list(fmt=None, page=1):
@@ -125,7 +125,7 @@ def your_request_list(fmt=None, page=1):
     )
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def tagged_request_list(tag_type, name, fmt=None, page=1):

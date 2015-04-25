@@ -28,7 +28,7 @@ chat_classes = {
 }
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def chat_list(fmt=None, type=None, page=1):

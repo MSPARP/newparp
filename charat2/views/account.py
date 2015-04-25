@@ -20,7 +20,7 @@ def log_in_get():
     return render_template("account/log_in.html")
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 def log_in_post(fmt=None):
 

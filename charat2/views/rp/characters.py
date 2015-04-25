@@ -8,7 +8,7 @@ from charat2.model import case_options, Character, CharacterTag, Request, Search
 from charat2.model.connections import use_db
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def character_list(fmt=None):
@@ -47,7 +47,7 @@ def new_character_post():
     return redirect(url_for("rp_character_list"))
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 @log_in_required
 def character(character_id, fmt=None):

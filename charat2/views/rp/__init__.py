@@ -53,7 +53,7 @@ def home():
     abort(404)
 
 
-@alt_formats(set(["json"]))
+@alt_formats({"json"})
 @use_db
 def groups(fmt=None):
 
