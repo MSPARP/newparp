@@ -788,6 +788,18 @@ var msparp = (function() {
 					},
 				},
 				{
+					"regex": /^unban (\d+)?/,
+					"chat_types": "group",
+					"minimum_rank": 3,
+					"description": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						return "Unban " + name_from_user_number(parseInt(match[1])) + " from the chat.";
+					},
+					"action": function(match) {
+						$.post("/" + chat.url + "/unban", {"number": parseInt(match[1])});
+					},
+				},
+				{
 					"regex": /^autosilence (on|off)/,
 					"chat_types": "group",
 					"minimum_rank": 1,
@@ -799,7 +811,7 @@ var msparp = (function() {
 					},
 				},
 				{
-					"regex": /^publicity (listed|unlisted)/,
+					"regex": /^publicity (private|listed|unlisted)/,
 					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
