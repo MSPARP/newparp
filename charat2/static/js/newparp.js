@@ -1241,8 +1241,8 @@ var msparp = (function() {
 						text = text.toUpperCase();
 						break;
 					case "title":
-						// Capitalise the first letter at the beginning, and the first character after whitespace.
-						text = text.toLowerCase().replace(/(^|\s)[a-z]/g, function(str) { return str.toUpperCase(); });
+						// Capitalise the first letter at the beginning, and after a word break if it's not a hyphen or an apostrophe.
+						text = text.toLowerCase().replace(/(^|[^'-]\b)\w/g, function(str) { return str.toUpperCase(); });
 						break;
 					case "inverted":
 						// Lower case the first letter at the beginning, the first letter of each sentence, and lone Is.
