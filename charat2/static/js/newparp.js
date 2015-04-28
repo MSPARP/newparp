@@ -873,7 +873,6 @@ var msparp = (function() {
 			function set_temporary_character(data) {
 				temporary_character = data;
 				text_preview.css("color", "#" + (data || user.character).color);
-				text_input.css("color", "#" + (data || user.character).color);
 			}
 
 			// Perform BBCode conversion
