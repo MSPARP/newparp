@@ -464,6 +464,7 @@ var msparp = (function() {
 							flag_publicity.val(chat.publicity);
 							flag_publicity.prop("disabled", false);
 						}
+						chat.publicity == "private" ? invites_link.show() : invites_link.hide();
 						flag_style.val(chat.style);
 						flag_level.val(chat.level);
 						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
@@ -960,6 +961,7 @@ var msparp = (function() {
 				var flag_publicity = $("#flag_publicity").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "publicity", "value": this.value });
 				});
+				var invites_link = $("#invites_link");
 				var flag_style = $("#flag_style").change(function() {
 					$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "style", "value": this.value });
 				});
