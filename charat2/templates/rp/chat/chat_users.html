@@ -23,7 +23,26 @@
             <td>{{chat_user.number}}</td>
             <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
             {% if chat_user.ban == None: %}
-            <td>{{{"admin": "God tier moderator", "creator": "Chat creator", "mod3": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod1": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}{% if chat.publicity == "private" and chat_user.invite != None: %}, invited by <span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.name}}</span>{% if chat_user.invite.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.invite.creator_chat_user.number}}).{% endif %}</td>
+            <td>
+                {% if g.user.group == "admin" and chat_user.user.group != "admin" and chat_user.user_id != chat.creator_id: %}
+                    <form action="/chat_api/set_group" method="post">
+                        <input type="hidden" name="chat_id" value="{{chat.id}}">
+                        <input type="hidden" name="number" value="{{chat_user.number}}">
+                        <select name="group">
+                            <option value="mod3"{% if chat_user.group == "mod3": %} selected="selected"{% endif %}>Professional Wet Blanket</option>
+                            <option value="mod2"{% if chat_user.group == "mod2": %} selected="selected"{% endif %}>Bum's Rusher</option>
+                            <option value="mod1"{% if chat_user.group == "mod1": %} selected="selected"{% endif %}>Amateur Gavel-Slinger</option>
+                            <option value="user"{% if chat_user.group == "user": %} selected="selected"{% endif %}>User</option>
+                            <option value="silent"{% if chat_user.group == "silent": %} selected="selected"{% endif %}>Silenced</option>
+                        </select>
+                        <button>Set group</button>
+                    </form>
+                {% else: %}
+                {{{"admin": "God tier moderator", "creator": "Chat creator", "mod3": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod1": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}
+                {% endif %}
+                {% if chat.publicity == "private" and chat_user.invite != None: %}, invited by <span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.name}}</span>
+                {% if chat_user.invite.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.invite.creator_chat_user.number}}).{% endif %}
+            </td>
             {% else: %}
             <td>
                 Banned {{chat_user.ban.created.strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}).{% if chat_user.ban.reason: %} Reason: {{chat_user.ban.reason}}{% endif %}
