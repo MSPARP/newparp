@@ -24,7 +24,7 @@
             <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
             {% if chat_user.ban == None: %}
             <td>
-                {% if g.user.group == "admin" and chat_user.user.group != "admin" and chat_user.user_id != chat.creator_id: %}
+                {% if (g.user.group == "admin" or g.user.id == chat.creator_id) and chat_user.user.group != "admin" and chat_user.user_id != chat.creator_id: %}
                     <form action="/chat_api/set_group" method="post">
                         <input type="hidden" name="chat_id" value="{{chat.id}}">
                         <input type="hidden" name="number" value="{{chat_user.number}}">
