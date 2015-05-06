@@ -58,6 +58,7 @@ def log_in_post(fmt=None):
 def log_out():
     if "session" in request.cookies:
         g.redis.delete("session:" + request.cookies["session"])
+        g.redis.delete("session:" + request.cookies["session"] + ":csrf")
     return redirect(referer_or_home())
 
 

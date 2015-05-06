@@ -1,6 +1,7 @@
 {% macro register() %}
         <h2>Register</h2>
         <form action="{{url_for("register")}}" method="post">
+            <input type="hidden" name="token" value="{{g.csrf_token}}">
             {% if "register_error" in request.args: %}
 			{% if request.args["register_error"] == "blank": %}
             <p class="error">Please enter a username and password.</p>
@@ -52,6 +53,7 @@
 {% macro log_in() %}
         <h2>Log in</h2>
         <form action="{{url_for("log_in")}}" method="post">
+            <input type="hidden" name="token" value="{{g.csrf_token}}">
             {% if "log_in_error" in request.args: %}
 			{% if request.args["log_in_error"] == "no_user": %}
             <p class="error">There doesn't seem to be an account with that username.</p>

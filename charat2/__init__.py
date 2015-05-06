@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, redirect, send_from_directory
+from flask import Flask, abort, g, redirect, request, send_from_directory
 
 from charat2.model.connections import (
     db_commit,
@@ -25,6 +25,16 @@ babel = Babel(app)
 app.jinja_env.globals.update(gettext=gettext)
 
 app.before_request(redis_connect)
+
+def check_csrf_token():
+    if request.method != "POST":
+        return
+    token = g.redis.get("session:%s:csrf" % g.session_id)
+    if "token" in request.form and request.form["token"] == token:
+        return
+    abort(403)
+
+app.before_request(check_csrf_token)
 
 app.after_request(set_cookie)
 app.after_request(db_commit)
