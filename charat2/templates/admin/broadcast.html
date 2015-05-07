@@ -3,6 +3,7 @@
 {% block content: %}
     <h2>Broadcast</h2>
     <form action="{{url_for("admin_broadcast")}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <p>Color: <input type="color" name="color" value="#000000"></p>
         <p><textarea name="text" rows="10" required></textarea></p>
         <p><button type="submit">Send</button></p>

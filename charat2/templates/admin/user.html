@@ -6,11 +6,15 @@
         <tbody>
             <tr>
                 <td>Group</td>
-                <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post"><select name="group">
-                    {% for value in User.group.type.enums: %}
-                    <option value="{{value}}"{% if value == user.group %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
-                    {% endfor %}
-                </select><button type="submit">Save</button></form></td>
+                <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <select name="group">
+                        {% for value in User.group.type.enums: %}
+                        <option value="{{value}}"{% if value == user.group %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Save</button>
+                </form></td>
             </tr>
             <tr>
                 <td>Email address</td>
