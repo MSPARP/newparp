@@ -12,6 +12,7 @@
         {% endif %}
         {% endif %}
         <form action="{{url_for("rp_create_chat")}}" method="post">
+            <input type="hidden" name="token" value="{{g.csrf_token}}">
             <p><label>URL: <input type="text" name="url" maxlength="50" required></label> <button type="submit">Create</button></p>
         </form>
     </div>

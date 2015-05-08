@@ -21,6 +21,7 @@
 <section id="edit_info_panel">
     <button type="button" class="close">Close</button>
     <form id="edit_info_form">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <h2>Description</h2>
         <p class="textarea_wrapper"><textarea id="edit_info_description" name="description" rows="10" maxlength="5000"></textarea></p>
         <h2>Rules</h2>
@@ -114,6 +115,7 @@
     <button type="button" class="close">Close</button>
     <h2>Character</h2>
     <form id="switch_character_form">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         {% if characters %}
         <p><select name="character_id">
             <option value="">Saved characters...</option>
@@ -188,6 +190,7 @@
 </section>
 
 <form id="send_form">
+    <input type="hidden" name="token" value="{{g.csrf_token}}">
     <p id="text_preview"></p>
     <input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="5000">
     <button type="submit" disabled="disabled">Send</button>

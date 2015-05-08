@@ -158,7 +158,7 @@ Your requests
       <a href="{{url_for("rp_delete_request_get", request_id=search_request.id)}}">Delete</a>
     </p>
 {% else: %}
-    <form action="{{url_for("rp_answer_request", request_id=search_request.id)}}" method="post"><button type="submit">Answer</button></form>
+    <form action="{{url_for("rp_answer_request", request_id=search_request.id)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Answer</button></form>
 {% endif %}
 
   </li>

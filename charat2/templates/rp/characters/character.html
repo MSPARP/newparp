@@ -6,6 +6,7 @@
 {% else: %}
     <form action="{{url_for("rp_new_character_post")}}" method="post">
 {% endif %}
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title if character else "New character"}}"></h2>
         <h2>Roleplay as <select name="search_character_id">
             {% for group in search_character_groups: %}

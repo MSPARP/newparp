@@ -5,6 +5,7 @@
 
 {% if own_chat_user: %}
 <form action="{{url_for("save_variables")}}" method="POST">
+    <input type="hidden" name="token" value="{{g.csrf_token}}">
     <input type="hidden" name="chat_id" value="{{chat.id}}">
     <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
     <p><button>{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>

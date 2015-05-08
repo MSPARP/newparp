@@ -53,7 +53,7 @@
                 <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
                 <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
                 {% endif %}
-                <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.url)}}" method="post"><button type="submit">Unsubscribe</button></form></td>
+                <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Unsubscribe</button></form></td>
             </tr>
             {% endfor %}
         </tbody>

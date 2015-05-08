@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content: %}
     <form action="{{url_for("rp_search_save")}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <h2>Roleplay as <select name="id">
             {% if characters: %}
             <optgroup label="Saved characters">

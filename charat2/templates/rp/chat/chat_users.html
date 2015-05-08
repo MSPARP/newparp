@@ -26,6 +26,7 @@
             <td>
                 {% if (g.user.group == "admin" or g.user.id == chat.creator_id) and chat_user.user.group != "admin" and chat_user.user_id != chat.creator_id: %}
                     <form action="/chat_api/set_group" method="post">
+                        <input type="hidden" name="token" value="{{g.csrf_token}}">
                         <input type="hidden" name="chat_id" value="{{chat.id}}">
                         <input type="hidden" name="number" value="{{chat_user.number}}">
                         <select name="group">
@@ -47,7 +48,7 @@
             <td>
                 Banned {{chat_user.ban.created.strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}).{% if chat_user.ban.reason: %} Reason: {{chat_user.ban.reason}}{% endif %}
                 {% if own_chat_user != None and own_chat_user.can("ban"): %}
-                <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
+                <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
                 {% endif %}
             </td>
             {% endif %}
