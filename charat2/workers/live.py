@@ -79,6 +79,9 @@ class ChatHandler(WebSocketHandler):
         except NoResultFound:
             self.send_error(404)
             return
+        # Remember the user number so typing notifications can refer to it
+        # without reopening the database session.
+        self.user_number = self.chat_user.number
         self.user.last_online = datetime.now()
         self.user.last_ip = self.request.headers["X-Forwarded-For"]
         if self.user.group == "banned":
@@ -112,9 +115,6 @@ class ChatHandler(WebSocketHandler):
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
-        # Remember the user number so typing notifications can refer to it
-        # without reopening the database session.
-        self.user_number = self.chat_user.number
         self.db.commit()
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
