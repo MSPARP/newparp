@@ -39,7 +39,7 @@
 
 <script id="pm_chat_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each chats}}
-    <li><a href="/{{url}}" class="{{#if (current_chat)}}active{{/if}} {{#if (partner_online)}}online{{/if}} {{#if (unread)}}unread{{/if}}">{{pm_username}}</a></li>
+    <li><a href="/{{url}}" class="{{#if (current_chat)}}active{{/if}} {{#if partner_online}}online{{/if}} {{#if unread}}unread{{/if}}">{{pm_username}}</a></li>
 {{/each}}
 {% endraw %}</script>
 
