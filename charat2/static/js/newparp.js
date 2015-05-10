@@ -373,6 +373,7 @@ var msparp = (function() {
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
 				set_sidebar(null);
+				if (chat.type == "pm") { refresh_pm_chat_list(); }
 				$("#send_form input, #send_form button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
@@ -918,18 +919,27 @@ var msparp = (function() {
 
 			// PM chat list
 			if (chat.type == "pm") {
+				var pm_chat_list_container = $("#pm_chat_list_container");
+				$("#pm_chat_list_container .close").click(function() { pm_chat_list_container.css("display", ""); });
 				var pm_chat_list = $("#pm_chat_list");
-				$("#pm_chat_list .close").click(function() { pm_chat_list.css("display", ""); });
-				var pm_chat_links = $("#pm_chat_list a").click(function() {
-					// Hide PM chat list on mobile.
-					if (pm_chat_list.css("display")) { pm_chat_list.css("display", ""); }
-					if (chat.url == "pm/" + this.innerHTML) { return false; }
-					next_chat_url = "pm/" + this.innerHTML;
-					disconnect();
-					pm_chat_links.removeClass("active");
-					$(this).addClass("active");
-					return false;
-				});
+				var pm_chat_list_template = Handlebars.compile($("#pm_chat_list_template").html());
+				Handlebars.registerHelper("current_chat", function() { return this.url == chat.url; });
+				Handlebars.registerHelper("pm_username", function() { return this.url.substr(3); });
+				function refresh_pm_chat_list() {
+					$.get("/chats/pm.json", {}, function(data) {
+						pm_chat_list.html(pm_chat_list_template(data));
+						var pm_chat_links = $("#pm_chat_list a").click(function() {
+							// Hide PM chat list on mobile.
+							if (pm_chat_list_container.css("display")) { pm_chat_list_container.css("display", ""); }
+							if (chat.url == "pm/" + this.innerHTML) { return false; }
+							next_chat_url = "pm/" + this.innerHTML;
+							disconnect();
+							pm_chat_links.removeClass("active");
+							$(this).addClass("active");
+							return false;
+						});
+					});
+				}
 			}
 
 			// Sidebars
@@ -1303,7 +1313,7 @@ var msparp = (function() {
 
 			// Other buttons
 			$("#user_list_button").click(function() {
-				chat.type == "pm" ? $("#pm_chat_list").show() : set_sidebar("user_list_container");
+				chat.type == "pm" ? $("#pm_chat_list_container").show() : set_sidebar("user_list_container");
 			});
 			$("#switch_character_button").click(function() { set_sidebar(current_sidebar != "switch_character" ? "switch_character" : null); });
 			$("#settings_button").click(function() { set_sidebar(current_sidebar != "settings" ? "settings" : null); });

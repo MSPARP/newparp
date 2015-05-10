@@ -219,30 +219,6 @@ def chat(chat, pm_user, url, fmt=None):
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
 
-    pm_chats = None
-    if chat.type == "pm":
-        # Fetch PMs list for the sidebar.
-        # Join opposing ChatUser on PM chats so we know who the other person is.
-        PMChatUser = aliased(ChatUser)
-        pm_chats = g.db.query(ChatUser, PMChat, PMChatUser).filter(
-            ChatUser.user_id == g.user.id,
-            ChatUser.subscribed == True,
-        ).join(
-            PMChat,
-            and_(
-                PMChat.type == "pm",
-                ChatUser.chat_id == PMChat.id,
-            ),
-        ).join(
-            PMChatUser,
-            and_(
-                PMChatUser.chat_id == PMChat.id,
-                PMChatUser.user_id != g.user.id,
-            ),
-        ).options(joinedload(PMChatUser.user)).order_by(
-            PMChat.last_message.desc(),
-        ).limit(50).all()
-
     return render_template(
         "rp/chat/chat.html",
         url=url,
@@ -255,7 +231,6 @@ def chat(chat, pm_user, url, fmt=None):
         characters=characters,
         character_shortcuts=character_shortcuts,
         search_character_groups=search_character_groups,
-        pm_chats=pm_chats,
     )
 
 

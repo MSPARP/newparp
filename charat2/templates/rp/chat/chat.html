@@ -30,16 +30,18 @@
     </form>
 </section>
 {% elif chat.type == "pm": %}
-<section id="pm_chat_list">
+<section id="pm_chat_list_container">
     <button type="button" class="close">Close</button>
     <h2>PM chats</h2>
-    <ul>
-{% for pm_chat in pm_chats: %}
-        <li><a href="{{url_for("rp_chat", url="pm/" + pm_chat[2].user.username.lower())}}"{% if pm_chat[1].id == chat.id: %} class="active"{% endif %}>{{pm_chat[2].user.username}}</a></li>
-{% endfor %}
-    </ul>
+    <ul id="pm_chat_list"></ul>
 </section>
 {% endif %}
+
+<script id="pm_chat_list_template" type="text/x-handlebars-template">{% raw %}
+{{#each chats}}
+    <li><a href="/{{url}}" class="{{#if (current_chat)}}active{{/if}} {{#if (partner_online)}}online{{/if}} {{#if (unread)}}unread{{/if}}">{{pm_username}}</a></li>
+{{/each}}
+{% endraw %}</script>
 
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each users}}
