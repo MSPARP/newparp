@@ -236,10 +236,12 @@ section > .close:first-child { float: right; margin: 5px; }
 /* 4.2. PM chat list */
 
 #pm_chat_list_container { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+#pm_chat_list a { text-decoration: none; color: #666; }
+#pm_chat_list a.online { color: #000; }
+#pm_chat_list a.unread { font-style: italic; }
 @media (min-width: 700px) {
 	#pm_chat_list_container { display: block; right: auto; width: 150px; }
 	#pm_chat_list_container .close:first-child { display: none; }
-	#pm_chat_list_container .active { color: #000; text-decoration: none; }
 	#pm_chat_list_container ~ #conversation, #pm_chat_list_container ~ #send_form { left: 160px; }
 }
 
