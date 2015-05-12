@@ -198,6 +198,9 @@ def get_userlist(db, redis, chat):
 
 def send_userlist(db, redis, chat):
     # Update the userlist without sending a message.
+    if chat.type == "pm":
+        for user_id, in db.query(ChatUser.user_id).filter(ChatUser.chat_id == chat.id):
+			redis.publish("channel:pm:%s" % user_id, "{\"pm\":\"1\"}")
     redis.publish("channel:%s" % chat.id, json.dumps({
         "messages": [],
         "users": get_userlist(db, redis, chat),

@@ -543,6 +543,9 @@ var msparp = (function() {
 						status_bar.text(name + " is typing...");
 					}
 				}
+				if (chat.type == "pm" && typeof data.pm != "undefined") {
+					refresh_pm_chat_list();
+				}
 				if (status == "disconnected") {
 					if (next_chat_url) {
 						$.get("/" + next_chat_url + ".json", {}, function(data) {

@@ -115,12 +115,14 @@ class ChatHandler(WebSocketHandler):
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
-        self.db.commit()
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
             "user": "channel:%s:%s" % (self.chat_id, self.user_id),
             "typing": "channel:%s:typing" % self.chat_id,
         }
+        if self.chat.type == "pm":
+            self.channels["pm"] = "channel:pm:%s" % self.user_id
+        self.db.commit()
         self.redis_listen()
 
     def on_message(self, message):
