@@ -848,6 +848,19 @@ var msparp = (function() {
 						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": match[1] });
 					},
 				},
+				{
+					"regex": /^lookup (\d+)$/,
+					"chat_types": "group",
+					"minimum_rank": Infinity,
+					"description": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						return "Look up " + name_from_user_number(parseInt(match[1])) + ".";
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						$.post("/chat_api/look_up_user", { "chat_id": chat.id, "number": match[1] });
+					},
+				},
 			];
 			function name_from_user_number(number) {
 				return user_data[number] ? user_data[number].character.name : "user " + number;
