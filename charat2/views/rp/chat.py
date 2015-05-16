@@ -465,7 +465,7 @@ def invite(chat, pm_user, url, fmt):
             )).one()
         except NoResultFound:
             new_number = (g.db.query(func.max(ChatUser.number)).filter(ChatUser.chat_id == chat.id).scalar() or 0) + 1
-            invite_chat_user = ChatUser(user_id=invite_user.id, chat_id=chat.id, number=new_number)
+            invite_chat_user = ChatUser.from_user(user=invite_user, chat_id=chat.id, number=new_number)
             # Disable typing notifications by default in group chats.
             invite_chat_user.typing_notifications = False
             g.db.add(invite_chat_user)

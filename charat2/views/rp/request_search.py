@@ -328,7 +328,7 @@ def answer_request(request_id):
     g.db.add(new_chat)
     g.db.flush()
 
-    new_chat_user = ChatUser(
+    new_chat_user = ChatUser.from_user(
         user=search_request.user,
         chat=new_chat,
         name=search_request.name,

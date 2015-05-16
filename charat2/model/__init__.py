@@ -494,11 +494,21 @@ class ChatUser(Base):
 
     @classmethod
     def from_user(cls, user, **kwargs):
-        # Create a ChatUser using a User and their default character to
-        # determine the default values.
-        if user.default_character is None:
+        # Create a ChatUser using a User to determine their settings.
+        # Also inherit their default character if they have one and there
+        # isn't one in the arguments.
+        if user.default_character is not None and "name" not in kwargs:
+            dc = user.default_character
             return cls(
                 user_id=user.id,
+                name=dc.name,
+                acronym=dc.acronym,
+                color=dc.color,
+                quirk_prefix=dc.quirk_prefix,
+                quirk_suffix=dc.quirk_suffix,
+                case=dc.case,
+                replacements=dc.replacements,
+                regexes=dc.regexes,
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
                 show_system_messages=user.show_system_messages,
@@ -507,17 +517,8 @@ class ChatUser(Base):
                 typing_notifications=user.typing_notifications,
                 **kwargs
             )
-        dc = user.default_character
         return cls(
             user_id=user.id,
-            name=dc.name,
-            acronym=dc.acronym,
-            color=dc.color,
-            quirk_prefix=dc.quirk_prefix,
-            quirk_suffix=dc.quirk_suffix,
-            case=dc.case,
-            replacements=dc.replacements,
-            regexes=dc.regexes,
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
