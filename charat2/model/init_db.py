@@ -1,5 +1,8 @@
 #!/usr/bin/python
+import os
 
+from alembic.config import Config
+from alembic import command
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm
@@ -8,6 +11,9 @@ if __name__ == "__main__":
 
     engine.echo = True
     Base.metadata.create_all(bind=engine)
+
+    alembic_cfg = Config(os.path.dirname(os.path.realpath(__file__)) + "/../../alembic.ini")
+    command.stamp(alembic_cfg, "head")
 
     # Initialise search characters if necessary.
     db = sm()

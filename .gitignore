@@ -1,6 +1,5 @@
 logs/
 *.pyc
-*.ini
 *.egg-info
 .c9/
 build/
