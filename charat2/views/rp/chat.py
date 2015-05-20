@@ -3,7 +3,7 @@ from flask import Flask, abort, current_app, g, jsonify, redirect, render_templa
 from functools import wraps
 from math import ceil
 from sqlalchemy import and_, func
-from sqlalchemy.orm import aliased, joinedload, joinedload_all
+from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 from webhelpers import paginate
 

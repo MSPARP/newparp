@@ -181,7 +181,15 @@ var msparp = (function() {
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[br\])+/g, "<br>");
 		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
-			if (url) { return $("<a>").attr({href: url, target: "_blank"}).text(url)[0].outerHTML; }
+			if (url) {
+				var suffix = "";
+				// Exclude a trailing closing bracket if there isn't an opening bracket.
+				if (url[url.length - 1] == ")" && url.indexOf("(") == -1) {
+					url = url.substr(0, url.length-1);
+					suffix = ")";
+				}
+				return $("<a>").attr({href: url, target: "_blank"}).text(url)[0].outerHTML + suffix;
+			}
 			tag = tag.toLowerCase();
 			if (attribute) {
 				switch (tag) {
