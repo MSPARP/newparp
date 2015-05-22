@@ -19,6 +19,10 @@ class BannedException(Exception):
     pass
 
 
+class TooManyPeopleException(Exception):
+    pass
+
+
 class KickedException(Exception):
     pass
 
@@ -51,7 +55,7 @@ def mark_alive(f):
                 get_chat_user()
             try:
                 authorize_joining(g.redis, g.db, g)
-            except UnauthorizedException:
+            except (UnauthorizedException, BannedException, TooManyPeopleException):
                 abort(403)
             try:
                 join(g.redis, g.db, g)
@@ -81,7 +85,10 @@ def authorize_joining(redis, db, context):
     if context.user is not None and context.user.group == "admin":
         return
 
-    # XXX ONLINE USER LIMITS ETC. HERE.
+    # XXX Allow chat creators to bypass this?
+    online_user_count = len(set(redis.hvals("chat:%s:online" % cd["id"])))
+    if online_user_count >= 30:
+        raise TooManyPeopleException
 
     if context.chat.type == "group":
         if context.chat.publicity == "admin_only":

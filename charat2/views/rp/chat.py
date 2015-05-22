@@ -9,7 +9,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
-from charat2.helpers.chat import UnauthorizedException, BannedException, authorize_joining, send_message
+from charat2.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from charat2.model import (
     case_options,
     AnyChat,
@@ -108,6 +108,9 @@ def get_chat(f):
             return redirect(url_for(request.endpoint, url="theoubliette", fmt=fmt))
         except UnauthorizedException:
             abort(403)
+        except TooManyPeopleException:
+            if request.endpoint == "rp_chat":
+                abort(403)
 
         return f(chat, None, url, fmt, *args, **kwargs)
 
