@@ -85,23 +85,29 @@ def authorize_joining(redis, db, context):
     if context.user is not None and context.user.group == "admin":
         return
 
-    # XXX Allow chat creators to bypass this?
-    online_user_count = len(set(redis.hvals("chat:%s:online" % cd["id"])))
-    if online_user_count >= 30:
-        raise TooManyPeopleException
-
     if context.chat.type == "group":
+
         if context.chat.publicity == "admin_only":
             raise UnauthorizedException
-        elif context.chat.publicity == "private":
+
+        if context.chat.publicity == "private":
+
             if context.user is None:
                 raise UnauthorizedException
-            # Creators bypass invite check.
-            if context.user.id != context.chat.creator_id and db.query(func.count('*')).select_from(Invite).filter(and_(
+
+            # Creators bypass all restrictions in their chats
+            if context.user_id == context.chat.creator_id:
+                return
+
+            if db.query(func.count('*')).select_from(Invite).filter(and_(
                 Invite.chat_id == context.chat_id,
                 Invite.user_id == context.user_id,
             )).scalar() != 1:
                 raise UnauthorizedException
+
+    online_user_count = len(set(redis.hvals("chat:%s:online" % cd["id"])))
+    if online_user_count >= 30:
+        raise TooManyPeopleException
 
     if db.query(func.count('*')).select_from(Ban).filter(and_(
         Ban.chat_id == context.chat_id,
