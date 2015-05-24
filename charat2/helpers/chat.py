@@ -150,18 +150,6 @@ def send_message(db, redis, message):
     db.add(message)
     db.flush()
 
-    if message.type in (u"ic", u"ooc", u"me"):
-
-        message.chat.last_message = message.posted
-
-        # Update last_online field for everyone who is online.
-        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
-        if len(online_user_ids) != 0:
-            db.query(ChatUser).filter(and_(
-                ChatUser.user_id.in_(online_user_ids),
-                ChatUser.chat_id == message.chat.id,
-            )).update({ "last_online": message.posted }, synchronize_session=False)
-
     message_dict = message.to_dict()
 
     # Cache before sending.
@@ -191,6 +179,30 @@ def send_message(db, redis, message):
 
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
+
+    # And send notifications last.
+    if message.type in (u"ic", u"ooc", u"me"):
+
+        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
+
+        if message.chat.type == "pm":
+            offline_chat_users = db.query(ChatUser).filter(and_(
+                ~ChatUser.user_id.in_(online_user_ids),
+                ChatUser.chat_id == message.chat.id,
+            ))
+            for chat_user in offline_chat_users:
+                # Only send a notification if it's not already unread.
+                if message.chat.last_message <= chat_user.last_online:
+                    redis.publish("channel:pm:%s" % chat_user.user_id, "{\"pm\":\"1\"}")
+
+        message.chat.last_message = message.posted
+
+        # Update last_online field for everyone who is online.
+        if len(online_user_ids) != 0:
+            db.query(ChatUser).filter(and_(
+                ChatUser.user_id.in_(online_user_ids),
+                ChatUser.chat_id == message.chat.id,
+            )).update({ "last_online": message.posted }, synchronize_session=False)
 
 
 def get_userlist(db, redis, chat):
