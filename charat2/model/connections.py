@@ -39,7 +39,7 @@ def redis_connect():
     g.redis = StrictRedis(connection_pool=redis_pool)
     if "session" in request.cookies:
         g.session_id = request.cookies["session"]
-        g.user_id = g.redis.get("session:" + g.session_id)
+        g.user_id = int(g.redis.get("session:" + g.session_id))
     else:
         g.session_id = str(uuid4())
         g.user_id = None
