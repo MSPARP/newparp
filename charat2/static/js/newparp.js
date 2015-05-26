@@ -955,8 +955,9 @@ var msparp = (function() {
 						var pm_chat_links = $("#pm_chat_list a").click(function() {
 							// Hide PM chat list on mobile.
 							if (pm_chat_list_container.css("display")) { pm_chat_list_container.css("display", ""); }
-							if (chat.url == "pm/" + this.innerHTML) { return false; }
-							next_chat_url = "pm/" + this.innerHTML;
+							var new_url = "pm" + this.href.substr(this.href.lastIndexOf("/"));
+							if (chat.url == new_url) { return false; }
+							next_chat_url = new_url;
 							disconnect();
 							pm_chat_links.removeClass("active");
 							$(this).addClass("active");
