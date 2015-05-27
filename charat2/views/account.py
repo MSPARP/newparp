@@ -169,3 +169,20 @@ def reset_password_post():
 
     return redirect(url_for("log_in"))
 
+
+
+@use_db
+def settings_get():
+    return render_template("account/settings.html")
+
+
+@use_db
+def settings_post():
+    g.user.confirm_disconnect = "confirm_disconnect" in request.form
+    g.user.desktop_notifications = "desktop_notifications" in request.form
+    g.user.show_system_messages = "show_system_messages" in request.form
+    g.user.show_bbcode = "show_bbcode" in request.form
+    g.user.show_preview = "show_preview" in request.form
+    g.user.typing_notifications = "typing_notifications" in request.form
+    return redirect(url_for("settings"))
+

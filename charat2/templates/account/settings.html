@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title: %}Settings - {% endblock %}
+{% block content: %}
+    <h2>Default settings for new chats</h2>
+    <form action="{{url_for("settings_post")}}" method="post">
+        <p><label><input type="checkbox" name="confirm_disconnect"{% if g.user.confirm_disconnect: %} checked="checked"{% endif %}> Confirm disconnect</label></p>
+        <p><label><input type="checkbox" name="desktop_notifications"{% if g.user.desktop_notifications: %} checked="checked"{% endif %}> Desktop notifications</label></p>
+        <p><label><input type="checkbox" name="show_system_messages"{% if g.user.show_system_messages: %} checked="checked"{% endif %}> Show system messages</label></p>
+        <p><label><input type="checkbox" name="show_bbcode"{% if g.user.show_bbcode: %} checked="checked"{% endif %}> Show BBCode</label></p>
+        <p><label><input type="checkbox" name="show_preview"{% if g.user.show_preview: %} checked="checked"{% endif %}> Show preview</label></p>
+        <p><label><input type="checkbox" name="typing_notifications"{% if g.user.typing_notifications: %} checked="checked"{% endif %}> Typing notifications</label></p>
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
+

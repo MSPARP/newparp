@@ -79,6 +79,9 @@ app.add_url_rule("/register", "register_post", account.register_post, methods=("
 app.add_url_rule("/reset_password", "reset_password", account.reset_password_get, methods=("GET",))
 app.add_url_rule("/reset_password", "reset_password_post", account.reset_password_post, methods=("POST",))
 
+app.add_url_rule("/settings", "settings", account.settings_get, methods=("GET",))
+app.add_url_rule("/settings", "settings_post", account.settings_post, methods=("POST",))
+
 # 2. Chats list
 
 make_rules("rp", "/chats", chat_list.chat_list, formats=True, paging=True)
