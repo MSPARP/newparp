@@ -813,6 +813,30 @@ class Tag(Base):
     synonym_id = Column(Integer, ForeignKey("tags.id"))
 
 
+class AdminLogEntry(Base):
+
+    __tablename__ = "admin_log_entries"
+
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime(), nullable=False, default=now)
+    action_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    type = Column(Unicode(50), nullable=False)
+    description = Column(UnicodeText(50))
+    affected_user_id = Column(Integer, ForeignKey("users.id"))
+    chat_id = Column(Integer, ForeignKey("chats.id"))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "date": time.mktime(self.date.timetuple()),
+            "action_user": self.action_user.to_dict(),
+            "type": self.type,
+            "description": self.description,
+            "affected_user": self.affected_user.to_dict() if self.affected_user is not None else None,
+            "chat": self.chat.to_dict() if self.chat is not None else None,
+        }
+
+
 # 2. Indexes
 
 
@@ -966,4 +990,8 @@ Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias
 Tag.characters = relation(CharacterTag, backref="tag")
 Tag.requests = relation(RequestTag, backref="tag")
 Tag.synonym_of = relation(Tag, backref="synonyms", remote_side=Tag.id)
+
+AdminLogEntry.action_user = relation(User, backref="admin_actions", foreign_keys=AdminLogEntry.action_user_id)
+AdminLogEntry.affected_user = relation(User, foreign_keys=AdminLogEntry.affected_user_id)
+AdminLogEntry.chat = relation(Chat)
 
