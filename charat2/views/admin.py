@@ -29,7 +29,14 @@ def announcements_get():
 @use_db
 @admin_required
 def announcements_post():
-    g.redis.set("announcements", request.form["announcements"])
+    current_announcements = g.redis.get("announcements")
+    if request.form["announcements"] != current_announcements:
+        g.redis.set("announcements", request.form["announcements"])
+        g.db.add(AdminLogEntry(
+            action_user=g.user,
+            type="announcements",
+            description=request.form["announcements"],
+        ))
     return redirect(url_for("admin_announcements"))
 
 
