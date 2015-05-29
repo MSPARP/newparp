@@ -821,7 +821,7 @@ class AdminLogEntry(Base):
     date = Column(DateTime(), nullable=False, default=now)
     action_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     type = Column(Unicode(50), nullable=False)
-    description = Column(UnicodeText(50))
+    description = Column(UnicodeText)
     affected_user_id = Column(Integer, ForeignKey("users.id"))
     chat_id = Column(Integer, ForeignKey("chats.id"))
 

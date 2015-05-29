@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('date', sa.DateTime(), nullable=False),
     sa.Column('action_user_id', sa.Integer(), nullable=False),
     sa.Column('type', sa.Unicode(length=50), nullable=False),
-    sa.Column('description', sa.UnicodeText(length=50), nullable=True),
+    sa.Column('description', sa.UnicodeText, nullable=True),
     sa.Column('affected_user_id', sa.Integer(), nullable=True),
     sa.Column('chat_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['action_user_id'], ['users.id'], ),

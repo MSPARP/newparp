@@ -9,7 +9,7 @@ from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
-from charat2.model import GroupChat, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, GroupChat, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -53,6 +53,12 @@ def broadcast_post():
         color = request.form["color"]
     if not color_validator.match(color):
         abort(400)
+
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="broadcast",
+        description=text,
+    ))
 
     message_json = json.dumps({
         "messages": [{
