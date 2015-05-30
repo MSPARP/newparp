@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title: %}Log - {% endblock %}
+{% block content: %}
+    <h2>Log</h2>
+    {{ pager() }}
+    {% if entries: %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries: %}
+            <tr>
+                <td>{{entry.id}}</td>
+                <td><a href="{{url_for("admin_user", username=entry.action_user.username)}}">{{entry.action_user.username}}</a></td>
+                {% if entry.type == "announcements": %}
+                <td>Announcements</td>
+                <td><pre>{{entry.description}}</pre></td>
+                {% elif entry.type == "broadcast": %}
+                <td>Broadcast</td>
+                <td>{{entry.description}}</td>
+                {% elif entry.type == "user_set_group": %}
+                <td>User group</td>
+                <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>No log entries.</p>
+    {% endif %}
+    {{ pager() }}
+{% endblock %}
+

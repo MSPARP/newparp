@@ -33,7 +33,7 @@ engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
     pool_recycle=3600,
-    echo='ECHO' in os.environ,
+    echo="ECHO" in os.environ,
 )
 
 sm = sessionmaker(
@@ -152,8 +152,8 @@ class User(Base):
             "id": self.id,
             "username": self.username,
             "group": self.group,
-            "created": self.created,
-            "last_online": self.last_online,
+            "created": time.mktime(self.created.timetuple()),
+            "last_online": time.mktime(self.last_online.timetuple()),
             "name": self.name,
             "acronym": self.acronym,
             "color": self.color,

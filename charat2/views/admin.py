@@ -201,3 +201,37 @@ def groups(fmt=None, page=1):
         paginator=paginator,
     )
 
+
+@alt_formats({"json"})
+@use_db
+@admin_required
+def log(fmt=None, page=1):
+    entries = g.db.query(AdminLogEntry).order_by(
+        AdminLogEntry.id.desc(),
+    ).options(
+        joinedload(AdminLogEntry.action_user),
+        joinedload(AdminLogEntry.affected_user),
+        joinedload(AdminLogEntry.chat),
+    ).offset((page - 1) * 50).limit(50).all()
+
+    if len(entries) == 0 and page != 1:
+        abort(404)
+    entry_count = g.db.query(func.count('*')).select_from(AdminLogEntry).scalar()
+    if fmt == "json":
+        return jsonify({
+            "total": entry_count,
+            "entries": [_.to_dict() for _ in entries],
+        })
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=entry_count,
+        url=lambda page: url_for("admin_log", page=page),
+    )
+    return render_template(
+        "admin/log.html",
+        entries=entries,
+        paginator=paginator,
+    )
+

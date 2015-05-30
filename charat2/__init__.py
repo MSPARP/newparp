@@ -193,6 +193,8 @@ app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", ad
 
 make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
+make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
+
 # 11. Error handlers
 
 app.error_handler_spec[None][403] = errors.error_403
