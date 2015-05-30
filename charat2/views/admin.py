@@ -153,14 +153,20 @@ def user(username, fmt=None):
 @use_db
 @admin_required
 def user_set_group(username):
+    if request.form["group"] not in User.group.type.enums:
+        abort(400)
     try:
         user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
     except NoResultFound:
         abort(404)
-    if request.form["group"] in User.group.type.enums:
+    if user.group != request.form["group"]:
         user.group = request.form["group"]
-    else:
-        abort(400)
+        g.db.add(AdminLogEntry(
+            action_user=g.user,
+            type="user_set_group",
+            description=request.form["group"],
+            affected_user=user,
+        ))
     return redirect(url_for("admin_user", username=user.username))
 
 
