@@ -206,7 +206,16 @@ def groups(fmt=None, page=1):
 @use_db
 @admin_required
 def log(fmt=None, page=1):
-    entries = g.db.query(AdminLogEntry).order_by(
+
+    if "type" in request.args:
+        entry_type = request.args["type"].strip().lower()
+    else:
+        entry_type = None
+
+    entries = g.db.query(AdminLogEntry)
+    if entry_type is not None:
+        entries = entries.filter(AdminLogEntry.type == entry_type)
+    entries = entries.order_by(
         AdminLogEntry.id.desc(),
     ).options(
         joinedload(AdminLogEntry.action_user),
@@ -216,7 +225,10 @@ def log(fmt=None, page=1):
 
     if len(entries) == 0 and page != 1:
         abort(404)
-    entry_count = g.db.query(func.count('*')).select_from(AdminLogEntry).scalar()
+    entry_count = g.db.query(func.count('*')).select_from(AdminLogEntry)
+    if entry_type is not None:
+        entry_count = entry_count.filter(AdminLogEntry.type == entry_type)
+    entry_count = entry_count.scalar()
     if fmt == "json":
         return jsonify({
             "total": entry_count,
@@ -227,7 +239,7 @@ def log(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=entry_count,
-        url=lambda page: url_for("admin_log", page=page),
+        url=lambda page: url_for("admin_log", page=page, type=entry_type),
     )
     return render_template(
         "admin/log.html",
