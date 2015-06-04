@@ -2,6 +2,24 @@
 {% block title: %}Log - {% endblock %}
 {% block content: %}
     <h2>Log</h2>
+    <nav id="subnav">
+        Show:
+        {% if request.args.type == "announcements": %}
+        Announcements
+        {% else %}
+        <a href="{{url_for("admin_log", type="announcements")}}">Announcements</a>
+        {% endif %}
+        {% if request.args.type == "broadcast": %}
+        Broadcast
+        {% else %}
+        <a href="{{url_for("admin_log", type="broadcast")}}">Broadcast</a>
+        {% endif %}
+        {% if request.args.type == "user_set_group": %}
+        User group
+        {% else %}
+        <a href="{{url_for("admin_log", type="user_set_group")}}">User group</a>
+        {% endif %}
+    </nav>
     {{ pager() }}
     {% if entries: %}
     <table>
