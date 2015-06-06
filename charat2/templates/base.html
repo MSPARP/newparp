@@ -19,6 +19,7 @@
     <div id="users_online">
         <p>{{g.redis.get("connected_users") or 0}} connected</p>
         <p>{{g.redis.get("searching_users") or 0}} searching</p>
+        <p>{{g.redis.get("rouletting_users") or 0}} rouletting</p>
     </div>
     <h1><a href="{{url_for("home")}}"><img src="/static/img/logo.gif" alt="MSPARP"></a></h1>
 </header>
