@@ -79,6 +79,9 @@ var msparp = (function() {
 
 	// Regex list
 	function delete_regex(e) {
+		if (this.parentNode.parentNode.childElementCount == 1) {
+			add_regex();
+		}
 		$(this.parentNode).remove();
 		return false;
 	}
@@ -96,6 +99,11 @@ var msparp = (function() {
 	}
 	function clear_regexes(e) {
 		$('#regex_list').empty();
+		return false;
+	}
+	function clear_regexes_and_add(e) {
+		$('#regex_list').empty();
+		add_regex();
 		return false;
 	}
 
@@ -137,7 +145,7 @@ var msparp = (function() {
 		// Regex list
 		$('.delete_regex').click(delete_regex);
 		$('#add_regex').click(add_regex);
-		$('#clear_regexes').click(clear_regexes);
+		$('#clear_regexes').click(clear_regexes_and_add);
 	}
 
 	// Searching
