@@ -21,11 +21,10 @@
 <section id="edit_info_panel">
     <button type="button" class="close">Close</button>
     <form id="edit_info_form">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <h2>Description</h2>
         <p class="textarea_wrapper"><textarea id="edit_info_description" name="description" rows="10" maxlength="5000"></textarea></p>
         <h2>Rules</h2>
-        <p class="textarea_wrapper"><textarea  id="edit_info_rules"name="rules" rows="10" maxlength="5000"></textarea></p>
+        <p class="textarea_wrapper"><textarea id="edit_info_rules" name="rules" rows="10" maxlength="5000"></textarea></p>
         <p><button type="submit">Save</button></p>
     </form>
 </section>
@@ -85,7 +84,7 @@
             <option value="pinned">Pinned</option>
             <option value="admin_only">Admin only</option>
             {% endif %}
-        </select></p>
+        </select></label></p>
         <p id="invites_link">&gt; <a href="{{url_for("rp_invites", url=chat.url)}}" target="_blank">Invite users</a></p>
         <p><label><select id="flag_style">
             <option value="script">Script</option>
@@ -117,7 +116,6 @@
     <button type="button" class="close">Close</button>
     <h2>Character</h2>
     <form id="switch_character_form">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
         {% if characters %}
         <p><select name="character_id">
             <option value="">Saved characters...</option>
@@ -222,6 +220,6 @@
 
 {% endblock %}
 {% block scripts: %}
-<script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{character_shortcuts|tojson|safe}}, {{latest_num|tojson|safe}});</script>
+<script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{character_shortcuts|tojson|safe}}, {{latest_num|tojson|safe}}, {{g.csrf_token|tojson|safe}});</script>
 {% endblock %}
 

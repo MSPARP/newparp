@@ -1,5 +1,14 @@
-from flask import abort, redirect, request, url_for
+from flask import abort, g, redirect, request, url_for
 from functools import wraps
+
+
+def check_csrf_token():
+    if request.method != "POST":
+        return
+    token = g.redis.get("session:%s:csrf" % g.session_id)
+    if "token" in request.form and request.form["token"] == token:
+        return
+    abort(403)
 
 
 def alt_formats(available_formats):

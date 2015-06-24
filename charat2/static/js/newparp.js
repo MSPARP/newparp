@@ -292,12 +292,14 @@ var msparp = (function() {
 
 		},
 		// Character search
-		"search": function() {
+		"search": function(token) {
+			$.ajaxSetup({data: {"token": token}});
 			$(window).unload(function () { if (searching) { stop_search(); }});
 			start_search();
 		},
 		// Roulette
-		"roulette": function() {
+		"roulette": function(token) {
+			$.ajaxSetup({data: {"token": token}});
 			search_type = "roulette";
 			$(window).unload(function () { if (searching) { stop_search(); }});
 			start_search();
@@ -317,7 +319,9 @@ var msparp = (function() {
 			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
 		},
 		// Chat window
-		"chat": function(chat, user, character_shortcuts, latest_message) {
+		"chat": function(chat, user, character_shortcuts, latest_message, token) {
+
+			$.ajaxSetup({data: {"token": token}});
 
 			var conversation = $("#conversation");
 			var status;
