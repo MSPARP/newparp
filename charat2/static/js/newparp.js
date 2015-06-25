@@ -953,6 +953,7 @@ var msparp = (function() {
 				var edit_info_panel = $("#edit_info_panel");
 				$("#edit_info_form").submit(function() {
 					var form_data = $(this).serializeArray();
+					form_data.push({ name: "token", value: token });
 					form_data.push({ name: "chat_id", value: chat.id });
 					$.post("/chat_api/set_info", form_data);
 					edit_info_panel.hide();
@@ -1111,6 +1112,7 @@ var msparp = (function() {
 					alert("You entered an invalid hex code.");
 				} else {
 					var form_data = $(this).serializeArray();
+					form_data.push({ name: "token", value: token });
 					form_data.push({ name: "chat_id", value: chat.id });
 					$.post("/chat_api/save", form_data, function(data) {
 						user = data;
