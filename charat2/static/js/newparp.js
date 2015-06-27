@@ -635,7 +635,7 @@ var msparp = (function() {
 				if (
 					(document.hidden || document.webkitHidden || document.msHidden)
 					// Skip notifications for system messages if we're hiding them.
-					&& (user.meta.show_system_messages || ["ic", "ooc", "me", "global"].indexOf(message.type) != -1)
+					&& (user.meta.show_system_messages || ["ic", "ooc", "me", "global", "spamless"].indexOf(message.type) != -1)
 					// Skip notifications if we're ignoring this person.
 					&& user.meta.ignored_numbers.indexOf(message.user_number) == -1
 				) {

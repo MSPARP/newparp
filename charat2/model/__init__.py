@@ -634,6 +634,7 @@ class Message(Base):
         u"user_action",
         u"chat_meta",
         u"search_info",
+        u"spamless",
         name=u"messages_type",
     ), nullable=False, default=u"ic")
 

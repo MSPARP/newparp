@@ -133,7 +133,7 @@ def join(redis, db, context):
 
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:
-        if context.chat_user.group == "silent" or context.chat.type in ("pm", "roulette"):
+        if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
             send_userlist(db, redis, context.chat)
         else:
             send_message(db, redis, Message(
@@ -145,7 +145,7 @@ def join(redis, db, context):
             ))
 
 
-def send_message(db, redis, message):
+def send_message(db, redis, message, force_userlist=False):
 
     db.add(message)
     db.flush()
@@ -170,7 +170,7 @@ def send_message(db, redis, message):
         u"user_info",
         u"user_group",
         u"user_action",
-    ):
+    ) or force_userlist:
         redis_message["users"] = get_userlist(db, redis, message.chat)
 
     # Reload chat metadata if necessary.
@@ -259,7 +259,7 @@ def disconnect_user(redis, chat_id, user_id):
 
 
 def send_quit_message(db, redis, chat_user, user, chat):
-    if chat_user.group == "silent" or chat.type in ("pm", "roulette"):
+    if chat_user.computed_group == "silent" or chat.type in ("pm", "roulette"):
         send_userlist(db, redis, chat)
     else:
         send_message(db, redis, Message(

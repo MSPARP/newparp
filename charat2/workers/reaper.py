@@ -46,7 +46,7 @@ if __name__ == "__main__":
             except NoResultFound:
                 print "Unable to find ChatUser (chat %s, user %s)." % (chat_id, user_id)
                 continue
-            if dead_chat_user.group == "silent" or dead_chat_user.chat.type in ("pm", "roulette"):
+            if dead_chat_user.computed_group == "silent" or dead_chat_user.chat.type in ("pm", "roulette"):
                 send_userlist(db, redis, dead_chat_user.chat)
             else:
                 send_message(db, redis, Message(

@@ -90,11 +90,7 @@ def ping():
 @mark_alive
 def send():
 
-    if (
-        g.chat_user.group == "silent"
-        and g.chat.creator != g.user
-        and g.user.group != "admin"
-    ):
+    if g.chat_user.computed_group == "silent":
         abort(403)
 
     if "text" not in request.form:
@@ -532,7 +528,7 @@ def save():
 
     # Send a message if name or acronym has changed.
     if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym:
-        if g.chat_user.group == "silent":
+        if g.chat_user.computed_group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
@@ -583,7 +579,7 @@ def save_from_character():
     g.chat_user.regexes = character.regexes
 
     if changed:
-        if g.chat_user.group == "silent":
+        if g.chat_user.computed_group == "silent":
             send_userlist(g.db, g.redis, g.chat)
         else:
             send_message(g.db, g.redis, Message(
