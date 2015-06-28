@@ -181,7 +181,7 @@ def send_message(db, redis, message, force_userlist=False):
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
     # And send notifications last.
-    if message.type in (u"ic", u"ooc", u"me"):
+    if message.type in (u"ic", u"ooc", u"me", u"spamless"):
 
         online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
 

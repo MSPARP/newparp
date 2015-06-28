@@ -647,6 +647,8 @@ class Message(Base):
 
     text = Column(UnicodeText, nullable=False)
 
+    spam_flag = Column(Unicode(15))
+
     def to_dict(self, include_user=False):
         md = {
             "id": self.id,

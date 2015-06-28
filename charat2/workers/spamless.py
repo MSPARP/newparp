@@ -38,6 +38,7 @@ def on_ps(ps_message):
         try:
             check_connection_spam(chat_id, message)
         except Silence, e:
+            db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
             db.query(ChatUser).filter(and_(
                 ChatUser.chat_id == chat_id,
                 ChatUser.number == message["user_number"]
