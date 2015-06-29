@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title: %}Spamless - {% endblock %}
+{% block content: %}
+    <h2>Spamless</h2>
+    <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
+{% endblock %}
+

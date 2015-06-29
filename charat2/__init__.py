@@ -11,7 +11,11 @@ from charat2.model.connections import (
     set_cookie,
 )
 from charat2.views import account, admin, errors, rp
-from charat2.views.rp import chat, chat_api, chat_list, characters, request_search, roulette, search, search_characters
+from charat2.views.admin import spamless
+from charat2.views.rp import (
+    chat, chat_api, chat_list, characters, request_search, roulette, search,
+    search_characters,
+)
 
 from flask.ext.babel import Babel, gettext
 
@@ -187,7 +191,9 @@ make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 
-# 11. Error handlers
+app.add_url_rule("/admin/spamless", "admin_spamless_home", spamless.home, methods=("GET",))
+
+# 12. Error handlers
 
 app.error_handler_spec[None][403] = errors.error_403
 app.error_handler_spec[None][404] = errors.error_404
