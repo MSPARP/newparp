@@ -3,5 +3,34 @@
 {% block content: %}
     <h2>Spamless</h2>
     <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
+    <h2>Recent messages</h2>
+    {% if messages: %}
+    {{ pager() }}
+    <table>
+        <thead>
+            <tr>
+                <th>Flag type</th>
+                <th>Time</th>
+                <th>Chat</th>
+                <th>User</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages: %}
+            <tr>
+                <td>{{ message.spam_flag.replace("_", " ").capitalize() }}</td>
+                <td>{{ message.posted }}</td>
+                <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
+                <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
+                <td style="color: #{{ message.color }}">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ pager() }}
+    {% else: %}
+    <p>No messages.</p>
+    {% endif %}
 {% endblock %}
 

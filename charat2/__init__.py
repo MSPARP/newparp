@@ -191,7 +191,7 @@ make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 
-app.add_url_rule("/admin/spamless", "admin_spamless_home", spamless.home, methods=("GET",))
+make_rules("spamless", "/admin/spamless", spamless.home, formats=False, paging=True)
 
 # 12. Error handlers
 
