@@ -15,6 +15,11 @@ db = sm()
 redis = StrictRedis(connection_pool=redis_pool)
 
 
+lists = {
+    "name_blacklist": redis.smembers("spamless:name_blacklist"),
+}
+
+
 class Silence(Exception):
     pass
 
@@ -37,6 +42,7 @@ def on_ps(ps_message):
 
         try:
             check_connection_spam(chat_id, message)
+            check_name_blacklist(chat_id, message)
         except Silence, e:
             db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
             db.query(ChatUser).filter(and_(
@@ -61,6 +67,15 @@ def check_connection_spam(chat_id, message):
     if attempts <= 10:
         return
     raise Silence("connection_spam")
+
+
+def check_name_blacklist(chat_id, message):
+    if not message["name"]:
+        return
+    lower_name = message["name"].lower()
+    for name in lists["name_blacklist"]:
+        if name in lower_name:
+            raise Silence("name")
 
 
 def increx(key, expire=60, incr=1):
