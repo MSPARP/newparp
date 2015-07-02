@@ -15,13 +15,16 @@ db = sm()
 redis = StrictRedis(connection_pool=redis_pool)
 
 
-lists = {
-    "name_blacklist": redis.smembers("spamless:name_blacklist"),
-}
-
-
 class Silence(Exception):
     pass
+
+
+lists = {}
+
+
+def load_lists(ps_message=None):
+    print "reload"
+    lists["name_blacklist"] = redis.smembers("spamless:name_blacklist")
 
 
 def on_ps(ps_message):
@@ -91,11 +94,13 @@ def halt(signal=None, frame=None):
 
 if __name__ == "__main__":
 
+    load_lists()
+
     signal.signal(signal.SIGTERM, halt)
     signal.signal(signal.SIGINT, halt)
 
     ps = redis.pubsub(ignore_subscribe_messages=True)
-    ps.psubscribe(**{"channel:*": on_ps})
+    ps.psubscribe(**{"spamless:reload": load_lists, "channel:*": on_ps})
     ps_thread = ps.run_in_thread()
 
     while ps_thread.is_alive():
