@@ -1,4 +1,4 @@
-from flask import abort, g, render_template
+from flask import abort, g, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from webhelpers import paginate
@@ -58,4 +58,20 @@ def banned_names():
         "admin/spamless/banned_names.html",
         names=sorted(list(g.redis.smembers("spamless:banned_names"))),
     )
+
+
+@use_db
+@admin_required
+def banned_names_post():
+    command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
+    try:
+        command = command_functions[request.form["command"]]
+    except KeyError:
+        abort(400)
+    name = request.form["name"].strip().lower()
+    if not name:
+        abort(400)
+    command("spamless:banned_names", name)
+    g.redis.publish("spamless:reload", 1)
+    return redirect(url_for("spamless_banned_names"))
 
