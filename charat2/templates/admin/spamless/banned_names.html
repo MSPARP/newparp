@@ -1,0 +1,12 @@
+{% extends "admin/spamless/base.html" %}
+{% block title: %}Banned names - Spamless - {% endblock %}
+{% block content: %}
+    {{ super() }}
+    <h2>Banned names</h2>
+    <ul>
+        {% for name in names: %}
+        <li>{{ name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

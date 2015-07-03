@@ -50,3 +50,12 @@ def home(fmt=None, page=1):
         paginator=paginator,
     )
 
+
+@use_db
+@admin_required
+def banned_names():
+    return render_template(
+        "admin/spamless/banned_names.html",
+        names=sorted(list(g.redis.smembers("spamless:banned_names"))),
+    )
+

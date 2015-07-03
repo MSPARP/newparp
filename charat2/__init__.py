@@ -192,6 +192,7 @@ make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 
 make_rules("spamless", "/admin/spamless", spamless.home, formats=False, paging=True)
+app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names", spamless.banned_names)
 
 # 12. Error handlers
 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content: %}
+    <h2>Spamless</h2>
+    <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
+    <nav id="subnav">
+        Show:
+        {% if request.url_rule.endpoint == "spamless_home": %}
+        Recent messages
+        {% else %}
+        <a href="{{url_for("spamless_home")}}">Recent messages</a>
+        {% endif %}
+        {% if request.url_rule.endpoint == "spamless_banned_names": %}
+        Banned names
+        {% else %}
+        <a href="{{url_for("spamless_banned_names")}}">Banned names</a>
+        {% endif %}
+    </nav>
+{% endblock %}
+

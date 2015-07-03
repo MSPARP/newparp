@@ -24,7 +24,7 @@ lists = {}
 
 def load_lists(ps_message=None):
     print "reload"
-    lists["name_blacklist"] = redis.smembers("spamless:name_blacklist")
+    lists["banned_names"] = redis.smembers("spamless:banned_names")
 
 
 def on_ps(ps_message):
@@ -45,7 +45,7 @@ def on_ps(ps_message):
 
         try:
             check_connection_spam(chat_id, message)
-            check_name_blacklist(chat_id, message)
+            check_banned_names(chat_id, message)
         except Silence, e:
             db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
             db.query(ChatUser).filter(and_(
@@ -72,11 +72,11 @@ def check_connection_spam(chat_id, message):
     raise Silence("connection_spam")
 
 
-def check_name_blacklist(chat_id, message):
+def check_banned_names(chat_id, message):
     if not message["name"]:
         return
     lower_name = message["name"].lower()
-    for name in lists["name_blacklist"]:
+    for name in lists["banned_names"]:
         if name in lower_name:
             raise Silence("name")
 
