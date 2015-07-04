@@ -57,7 +57,7 @@ def on_ps(ps_message):
                 type="spamless",
                 name="The Spamless",
                 acronym=u"\u264b",
-                text="Spam has been detected and silenced.",
+                text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
                 color="626262"
             ), True)
             db.commit()
