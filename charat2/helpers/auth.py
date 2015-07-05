@@ -21,3 +21,12 @@ def log_in_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+def not_logged_in_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user_id is not None:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+

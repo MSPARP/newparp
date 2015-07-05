@@ -5,9 +5,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from urlparse import urlparse
 
 from charat2.helpers import alt_formats
+from charat2.helpers.auth import log_in_required, not_logged_in_required
 from charat2.model import User
 from charat2.model.connections import use_db
 from charat2.model.validators import username_validator, email_validator, reserved_usernames, secret_answer_replacer
+
 
 def referer_or_home():
     if "Referer" in request.headers:
@@ -16,11 +18,13 @@ def referer_or_home():
     return url_for("home")
 
 
+@not_logged_in_required
 def log_in_get():
     return render_template("account/log_in.html")
 
 
 @alt_formats({"json"})
+@not_logged_in_required
 @use_db
 def log_in_post(fmt=None):
 
@@ -62,10 +66,12 @@ def log_out():
     return redirect(referer_or_home())
 
 
+@not_logged_in_required
 def register_get():
     return render_template("account/register.html")
 
 
+@not_logged_in_required
 @use_db
 def register_post():
 
@@ -127,10 +133,9 @@ def register_post():
     return redirect(redirect_url)
 
 
+@not_logged_in_required
 @use_db
 def reset_password_get():
-    if g.user is not None:
-        abort(403)
     username = request.args.get("username", "").strip()[:50].lower()
     if not username:
         return render_template("account/reset_password.html")
@@ -141,11 +146,9 @@ def reset_password_get():
     return render_template("account/secret_question.html", user=user)
 
 
+@not_logged_in_required
 @use_db
 def reset_password_post():
-
-    if g.user is not None:
-        abort(403)
 
     try:
         user = g.db.query(User).filter(
@@ -174,13 +177,13 @@ def reset_password_post():
     return redirect(url_for("log_in"))
 
 
-
 @use_db
+@log_in_required
 def settings_get():
     return render_template("account/settings.html")
 
-
 @use_db
+@log_in_required
 def settings_post():
     g.user.confirm_disconnect = "confirm_disconnect" in request.form
     g.user.desktop_notifications = "desktop_notifications" in request.form
