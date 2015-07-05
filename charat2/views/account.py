@@ -69,6 +69,9 @@ def register_get():
 @use_db
 def register_post():
 
+    if g.redis.exists("register:" + request.headers["X-Forwarded-For"]):
+        return redirect(referer_or_home() + "?register_error=ip")
+
     # Don't accept blank fields.
     if request.form["username"] == "" or request.form["password"] == "":
         return redirect(referer_or_home() + "?register_error=blank")
@@ -114,6 +117,7 @@ def register_post():
     g.db.add(new_user)
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
+    g.redis.setex("register:" + request.headers["X-Forwarded-For"], 86400, 1)
     g.db.commit()
 
     redirect_url = referer_or_home()

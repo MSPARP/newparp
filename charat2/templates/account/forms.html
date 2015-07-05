@@ -3,7 +3,9 @@
         <form action="{{url_for("register")}}" method="post">
             <input type="hidden" name="token" value="{{g.csrf_token}}">
             {% if "register_error" in request.args: %}
-			{% if request.args["register_error"] == "blank": %}
+			{% if request.args["register_error"] == "ip": %}
+            <p class="error">It looks like you've already registered recently. Please wait before trying again.</p>
+			{% elif request.args["register_error"] == "blank": %}
             <p class="error">Please enter a username and password.</p>
 			{% elif request.args["register_error"] == "passwords_didnt_match": %}
             <p class="error">The two passwords didn't match.</p>
