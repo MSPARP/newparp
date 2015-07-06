@@ -3,6 +3,7 @@
 {% block content: %}
     <h2>Default settings for new chats</h2>
     <form action="{{url_for("settings_post")}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
         <p><label><input type="checkbox" name="confirm_disconnect"{% if g.user.confirm_disconnect: %} checked="checked"{% endif %}> Confirm disconnect</label></p>
         <p><label><input type="checkbox" name="desktop_notifications"{% if g.user.desktop_notifications: %} checked="checked"{% endif %}> Desktop notifications</label></p>
         <p><label><input type="checkbox" name="show_system_messages"{% if g.user.show_system_messages: %} checked="checked"{% endif %}> Show system messages</label></p>
