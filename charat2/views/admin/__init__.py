@@ -184,9 +184,14 @@ def groups(fmt=None, page=1):
         abort(404)
     group_count = g.db.query(func.count('*')).select_from(GroupChat).scalar()
     if fmt == "json":
+        group_dicts = []
+        for group in groups:
+            group_dict = group.to_dict()
+            group_dict["creator"] = group.creator.to_dict()
+            group_dicts.append(group_dict)
         return jsonify({
             "total": group_count,
-            "groups": [_.to_dict() for _ in groups],
+            "groups": group_dicts,
         })
     paginator = paginate.Page(
         [],
