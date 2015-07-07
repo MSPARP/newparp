@@ -16,7 +16,11 @@ def home(fmt=None, page=1):
         g.db.query(Message)
         .filter(Message.spam_flag != None)
         .order_by(Message.id.desc())
-        .options(joinedload(Message.chat), joinedload(Message.user))
+        .options(
+            joinedload(Message.chat),
+            joinedload(Message.user),
+            joinedload(Message.chat_user)
+        )
         .offset((page - 1) * 50).limit(50).all()
     )
 

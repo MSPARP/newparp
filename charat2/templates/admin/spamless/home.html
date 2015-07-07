@@ -11,7 +11,9 @@
                 <th>Flag type</th>
                 <th>Time</th>
                 <th>Chat</th>
-                <th>User</th>
+                <th>Username</th>
+                <th>#</th>
+                <th>Character</th>
                 <th>Message</th>
             </tr>
         </thead>
@@ -22,6 +24,8 @@
                 <td>{{ message.posted }}</td>
                 <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
                 <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
+                <td>{{ message.chat_user.number }}</td>
+                <td>{{ message.name }}</td>
                 <td style="color: #{{ message.color }}">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
             </tr>
             {% endfor %}
