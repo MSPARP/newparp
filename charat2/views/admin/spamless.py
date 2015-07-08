@@ -97,10 +97,10 @@ def warnlist_post():
         command = command_functions[request.form["command"]]
     except KeyError:
         abort(400)
-    name = request.form["name"].strip().lower()
-    if not name:
+    phrase = request.form["phrase"].strip().lower()
+    if not phrase:
         abort(400)
-    command("spamless:warnlist", name)
+    command("spamless:warnlist", phrase)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_warnlist"))
 

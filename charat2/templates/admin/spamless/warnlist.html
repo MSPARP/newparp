@@ -10,7 +10,7 @@
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="name" value="{{ name }}">
+                <input type="hidden" name="phrase" value="{{ phrase }}">
                 <button type="submit">Remove</button>
             </form>
         </li>
@@ -19,7 +19,7 @@
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="add">
-                <input type="text" name="name" required>
+                <input type="text" name="phrase" required>
                 <button type="submit">Add</button>
             </form>
         </li>
