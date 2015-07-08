@@ -1,0 +1,28 @@
+{% extends "admin/spamless/base.html" %}
+{% block title: %}Warnlist - Spamless - {% endblock %}
+{% block content: %}
+    {{ super() }}
+    <h2>Warnlist</h2>
+    <ul>
+        {% for phrase in phrases: %}
+        <li>
+            {{ phrase }}
+            <form action="" method="post">
+                <input type="hidden" name="token" value="{{ g.csrf_token }}">
+                <input type="hidden" name="command" value="remove">
+                <input type="hidden" name="name" value="{{ name }}">
+                <button type="submit">Remove</button>
+            </form>
+        </li>
+        {% endfor %}
+        <li>
+            <form action="" method="post">
+                <input type="hidden" name="token" value="{{ g.csrf_token }}">
+                <input type="hidden" name="command" value="add">
+                <input type="text" name="name" required>
+                <button type="submit">Add</button>
+            </form>
+        </li>
+    </ul>
+{% endblock %}
+

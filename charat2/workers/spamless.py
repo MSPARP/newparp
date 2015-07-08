@@ -2,6 +2,7 @@
 
 import json
 import signal
+import time
 
 from redis import StrictRedis
 from sqlalchemy import and_
@@ -15,6 +16,10 @@ db = sm()
 redis = StrictRedis(connection_pool=redis_pool)
 
 
+class Mark(Exception):
+    pass
+
+
 class Silence(Exception):
     pass
 
@@ -25,6 +30,7 @@ lists = {}
 def load_lists(ps_message=None):
     print "reload"
     lists["banned_names"] = redis.smembers("spamless:banned_names")
+    lists["warnlist"] = redis.smembers("spamless:warnlist")
 
 
 def on_ps(ps_message):
@@ -46,7 +52,13 @@ def on_ps(ps_message):
         try:
             check_connection_spam(chat_id, message)
             check_banned_names(chat_id, message)
+            check_warnlist(chat_id, message)
+        except Mark, e:
+            time.sleep(0.1)
+            q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
+            db.commit()
         except Silence, e:
+            time.sleep(0.1)
             db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
             db.query(ChatUser).filter(and_(
                 ChatUser.chat_id == chat_id,
@@ -79,6 +91,13 @@ def check_banned_names(chat_id, message):
     for name in lists["banned_names"]:
         if name in lower_name:
             raise Silence("name")
+
+
+def check_warnlist(chat_id, message):
+    lower_text = message["text"].lower()
+    for phrase in lists["warnlist"]:
+        if phrase in lower_text:
+            raise Mark("warnlist")
 
 
 def increx(key, expire=60, incr=1):

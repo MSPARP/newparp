@@ -194,6 +194,8 @@ make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 make_rules("spamless", "/admin/spamless", spamless.home, formats=False, paging=True)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names", spamless.banned_names)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names_post", spamless.banned_names_post, methods=("POST",))
+app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist", spamless.warnlist)
+app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.warnlist_post, methods=("POST",))
 
 # 12. Error handlers
 

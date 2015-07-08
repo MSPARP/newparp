@@ -45,7 +45,7 @@ def home(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=message_count,
-        url=lambda page: url_for("admin_spamless", page=page),
+        url=lambda page: url_for("spamless_home", page=page),
     )
 
     return render_template(
@@ -78,4 +78,29 @@ def banned_names_post():
     command("spamless:banned_names", name)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_banned_names"))
+
+
+@use_db
+@admin_required
+def warnlist():
+    return render_template(
+        "admin/spamless/warnlist.html",
+        phrases=sorted(list(g.redis.smembers("spamless:warnlist"))),
+    )
+
+
+@use_db
+@admin_required
+def warnlist_post():
+    command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
+    try:
+        command = command_functions[request.form["command"]]
+    except KeyError:
+        abort(400)
+    name = request.form["name"].strip().lower()
+    if not name:
+        abort(400)
+    command("spamless:warnlist", name)
+    g.redis.publish("spamless:reload", 1)
+    return redirect(url_for("spamless_warnlist"))
 
