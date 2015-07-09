@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import json
+import re
 import signal
 import time
 
@@ -29,8 +30,14 @@ lists = {}
 
 def load_lists(ps_message=None):
     print "reload"
-    lists["banned_names"] = redis.smembers("spamless:banned_names")
-    lists["warnlist"] = redis.smembers("spamless:warnlist")
+    lists["banned_names"] = [
+        re.compile(name, re.IGNORECASE | re.MULTILINE)
+        for name in redis.smembers("spamless:banned_names")
+    ]
+    lists["warnlist"] = [
+        re.compile(phrase, re.IGNORECASE | re.MULTILINE)
+        for phrase in redis.smembers("spamless:warnlist")
+    ]
 
 
 def on_ps(ps_message):
@@ -89,14 +96,16 @@ def check_banned_names(chat_id, message):
         return
     lower_name = message["name"].lower()
     for name in lists["banned_names"]:
-        if name in lower_name:
+        if name.search(lower_name):
             raise Silence("name")
 
 
 def check_warnlist(chat_id, message):
+    if message["type"] in ("join", "disconnect", "timeout", "user_info"):
+        return
     lower_text = message["text"].lower()
     for phrase in lists["warnlist"]:
-        if phrase in lower_text:
+        if phrase.search(lower_text):
             raise Mark("warnlist")
 
 
