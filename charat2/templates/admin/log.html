@@ -4,6 +4,11 @@
     <h2>Log</h2>
     <nav id="subnav">
         Show:
+        {% if not request.args.type: %}
+        All
+        {% else %}
+        <a href="{{url_for("admin_log")}}">All</a>
+        {% endif %}
         {% if request.args.type == "announcements": %}
         Announcements
         {% else %}
@@ -18,6 +23,11 @@
         User group
         {% else %}
         <a href="{{url_for("admin_log", type="user_set_group")}}">User group</a>
+        {% endif %}
+        {% if request.args.type == "spamless": %}
+        Spamless
+        {% else %}
+        <a href="{{url_for("admin_log", type="spamless")}}">Spamless</a>
         {% endif %}
     </nav>
     {{ pager() }}
@@ -45,6 +55,18 @@
                 {% elif entry.type == "user_set_group": %}
                 <td>User group</td>
                 <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
+                {% elif entry.type == "spamless:banned_names:add": %}
+                <td>Spamless</td>
+                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
+                {% elif entry.type == "spamless:banned_names:remove": %}
+                <td>Spamless</td>
+                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
+                {% elif entry.type == "spamless:warnlist:add": %}
+                <td>Spamless</td>
+                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
+                {% elif entry.type == "spamless:warnlist:remove": %}
+                <td>Spamless</td>
+                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
                 {% endif %}
             </tr>
             {% endfor %}

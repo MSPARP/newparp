@@ -218,7 +218,9 @@ def log(fmt=None, page=1):
         entry_type = None
 
     entries = g.db.query(AdminLogEntry)
-    if entry_type is not None:
+    if entry_type == "spamless":
+        entries = entries.filter(AdminLogEntry.type.like("spamless:%"))
+    elif entry_type is not None:
         entries = entries.filter(AdminLogEntry.type == entry_type)
     entries = entries.order_by(
         AdminLogEntry.id.desc(),

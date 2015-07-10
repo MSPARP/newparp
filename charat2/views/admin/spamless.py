@@ -4,7 +4,7 @@ from sqlalchemy.orm import joinedload
 from webhelpers import paginate
 
 from charat2.helpers.auth import admin_required
-from charat2.model import Message
+from charat2.model import AdminLogEntry, Message
 from charat2.model.connections import use_db
 
 
@@ -75,6 +75,11 @@ def banned_names_post():
     name = request.form["name"].strip().lower()
     if not name:
         abort(400)
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="spamless:banned_names:%s" % request.form["command"],
+        description=name,
+    ))
     command("spamless:banned_names", name)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_banned_names"))
@@ -100,6 +105,11 @@ def warnlist_post():
     phrase = request.form["phrase"].strip().lower()
     if not phrase:
         abort(400)
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="spamless:warnlist:%s" % request.form["command"],
+        description=phrase,
+    ))
     command("spamless:warnlist", phrase)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_warnlist"))
