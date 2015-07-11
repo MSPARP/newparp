@@ -87,6 +87,43 @@ def banned_names_post():
 
 @use_db
 @admin_required
+def blacklist():
+    return render_template(
+        "admin/spamless/blacklist.html",
+        phrases=sorted(list(
+            (phrase, int(score)) for phrase, score in
+            g.redis.zrange("spamless:blacklist", 0, -1, withscores=True)
+        )),
+    )
+
+
+@use_db
+@admin_required
+def blacklist_post():
+    phrase = request.form["phrase"].strip().lower()
+    if not phrase:
+        abort(400)
+    if request.form["command"] == "add":
+        try:
+            score = int(request.form["score"].strip())
+        except ValueError:
+            abort(400)
+        g.redis.zadd("spamless:blacklist", score, phrase)
+    elif request.form["command"] == "remove":
+        g.redis.zrem("spamless:blacklist", phrase)
+    else:
+        abort(400)
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="spamless:blacklist:%s" % request.form["command"],
+        description=phrase,
+    ))
+    g.redis.publish("spamless:reload", 1)
+    return redirect(url_for("spamless_blacklist"))
+
+
+@use_db
+@admin_required
 def warnlist():
     return render_template(
         "admin/spamless/warnlist.html",
@@ -113,4 +150,3 @@ def warnlist_post():
     command("spamless:warnlist", phrase)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_warnlist"))
-

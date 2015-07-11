@@ -14,6 +14,11 @@
         {% else %}
         <a href="{{url_for("spamless_banned_names")}}">Banned names</a>
         {% endif %}
+        {% if request.url_rule.endpoint == "spamless_blacklist": %}
+        Blacklist
+        {% else %}
+        <a href="{{url_for("spamless_blacklist")}}">Blacklist</a>
+        {% endif %}
         {% if request.url_rule.endpoint == "spamless_warnlist": %}
         Warnlist
         {% else %}
