@@ -3,11 +3,16 @@ import os
 
 from alembic.config import Config
 from alembic import command
+from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm
 
 if __name__ == "__main__":
+
+    inspector = Inspector.from_engine(engine)
+    if "alembic_version" in inspector.get_table_names():
+        raise Exception("Database has already been initialised. Use \"alembic upgrade head\" instead.")
 
     engine.echo = True
     Base.metadata.create_all(bind=engine)

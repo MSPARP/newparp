@@ -150,3 +150,4 @@ def warnlist_post():
     command("spamless:warnlist", phrase)
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_warnlist"))
+
