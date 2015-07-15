@@ -109,14 +109,16 @@ def blacklist_post():
         except ValueError:
             abort(400)
         g.redis.zadd("spamless:blacklist", score, phrase)
+        log_message = "%s (%s)" % (phrase, score)
     elif request.form["command"] == "remove":
         g.redis.zrem("spamless:blacklist", phrase)
+        log_message = phrase
     else:
         abort(400)
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="spamless:blacklist:%s" % request.form["command"],
-        description=phrase,
+        description=log_message,
     ))
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_blacklist"))

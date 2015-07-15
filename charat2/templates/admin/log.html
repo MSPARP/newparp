@@ -61,6 +61,12 @@
                 {% elif entry.type == "spamless:banned_names:remove": %}
                 <td>Spamless</td>
                 <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
+                {% elif entry.type == "spamless:blacklist:add": %}
+                <td>Spamless</td>
+                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
+                {% elif entry.type == "spamless:blacklist:remove": %}
+                <td>Spamless</td>
+                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
                 {% elif entry.type == "spamless:warnlist:add": %}
                 <td>Spamless</td>
                 <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
