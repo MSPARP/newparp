@@ -52,7 +52,7 @@
         {{#if (can_block)}}<li id="action_block">Block</li>{{/if}}
         <li id="action_highlight">{{#if (is_highlighted)}}Clear highlight{{else}}Highlight{{/if}}</li>
         <li id="action_ignore">{{#if (is_ignored)}}Clear ignore{{else}}Ignore{{/if}}</li>
-        {{#if (is_you)}}<li id="action_switch_character">Switch character</li>{{/if}}
+        {{#if (is_you)}}<li id="action_switch_character">Characters</li>{{/if}}
         {{#if (is_you)}}<li id="action_settings">Settings</li>{{/if}}
         {{#if (can_set_group "mod3")}}<li id="action_mod3">Make Professional Wet Blanket</li>{{/if}}
         {{#if (can_set_group "mod2")}}<li id="action_mod2">Make Bum's Rusher</li>{{/if}}
@@ -76,7 +76,7 @@
         <h3>&gt; <label for="mod_tools_toggle">Mod tools</label></h3>
         <p><button class="set_topic_button">Set topic</button></p>
         <p><label><input type="checkbox" id="flag_autosilence"> Auto-silence new users</label></p>
-        <p><label>Publicity: <select id="flag_publicity">
+        <p><label><select id="flag_publicity">
             <option value="private">Private</option>
             <option value="unlisted">Unlisted</option>
             <option value="listed">Listed</option>
@@ -87,13 +87,13 @@
         </select></label></p>
         <p id="invites_link">&gt; <a href="{{url_for("rp_invites", url=chat.url)}}" target="_blank">Invite users</a></p>
         <p><label><select id="flag_style">
-            <option value="script">Script</option>
-            <option value="paragraph">Paragraph</option>
-            <option value="either">Either</option>
-        </select> style</label></p>
-        <p><label>This chat is <select id="flag_level">
-            <option value="sfw">SFW</option>
-            <option value="nsfw">NSFW</option>
+            <option value="script">Script style</option>
+            <option value="paragraph">Paragraph style</option>
+            <option value="either">Either style</option>
+        </select></label></p>
+        <p><label><select id="flag_level">
+            <option value="sfw">Safe for work</option>
+            <option value="nsfw">Not safe for work</option>
             <option value="nsfw-extreme">NSFW extreme</option>
         </select></label></p>
     </section>
@@ -198,7 +198,7 @@
 {% if chat.type != "roulette": %}
     <button type="button" disabled="disabled" id="user_list_button" class="mobile_button">Users</button>
 {% endif %}
-    <button type="button" disabled="disabled" id="switch_character_button">Switch char</button>
+    <button type="button" disabled="disabled" id="switch_character_button">Characters</button>
     <button type="button" disabled="disabled" id="settings_button">Settings</button>
     <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" id="log_button">Log</a>
 </form>

@@ -258,6 +258,8 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #mod_tools, #flag_messages { display: none; }
 
+#mod_tools select { width: 100%; }
+
 #user_list_container a { color: #2c2c2c; }
 #user_list li, #action_list li { cursor: pointer; }
 .group_admin { text-decoration: underline; }
