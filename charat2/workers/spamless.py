@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import hashlib
 import json
 import re
 import signal
@@ -34,6 +35,10 @@ def load_lists(ps_message=None):
         re.compile(name, re.IGNORECASE | re.MULTILINE)
         for name in redis.smembers("spamless:banned_names")
     ]
+    lists["blacklist"] = [
+        (re.compile(phrase, re.IGNORECASE | re.MULTILINE), points)
+        for phrase, points in redis.zrange("spamless:blacklist", 0, -1, withscores=True)
+    ]
     lists["warnlist"] = [
         re.compile(phrase, re.IGNORECASE | re.MULTILINE)
         for phrase in redis.smembers("spamless:warnlist")
@@ -56,9 +61,12 @@ def on_ps(ps_message):
         if message["user_number"] is None:
             continue
 
+        message["hash"] = hashlib.md5(message["text"].encode("utf-8").lower()).hexdigest()
+
         try:
             check_connection_spam(chat_id, message)
             check_banned_names(chat_id, message)
+            check_blacklist(chat_id, message)
             check_warnlist(chat_id, message)
         except Mark, e:
             time.sleep(0.1)
@@ -85,7 +93,7 @@ def on_ps(ps_message):
 def check_connection_spam(chat_id, message):
     if message["type"] not in ("join", "disconnect", "timeout", "user_info"):
         return
-    attempts = increx("antispam:join:%s:%s" % (chat_id, message["user_number"]), expire=5)
+    attempts = increx("spamless:join:%s:%s" % (chat_id, message["user_number"]), expire=5)
     if attempts <= 10:
         return
     raise Silence("connection_spam")
@@ -98,6 +106,25 @@ def check_banned_names(chat_id, message):
     for name in lists["banned_names"]:
         if name.search(lower_name):
             raise Silence("name")
+
+
+def check_blacklist(chat_id, message):
+
+    if message["type"] in ("join", "disconnect", "timeout", "user_info"):
+        return
+
+    message_attempts = 0
+    user_attempts = 0
+
+    for phrase, points in lists["blacklist"]:
+        total_points = len(phrase.findall(message["text"])) * int(points)
+        message_attempts = increx("spamless:message:%s" % message["hash"], expire=60, incr=total_points)
+        user_attempts = increx("spamless:blacklist:%s:%s" % (chat_id, message["user_number"]), expire=10, incr=total_points)
+
+    if message_attempts >= 15 or user_attempts >= 15:
+        raise Silence("blacklistx%s" % max(message_attempts, user_attempts))
+    elif message_attempts >= 10 or user_attempts >= 10:
+        raise Mark("blacklistx%s" % max(message_attempts, user_attempts))
 
 
 def check_warnlist(chat_id, message):
