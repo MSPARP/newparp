@@ -36,6 +36,7 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>Time</th>
                 <th>User</th>
                 <th>Type</th>
                 <th>Description</th>
@@ -45,6 +46,7 @@
             {% for entry in entries: %}
             <tr>
                 <td>{{entry.id}}</td>
+                <td>{{ entry.date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
                 <td><a href="{{url_for("admin_user", username=entry.action_user.username)}}">{{entry.action_user.username}}</a></td>
                 {% if entry.type == "announcements": %}
                 <td>Announcements</td>
