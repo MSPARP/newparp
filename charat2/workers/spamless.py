@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
     ps = redis.pubsub(ignore_subscribe_messages=True)
     ps.psubscribe(**{"spamless:reload": load_lists, "channel:*": on_ps})
-    ps_thread = ps.run_in_thread()
+    ps_thread = ps.run_in_thread(sleep_time=0.01)
 
     while ps_thread.is_alive():
         redis.setex("spamless:alive", 10, "alive")
