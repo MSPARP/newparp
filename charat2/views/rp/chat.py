@@ -48,7 +48,7 @@ def get_chat(f):
                 abort(404)
 
             # You can't PM yourself.
-            if username.lower() == g.user.username.lower():
+            if g.user is None or username.lower() == g.user.username.lower():
                 abort(404)
 
             try:
