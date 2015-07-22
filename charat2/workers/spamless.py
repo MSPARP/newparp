@@ -9,9 +9,10 @@ import time
 from random import randint
 from redis import StrictRedis
 from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import send_message
-from charat2.model import sm, ChatUser, Message
+from charat2.model import sm, AnyChat, ChatUser, Message, User
 from charat2.model.connections import redis_pool
 
 
@@ -77,19 +78,47 @@ def on_ps(ps_message):
 
         except Silence, e:
             time.sleep(0.1)
-            db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message + " SILENCED"})
-            db.query(ChatUser).filter(and_(
-                ChatUser.chat_id == chat_id,
-                ChatUser.number == message["user_number"]
-            )).update({"group": "silent"})
-            send_message(db, redis, Message(
-                chat_id=chat_id,
-                type="spamless",
-                name="The Spamless",
-                acronym=u"\u264b",
-                text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
-                color="626262"
-            ), True)
+
+            # XXX maybe cache this?
+            try:
+                chat_user, user, chat = db.query(
+                    ChatUser, User, AnyChat,
+                ).join(
+                    User, ChatUser.user_id == User.id,
+                ).join(
+                    AnyChat, ChatUser.chat_id == AnyChat.id,
+                ).filter(and_(
+                    ChatUser.chat_id == chat_id,
+                    ChatUser.number == message["user_number"],
+                )).one()
+            except NoResultFound:
+                continue
+
+            if chat.type != "group":
+                flag_suffix = chat.type.upper()
+            elif chat_user.computed_group in ("admin", "creator"):
+                flag_suffix = chat_user.computed_group.upper()
+            else:
+                flag_suffix = "SILENCED"
+
+            db.query(Message).filter(Message.id == message["id"]).update({
+                "spam_flag": e.message + " " + flag_suffix,
+            })
+
+            if flag_suffix == "SILENCED":
+                db.query(ChatUser).filter(and_(
+                    ChatUser.chat_id == chat_id,
+                    ChatUser.number == message["user_number"]
+                )).update({"group": "silent"})
+                send_message(db, redis, Message(
+                    chat_id=chat_id,
+                    type="spamless",
+                    name="The Spamless",
+                    acronym=u"\u264b",
+                    text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
+                    color="626262"
+                ), True)
+
             db.commit()
 
 
