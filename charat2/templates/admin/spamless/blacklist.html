@@ -6,11 +6,11 @@
     <ul>
         {% for phrase, score in phrases: %}
         <li>
-            {{ phrase }} ({{ score }})
+            {{ phrase.decode("utf8") }} ({{ score }})
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="phrase" value="{{ phrase }}">
+                <input type="hidden" name="phrase" value="{{ phrase.decode("utf8") }}">
                 <button type="submit">Remove</button>
             </form>
         </li>

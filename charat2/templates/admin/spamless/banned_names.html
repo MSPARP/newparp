@@ -6,11 +6,11 @@
     <ul>
         {% for name in names: %}
         <li>
-            {{ name }}
+            {{ name.decode("utf8") }}
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="name" value="{{ name }}">
+                <input type="hidden" name="name" value="{{ name.decode("utf8") }}">
                 <button type="submit">Remove</button>
             </form>
         </li>
