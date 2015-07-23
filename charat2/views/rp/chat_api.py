@@ -78,7 +78,7 @@ def messages():
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
-            pubsub.reset()
+            pubsub.close()
             return resp
 
 

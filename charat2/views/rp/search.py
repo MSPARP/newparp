@@ -130,6 +130,7 @@ def search_continue():
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
+            pubsub.close()
             return resp
 
 
