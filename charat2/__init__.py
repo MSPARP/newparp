@@ -77,6 +77,7 @@ app.add_url_rule("/reset_password", "reset_password_post", account.reset_passwor
 
 app.add_url_rule("/settings", "settings", account.settings_get, methods=("GET",))
 app.add_url_rule("/settings", "settings_post", account.settings_post, methods=("POST",))
+app.add_url_rule("/settings/timezone", "settings_timezone", account.settings_timezone, methods=("POST",))
 
 # 2. Chats list
 

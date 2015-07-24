@@ -147,6 +147,8 @@ class User(Base):
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
+    timezone = Column(Unicode(255))
+
     def to_dict(self, include_options=False):
         ud = {
             "id": self.id,
