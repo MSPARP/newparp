@@ -28,5 +28,15 @@
 <script src="/static/js/newparp.js"></script>
 {% block scripts: %}{% endblock %}
 
+{% if g.user and g.user.timezone == None: %}
+<script src="/static/js/jstz-1.0.4.min.js"></script>
+<script>
+var timezone = jstz.determine().name();
+if (timezone) {
+	$.post("/settings/timezone", {"timezone": timezone, "token": {{g.csrf_token|tojson|safe}}});
+}
+</script>
+{% endif %}
+
 </body>
 </html>
