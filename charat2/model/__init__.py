@@ -3,6 +3,7 @@ import json
 import os
 import time
 
+from pytz import timezone, utc
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
 from sqlalchemy.orm import (
@@ -148,6 +149,12 @@ class User(Base):
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
     timezone = Column(Unicode(255))
+
+    def localize_time(self, input_datetime):
+        utc_datetime = utc.localize(input_datetime)
+        if self.timezone is None:
+            return utc_datetime
+        return utc_datetime.astimezone(timezone(self.timezone))
 
     def to_dict(self, include_options=False):
         ud = {
