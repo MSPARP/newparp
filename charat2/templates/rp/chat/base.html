@@ -6,11 +6,19 @@
 </p>
 {% endif %}
 {% endmacro %}
-{% macro render_message(message): %}
+{% macro render_messages(messages): %}
+    {% set last_date = None %}
+    {% for message in messages: %}
+    {% set current_date = (g.user.localize_time(message.posted) if g.user else message.posted).date() %}
+    {% if current_date != last_date %}
+	<h2>{{current_date.strftime("%A %d %B %Y")}}</h2>
+    {% set last_date = current_date %}
+    {% endif %}
 <div id="message_{{message.id}}" class="message_{{message.type}}{% if message.chat_user != None: %} unum_{{message.chat_user.number}}{% if chat_user and message.chat_user.number in chat_user.highlighted_numbers: %} highlighted{% endif %}{% if chat_user and message.chat_user.number in chat_user.ignored_numbers: %} ignored{% endif %}{% endif %}">
     <div class="unum">[{{message.chat_user.number if message.chat_user != None else "*"}}]</div>
-    <p style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% elif chat_user and chat.type == "roulette" and message.type in ("ic", "ooc"): %}{{"▲" if chat_user.number == message.chat_user.number else "▼"}}: {{message.text}}{% else: %}{% if message.acronym != "" %}{{message.acronym}}: {% endif %}{{message.text}}{% endif %}</p>
+    <p style="color: #{{message.color}};">{% if message.type == "me": %}* {{message.name}} {{message.text}}{% elif chat_user and chat.type == "roulette" and message.type in ("ic", "ooc"): %}{{"▲" if chat_user.number == message.chat_user.number else "▼"}}: {{message.text}}{% else: %}{% if message.acronym != "" %}{{message.acronym}}: {% endif %}{{message.text}}{% endif %}<span class="timestamp">{{(g.user.localize_time(message.posted) if g.user else message.posted).strftime("%H:%M:%S")}}</span></p>
 </div>
+    {% endfor %}
 {% endmacro %}
 <html>
 <head>

@@ -183,9 +183,7 @@
 
 <section id="conversation">
     <p><a href="{{url_for("rp_log", url=chat.url)}}" target="_blank">View log</a></p>
-    {% for message in messages: %}
-    {{render_message(message)}}
-    {% endfor %}
+    {{render_messages(messages)}}
     <p id="status_bar">&nbsp;</p>
 </section>
 
