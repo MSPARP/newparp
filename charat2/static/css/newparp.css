@@ -230,7 +230,7 @@ section > .close:first-child { float: right; margin: 5px; }
 #topbar h1 { float: left; max-width: 100%; margin: 0 8px 0 0; padding: 0 5px; background-color: #f8f8f8; font-size: 14pt; }
 #topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #topbar ~ #conversation, #topbar ~ .sidebar { top: 35px; }
-#info_panel, #edit_info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+#info_panel, #edit_info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 .topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 #info_panel p { white-space: pre-line; }
 
@@ -248,7 +248,7 @@ section > .close:first-child { float: right; margin: 5px; }
 
 /* 4.3. Sidebars */
 
-.sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; }
+.sidebar { display: none; position: fixed; top: 5px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 @media (min-width: 500px) {
 	.mobile_button { display: none; }
 	.sidebar { left: auto; width: 220px; }
@@ -269,7 +269,7 @@ section > .close:first-child { float: right; margin: 5px; }
 
 /* 4.4. Conversation and send form */
 
-#conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; }
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; -webkit-overflow-scrolling: touch; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #666; }
 
