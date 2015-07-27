@@ -19,7 +19,7 @@
                 <td>{{user.id}}</td>
                 <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
                 <td>{{user.group.capitalize()}}</td>
-                <td>{{user.created}}</td>
+                <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
             </tr>
             {% endfor %}
         </tbody>

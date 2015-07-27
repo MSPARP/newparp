@@ -22,11 +22,11 @@
             </tr>
             <tr>
                 <td>Created</td>
-                <td>{{user.created}}</td>
+                <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
             </tr>
             <tr>
                 <td>Last online</td>
-                <td>{{user.last_online}}</td>
+                <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
             </tr>
             <tr>
                 <td>Last IP</td>

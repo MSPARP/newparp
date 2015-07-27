@@ -20,7 +20,7 @@
         <tbody>
             {% for message in messages: %}
             <tr>
-                <td>{{ message.posted.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                <td>{{ g.user.localize_time(message.posted).strftime("%Y-%m-%d %H:%M:%S") }}</td>
                 <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
                 <td>{{ message.spam_flag }}</td>
                 <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
