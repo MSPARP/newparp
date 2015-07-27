@@ -300,7 +300,7 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
 #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
 #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
-#send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; }
+#send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
 #send_form button[type=submit] { float: right; margin-right: -2px; }
 #abscond_button { margin-left: -2px; }
 #log_button { display: inline-block; padding: 2px 6px; background-color: #f8f8f8; color: #000; text-decoration: none; }
