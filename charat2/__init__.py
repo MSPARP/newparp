@@ -23,8 +23,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
-# XXX REMEMBER TO REMOVE THIS BEFORE LAUNCH
-app.debug = True
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 babel = Babel(app)
 app.jinja_env.globals.update(gettext=gettext)
