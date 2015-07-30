@@ -628,6 +628,7 @@ var msparp = (function() {
 						return false;
 					}).appendTo(p);
 				}
+				$("<span>").addClass("timestamp").text(new Date(message.posted * 1000).toLocaleTimeString()).appendTo(p);
 				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
