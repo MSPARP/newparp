@@ -1,7 +1,8 @@
+import paginate
+
 from flask import abort, g, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-from webhelpers import paginate
 
 from charat2.helpers.auth import admin_required
 from charat2.model import AdminLogEntry, Message
@@ -45,7 +46,7 @@ def home(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=message_count,
-        url=lambda page: url_for("spamless_home", page=page),
+        url_maker=lambda page: url_for("spamless_home", page=page),
     )
 
     return render_template(

@@ -1,11 +1,11 @@
 import json
+import paginate
 import time
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
-from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
@@ -110,7 +110,7 @@ def user_list(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=user_count,
-        url=lambda page: url_for("admin_user_list", page=page),
+        url_maker=lambda page: url_for("admin_user_list", page=page),
     )
     return render_template(
         "admin/user_list.html",
@@ -198,7 +198,7 @@ def groups(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=group_count,
-        url=lambda page: url_for("admin_groups", page=page),
+        url_maker=lambda page: url_for("admin_groups", page=page),
     )
     return render_template(
         "admin/groups.html",
@@ -246,7 +246,7 @@ def log(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=entry_count,
-        url=lambda page: url_for("admin_log", page=page, type=entry_type),
+        url_maker=lambda page: url_for("admin_log", page=page, type=entry_type),
     )
     return render_template(
         "admin/log.html",

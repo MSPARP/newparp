@@ -1,12 +1,12 @@
 import datetime
 import json
+import paginate
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
-from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
@@ -72,7 +72,7 @@ def request_list(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=request_count,
-        url=lambda page: url_for("rp_request_list", page=page),
+        url_maker=lambda page: url_for("rp_request_list", page=page),
     )
 
     return render_template(
@@ -114,7 +114,7 @@ def your_request_list(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=request_count,
-        url=lambda page: url_for("rp_your_request_list", page=page),
+        url_maker=lambda page: url_for("rp_your_request_list", page=page),
     )
 
     return render_template(
@@ -188,7 +188,7 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=request_count,
-        url=lambda page: url_for("rp_tagged_request_list", tag_type=tag_type, name=name, page=page),
+        url_maker=lambda page: url_for("rp_tagged_request_list", tag_type=tag_type, name=name, page=page),
     )
 
     return render_template(

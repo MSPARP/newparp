@@ -2,7 +2,7 @@
 {% macro pager(): %}
 {% if paginator.page_count!=1 %}
 <p class="pager">
-{{paginator.pager(format='~20~')}}
+{{paginator.pager(format="~20~")|safe}}
 </p>
 {% endif %}
 {% endmacro %}

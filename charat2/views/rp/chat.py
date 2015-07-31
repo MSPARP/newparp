@@ -1,3 +1,5 @@
+import paginate
+
 from datetime import timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from functools import wraps
@@ -5,7 +7,6 @@ from math import ceil
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
-from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
@@ -296,7 +297,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
         page=page,
         items_per_page=messages_per_page,
         item_count=message_count,
-        url=lambda page: url_for("rp_log", url=url, page=page),
+        url_maker=lambda page: url_for("rp_log", url=url, page=page),
     )
 
     return render_template(
@@ -352,7 +353,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
         page=page,
         items_per_page=20,
         item_count=user_count,
-        url=lambda page: url_for("rp_users", url=url, page=page),
+        url_maker=lambda page: url_for("rp_users", url=url, page=page),
     )
 
     return render_template(
@@ -409,7 +410,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
         page=page,
         items_per_page=20,
         item_count=invite_count,
-        url=lambda page: url_for("rp_invites", url=url, page=page),
+        url_maker=lambda page: url_for("rp_invites", url=url, page=page),
     )
 
     return render_template(

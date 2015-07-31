@@ -1,7 +1,8 @@
+import paginate
+
 from flask import abort, g, jsonify, render_template, url_for
 from sqlalchemy import and_, func
 from sqlalchemy.orm import aliased, joinedload
-from webhelpers import paginate
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required
@@ -112,7 +113,7 @@ def chat_list(fmt=None, type=None, page=1):
         page=page,
         items_per_page=50,
         item_count=chat_count,
-        url=lambda page: url_for("rp_chat_list", page=page, type=type),
+        url_maker=lambda page: url_for("rp_chat_list", page=page, type=type),
     )
 
     return render_template(
