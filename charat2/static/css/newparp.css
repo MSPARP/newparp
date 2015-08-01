@@ -217,7 +217,7 @@ body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break
 .chat h3 { font-size: 12px; }
 .chat ul { margin: 5px 0; padding: 0 0 0 1.5em; }
 .chat li { margin: 2px 0; }
-.chat input, .chat textarea, .chat button, .chat select { padding: 2px; border: 0; background-color: #fbfbfb; }
+.chat input, .chat textarea, .chat button, .chat select { max-width: 100%; padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat textarea { margin: 0 -2px; }
 .chat .textarea_wrapper { padding: 2px 7px; }
 .chat button:hover { background-color: #fff; }
