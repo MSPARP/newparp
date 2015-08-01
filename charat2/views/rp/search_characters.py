@@ -154,6 +154,7 @@ def delete_search_character_post(id):
     g.db.query(Character).filter(Character.search_character_id == character.id).update({
         "search_character_id": 1,
     })
+    g.db.query(SearchCharacterChoice).filter(SearchCharacterChoice.search_character_id == id).delete()
     # Don't use g.db.delete(character) because it does a load of extra queries
     # for foreign keys and stuff.
     g.db.query(SearchCharacter).filter(SearchCharacter.id == id).delete()
