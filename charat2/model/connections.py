@@ -14,6 +14,7 @@ redis_pool = ConnectionPool(
     host=os.environ['REDIS_HOST'],
     port=int(os.environ['REDIS_PORT']),
     db=int(os.environ['REDIS_DB']),
+    decode_responses=True,
 )
 
 cookie_domain = "." + os.environ['BASE_DOMAIN']

@@ -2,7 +2,10 @@ from bcrypt import gensalt, hashpw
 from flask import abort, g, jsonify, render_template, redirect, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
-from urlparse import urlparse
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import log_in_required, not_logged_in_required
