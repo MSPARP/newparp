@@ -228,3 +228,5 @@ def settings_timezone():
         g.user.timezone = request.form["timezone"]
     return "", 204
 
+def csrf_token():
+    return jsonify({"csrf_token": g.csrf_token})
