@@ -78,6 +78,8 @@ app.add_url_rule("/settings", "settings", account.settings_get, methods=("GET",)
 app.add_url_rule("/settings", "settings_post", account.settings_post, methods=("POST",))
 app.add_url_rule("/settings/timezone", "settings_timezone", account.settings_timezone, methods=("POST",))
 
+app.add_url_rule("/csrf_token", "csrf_token", account.csrf_token, methods=("GET",))
+
 # 2. Chats list
 
 make_rules("rp", "/chats", chat_list.chat_list, formats=True, paging=True)
