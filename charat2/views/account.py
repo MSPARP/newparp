@@ -183,7 +183,10 @@ def reset_password_post():
 @use_db
 @log_in_required
 def settings_get():
-    return render_template("account/settings.html")
+    return render_template(
+        "account/settings.html",
+        timezones=sorted(list(timezones))
+    )
 
 @use_db
 @log_in_required
