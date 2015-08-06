@@ -1,4 +1,5 @@
 import paginate
+import time
 
 from datetime import timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
@@ -204,6 +205,7 @@ def chat(chat, pm_user, url, fmt=None):
     messages.reverse()
 
     latest_num = messages[-1].id if len(messages) > 0 else 0
+    latest_time = time.mktime(messages[-1].posted.timetuple()) if len(messages) > 0 else 0
 
     if fmt == "json":
 
@@ -231,6 +233,7 @@ def chat(chat, pm_user, url, fmt=None):
         chat_user_dict=chat_user.to_dict(include_options=True),
         messages=messages,
         latest_num=latest_num,
+        latest_time=latest_time,
         case_options=case_options,
         characters=characters,
         character_shortcuts=character_shortcuts,

@@ -218,6 +218,15 @@
 
 {% endblock %}
 {% block scripts: %}
-<script>msparp.chat({{chat|tojson|safe}}, {{chat_user_dict|tojson|safe}}, {{character_shortcuts|tojson|safe}}, {{latest_num|tojson|safe}}, {{g.csrf_token|tojson|safe}});</script>
+<script>
+msparp.chat(
+    {{chat|tojson|safe}},
+    {{chat_user_dict|tojson|safe}},
+    {{character_shortcuts|tojson|safe}},
+    {{latest_num|tojson|safe}},
+    {{latest_time|tojson|safe}},
+    {{g.csrf_token|tojson|safe}}
+);
+</script>
 {% endblock %}
 

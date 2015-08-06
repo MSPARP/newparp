@@ -319,7 +319,7 @@ var msparp = (function() {
 			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
 		},
 		// Chat window
-		"chat": function(chat, user, character_shortcuts, latest_message, token) {
+		"chat": function(chat, user, character_shortcuts, latest_message, latest_time, token) {
 
 			$.ajaxSetup({data: {"token": token}});
 
@@ -327,6 +327,7 @@ var msparp = (function() {
 			var status;
 			var next_chat_url;
 			var user_data = {};
+			var latest_date = new Date(latest_time * 1000);
 
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
@@ -596,6 +597,11 @@ var msparp = (function() {
 			}
 			function render_message(message) {
 				// XXX yeah you should be using a template here
+				message_date = new Date(message.posted * 1000);
+				if (latest_date.getDate() != message_date.getDate() || latest_date.getMonth() != message_date.getMonth() || latest_date.getFullYear() != message_date.getFullYear()) {
+					$("<h2>").text(message_date.toDateString()).insertBefore(status_bar);
+				}
+				latest_date = message_date;
 				var div = $("<div>");
 				if (message.id) {
 					latest_message = message.id;
@@ -628,7 +634,7 @@ var msparp = (function() {
 						return false;
 					}).appendTo(p);
 				}
-				$("<span>").addClass("timestamp").text(new Date(message.posted * 1000).toLocaleTimeString()).appendTo(p);
+				$("<span>").addClass("timestamp").text(message_date.toLocaleTimeString()).appendTo(p);
 				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
