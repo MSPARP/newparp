@@ -319,7 +319,7 @@ var msparp = (function() {
 			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
 		},
 		// Chat window
-		"chat": function(chat, user, character_shortcuts, latest_message, latest_time, token) {
+		"chat": function(chat, user, character_shortcuts, latest_message_id, latest_time, token) {
 
 			$.ajaxSetup({data: {"token": token}});
 
@@ -339,7 +339,7 @@ var msparp = (function() {
 				// This prevents problems with eg. double clicking the join button.
 				if (ws && ws.readyState != 3) { return; }
 				status = "connecting";
-				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message);
+				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
 				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); }
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
 				ws.onclose = function(e) {
@@ -360,7 +360,7 @@ var msparp = (function() {
 
 			// Long polling
 			function launch_long_poll(joining) {
-				var data = { "chat_id": chat.id, "after": latest_message };
+				var data = { "chat_id": chat.id, "after": latest_message_id };
 				if (joining) { enter(); data["joining"] = true; }
 				$.post("/chat_api/messages", data, receive_messages).complete(function(jqxhr, text_status) {
 					if (status == "chatting") {
@@ -582,7 +582,7 @@ var msparp = (function() {
 							document.title = chat.title + " - MSPARP";
 							history.replaceState({}, chat.url, "/" + chat.url);
 							user = data.chat_user;
-							latest_message = data.latest_num;
+							latest_message_id = data.latest_message_id;
 							conversation.html("<p><a href=\"/" + chat.url + "/log\" target=\"_blank\">View log</a></p>");
 							status_bar = $("<p>").attr("id", "status_bar").appendTo(conversation);
 							data.messages.forEach(render_message);
@@ -604,7 +604,7 @@ var msparp = (function() {
 				latest_date = message_date;
 				var div = $("<div>");
 				if (message.id) {
-					latest_message = message.id;
+					latest_message_id = message.id;
 					div.attr("id", "message_" + message.id);
 				}
 				div.addClass("message_" + message.type + " unum_" + message.user_number);

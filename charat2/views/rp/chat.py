@@ -204,7 +204,7 @@ def chat(chat, pm_user, url, fmt=None):
     ).limit(50).all()
     messages.reverse()
 
-    latest_num = messages[-1].id if len(messages) > 0 else 0
+    latest_message_id = messages[-1].id if len(messages) > 0 else 0
     latest_time = time.mktime(messages[-1].posted.timetuple()) if len(messages) > 0 else 0
 
     if fmt == "json":
@@ -215,7 +215,7 @@ def chat(chat, pm_user, url, fmt=None):
             "messages": [
                 _.to_dict() for _ in messages
             ],
-            "latest_num": latest_num,
+            "latest_message_id": latest_message_id,
         })
 
     # Character and search character info for settings form.
@@ -232,7 +232,7 @@ def chat(chat, pm_user, url, fmt=None):
         chat_user=chat_user,
         chat_user_dict=chat_user.to_dict(include_options=True),
         messages=messages,
-        latest_num=latest_num,
+        latest_message_id=latest_message_id,
         latest_time=latest_time,
         case_options=case_options,
         characters=characters,
