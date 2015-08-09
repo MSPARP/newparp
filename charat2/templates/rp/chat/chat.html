@@ -116,23 +116,23 @@
     <button type="button" class="close">Close</button>
     <h2>Character</h2>
     <form id="switch_character_form">
-        {% if characters %}
-        <p><select name="character_id">
-            <option value="">Saved characters...</option>
-            {% for character in characters: %}
-            <option value="{{character.id}}">{{character.title}}</option>
-            {% endfor %}
-        </select></p>
-        {% endif %}
-        <p><select name="search_character_id">
+        <p><select name="id">
+            {% if characters: %}
+            <optgroup label="Saved characters">
+                {% for character in characters: %}
+                <option value="c_{{character.id}}">{{character.title}}</option>
+                {% endfor %}
+            </optgroup>
+            {% endif %}
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
                 {% for character in group.characters: %}
-                <option value="{{character.id}}"{% if character.id == chat_user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                <option value="s_{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
                 {% endfor %}
             </optgroup>
             {% endfor %}
         </select></p>
+        <input type="hidden" name="search_character_id" value="{{g.user.search_character_id}}">
         <p><input type="text" id="name_input" name="name" maxlength="50" required value="{{chat_user.name}}"></p>
         <p><input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{chat_user.acronym}}"></p>
         <p><input type="color" id="color_input" name="color" size="7" required value="#{{chat_user.color}}"> <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{chat_user.color}}"></p>
