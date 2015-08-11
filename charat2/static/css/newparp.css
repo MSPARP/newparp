@@ -131,7 +131,7 @@ h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #2c2c2c; }
 h2 { font-size: 12pt; }
 h3 { font-size: 10pt; }
 
-ul { padding-left: 1em; }
+ul { padding-left: 1rem; }
 
 table { display: block; max-width: 100%; overflow-x: auto; }
 th { text-align: left; }
@@ -179,7 +179,7 @@ input:invalid + .pattern_error { display: inline; color: #f00; }
 #text_preview_container { background-color: #eee; padding: 3px 5px; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 12px; }
 
 .character_list { margin: 0; padding: 0; border: 0; }
-.character_list ul { margin: 10px 0; padding: 0 0 0 10px; list-style-type: none; line-height: 1.8em; }
+.character_list ul { margin: 10px 0; padding: 0 0 0 10px; list-style-type: none; line-height: 1.8rem; }
 .character_list li { display: inline-block; }
 
 .character_button { display: none; }
@@ -215,7 +215,7 @@ body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break
 .chat h2, .chat h3, .chat p { margin: 5px; }
 .chat h2 { font-size: 14pt; }
 .chat h3 { font-size: 12px; }
-.chat ul { margin: 5px 0; padding: 0 0 0 1.5em; }
+.chat ul { margin: 5px 0; padding: 0 0 0 1.5rem; }
 .chat li { margin: 2px 0; }
 .chat input, .chat textarea, .chat button, .chat select { max-width: 100%; padding: 2px; border: 0; background-color: #fbfbfb; }
 .chat textarea { margin: 0 -2px; }
@@ -290,7 +290,7 @@ section > .close:first-child { float: right; margin: 5px; }
 .spoiler input + span + span, .spoiler input:checked + span { display: none; }
 .spoiler input:checked + span + span { display: inline; }
 
-.message_action { margin-left: 0.5em; }
+.message_action { margin-left: 0.5rem; }
 
 .timestamp { display: none; }
 p:hover > .timestamp { display: block; float: right; color: #666; }
