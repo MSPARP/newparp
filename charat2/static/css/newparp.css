@@ -127,7 +127,7 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 
 a:hover { text-decoration: none; }
 
-h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #2c2c2c; }
+h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #444; }
 h2 { font-size: 12pt; }
 h3 { font-size: 10pt; }
 
@@ -166,8 +166,10 @@ input:invalid + .pattern_error { display: inline; color: #f00; }
 
 /* 2.2. Toggle box */
 
+.toggle_box { padding-left: 0.75rem; }
 .toggle_box > input:first-child { display: none; }
 .toggle_box > input:first-child:not(:checked) + h2 ~ *, .toggle_box > input:first-child:not(:checked) + h3 ~ * { display: none }
+.toggle_box > h2:nth-child(2), .toggle_box > h3:nth-child(2) { text-indent: -0.75rem; }
 /* Make these look more clickable. */
 .toggle_box h2 label, .toggle_box h3 label { cursor: pointer; text-decoration: underline; }
 .toggle_box h2 label:hover, .toggle_box h3 label:hover { text-decoration: none; }
