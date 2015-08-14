@@ -34,15 +34,15 @@ lists = {}
 def load_lists(ps_message=None):
     print "reload"
     lists["banned_names"] = [
-        re.compile(name.decode("utf8"), re.IGNORECASE | re.MULTILINE)
+        re.compile(name, re.IGNORECASE | re.MULTILINE)
         for name in redis.smembers("spamless:banned_names")
     ]
     lists["blacklist"] = [
-        (re.compile(phrase.decode("utf8"), re.IGNORECASE | re.MULTILINE), points)
+        (re.compile(phrase, re.IGNORECASE | re.MULTILINE), points)
         for phrase, points in redis.zrange("spamless:blacklist", 0, -1, withscores=True)
     ]
     lists["warnlist"] = [
-        re.compile(phrase.decode("utf8"), re.IGNORECASE | re.MULTILINE)
+        re.compile(phrase, re.IGNORECASE | re.MULTILINE)
         for phrase in redis.smembers("spamless:warnlist")
     ]
 
