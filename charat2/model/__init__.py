@@ -150,6 +150,9 @@ class User(Base):
 
     timezone = Column(Unicode(255))
 
+    def __repr__(self):
+        return "<User #%s: %s>" % (self.id, self.username)
+
     def localize_time(self, input_datetime):
         utc_datetime = utc.localize(input_datetime)
         if self.timezone is None:
@@ -187,6 +190,9 @@ class Block(Base):
     created = Column(DateTime(), nullable=False, default=now)
     reason = Column(UnicodeText)
 
+    def __repr__(self):
+        return "<Block: %s blocked %s>" % (self.blocking_user, self.blocked_user)
+
 
 class Character(Base):
 
@@ -212,6 +218,9 @@ class Character(Base):
 
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
+
+    def __repr__(self):
+        return "<Character #%s: %s>" % (self.id, self.title.encode("utf8"))
 
     def tags_by_type(self):
         tags = { "fandom": [], "character": [], "gender": [] }
@@ -276,6 +285,9 @@ class SearchCharacter(Base):
 
     text_preview = Column(UnicodeText, nullable=False, default=u"oh god how did this get here I am not good with computer")
 
+    def __repr__(self):
+        return "<SearchCharacter #%s: %s>" % (self.id, self.title.encode("utf8"))
+
     def to_dict(self, include_options=False):
         ucd = {
             "id": self.id,
@@ -300,11 +312,17 @@ class SearchCharacterGroup(Base):
     name = Column(Unicode(50), nullable=False)
     order = Column(Integer, nullable=False, unique=True)
 
+    def __repr__(self):
+        return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
+
 
 class SearchCharacterChoice(Base):
     __tablename__ = "search_character_choices"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), primary_key=True)
+
+    def __repr__(self):
+        return "<SearchCharacterChoice: %s chose %s>" % (self.user, self.search_character)
 
 
 class Chat(Base):
@@ -391,6 +409,9 @@ class GroupChat(Chat):
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     parent_id = Column(Integer, ForeignKey("chats.id"))
 
+    def __repr__(self):
+        return "<GroupChat #%s: %s>" % (self.id, self.url)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -409,6 +430,10 @@ class GroupChat(Chat):
 
 class PMChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "pm" }
+
+    def __repr__(self):
+        return "<PMChat #%s: %s>" % (self.id, self.url)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -419,13 +444,22 @@ class PMChat(Chat):
 class RequestedChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "requested" }
 
+    def __repr__(self):
+        return "<RequestedChat #%s: %s>" % (self.id, self.url)
+
 
 class RouletteChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "roulette" }
 
+    def __repr__(self):
+        return "<RouletteChat #%s: %s>" % (self.id, self.url)
+
 
 class SearchedChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "searched" }
+
+    def __repr__(self):
+        return "<SearchedChat #%s: %s>" % (self.id, self.url)
 
 
 AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, RouletteChat, SearchedChat])
@@ -477,6 +511,9 @@ class ChatUser(Base):
     # No joins or filtering here so these don't need to be foreign keys.
     highlighted_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
     ignored_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
+
+    def __repr__(self):
+        return "<ChatUser: %s in %s>" % (self.user, self.chat)
 
     @classmethod
     def from_character(cls, character, **kwargs):
@@ -658,6 +695,13 @@ class Message(Base):
 
     spam_flag = Column(Unicode(15))
 
+    def __repr__(self):
+        if len(self.text) < 50:
+            preview = self.text
+        else:
+            preview = self.text[:47] + "..."
+        return "<Message #%s: \"%s\">" % (self.id, preview.encode("utf8"))
+
     def to_dict(self, include_user=False):
         md = {
             "id": self.id,
@@ -687,6 +731,9 @@ class Invite(Base):
     creator_id = Column(Integer, ForeignKey("users.id"))
     created = Column(DateTime(), nullable=False, default=now)
 
+    def __repr__(self):
+        return "<Invite: %s to %s>" % (self.user, self.chat)
+
     def to_dict(self):
         return {
             "invited": self.chat_user.to_dict(include_user=True),
@@ -706,6 +753,9 @@ class Ban(Base):
     expires = Column(DateTime())
 
     reason = Column(UnicodeText)
+
+    def __repr__(self):
+        return "<Ban: %s from %s>" % (self.user, self.chat)
 
 
 class Request(Base):
