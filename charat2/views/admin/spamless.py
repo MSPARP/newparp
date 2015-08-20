@@ -1,14 +1,16 @@
 import paginate
 
-from flask import abort, g, redirect, render_template, request, url_for
+from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
+from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
 from charat2.model import AdminLogEntry, Message
 from charat2.model.connections import use_db
 
 
+@alt_formats({"json"})
 @use_db
 @admin_required
 def home(fmt=None, page=1):

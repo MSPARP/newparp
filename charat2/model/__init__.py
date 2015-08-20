@@ -702,7 +702,7 @@ class Message(Base):
             preview = self.text[:47] + "..."
         return "<Message #%s: \"%s\">" % (self.id, preview.encode("utf8"))
 
-    def to_dict(self, include_user=False):
+    def to_dict(self, include_user=False, include_spam_flag=True):
         md = {
             "id": self.id,
             "user_number": self.chat_user.number if self.chat_user is not None else None,
@@ -718,6 +718,8 @@ class Message(Base):
                 "id": self.user.id,
                 "username": self.user.username,
             } if self.user is not None else None
+        if include_spam_flag:
+            md["spam_flag"] = self.spam_flag
         return md
 
 
