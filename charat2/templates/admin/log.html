@@ -14,6 +14,11 @@
         {% else %}
         <a href="{{url_for("admin_log", type="announcements")}}">Announcements</a>
         {% endif %}
+        {% if request.args.type == "chat_links": %}
+        Chat links
+        {% else %}
+        <a href="{{url_for("admin_log", type="chat_links")}}">Chat links</a>
+        {% endif %}
         {% if request.args.type == "broadcast": %}
         Broadcast
         {% else %}
@@ -54,6 +59,9 @@
                 {% elif entry.type == "broadcast": %}
                 <td>Broadcast</td>
                 <td>{{entry.description}}</td>
+                {% elif entry.type == "chat_links": %}
+                <td>Chat links</td>
+                <td><pre>{{entry.description}}</pre></td>
                 {% elif entry.type == "user_set_group": %}
                 <td>User group</td>
                 <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>

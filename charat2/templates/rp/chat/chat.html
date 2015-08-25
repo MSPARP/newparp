@@ -110,6 +110,7 @@
     {% if chat.type == "group": %}
     <p>&gt; <a href="{{url_for("rp_users", url=chat.url)}}" target="_blank">Full user list</a></p>
     {% endif %}
+    {{(g.redis.get("chat_links") or "")|safe}}
 </section>
 
 <section class="sidebar" id="switch_character">

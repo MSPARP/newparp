@@ -29,14 +29,24 @@ def announcements_get():
 @use_db
 @admin_required
 def announcements_post():
-    current_announcements = g.redis.get("announcements")
-    if request.form["announcements"] != current_announcements:
-        g.redis.set("announcements", request.form["announcements"])
-        g.db.add(AdminLogEntry(
-            action_user=g.user,
-            type="announcements",
-            description=request.form["announcements"],
-        ))
+    if "announcements" in request.form:
+        current_announcements = g.redis.get("announcements")
+        if request.form["announcements"] != current_announcements:
+            g.redis.set("announcements", request.form["announcements"])
+            g.db.add(AdminLogEntry(
+                action_user=g.user,
+                type="announcements",
+                description=request.form["announcements"],
+            ))
+    if "chat_links" in request.form:
+        current_chat_links = g.redis.get("chat_links")
+        if request.form["chat_links"] != current_chat_links:
+            g.redis.set("chat_links", request.form["chat_links"])
+            g.db.add(AdminLogEntry(
+                action_user=g.user,
+                type="chat_links",
+                description=request.form["chat_links"],
+            ))
     return redirect(url_for("admin_announcements"))
 
 
