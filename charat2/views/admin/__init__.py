@@ -138,7 +138,7 @@ def user_list(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=user_count,
-        url_maker=lambda page: url_for("admin_user_list", page=page),
+        url_maker=lambda page: url_for("admin_user_list", page=page, group=user_group),
     )
     return render_template(
         "admin/user_list.html",
