@@ -106,15 +106,33 @@ def broadcast_post():
 @use_db
 @admin_required
 def user_list(fmt=None, page=1):
-    users = g.db.query(User).order_by(User.id).offset((page - 1) * 50).limit(50).all()
+
+    if "group" in request.args:
+        user_group = request.args["group"].strip().lower()
+        if user_group not in User.group.type.enums:
+            abort(404)
+    else:
+        user_group = None
+
+    users = g.db.query(User)
+    if user_group is not None:
+        users = users.filter(User.group == user_group)
+    users = users.order_by(User.id).offset((page - 1) * 50).limit(50).all()
+
     if len(users) == 0 and page != 1:
         abort(404)
-    user_count = g.db.query(func.count('*')).select_from(User).scalar()
+
+    user_count = g.db.query(func.count('*')).select_from(User)
+    if user_group is not None:
+        user_count = user_count.filter(User.group == user_group)
+    user_count = user_count.scalar()
+
     if fmt == "json":
         return jsonify({
             "total": user_count,
             "users": [_.to_dict(include_options=True) for _ in users],
         })
+
     paginator = paginate.Page(
         [],
         page=page,
@@ -124,10 +142,10 @@ def user_list(fmt=None, page=1):
     )
     return render_template(
         "admin/user_list.html",
+        User=User,
         users=users,
         paginator=paginator,
     )
-
 
 
 @alt_formats({"json"})

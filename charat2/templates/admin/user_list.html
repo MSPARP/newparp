@@ -2,6 +2,24 @@
 {% block title: %}Users - {% endblock %}
 {% block content: %}
     <h2>Users</h2>
+
+    <nav id="subnav">
+        Show:
+        {% if not request.args.group: %}
+        All
+        {% else %}
+        <a href="{{url_for("admin_user_list")}}">All</a>
+        {% endif %}
+        {% for group in User.group.type.enums: %}
+        {% if request.args.group == group: %}
+        {{ group.capitalize() }}
+        {% else %}
+        <a href="{{url_for("admin_user_list", group=group)}}">{{ group.capitalize() }}</a>
+        {% endif %}
+        {% endfor %}
+    </nav>
+
+
     {{ pager() }}
     {% if users: %}
     <table>
