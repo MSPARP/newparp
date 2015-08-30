@@ -111,7 +111,7 @@ def _filter_users(query):
         query = query.filter(User.group == user_group)
 
     if request.args.get("username"):
-        query = query.filter(func.lower(User.username).like("%" + request.args["username"] + "%"))
+        query = query.filter(func.lower(User.username).like("%" + request.args["username"].strip().lower() + "%"))
 
     return query
 
