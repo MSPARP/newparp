@@ -102,29 +102,34 @@ def broadcast_post():
     return redirect(url_for("admin_broadcast"))
 
 
-@alt_formats({"json"})
-@use_db
-@admin_required
-def user_list(fmt=None, page=1):
+def _filter_users(query):
 
     if "group" in request.args:
         user_group = request.args["group"].strip().lower()
         if user_group not in User.group.type.enums:
             abort(404)
-    else:
-        user_group = None
+        query = query.filter(User.group == user_group)
+
+    if request.args.get("username"):
+        query = query.filter(func.lower(User.username).like("%" + request.args["username"] + "%"))
+
+    return query
+
+
+@alt_formats({"json"})
+@use_db
+@admin_required
+def user_list(fmt=None, page=1):
 
     users = g.db.query(User)
-    if user_group is not None:
-        users = users.filter(User.group == user_group)
+    users = _filter_users(users)
     users = users.order_by(User.id).offset((page - 1) * 50).limit(50).all()
 
     if len(users) == 0 and page != 1:
         abort(404)
 
     user_count = g.db.query(func.count('*')).select_from(User)
-    if user_group is not None:
-        user_count = user_count.filter(User.group == user_group)
+    user_count = _filter_users(user_count)
     user_count = user_count.scalar()
 
     if fmt == "json":
@@ -138,13 +143,17 @@ def user_list(fmt=None, page=1):
         page=page,
         items_per_page=50,
         item_count=user_count,
-        url_maker=lambda page: url_for("admin_user_list", page=page, group=user_group),
+        url_maker=lambda page: url_for("admin_user_list", page=page, **request.args),
     )
+    group_link_args = request.args.copy()
+    if "group" in group_link_args:
+        del group_link_args["group"]
     return render_template(
         "admin/user_list.html",
         User=User,
         users=users,
         paginator=paginator,
+        group_link_args=group_link_args,
     )
 
 

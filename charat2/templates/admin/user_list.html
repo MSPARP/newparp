@@ -4,21 +4,26 @@
     <h2>Users</h2>
 
     <nav id="subnav">
-        Show:
+        Group:
         {% if not request.args.group: %}
         All
         {% else %}
-        <a href="{{url_for("admin_user_list")}}">All</a>
+        <a href="{{url_for("admin_user_list", **group_link_args)}}">All</a>
         {% endif %}
         {% for group in User.group.type.enums: %}
         {% if request.args.group == group: %}
         {{ group.capitalize() }}
         {% else %}
-        <a href="{{url_for("admin_user_list", group=group)}}">{{ group.capitalize() }}</a>
+        <a href="{{url_for("admin_user_list", group=group, **group_link_args)}}">{{ group.capitalize() }}</a>
         {% endif %}
         {% endfor %}
     </nav>
 
+    <form action="{{request.path}}" method="get">
+        {% if request.args.group %}<input type="hidden" name="group" value="{{ request.args.group }}">{% endif %}
+        <p>Username: <input type="text" name="username" value="{{ request.args.username }}"></p>
+        <p><button type="submit">Search</button></p>
+    </form>
 
     {{ pager() }}
     {% if users: %}
