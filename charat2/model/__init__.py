@@ -14,7 +14,7 @@ from sqlalchemy.orm import (
     with_polymorphic,
 )
 # Sorry SQLiters, this just ain't gonna work.
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import ARRAY, INET
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     func,
@@ -97,7 +97,7 @@ class User(Base):
 
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
-    last_ip = Column(String(40), nullable=False)
+    last_ip = Column(INET, nullable=False)
 
     # Default character for entering group chats
     default_character_id = Column(Integer, ForeignKey(
