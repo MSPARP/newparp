@@ -22,6 +22,7 @@
     <form action="{{request.path}}" method="get">
         {% if request.args.group %}<input type="hidden" name="group" value="{{ request.args.group }}">{% endif %}
         <p>Username: <input type="text" name="username" value="{{ request.args.username }}"></p>
+        <p>IP address: <input type="text" name="ip" value="{{ request.args.ip }}"></p>
         <p><button type="submit">Search</button></p>
     </form>
 
@@ -34,6 +35,8 @@
                 <th>Username</th>
                 <th>Group</th>
                 <th>Created</th>
+                <th>Last online</th>
+                <th>Last IP</th>
             </tr>
         </thead>
         <tbody>
@@ -43,6 +46,8 @@
                 <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
                 <td>{{user.group.capitalize()}}</td>
                 <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{user.last_ip}}</td>
             </tr>
             {% endfor %}
         </tbody>

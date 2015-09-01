@@ -4,6 +4,7 @@ import time
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
+from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -113,6 +114,11 @@ def _filter_users(query):
     if request.args.get("username"):
         query = query.filter(func.lower(User.username).like("%" + request.args["username"].strip().lower() + "%"))
 
+    if request.args.get("ip"):
+        # XXX VALIDATE THIS
+        print dir(User.last_ip)
+        query = query.filter(User.last_ip.op("<<")(request.args["ip"]))
+
     return query
 
 
@@ -123,7 +129,10 @@ def user_list(fmt=None, page=1):
 
     users = g.db.query(User)
     users = _filter_users(users)
-    users = users.order_by(User.id).offset((page - 1) * 50).limit(50).all()
+    try:
+        users = users.order_by(User.id).offset((page - 1) * 50).limit(50).all()
+    except DataError:
+        abort(400)
 
     if len(users) == 0 and page != 1:
         abort(404)
