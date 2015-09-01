@@ -117,7 +117,7 @@ def _filter_users(query):
     if request.args.get("ip"):
         # XXX VALIDATE THIS
         print dir(User.last_ip)
-        query = query.filter(User.last_ip.op("<<")(request.args["ip"]))
+        query = query.filter(User.last_ip.op("<<=")(request.args["ip"]))
 
     return query
 
