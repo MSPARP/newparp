@@ -37,6 +37,7 @@
                 <th>Created</th>
                 <th>Last online</th>
                 <th>Last IP</th>
+                <th>Time zone</th>
             </tr>
         </thead>
         <tbody>
@@ -48,6 +49,7 @@
                 <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{user.last_ip}}</td>
+                <td>{{user.timezone}}</td>
             </tr>
             {% endfor %}
         </tbody>
