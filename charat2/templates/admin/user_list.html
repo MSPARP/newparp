@@ -23,6 +23,11 @@
         {% if request.args.group %}<input type="hidden" name="group" value="{{ request.args.group }}">{% endif %}
         <p>Username: <input type="text" name="username" value="{{ request.args.username }}"></p>
         <p>IP address: <input type="text" name="ip" value="{{ request.args.ip }}"></p>
+        <p>Order by: <select name="order">
+        {% for id, order in user_orders.items(): %}
+            <option value="{{ id }}"{% if request.args.order == id: %} selected{% endif %}>{{ order.name }}</option>
+        {% endfor %}
+        </select></p>
         <p><button type="submit">Search</button></p>
     </form>
 

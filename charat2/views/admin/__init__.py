@@ -2,6 +2,7 @@ import json
 import paginate
 import time
 
+from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.exc import DataError
@@ -122,6 +123,18 @@ def _filter_users(query):
     return query
 
 
+user_order = namedtuple("user_order", ("name", "column"))
+user_orders = OrderedDict([
+    ("id", user_order("#", User.id)),
+    ("username", user_order("Username", func.lower(User.username))),
+    ("group", user_order("Group", User.group)),
+    ("created", user_order("Created", User.created.desc())),
+    ("last_online", user_order("Last online", User.last_online.desc())),
+    ("last_ip", user_order("Last IP", User.last_ip)),
+    ("timezone", user_order("Time zone", User.timezone)),
+])
+
+
 @alt_formats({"json"})
 @use_db
 @admin_required
@@ -129,8 +142,14 @@ def user_list(fmt=None, page=1):
 
     users = g.db.query(User)
     users = _filter_users(users)
+
+    if request.args.get("order") in user_orders:
+        users = users.order_by(user_orders[request.args["order"]].column)
+    else:
+        users = users.order_by(user_orders["id"].column)
+
     try:
-        users = users.order_by(User.id).offset((page - 1) * 50).limit(50).all()
+        users = users.offset((page - 1) * 50).limit(50).all()
     except DataError:
         abort(400)
 
@@ -163,6 +182,7 @@ def user_list(fmt=None, page=1):
         users=users,
         paginator=paginator,
         group_link_args=group_link_args,
+        user_orders=user_orders,
     )
 
 
