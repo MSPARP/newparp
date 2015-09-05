@@ -191,7 +191,7 @@
 <form id="send_form">
     <input type="hidden" name="token" value="{{g.csrf_token}}">
     <p id="text_preview"></p>
-    <input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="5000">
+    <input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="5000"{% if chat_user.draft: %} value="{{ chat_user.draft }}"{% endif %}>
     <button type="submit" disabled="disabled">Send</button>
     <button type="button" disabled="disabled" id="abscond_button">Abscond</button>
 {% if chat.type != "roulette": %}

@@ -412,6 +412,7 @@ var msparp = (function() {
 					// Also always show it in PM and roulette chats for online status.
 					|| chat.type == "pm" || chat.type == "roulette"
 				) ? " " : "");
+				text_input.keyup();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
 				$("#messages_method").text(messages_method);
@@ -1185,7 +1186,18 @@ var msparp = (function() {
 				text_preview.text(text);
 				resize_conversation();
 			}
+
+			var changed_since_draft = false;
+			window.setInterval(function() {
+				if (changed_since_draft) {
+					console.log("changed");
+					$.post("/chat_api/draft", { "chat_id": chat.id, "text": text_input.val().trim() });
+				}
+				changed_since_draft = false;
+			}, 15000);
+
 			var text_input = $("input[name=text]").keydown(function() {
+				changed_since_draft = true;
 				if (messages_method == "websocket") {
 					window.clearTimeout(typing_timeout);
 					if (!typing) {
@@ -1282,6 +1294,7 @@ var msparp = (function() {
 				text_input.val("");
 				last_alternating_line = !last_alternating_line;
 				if (temporary_character) { set_temporary_character(null); }
+				changed_since_draft = false;
 				typing = false;
 				return false;
 			});

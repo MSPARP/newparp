@@ -159,6 +159,7 @@ app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscr
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("POST",))
+app.add_url_rule("/chat_api/draft", "draft", chat_api.draft, methods=("POST",))
 app.add_url_rule("/chat_api/block", "block", chat_api.block, methods=("POST",))
 app.add_url_rule("/chat_api/set_state", "set_state", chat_api.set_state, methods=("POST",))
 app.add_url_rule("/chat_api/set_group", "set_group", chat_api.set_group, methods=("POST",))
