@@ -512,6 +512,8 @@ class ChatUser(Base):
     highlighted_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
     ignored_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
 
+    draft = Column(UnicodeText)
+
     def __repr__(self):
         return "<ChatUser: %s in %s>" % (self.user, self.chat)
 
@@ -646,6 +648,7 @@ class ChatUser(Base):
             ucd["meta"]["typing_notifications"] = self.typing_notifications
             ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
             ucd["meta"]["ignored_numbers"] = self.ignored_numbers
+            ucd["draft"] = self.draft or ""
         if include_user:
             ucd["user"] = {
                 "user_id": self.user.id,

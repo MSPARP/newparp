@@ -133,6 +133,15 @@ def send():
                 "typing": list(int(_) for _ in g.redis.smembers(typing_key)),
             }))
 
+    g.chat_user.draft = ""
+
+    return "", 204
+
+
+@use_db_chat
+@mark_alive
+def draft():
+    g.chat_user.draft = request.form.get("text", "").strip()[:5000]
     return "", 204
 
 
