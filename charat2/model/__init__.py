@@ -262,7 +262,6 @@ class Character(Base):
 class SearchCharacter(Base):
 
     __tablename__ = "search_characters"
-    __table_args__ = (UniqueConstraint('group_id', 'order', name='search_character_group_order_unique'),)
 
     id = Column(Integer, primary_key=True)
     title = Column(Unicode(50), nullable=False)
@@ -310,7 +309,7 @@ class SearchCharacterGroup(Base):
     __tablename__ = "search_character_groups"
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(50), nullable=False)
-    order = Column(Integer, nullable=False, unique=True)
+    order = Column(Integer, nullable=False)
 
     def __repr__(self):
         return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
