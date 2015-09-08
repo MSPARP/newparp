@@ -157,7 +157,7 @@ h2 select { font-size: 10pt; color: #000; }
 .input_table p > input, .input_table p > select { margin: 2px 0; }
 .input_table p > label { padding-right: 5px; }
 
-@media (max-width: 450px) { .input_table p > input[size="50"] { width: 98%; } }
+@media (max-width: 480px) { .input_table p > input[size="50"] { box-sizing: border-box; width: 100%; } }
 
 textarea { width: 100%; resize: vertical; }
 
@@ -300,8 +300,8 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 #conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
-#text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
-#text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
+.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
+.chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
 #send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
 #send_form button[type=submit] { float: right; margin-right: -2px; }
 #abscond_button { margin-left: -2px; }
