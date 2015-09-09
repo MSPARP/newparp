@@ -903,6 +903,25 @@ class AdminLogEntry(Base):
         }
 
 
+class IPBan(Base):
+    __tablename__ = "ip_bans"
+    address = Column(INET, primary_key=True)
+    date = Column(DateTime(), nullable=False, default=now)
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reason = Column(Unicode(255), nullable=False)
+
+    def __repr__(self):
+        return "<IPBan: %s>" % self.address
+
+    def to_dict(self):
+        return {
+            "address": self.address,
+            "date": time.mktime(self.date.timetuple()),
+            "creator": self.creator.to_dict(),
+            "reason": self.reason,
+        }
+
+
 # 2. Indexes
 
 
@@ -1060,4 +1079,6 @@ Tag.synonym_of = relation(Tag, backref="synonyms", remote_side=Tag.id)
 AdminLogEntry.action_user = relation(User, backref="admin_actions", foreign_keys=AdminLogEntry.action_user_id)
 AdminLogEntry.affected_user = relation(User, foreign_keys=AdminLogEntry.affected_user_id)
 AdminLogEntry.chat = relation(Chat)
+
+IPBan.creator = relation(User)
 
