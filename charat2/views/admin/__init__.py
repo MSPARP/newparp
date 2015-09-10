@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required
-from charat2.model import AdminLogEntry, GroupChat, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -317,6 +317,41 @@ def log(fmt=None, page=1):
     return render_template(
         "admin/log.html",
         entries=entries,
+        paginator=paginator,
+    )
+
+
+@alt_formats({"json"})
+@use_db
+@admin_required
+def ip_bans(fmt=None, page=1):
+
+    ip_bans = (
+        g.db.query(IPBan)
+        .options(joinedload(IPBan.creator))
+        .order_by(IPBan.address)
+        .offset((page - 1) * 50).limit(50).all()
+    )
+
+    ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).scalar()
+
+    if fmt == "json":
+        return jsonify({
+            "total": ip_ban_count,
+            "ip_bans": [_.to_dict() for _ in ip_bans],
+        })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=ip_ban_count,
+        url_maker=lambda page: url_for("admin_ip_bans", page=page),
+    )
+
+    return render_template(
+        "admin/ip_bans.html",
+        ip_bans=ip_bans,
         paginator=paginator,
     )
 

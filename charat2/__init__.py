@@ -200,6 +200,8 @@ app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist_post", spamles
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist", spamless.warnlist)
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.warnlist_post, methods=("POST",))
 
+make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
+
 # 12. Error handlers
 
 app.error_handler_spec[None][403] = errors.error_403

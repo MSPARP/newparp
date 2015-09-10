@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title: %}IP bans - {% endblock %}
+{% block content: %}
+    <h2>IP bans</h2>
+
+    {% if ip_bans: %}
+    {{ pager() }}
+    <table>
+        <thead>
+            <tr>
+                <th>Address/range</th>
+                <th>Banned by</th>
+                <th>Date</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ip_ban in ip_bans: %}
+            <tr>
+                <td>{{ip_ban.address}}</td>
+                <td><a href="{{url_for("admin_user", username=ip_ban.creator.username)}}">{{ip_ban.creator.username}}</a></td>
+                <td>{{g.user.localize_time(ip_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{ip_ban.reason}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ pager() }}
+    {% else: %}
+    <p>No IP bans. Thank god.</p>
+    {% endif %}
+
+{% endblock %}
+
