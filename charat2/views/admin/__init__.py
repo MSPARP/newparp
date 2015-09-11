@@ -117,7 +117,6 @@ def _filter_users(query):
 
     if request.args.get("ip"):
         # XXX VALIDATE THIS
-        print dir(User.last_ip)
         query = query.filter(User.last_ip.op("<<=")(request.args["ip"]))
 
     return query
@@ -333,6 +332,9 @@ def ip_bans(fmt=None, page=1):
         .offset((page - 1) * 50).limit(50).all()
     )
 
+    if page != 1 and len(ip_bans) == 0:
+        abort(404)
+
     ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).scalar()
 
     if fmt == "json":
@@ -354,4 +356,13 @@ def ip_bans(fmt=None, page=1):
         ip_bans=ip_bans,
         paginator=paginator,
     )
+
+@use_db
+@admin_required
+def ip_bans_delete():
+    try:
+        g.db.query(IPBan).filter(IPBan.address == request.form["address"]).delete()
+    except DataError:
+        abort(400)
+    return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
 

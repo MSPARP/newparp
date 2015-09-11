@@ -12,6 +12,7 @@
                 <th>Banned by</th>
                 <th>Date</th>
                 <th>Reason</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -21,6 +22,11 @@
                 <td><a href="{{url_for("admin_user", username=ip_ban.creator.username)}}">{{ip_ban.creator.username}}</a></td>
                 <td>{{g.user.localize_time(ip_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{ip_ban.reason}}</td>
+                <td><form action="{{url_for("admin_ip_bans_delete")}}" method="post">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <input type="hidden" name="address" value="{{ip_ban.address}}">
+                    <button type="submit">Delete</button>
+                </form></td>
             </tr>
             {% endfor %}
         </tbody>

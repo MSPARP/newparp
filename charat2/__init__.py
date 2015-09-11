@@ -201,6 +201,7 @@ app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist", spamless.warnl
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.warnlist_post, methods=("POST",))
 
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
+app.add_url_rule("/admin/ip_bans/delete", "admin_ip_bans_delete", admin.ip_bans_delete, methods=("POST",))
 
 # 12. Error handlers
 
