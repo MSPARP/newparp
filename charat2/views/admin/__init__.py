@@ -357,9 +357,47 @@ def ip_bans(fmt=None, page=1):
         paginator=paginator,
     )
 
+
 @use_db
 @admin_required
-def ip_bans_delete():
+def new_ip_ban():
+
+    if not request.form.get("reason"):
+        abort(400)
+
+    try:
+        existing_ban = (
+            g.db.query(func.count('*')).select_from(IPBan)
+            .filter(IPBan.address == request.form["address"]).scalar()
+        )
+    except DataError:
+        abort(400)
+
+    if existing_ban != 0:
+        return redirect(url_for("admin_ip_bans", ip_ban_error="already_banned"))
+
+    try:
+        g.db.add(IPBan(
+            address = request.form["address"][:42],
+            creator_id = g.user.id,
+            reason = request.form["reason"][:255],
+        ))
+        g.db.flush()
+    except DataError:
+        abort(400)
+
+    if request.headers.get("Referer"):
+        referer = request.headers["Referer"]
+        if "?ip_ban_error=already_banned" in referer:
+            referer = referer.replace("?ip_ban_error=already_banned", "")
+        return redirect(referer)
+
+    return redirect(url_for("admin_ip_bans"))
+
+
+@use_db
+@admin_required
+def delete_ip_ban():
     try:
         g.db.query(IPBan).filter(IPBan.address == request.form["address"]).delete()
     except DataError:

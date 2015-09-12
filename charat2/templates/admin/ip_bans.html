@@ -3,6 +3,20 @@
 {% block content: %}
     <h2>IP bans</h2>
 
+    <div class="toggle_box">
+        <input type="checkbox" id="toggle_new_ip_ban"{% if "ip_ban_error" in request.args: %} checked="checked"{% endif %}>
+        <h2>&gt; <label for="toggle_new_ip_ban">Ban an IP address</label></h2>
+        <form action="{{url_for("admin_new_ip_ban")}}" method="post">
+            <input type="hidden" name="token" value="{{ g.csrf_token }}">
+            {% if request.args.ip_ban_error == "already_banned" %}
+            <p class="error">That IP address/range is already banned.</p>
+            {% endif %}
+            <p><label>Address: <input type="text" name="address" maxlength="42" required></label></p>
+            <p><label>Reason: <input type="text" name="reason" maxlength="255" required></label></p>
+            <button type="submit">Ban</button></label></p>
+        </form>
+    </div>
+
     {% if ip_bans: %}
     {{ pager() }}
     <table>
@@ -22,7 +36,7 @@
                 <td><a href="{{url_for("admin_user", username=ip_ban.creator.username)}}">{{ip_ban.creator.username}}</a></td>
                 <td>{{g.user.localize_time(ip_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{ip_ban.reason}}</td>
-                <td><form action="{{url_for("admin_ip_bans_delete")}}" method="post">
+                <td><form action="{{url_for("admin_delete_ip_ban")}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
                     <input type="hidden" name="address" value="{{ip_ban.address}}">
                     <button type="submit">Delete</button>
