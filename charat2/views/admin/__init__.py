@@ -386,6 +386,12 @@ def new_ip_ban():
     except DataError:
         abort(400)
 
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="ip_ban",
+        description="Banned %s. Reason: %s" % (request.form["address"], request.form["reason"]),
+    ))
+
     if request.headers.get("Referer"):
         referer = request.headers["Referer"]
         if "?ip_ban_error=already_banned" in referer:
@@ -402,5 +408,10 @@ def delete_ip_ban():
         g.db.query(IPBan).filter(IPBan.address == request.form["address"]).delete()
     except DataError:
         abort(400)
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="ip_ban",
+        description="Unbanned %s." % request.form["address"],
+    ))
     return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
 

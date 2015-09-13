@@ -34,6 +34,11 @@
         {% else %}
         <a href="{{url_for("admin_log", type="spamless")}}">Spamless</a>
         {% endif %}
+        {% if request.args.type == "ip_ban": %}
+        IP ban
+        {% else %}
+        <a href="{{url_for("admin_log", type="ip_ban")}}">IP ban</a>
+        {% endif %}
     </nav>
     {{ pager() }}
     {% if entries: %}
@@ -83,6 +88,9 @@
                 {% elif entry.type == "spamless:warnlist:remove": %}
                 <td>Spamless</td>
                 <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
+                {% elif entry.type == "ip_ban": %}
+                <td>IP ban</td>
+                <td>{{entry.description}}</td>
                 {% endif %}
             </tr>
             {% endfor %}
