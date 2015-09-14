@@ -8,7 +8,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
-from charat2.model import sm, AnyChat, Chat, ChatUser, User
+from charat2.model import sm, AnyChat, Chat, ChatUser, IPBan, User
 
 redis_pool = ConnectionPool(
     host=os.environ['REDIS_HOST'],
@@ -82,13 +82,16 @@ def use_db(f):
                 return f(*args, **kwargs)
             g.user.last_online = datetime.now()
             g.user.last_ip = request.headers["X-Forwarded-For"]
-            if g.user.group == "banned":
-                return redirect("http://rp.terminallycapricio.us/")
             g.unread_chats = g.db.query(func.count('*')).select_from(ChatUser).join(Chat).filter(and_(
                 ChatUser.user_id == g.user.id,
                 ChatUser.subscribed == True,
                 Chat.last_message > ChatUser.last_online,
             )).scalar()
+            if g.user.group == "banned":
+                return redirect("http://rp.terminallycapricio.us/")
+            ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(g.user.last_ip)).scalar()
+            if ip_bans > 0:
+                abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -110,6 +113,9 @@ def get_chat_user():
     g.user.last_online = datetime.now()
     g.user.last_ip = request.headers["X-Forwarded-For"]
     if g.user.group == "banned":
+        abort(403)
+    ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(g.user.last_ip)).scalar()
+    if ip_bans > 0:
         abort(403)
 
 
