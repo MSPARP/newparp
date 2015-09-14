@@ -91,7 +91,7 @@ def use_db(f):
                 return redirect("http://rp.terminallycapricio.us/")
             ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(g.user.last_ip)).scalar()
             if ip_bans > 0:
-                abort(403)
+                return redirect("http://pup-king-louie.tumblr.com/")
         return f(*args, **kwargs)
     return decorated_function
 
