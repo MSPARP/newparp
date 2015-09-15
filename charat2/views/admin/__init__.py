@@ -205,7 +205,7 @@ def user(username, fmt=None):
         return redirect(url_for("admin_user", username=user.username))
     ip_bans = (
         g.db.query(IPBan)
-        .filter(IPBan.address.op(">>=")(g.user.last_ip))
+        .filter(IPBan.address.op(">>=")(user.last_ip))
         .order_by(IPBan.address).all()
     )
     if fmt == "json":
