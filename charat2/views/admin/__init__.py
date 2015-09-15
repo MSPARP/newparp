@@ -203,8 +203,15 @@ def user(username, fmt=None):
     # Redirect to fix capitalisation.
     if username != user.username:
         return redirect(url_for("admin_user", username=user.username))
+    ip_bans = (
+        g.db.query(IPBan)
+        .filter(IPBan.address.op(">>=")(g.user.last_ip))
+        .order_by(IPBan.address).all()
+    )
     if fmt == "json":
-        return jsonify(user.to_dict(include_options=True))
+        user = user.to_dict(include_options=True)
+        user["ip_bans"] = [_.to_dict() for _ in ip_bans]
+        return jsonify(user)
     search_characters = ", ".join(_.title for _ in (
         g.db.query(SearchCharacter)
         .select_from(SearchCharacterChoice)
@@ -212,7 +219,13 @@ def user(username, fmt=None):
         .filter(SearchCharacterChoice.user_id == user.id)
         .order_by(SearchCharacter.name).all()
     ))
-    return render_template("admin/user.html", User=User, user=user, search_characters=search_characters)
+    return render_template(
+        "admin/user.html",
+        User=User,
+        user=user,
+        ip_bans=[_.address for _ in ip_bans],
+        search_characters=search_characters,
+    )
 
 
 @use_db

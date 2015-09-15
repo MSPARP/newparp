@@ -30,7 +30,16 @@
             </tr>
             <tr>
                 <td>Last IP</td>
-                <td>{{user.last_ip}}</td>
+                <td>
+{% if not ip_bans: %}
+                    {{user.last_ip}}
+{% else %}
+                    <del>{{user.last_ip}}</del>
+{% if ip_bans[0].address != user.last_ip: %}
+                    (ban{% if ip_bans|length > 1 %}s{% endif %}: {{ ", ".join(ip_bans) }})
+{% endif %}
+{% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Time zone</td>
