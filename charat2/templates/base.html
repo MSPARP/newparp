@@ -24,6 +24,7 @@
     <h1><a href="{{url_for("home")}}"><img src="/static/img/logo.gif" alt="MSPARP"></a></h1>
 </header>
 
+
 <nav id="global_navigation">
     {% if g.user and g.unread_chats and g.unread_chats > 0: %}
     <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}">{{g.unread_chats}}</a>
@@ -53,6 +54,7 @@
 </nav>
 
 <main>
+    {% if g.user and g.ip_banned %}<p><strong>LOL UR IP BANNED</strong></p>{% endif %}
     <section id="announcements">
         <h2>Announcements</h2>
         {{(g.redis.get("announcements") or "<p>No announcements.</p>")|safe}}
