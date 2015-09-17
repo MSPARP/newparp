@@ -378,10 +378,15 @@ def new_ip_ban():
     if not request.form.get("reason"):
         abort(400)
 
+    if "subnet" in request.form:
+        full_address = request.form["address"] + "/" + request.form["subnet"]
+    else:
+        full_address = request.form["address"]
+
     try:
         existing_ban = (
             g.db.query(func.count('*')).select_from(IPBan)
-            .filter(IPBan.address == request.form["address"]).scalar()
+            .filter(IPBan.address == full_address).scalar()
         )
     except DataError:
         abort(400)
@@ -391,7 +396,7 @@ def new_ip_ban():
 
     try:
         g.db.add(IPBan(
-            address = request.form["address"][:42],
+            address = full_address[:42],
             creator_id = g.user.id,
             reason = request.form["reason"][:255],
         ))
@@ -402,7 +407,7 @@ def new_ip_ban():
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="ip_ban",
-        description="Banned %s. Reason: %s" % (request.form["address"], request.form["reason"]),
+        description="Banned %s. Reason: %s" % (full_address, request.form["reason"]),
     ))
 
     if request.headers.get("Referer"):

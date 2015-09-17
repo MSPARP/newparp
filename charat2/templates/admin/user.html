@@ -31,14 +31,25 @@
             <tr>
                 <td>Last IP</td>
                 <td>
-{% if not ip_bans: %}
+                {% if not ip_bans: %}
                     {{user.last_ip}}
-{% else %}
+                    <form action="{{url_for("admin_new_ip_ban")}}" method="post">
+                        <input type="hidden" name="token" value="{{g.csrf_token}}">
+                        <input type="hidden" name="address" value="{{user.last_ip}}">
+                        <input type="hidden" name="reason" value="User #{{user.id}} {{user.username}}">
+                        {% if "." in user.last_ip: %}
+                        /<input type="number" name="subnet" min="8" max="32" value="32" required>
+                        {% else %}
+                        /<input type="number" name="subnet" min="8" max="64" value="64" required>
+                        {% endif %}
+                        <button type="submit">Ban</button>
+                    </form>
+                {% else %}
                     <del>{{user.last_ip}}</del>
-{% if ip_bans[0].address != user.last_ip: %}
-                    (ban{% if ip_bans|length > 1 %}s{% endif %}: {{ ", ".join(ip_bans) }})
-{% endif %}
-{% endif %}
+                    {% if ip_bans[0].address != user.last_ip: %}
+                        (ban{% if ip_bans|length > 1 %}s{% endif %}: {{ ", ".join(ip_bans) }})
+                    {% endif %}
+                {% endif %}
                 </td>
             </tr>
             <tr>

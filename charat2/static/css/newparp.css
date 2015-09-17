@@ -157,6 +157,8 @@ h2 select { font-size: 10pt; color: #000; }
 .input_table p > input, .input_table p > select { margin: 2px 0; }
 .input_table p > label { padding-right: 5px; }
 
+input[type="number"] { max-width: 50px; }
+
 @media (max-width: 480px) { .input_table p > input[size="50"] { box-sizing: border-box; width: 100%; } }
 
 textarea { width: 100%; resize: vertical; }
