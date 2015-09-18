@@ -1,4 +1,5 @@
 from bcrypt import gensalt, hashpw
+from collections import OrderedDict
 from flask import abort, g, jsonify, render_template, redirect, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
@@ -185,7 +186,8 @@ def reset_password_post():
 def settings_get():
     return render_template(
         "account/settings.html",
-        timezones=sorted(list(timezones))
+        timezones=sorted(list(timezones)),
+        themes=themes,
     )
 
 @use_db
@@ -230,4 +232,17 @@ def settings_timezone():
     if request.form["timezone"] in timezones:
         g.user.timezone = request.form["timezone"]
     return "", 204
+
+
+themes = OrderedDict([])
+
+
+@use_db
+@log_in_required
+def settings_theme():
+    if request.form["theme"] in themes:
+        g.user.theme = request.form["theme"]
+    else:
+        g.user.theme = None
+    return redirect(url_for("settings"))
 

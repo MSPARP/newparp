@@ -149,6 +149,7 @@ class User(Base):
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
     timezone = Column(Unicode(255))
+    theme = Column(Unicode(255))
 
     def __repr__(self):
         return "<User #%s: %s>" % (self.id, self.username)
@@ -180,6 +181,8 @@ class User(Base):
             ud["case"] = self.case
             ud["replacements"] = json.loads(self.replacements)
             ud["regexes"] = json.loads(self.regexes)
+            ud["timezone"] = self.timezone
+            ud["theme"] = self.theme
         return ud
 
 

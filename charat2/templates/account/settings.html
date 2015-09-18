@@ -22,5 +22,16 @@
         </select>
         <button type="submit">Save</button>
     </form>
+    <h2>Chat theme</h2>
+    <form action="{{url_for("settings_theme")}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
+        <select name="theme">
+            <option value=""{% if g.user.theme == None %} selected="selected"{% endif %}>Default</option>
+{% for theme, name in themes.items(): %}
+            <option value="{{theme}}"{% if theme == g.user.theme %} selected="selected"{% endif %}>{{name}}</option>
+{% endfor %}
+        </select>
+        <button type="submit">Save</button>
+    </form>
 {% endblock %}
 
