@@ -1,0 +1,64 @@
+
+
+/* 
+4. Chat window
+	1. Topbar and info panel
+	2. PM chat list
+	3. Sidebars
+	4. Conversation and send form
+	5. Log pages
+*/
+
+/* 4. Chat window */
+
+body.chat {background-color:#1d1f2c;}
+.chat input, .chat textarea, .chat button, .chat select {background-color: #535353; color:#ccc;}
+.chat button:hover {background-color: #626262;}
+.char p {color:#626262;}
+
+/* 4.1. Topbar and info panel */
+
+#topbar {background-color: #050613;}
+#topbar h1 {background-color:#050613; color:#868686;}
+#info_panel, #edit_info_panel {background-color: #050613;}
+#description {color:#626262;}
+#rules {color:#626262;}
+
+/* 4.2. PM chat list */
+
+#pm_chat_list_container {background-color: #050613;}
+#pm_chat_list a {color: #666;}
+#pm_chat_list a.online {color: #626262;}
+
+/* 4.3. Sidebars */
+
+.sidebar {background-color: #050613;}
+
+#user_list_container a {color: #626262;}
+#action_list {color: #626262;}
+
+/* 4.4. Conversation and send form */
+
+#conversation {background-color: #050613;}
+#status_bar {color: #666;}
+.unum {color:#868686;}
+.highlighted {background-color: #1d1f2c; color:#ccc;}
+
+.spoiler {border: 1px dashed #1d1f2c;}
+
+
+#conversation hr {border-color: #1d1f2c;}
+
+.chat #text_preview {background-color: #050613;}
+#log_button {background-color: #535353; color: #ccc;}
+
+
+/* Color Overrides */
+
+/* override character colours */
+
+*[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #626262 !important}
+*[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #626262 !important}
+*[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{color: #3939f2 !important}
+*[style*="color: #2B0057"],*[style*="color: rgb(43, 0, 87)"]{color: #6d03de !important}
+*[style*="color: #0715CD"],*[style*="color: rgb(7, 20, 205)"]{color: #172aff !important}

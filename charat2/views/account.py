@@ -234,7 +234,7 @@ def settings_timezone():
     return "", 204
 
 
-themes = OrderedDict([])
+themes = OrderedDict([("darkskin", "Dark skin")])
 
 
 @use_db
