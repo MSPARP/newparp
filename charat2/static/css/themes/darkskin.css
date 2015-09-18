@@ -59,6 +59,6 @@ body.chat {background-color:#1d1f2c;color: #626262}
 
 *[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #626262 !important}
 *[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #626262 !important}
-*[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{color: #3939f2 !important}
+*[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{color: #2323ed !important}
 *[style*="color: #2B0057"],*[style*="color: rgb(43, 0, 87)"]{color: #6d03de !important}
 *[style*="color: #0715CD"],*[style*="color: rgb(7, 20, 205)"]{color: #172aff !important}
