@@ -180,6 +180,16 @@
     <p><label><input type="checkbox" class="variable" id="show_preview"{% if chat_user.show_preview: %} checked="checked"{% endif %}> Show preview</label></p>
     <p><label><input type="checkbox" class="variable" id="typing_notifications"{% if chat_user.typing_notifications: %} checked="checked"{% endif %}> Typing notifications</label></p>
     <p><label><input type="checkbox" id="subscribed"{% if chat_user.subscribed: %} checked="checked"{% endif %}> Subscribed</label></p>
+    <h2>Chat theme</h2>
+    <form action="{{url_for("settings_theme")}}" method="post" id="theme_form">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
+        <p><select name="theme">
+            <option value=""{% if g.user.theme == None %} selected="selected"{% endif %}>Default</option>
+{% for theme, name in themes.items(): %}
+            <option value="{{theme}}"{% if theme == g.user.theme %} selected="selected"{% endif %}>{{name}}</option>
+{% endfor %}
+        </select> <button type="submit">Save</button></p>
+    </form>
 </section>
 
 <section id="conversation">

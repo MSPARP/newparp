@@ -9,7 +9,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.helpers import alt_formats
+from charat2.helpers import alt_formats, themes
 from charat2.helpers.auth import log_in_required
 from charat2.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from charat2.model import (
@@ -238,6 +238,7 @@ def chat(chat, pm_user, url, fmt=None):
         characters=characters,
         character_shortcuts=character_shortcuts,
         search_character_groups=search_character_groups,
+        themes=themes,
     )
 
 

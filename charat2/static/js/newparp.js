@@ -1162,6 +1162,13 @@ var msparp = (function() {
 				$.post("/" + chat.url + "/" + (this.checked ? "subscribe" : "unsubscribe"));
 				user.meta.subscribed = this.checked;
 			});
+			$("#theme_form").submit(function() {
+				var form_data = $(this).serializeArray();
+				form_data.push({ name: "token", value: token });
+				form_data.push({ name: "chat_id", value: chat.id });
+				$.post(this.action, form_data);
+				return false;
+			});
 
 			// Conversation
 			function is_at_bottom() {

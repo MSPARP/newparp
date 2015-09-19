@@ -1,5 +1,9 @@
+from collections import OrderedDict
 from flask import abort, g, redirect, request, url_for
 from functools import wraps
+
+
+themes = OrderedDict([("darkskin", "Dark skin")])
 
 
 def check_csrf_token():

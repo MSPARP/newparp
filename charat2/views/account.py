@@ -1,5 +1,4 @@
 from bcrypt import gensalt, hashpw
-from collections import OrderedDict
 from flask import abort, g, jsonify, render_template, redirect, request, url_for
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
@@ -8,7 +7,7 @@ try:
 except ImportError:
     from urlparse import urlparse
 
-from charat2.helpers import alt_formats
+from charat2.helpers import alt_formats, themes
 from charat2.helpers.auth import log_in_required, not_logged_in_required
 from charat2.model import User
 from charat2.model.connections import use_db
@@ -231,10 +230,9 @@ timezones = {
 def settings_timezone():
     if request.form["timezone"] in timezones:
         g.user.timezone = request.form["timezone"]
-    return "", 204
-
-
-themes = OrderedDict([("darkskin", "Dark skin")])
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return "", 204
+    return redirect(url_for("settings"))
 
 
 @use_db
@@ -244,5 +242,7 @@ def settings_theme():
         g.user.theme = request.form["theme"]
     else:
         g.user.theme = None
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return "", 204
     return redirect(url_for("settings"))
 
