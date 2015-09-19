@@ -1164,9 +1164,21 @@ var msparp = (function() {
 			});
 			$("#theme_form").submit(function() {
 				var form_data = $(this).serializeArray();
-				form_data.push({ name: "token", value: token });
+                var new_theme = $(this).find("select").val();
 				form_data.push({ name: "chat_id", value: chat.id });
-				$.post(this.action, form_data);
+				$.post(this.action, form_data, function() {
+                    var theme_stylesheet = $("#theme_stylesheet");
+                    if (new_theme) {
+                        var stylesheet_url = "/static/css/themes/" + new_theme + ".css";
+                        if (theme_stylesheet.length == 1) {
+                            theme_stylesheet.attr("href", stylesheet_url);
+                        } else {
+                            $("<link>").attr({id: "theme_stylesheet", rel: "stylesheet", href: stylesheet_url}).appendTo(document.head);
+                        }
+                    } else {
+                        theme_stylesheet.remove();
+                    }
+                });
 				return false;
 			});
 

@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="/static/css/normalize.css">
 <link rel="stylesheet" href="/static/css/newparp.css">
 {% if g.user and g.user.theme: %}
-<link rel="stylesheet" href="/static/css/themes/{{g.user.theme}}.css">
+<link id="theme_stylesheet" rel="stylesheet" href="/static/css/themes/{{g.user.theme}}.css">
 {% endif %}
 </head>
 <body class="chat">
