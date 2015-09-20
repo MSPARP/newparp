@@ -9,6 +9,8 @@
 	5. Log pages
 */
 
+a {color: #626262;}
+
 /* 4. Chat window */
 
 body.chat {background-color:#1d1f2c;color: #626262}
@@ -52,6 +54,9 @@ body.chat {background-color:#1d1f2c;color: #626262}
 .chat #text_preview {background-color: #000;}
 #log_button {background-color: #535353; color: #ccc;}
 
+/* 4.5. Log pages */
+
+.chat .pager, #archive_conversation { background-color: #000; }
 
 /* Color Overrides */
 
