@@ -16,7 +16,7 @@ a {color: #626262;}
 body.chat {background-color:#1d1f2c;color: #626262}
 .chat input, .chat textarea, .chat button, .chat select {background-color: #535353; color:#ccc;}
 .chat button:hover {background-color: #626262;}
-.chat p {color:#626262;}
+.chat p {color:#626262!important;}
 
 /* 4.1. Topbar and info panel */
 
@@ -37,6 +37,7 @@ body.chat {background-color:#1d1f2c;color: #626262}
 .sidebar {background-color: #000;}
 
 #user_list_container a {color: #626262;}
+#user_list li {color: #626262!important;}
 #action_list {color: #626262;}
 
 /* 4.4. Conversation and send form */
@@ -57,12 +58,3 @@ body.chat {background-color:#1d1f2c;color: #626262}
 
 .chat .pager, #archive_conversation { background-color: #000; }
 
-/* Color Overrides */
-
-/* override character colours */
-
-*[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #626262 !important}
-*[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #626262 !important}
-*[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{color: #2323ed !important}
-*[style*="color: #2B0057"],*[style*="color: rgb(43, 0, 87)"]{color: #6d03de !important}
-*[style*="color: #0715CD"],*[style*="color: rgb(7, 20, 205)"]{color: #172aff !important}
