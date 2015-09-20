@@ -1,0 +1,19 @@
+/* 
+4. Chat window
+	1. Topbar and info panel
+	2. PM chat list
+	3. Sidebars
+	4. Conversation and send form
+	5. Log pages
+*/
+
+a {color: #2c2c2c;}
+
+/* 4. Chat window */
+
+.chat p {color:#000!important;}
+
+/* 4.3. Sidebars */
+
+#user_list li {color: #000!important;}
+

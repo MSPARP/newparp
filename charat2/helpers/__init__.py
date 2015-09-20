@@ -3,7 +3,11 @@ from flask import abort, g, redirect, request, url_for
 from functools import wraps
 
 
-themes = OrderedDict([("darkskin", "Dark skin"), ("darkskin_monochrome", "Dark skin (monochrome)")])
+themes = OrderedDict([
+    ("default_monochrome", "Default (monochrome)"),
+    ("darkskin", "Dark skin"),
+    ("darkskin_monochrome", "Dark skin (monochrome)"),
+])
 
 
 def check_csrf_token():
