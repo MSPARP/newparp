@@ -510,6 +510,8 @@ class ChatUser(Base):
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
+    theme = Column(Unicode(255))
+
     # No joins or filtering here so these don't need to be foreign keys.
     highlighted_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
     ignored_numbers = Column(ARRAY(Integer), nullable=False, default=lambda: [])
@@ -539,6 +541,7 @@ class ChatUser(Base):
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
+            theme=user.theme,
             **kwargs
         )
 
@@ -565,6 +568,7 @@ class ChatUser(Base):
                 show_bbcode=user.show_bbcode,
                 show_preview=user.show_preview,
                 typing_notifications=user.typing_notifications,
+                theme=user.theme,
                 **kwargs
             )
         return cls(
@@ -575,6 +579,7 @@ class ChatUser(Base):
             show_bbcode=user.show_bbcode,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
+            theme=user.theme,
             **kwargs
         )
 
@@ -648,6 +653,7 @@ class ChatUser(Base):
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_preview"] = self.show_preview
             ucd["meta"]["typing_notifications"] = self.typing_notifications
+            ucd["meta"]["theme"] = self.theme
             ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
             ucd["meta"]["ignored_numbers"] = self.ignored_numbers
             ucd["draft"] = self.draft or ""
