@@ -37,7 +37,7 @@
         <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
         <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
         {% if g.user: %}
-        {% if g.user.group == "admin": %}
+        {% if g.user.is_admin: %}
         <li><a href="{{url_for("admin_home")}}">Admin</a></li>
         {% endif %}
         <li class="user">

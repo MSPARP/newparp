@@ -80,7 +80,7 @@
             <option value="private">Private</option>
             <option value="unlisted">Unlisted</option>
             <option value="listed">Listed</option>
-            {% if g.user.group == "admin": %}
+            {% if g.user.is_admin: %}
             <option value="pinned">Pinned</option>
             <option value="admin_only">Admin only</option>
             {% endif %}

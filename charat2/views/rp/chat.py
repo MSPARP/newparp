@@ -191,7 +191,7 @@ def chat(chat, pm_user, url, fmt=None):
             chat_user.typing_notifications = False
             if g.user.id != chat.creator_id:
                 chat_user.subscribed = False
-            if chat.autosilence and g.user.group != "admin" and g.user.id != chat.creator_id:
+            if chat.autosilence and not g.user.is_admin and g.user.id != chat.creator_id:
                 chat_user.group = "silent"
         g.db.add(chat_user)
         g.db.flush()

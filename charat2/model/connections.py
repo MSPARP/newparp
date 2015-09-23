@@ -91,7 +91,7 @@ def use_db(f):
                 return redirect("http://rp.terminallycapricio.us/")
         ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers["X-Forwarded-For"])).scalar()
         g.ip_banned = ip_bans > 0
-        if g.ip_banned and (g.user is None or g.user.group != "admin"):
+        if g.ip_banned and (g.user is None or not g.user.is_admin):
             return redirect("http://pup-king-louie.tumblr.com/")
         return f(*args, **kwargs)
     return decorated_function
@@ -117,7 +117,7 @@ def get_chat_user():
         abort(403)
     ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers["X-Forwarded-For"])).scalar()
     g.ip_banned = ip_bans > 0
-    if g.ip_banned and g.user.group != "admin":
+    if g.ip_banned and not g.user.is_admin:
         abort(403)
 
 def use_db_chat(f):

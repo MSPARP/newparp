@@ -155,6 +155,10 @@ class User(Base):
     def __repr__(self):
         return "<User #%s: %s>" % (self.id, self.username)
 
+    @property
+    def is_admin(self):
+        return self.group.startswith("admin")
+
     def localize_time(self, input_datetime):
         utc_datetime = utc.localize(input_datetime)
         if self.timezone is None:
@@ -614,7 +618,7 @@ class ChatUser(Base):
     def computed_group(self):
         # Group is overridden by chat creator and user status.
         # Needs joinedload whenever we're getting these.
-        if self.user.group == "admin":
+        if self.user.is_admin:
             return "admin"
         if self.chat.type == "group" and self.chat.creator == self.user:
             return "creator"

@@ -82,7 +82,7 @@ def authorize_joining(redis, db, context):
     """
 
     # Admins bypass all restrictions.
-    if context.user is not None and context.user.group == "admin":
+    if context.user is not None and context.user.is_admin:
         return
 
     if context.chat.type == "group":

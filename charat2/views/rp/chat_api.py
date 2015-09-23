@@ -649,7 +649,7 @@ def save_variables():
 @use_db_chat
 @mark_alive
 def look_up_user():
-    if g.user.group != "admin":
+    if not g.user.is_admin:
         abort(403)
     try:
         chat_user = g.db.query(ChatUser).filter(and_(

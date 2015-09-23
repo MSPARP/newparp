@@ -6,7 +6,7 @@
 <table>
     <thead>
         <tr>
-            {% if g.user.group == "admin": %}
+            {% if g.user.is_admin: %}
             <th>Username</th>
             {% endif %}
             <th>#</th>
@@ -17,14 +17,14 @@
     <tbody>
         {% for chat_user in users: %}
         <tr>
-            {% if g.user.group == "admin": %}
+            {% if g.user.is_admin: %}
             <td><a href="{{url_for("admin_user", username=chat_user.user.username)}}">{{chat_user.user.username}}</a></td>
             {% endif %}
             <td>{{chat_user.number}}</td>
             <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
             {% if chat_user.ban == None: %}
             <td>
-                {% if (g.user.group == "admin" or g.user.id == chat.creator_id) and chat_user.user.group != "admin" and chat_user.user_id != chat.creator_id: %}
+                {% if (g.user.is_admin or g.user.id == chat.creator_id) and not chat_user.user.is_admin and chat_user.user_id != chat.creator_id: %}
                     <form action="/chat_api/set_group" method="post">
                         <input type="hidden" name="token" value="{{g.csrf_token}}">
                         <input type="hidden" name="chat_id" value="{{chat.id}}">
