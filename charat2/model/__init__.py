@@ -88,10 +88,11 @@ class User(Base):
     email_address = Column(String(100))
 
     group = Column(Enum(
+        u"banned",
         u"guest",
         u"active",
-        u"admin",
-        u"banned",
+        u"admin1",
+        u"admin2",
         name=u"users_group",
     ), nullable=False, default=u"guest")
 
