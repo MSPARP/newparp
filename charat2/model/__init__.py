@@ -16,6 +16,7 @@ from sqlalchemy.orm import (
 # Sorry SQLiters, this just ain't gonna work.
 from sqlalchemy.dialects.postgresql import ARRAY, INET
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import (
     func,
     Column,
@@ -1124,5 +1125,9 @@ AdminLogEntry.chat = relation(Chat)
 
 IPBan.creator = relation(User)
 
-AdminTier.permissions = relation(AdminTierPermission, backref="admin_tier")
+AdminTier.admin_tier_permissions = relation(AdminTierPermission, backref="admin_tier")
+AdminTier.permissions = association_proxy(
+    "admin_tier_permissions", "permission",
+    creator=lambda permission: AdminTierPermission(permission=permission),
+)
 
