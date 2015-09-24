@@ -936,6 +936,34 @@ class IPBan(Base):
         }
 
 
+class AdminTier(Base):
+    __tablename__ = "admin_tiers"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(50), nullable=False)
+
+    def __repr__(self):
+        return "<AdminTier #%s: %s>" % (self.id, self.name)
+
+
+class AdminTierPermission(Base):
+    __tablename__ = "admin_tier_permissions"
+    admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"), primary_key=True)
+    permission = Column(Enum(
+        u"search_characters",
+        u"announcements",
+        u"broadcast",
+        u"user_list",
+        u"groups",
+        u"log",
+        u"spamless",
+        u"ip_ban",
+        name=u"admin_tier_permissions_permission",
+    ), primary_key=True)
+
+    def __repr__(self):
+        return "<AdminTierPermission: %s has %s>" % (self.admin_tier_id, self.permission)
+
+
 # 2. Indexes
 
 
@@ -1095,4 +1123,6 @@ AdminLogEntry.affected_user = relation(User, foreign_keys=AdminLogEntry.affected
 AdminLogEntry.chat = relation(Chat)
 
 IPBan.creator = relation(User)
+
+AdminTier.permissions = relation(AdminTierPermission, backref="admin_tier")
 
