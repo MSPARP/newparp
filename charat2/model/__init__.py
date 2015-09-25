@@ -945,6 +945,13 @@ class AdminTier(Base):
     def __repr__(self):
         return "<AdminTier #%s: %s>" % (self.id, self.name)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "permissions": self.permissions,
+        }
+
 
 class AdminTierPermission(Base):
     __tablename__ = "admin_tier_permissions"
