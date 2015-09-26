@@ -96,6 +96,7 @@ class User(Base):
         u"admin2",
         name=u"users_group",
     ), nullable=False, default=u"guest")
+    admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))
 
     created = Column(DateTime(), nullable=False, default=now)
     last_online = Column(DateTime(), nullable=False, default=now)
@@ -1015,6 +1016,7 @@ Index("tags_type_name", Tag.type, Tag.name, unique=True)
 
 # 3. Relationships
 
+User.admin_tier = relation(AdminTier, backref="users")
 User.default_character = relation(
     Character,
     primaryjoin=User.default_character_id == Character.id,
