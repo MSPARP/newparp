@@ -240,9 +240,6 @@ def user_set_group(username):
     except NoResultFound:
         abort(404)
 
-    if g.user.group != "admin2" and (request.form["group"] == "admin2" or user.group == "admin2"):
-        abort(403)
-
     if user.group != request.form["group"]:
         user.group = request.form["group"]
         g.db.add(AdminLogEntry(

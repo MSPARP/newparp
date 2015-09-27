@@ -92,8 +92,7 @@ class User(Base):
         u"banned",
         u"guest",
         u"active",
-        u"admin1",
-        u"admin2",
+        u"admin",
         name=u"users_group",
     ), nullable=False, default=u"guest")
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))

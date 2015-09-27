@@ -8,10 +8,10 @@
                 <td>Group</td>
                 <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
-                    <select name="group"{% if user.group == "admin2" and g.user.group != "admin2": %} disabled{% endif %}>
-                        {% for value in User.group.type.enums: %}{% if value != "admin2" or user.group == "admin2" or g.user.group == "admin2": %}
-                        <option value="{{value}}"{% if value == user.group %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
-                        {% endif %}{% endfor %}
+                    <select name="group">
+                        {% for value in User.group.type.enums: %}
+                        <option value="{{value}}">{{value.capitalize()}}</option>
+                        {% endfor %}
                     </select>
                     <button type="submit"{% if user.group == "admin2" and g.user.group != "admin2": %} disabled{% endif %}>Save</button>
                 </form></td>
