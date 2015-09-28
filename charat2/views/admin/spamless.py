@@ -5,14 +5,14 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import admin_required
+from charat2.helpers.auth import permission_required
 from charat2.model import AdminLogEntry, Message
 from charat2.model.connections import use_db
 
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("spamless")
 def home(fmt=None, page=1):
 
     messages = (
@@ -59,7 +59,7 @@ def home(fmt=None, page=1):
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def banned_names():
     return render_template(
         "admin/spamless/banned_names.html",
@@ -68,7 +68,7 @@ def banned_names():
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def banned_names_post():
     command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
     try:
@@ -89,7 +89,7 @@ def banned_names_post():
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def blacklist():
     return render_template(
         "admin/spamless/blacklist.html",
@@ -101,7 +101,7 @@ def blacklist():
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def blacklist_post():
     phrase = request.form["phrase"].strip().lower()
     if not phrase:
@@ -128,7 +128,7 @@ def blacklist_post():
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def warnlist():
     return render_template(
         "admin/spamless/warnlist.html",
@@ -137,7 +137,7 @@ def warnlist():
 
 
 @use_db
-@admin_required
+@permission_required("spamless")
 def warnlist_post():
     command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
     try:
