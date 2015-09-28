@@ -5,7 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.helpers.auth import admin_required
+from charat2.helpers.auth import permission_required
 from charat2.helpers.characters import validate_character_form
 from charat2.model import case_options, Character, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_connect
@@ -19,7 +19,7 @@ def search_character_query(id):
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def search_character_list():
     return render_template(
         "rp/search_characters/search_character_list.html",
@@ -30,7 +30,7 @@ def search_character_list():
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def new_search_character_group_post():
     name = request.form["name"].strip()
     if len(name) == 0:
@@ -41,7 +41,7 @@ def new_search_character_group_post():
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def search_character(id):
     character = search_character_query(id)
     return render_template(
@@ -52,7 +52,7 @@ def search_character(id):
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def new_search_character_get():
     groups = g.db.query(SearchCharacterGroup).order_by(SearchCharacterGroup.order).all()
     return render_template(
@@ -63,7 +63,7 @@ def new_search_character_get():
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def new_search_character_post():
     new_details = validate_character_form(request.form)
     del new_details["search_character_id"]
@@ -106,7 +106,7 @@ def search_character_json(id):
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def save_search_character(id):
     character = search_character_query(id)
     new_details = validate_character_form(request.form)
@@ -128,7 +128,7 @@ def save_search_character(id):
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def delete_search_character_get(id):
     # Anon/other is the default character so it can't be deleted.
     if id == 1:
@@ -138,7 +138,7 @@ def delete_search_character_get(id):
 
 
 @use_db
-@admin_required
+@permission_required("search_characters")
 def delete_search_character_post(id):
     # Anon/other is the default character so it can't be deleted.
     if id == 1:
