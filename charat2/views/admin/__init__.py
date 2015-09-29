@@ -10,7 +10,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
-from charat2.helpers.auth import admin_required
+from charat2.helpers.auth import admin_required, permission_required
 from charat2.model import AdminLogEntry, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
@@ -23,13 +23,13 @@ def home():
 
 
 @use_db
-@admin_required
+@permission_required("announcements")
 def announcements_get():
     return render_template("admin/announcements.html")
 
 
 @use_db
-@admin_required
+@permission_required("announcements")
 def announcements_post():
     if "announcements" in request.form:
         current_announcements = g.redis.get("announcements")
@@ -53,13 +53,13 @@ def announcements_post():
 
 
 @use_db
-@admin_required
+@permission_required("broadcast")
 def broadcast_get():
     return render_template("admin/broadcast.html")
 
 
 @use_db
-@admin_required
+@permission_required("broadcast")
 def broadcast_post():
 
     text = request.form["text"].strip()
@@ -136,7 +136,7 @@ user_orders = OrderedDict([
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("user_list")
 def user_list(fmt=None, page=1):
 
     users = g.db.query(User)
@@ -187,7 +187,7 @@ def user_list(fmt=None, page=1):
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("user_list")
 def user(username, fmt=None):
     try:
         user = (
@@ -229,7 +229,7 @@ def user(username, fmt=None):
 
 
 @use_db
-@admin_required
+@permission_required("user_list")
 def user_set_group(username):
 
     if request.form["group"] not in User.group.type.enums:
@@ -254,7 +254,7 @@ def user_set_group(username):
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("groups")
 def groups(fmt=None, page=1):
     groups = (
         g.db.query(GroupChat)
@@ -291,7 +291,7 @@ def groups(fmt=None, page=1):
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("log")
 def log(fmt=None, page=1):
 
     if "type" in request.args:
@@ -339,7 +339,7 @@ def log(fmt=None, page=1):
 
 @alt_formats({"json"})
 @use_db
-@admin_required
+@permission_required("ip_bans")
 def ip_bans(fmt=None, page=1):
 
     ip_bans = (
@@ -376,7 +376,7 @@ def ip_bans(fmt=None, page=1):
 
 
 @use_db
-@admin_required
+@permission_required("ip_bans")
 def new_ip_ban():
 
     if not request.form.get("reason"):
@@ -424,7 +424,7 @@ def new_ip_ban():
 
 
 @use_db
-@admin_required
+@permission_required("ip_bans")
 def delete_ip_ban():
     try:
         g.db.query(IPBan).filter(IPBan.address == request.form["address"]).delete()
