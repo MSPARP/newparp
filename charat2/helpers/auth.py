@@ -42,12 +42,7 @@ def permission_required(permission):
         def decorated_function(*args, **kwargs):
             if g.user is None:
                 return render_template("account/log_in_required.html")
-            elif not g.user.is_admin or g.user.admin_tier_id is None:
-                abort(403)
-            elif g.db.query(func.count("*")).select_from(AdminTierPermission).filter(and_(
-                AdminTierPermission.admin_tier_id == g.user.admin_tier_id,
-                AdminTierPermission.permission == permission,
-            )).scalar() == 0:
+            elif not g.user.has_permission(permission):
                 abort(403)
             return f(*args, **kwargs)
         return decorated_function

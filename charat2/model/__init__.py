@@ -160,6 +160,11 @@ class User(Base):
     def is_admin(self):
         return self.group.startswith("admin")
 
+    def has_permission(self, permission):
+        if self.admin_tier_id is not None and permission in self.admin_tier.permissions:
+            return True
+        return False
+
     def localize_time(self, input_datetime):
         utc_datetime = utc.localize(input_datetime)
         if self.timezone is None:
