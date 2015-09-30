@@ -240,8 +240,12 @@ def user_set_group(username):
     except NoResultFound:
         abort(404)
 
+    if not g.user.has_permission("permissions") and (request.form["group"] == "admin" or user.is_admin):
+        abort(403)
+
     if user.group != request.form["group"]:
         user.group = request.form["group"]
+        user.admin_tier_id = 1 if request.form["group"] == "admin" else None
         g.db.add(AdminLogEntry(
             action_user=g.user,
             type="user_set_group",
