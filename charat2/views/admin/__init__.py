@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required, permission_required
-from charat2.model import AdminLogEntry, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, AdminTier, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -193,6 +193,7 @@ def user(username, fmt=None):
         user = (
             g.db.query(User).filter(func.lower(User.username) == username.lower())
             .options(
+                joinedload(User.admin_tier),
                 joinedload(User.default_character),
                 joinedload(User.roulette_search_character),
                 joinedload(User.search_character),
@@ -212,6 +213,7 @@ def user(username, fmt=None):
         user = user.to_dict(include_options=True)
         user["ip_bans"] = [_.to_dict() for _ in ip_bans]
         return jsonify(user)
+
     search_characters = ", ".join(_.title for _ in (
         g.db.query(SearchCharacter)
         .select_from(SearchCharacterChoice)
@@ -225,6 +227,11 @@ def user(username, fmt=None):
         user=user,
         ip_bans=[_.address for _ in ip_bans],
         search_characters=search_characters,
+        admin_tiers=(
+            g.db.query(AdminTier).order_by(AdminTier.id).all()
+            if user.is_admin and g.user.has_permission("permissions")
+            else None
+        ),
     )
 
 
@@ -252,6 +259,25 @@ def user_set_group(username):
             description=request.form["group"],
             affected_user=user,
         ))
+
+    return redirect(url_for("admin_user", username=user.username))
+
+
+@use_db
+@permission_required("permissions")
+def user_set_admin_tier(username):
+
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
+    except NoResultFound:
+        abort(404)
+
+    try:
+        admin_tier = g.db.query(AdminTier).filter(AdminTier.id == request.form["admin_tier"]).one()
+    except NoResultFound:
+        abort(404)
+
+    user.admin_tier = admin_tier
 
     return redirect(url_for("admin_user", username=user.username))
 

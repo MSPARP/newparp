@@ -16,6 +16,24 @@
                     <button type="submit"{% if user.is_admin and not g.user.has_permission("permissions"): %} disabled{% endif %}>Save</button>
                 </form></td>
             </tr>
+            {% if user.is_admin: %}
+            <tr>
+                <td>Admin tier</td>
+                {% if g.user.has_permission("permissions"): %}
+                <td><form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <select name="admin_tier">
+                        {% for admin_tier in admin_tiers: %}
+                        <option value="{{admin_tier.id}}"{% if admin_tier == user.admin_tier %} selected="selected"{% endif %}>{{admin_tier.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Save</button>
+                </form></td>
+                {% else: %}
+                <td>{{user.admin_tier.name}}</td>
+                {% endif %}
+            </tr>
+            {% endif %}
             <tr>
                 <td>Email address</td>
                 <td>{{user.email_address}}</td>
