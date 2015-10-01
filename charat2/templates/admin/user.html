@@ -9,28 +9,31 @@
                 <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
                     <select name="group"{% if user.is_admin and not g.user.has_permission("permissions"): %} disabled{% endif %}>
-                        {% for value in User.group.type.enums: %}{% if value != "admin" or user.is_admin or g.user.has_permission("permissions"): %}
-                        <option value="{{value}}"{% if value == user.group %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
-                        {% endif %}{% endfor %}
+                        {% for value in User.group.type.enums: %}
+                        <option value="{{value}}"{% if user.group == value %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
+                        {% endfor %}
                     </select>
                     <button type="submit"{% if user.is_admin and not g.user.has_permission("permissions"): %} disabled{% endif %}>Save</button>
                 </form></td>
             </tr>
-            {% if user.is_admin: %}
+            {% if user.group == "active": %}
             <tr>
                 <td>Admin tier</td>
                 {% if g.user.has_permission("permissions"): %}
                 <td><form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
                     <select name="admin_tier">
+                        <option value=""{% if user.admin_tier ==  None %} selected="selected"{% endif %}>None</option>
                         {% for admin_tier in admin_tiers: %}
-                        <option value="{{admin_tier.id}}"{% if admin_tier == user.admin_tier %} selected="selected"{% endif %}>{{admin_tier.name}}</option>
+                        <option value="{{admin_tier.id}}"{% if user.admin_tier == admin_tier %} selected="selected"{% endif %}>{{admin_tier.name}}</option>
                         {% endfor %}
                     </select>
                     <button type="submit">Save</button>
                 </form></td>
-                {% else: %}
+                {% elif user.is_admin: %}
                 <td>{{user.admin_tier.name}}</td>
+                {% else: %}
+                <td>None</td>
                 {% endif %}
             </tr>
             {% endif %}

@@ -92,7 +92,6 @@ class User(Base):
         u"banned",
         u"guest",
         u"active",
-        u"admin",
         name=u"users_group",
     ), nullable=False, default=u"guest")
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))
@@ -158,10 +157,10 @@ class User(Base):
 
     @property
     def is_admin(self):
-        return self.group.startswith("admin")
+        return self.admin_tier_id is not None
 
     def has_permission(self, permission):
-        if self.admin_tier_id is not None and permission in self.admin_tier.permissions:
+        if self.is_admin and permission in self.admin_tier.permissions:
             return True
         return False
 

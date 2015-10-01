@@ -227,11 +227,7 @@ def user(username, fmt=None):
         user=user,
         ip_bans=[_.address for _ in ip_bans],
         search_characters=search_characters,
-        admin_tiers=(
-            g.db.query(AdminTier).order_by(AdminTier.id).all()
-            if user.is_admin and g.user.has_permission("permissions")
-            else None
-        ),
+        admin_tiers=g.db.query(AdminTier).order_by(AdminTier.id).all(),
     )
 
 
@@ -247,12 +243,16 @@ def user_set_group(username):
     except NoResultFound:
         abort(404)
 
-    if not g.user.has_permission("permissions") and (request.form["group"] == "admin" or user.is_admin):
+    if user.is_admin and not g.user.has_permission("permissions"):
         abort(403)
 
     if user.group != request.form["group"]:
+
         user.group = request.form["group"]
-        user.admin_tier_id = 1 if request.form["group"] == "admin" else None
+
+        if user.group != "active":
+            user.admin_tier_id = None
+
         g.db.add(AdminLogEntry(
             action_user=g.user,
             type="user_set_group",
@@ -272,12 +272,14 @@ def user_set_admin_tier(username):
     except NoResultFound:
         abort(404)
 
-    try:
-        admin_tier = g.db.query(AdminTier).filter(AdminTier.id == request.form["admin_tier"]).one()
-    except NoResultFound:
-        abort(404)
-
-    user.admin_tier = admin_tier
+    if request.form.get("admin_tier"):
+        try:
+            admin_tier = g.db.query(AdminTier).filter(AdminTier.id == request.form["admin_tier"]).one()
+        except NoResultFound:
+            abort(404)
+        user.admin_tier_id = admin_tier.id
+    else:
+        user.admin_tier_id = None
 
     return redirect(url_for("admin_user", username=user.username))
 
