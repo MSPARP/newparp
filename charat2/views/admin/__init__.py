@@ -6,7 +6,7 @@ from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
 from sqlalchemy.exc import DataError
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
@@ -193,7 +193,7 @@ def user(username, fmt=None):
         user = (
             g.db.query(User).filter(func.lower(User.username) == username.lower())
             .options(
-                joinedload(User.admin_tier),
+                joinedload_all(User.admin_tier, AdminTier.admin_tier_permissions),
                 joinedload(User.default_character),
                 joinedload(User.roulette_search_character),
                 joinedload(User.search_character),

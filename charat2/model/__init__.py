@@ -175,6 +175,7 @@ class User(Base):
             "id": self.id,
             "username": self.username,
             "group": self.group,
+            "is_admin": self.is_admin,
             "created": time.mktime(self.created.timetuple()),
             "last_online": time.mktime(self.last_online.timetuple()),
             "name": self.name,
@@ -184,6 +185,7 @@ class User(Base):
             "search_level": self.search_level,
         }
         if include_options:
+            ud["admin_tier"] = self.admin_tier.to_dict() if self.is_admin else None
             ud["default_character"] = self.default_character.to_dict() if self.default_character is not None else None
             ud["search_character"] = self.search_character.to_dict()
             ud["quirk_prefix"] = self.quirk_prefix
@@ -953,7 +955,7 @@ class AdminTier(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "permissions": self.permissions,
+            "permissions": list(self.permissions),
         }
 
 
