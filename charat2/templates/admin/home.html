@@ -3,14 +3,30 @@
 {% block content: %}
     <h2>Admin tools</h2>
     <ul>
+        {% if g.user.has_permission("search_characters"): %}
         <li><a href="{{url_for("rp_search_character_list")}}">Search character creator</a></li>
+        {% endif %}
+        {% if g.user.has_permission("announcements"): %}
         <li><a href="{{url_for("admin_announcements")}}">Edit announcements</a></li>
+        {% endif %}
+        {% if g.user.has_permission("broadcast"): %}
         <li><a href="{{url_for("admin_broadcast")}}">Broadcast</a></li>
+        {% endif %}
+        {% if g.user.has_permission("user_list"): %}
         <li><a href="{{url_for("admin_user_list")}}">Full user list</a></li>
+        {% endif %}
+        {% if g.user.has_permission("groups"): %}
         <li><a href="{{url_for("admin_groups")}}">Full group chat list</a></li>
+        {% endif %}
+        {% if g.user.has_permission("log"): %}
         <li><a href="{{url_for("admin_log")}}">Log</a></li>
+        {% endif %}
+        {% if g.user.has_permission("spamless"): %}
         <li><a href="{{url_for("spamless_home")}}">Spamless</a></li>
+        {% endif %}
+        {% if g.user.has_permission("ip_bans"): %}
         <li><a href="{{url_for("admin_ip_bans")}}">IP bans</a></li>
+        {% endif %}
     </ul>
 {% endblock %}
 
