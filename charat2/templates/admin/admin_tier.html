@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title: %}{{admin_tier.name}} - {% endblock %}
+{% block content: %}
+    <h2>{{admin_tier.name}}</h2>
+    <h3>Permissions</h3>
+    {% if admin_tier.id == 1: %}
+    <p>{{admin_tier.name}}'s permissions can't be edited.</p>
+    {% else: %}
+    <form action="{{url_for("admin_admin_tier_post", admin_tier_id=admin_tier.id)}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
+        <ul class="checkbox_list">
+            {% for permission in AdminTierPermission.permission.type.enums: %}
+            <li><label>
+                <input type="checkbox" name="{{permission}}"{% if permission in admin_tier.permissions: %} checked="checked"{% endif %}>
+                <span>{{permission.replace("_", " ").capitalize()}}</span>
+            </label></li>
+            {% endfor %}
+        </ul>
+        <p><button type="submit">Save</button></p>
+    </form>
+    {% endif %}
+    <h3>Users</h3>
+    {% if users: %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Created</th>
+                <th>Last online</th>
+                <th>Last IP</th>
+                <th>Time zone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users: %}
+            <tr>
+                <td>{{user.id}}</td>
+                <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
+                <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{user.last_ip}}</td>
+                <td>{{user.timezone}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>No users.</p>
+    {% endif %}
+{% endblock %}
+

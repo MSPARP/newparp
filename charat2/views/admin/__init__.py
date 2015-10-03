@@ -287,7 +287,7 @@ def user_set_admin_tier(username):
 @alt_formats({"json"})
 @use_db
 @permission_required("permissions")
-def permissions_get(fmt=None):
+def permissions(fmt=None):
 
     admin_tiers = (
         g.db.query(AdminTier)
@@ -304,6 +304,79 @@ def permissions_get(fmt=None):
         "admin/permissions.html",
         AdminTierPermission=AdminTierPermission,
         admin_tiers=admin_tiers,
+    )
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("permissions")
+def admin_tier_get(admin_tier_id, fmt=None):
+
+    try:
+        admin_tier = (
+            g.db.query(AdminTier).filter(AdminTier.id == admin_tier_id)
+            .options(joinedload(AdminTier.admin_tier_permissions)).one()
+        )
+    except NoResultFound:
+        abort(404)
+
+    users = (
+        g.db.query(User)
+        .filter(User.admin_tier_id == admin_tier.id)
+        .order_by(User.id).all()
+    )
+
+    if fmt == "json":
+        return jsonify({
+            "admin_tier": admin_tier.to_dict(),
+            "users": [_.to_dict() for _ in users],
+        })
+
+    return render_template(
+        "admin/admin_tier.html",
+        AdminTierPermission=AdminTierPermission,
+        admin_tier=admin_tier,
+        users=users,
+    )
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("permissions")
+def admin_tier_post(admin_tier_id, fmt=None):
+
+    if admin_tier_id == 1:
+        abort(404)
+
+    try:
+        admin_tier = (
+            g.db.query(AdminTier).filter(AdminTier.id == admin_tier_id)
+            .options(joinedload(AdminTier.admin_tier_permissions)).one()
+        )
+    except NoResultFound:
+        abort(404)
+
+    old_permissions = set(admin_tier.permissions)
+    new_permissions = {
+        _ for _ in request.form.keys()
+        if _ in AdminTierPermission.permission.type.enums
+    }
+
+    remove = old_permissions - new_permissions
+    add = new_permissions - old_permissions
+    print "remove:", remove
+    print "add:", add
+
+    for admin_tier_permission in admin_tier.admin_tier_permissions:
+        if admin_tier_permission.permission in remove:
+            g.db.delete(admin_tier_permission)
+
+    for permission in add:
+        admin_tier.permissions.append(permission)
+
+    return redirect(
+        request.headers.get("Referer")
+        or url_for("admin_tier_get", admin_tier_id=admin_tier_id)
     )
 
 

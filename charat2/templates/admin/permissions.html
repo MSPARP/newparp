@@ -14,7 +14,7 @@
         <tbody>
             {% for admin_tier in admin_tiers: %}
             <tr>
-                <td>{{admin_tier.name}}</td>
+                <td><a href="{{url_for("admin_admin_tier_get", admin_tier_id=admin_tier.id)}}">{{admin_tier.name}}</a></td>
                 {% for permission in AdminTierPermission.permission.type.enums: %}
                 <td>{{"✓" if permission in admin_tier.permissions else ""}}</td>
                 {% endfor %}
