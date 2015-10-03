@@ -191,6 +191,7 @@ app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", ad
 app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
 
 make_rules("admin", "/admin/permissions", admin.permissions, formats=True)
+app.add_url_rule("/admin/permissions/new", "admin_new_admin_tier", admin.new_admin_tier, methods=("POST",))
 make_rules("admin", "/admin/permissions/<admin_tier_id>", admin.admin_tier_get, formats=True)
 app.add_url_rule("/admin/permissions/<admin_tier_id>", "admin_admin_tier_post", admin.admin_tier_post, methods=("POST",))
 

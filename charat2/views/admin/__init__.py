@@ -307,6 +307,17 @@ def permissions(fmt=None):
     )
 
 
+@use_db
+@permission_required("permissions")
+def new_admin_tier():
+    if not request.form.get("name"):
+        abort(400)
+    admin_tier = AdminTier(name=request.form["name"][:50])
+    g.db.add(admin_tier)
+    g.db.flush()
+    return redirect(url_for("admin_admin_tier_get", admin_tier_id=admin_tier.id))
+
+
 @alt_formats({"json"})
 @use_db
 @permission_required("permissions")
