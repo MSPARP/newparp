@@ -15,6 +15,9 @@
         {% if g.user.has_permission("user_list"): %}
         <li><a href="{{url_for("admin_user_list")}}">Full user list</a></li>
         {% endif %}
+        {% if g.user.has_permission("permissions"): %}
+        <li><a href="{{url_for("admin_permissions")}}">Permissions</a></li>
+        {% endif %}
         {% if g.user.has_permission("groups"): %}
         <li><a href="{{url_for("admin_groups")}}">Full group chat list</a></li>
         {% endif %}

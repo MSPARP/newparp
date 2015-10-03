@@ -18,6 +18,7 @@ Contents:
 	2. Searching
 	3. Group chats
 	4. Your chats
+	5. Admin
 4. Chat window
 	1. Topbar and info panel
 	2. PM chat list
@@ -212,6 +213,10 @@ input:invalid + .pattern_error { display: inline; color: #f00; }
 /* 3.4. Your chats */
 
 .unread { font-style: italic; }
+
+/* 3.5. Admin */
+
+#permissions_table td:not(:first-child) { text-align: center; }
 
 /* 4. Chat window */
 

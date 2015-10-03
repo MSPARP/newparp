@@ -963,11 +963,11 @@ class AdminTierPermission(Base):
     __tablename__ = "admin_tier_permissions"
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"), primary_key=True)
     permission = Column(Enum(
-        u"permissions",
         u"search_characters",
         u"announcements",
         u"broadcast",
         u"user_list",
+        u"permissions",
         u"groups",
         u"log",
         u"spamless",

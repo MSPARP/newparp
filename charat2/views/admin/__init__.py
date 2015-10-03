@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required, permission_required
-from charat2.model import AdminLogEntry, AdminTier, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -162,7 +162,7 @@ def user_list(fmt=None, page=1):
     if fmt == "json":
         return jsonify({
             "total": user_count,
-            "users": [_.to_dict(include_options=True) for _ in users],
+            "users": [_.to_dict() for _ in users],
         })
 
     paginator = paginate.Page(
@@ -282,6 +282,29 @@ def user_set_admin_tier(username):
         user.admin_tier_id = None
 
     return redirect(url_for("admin_user", username=user.username))
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("permissions")
+def permissions_get(fmt=None):
+
+    admin_tiers = (
+        g.db.query(AdminTier)
+        .options(joinedload(AdminTier.admin_tier_permissions))
+        .order_by(AdminTier.id).all()
+    )
+
+    if fmt == "json":
+        return jsonify({
+            "admin_tiers": [_.to_dict() for _ in admin_tiers],
+        })
+
+    return render_template(
+        "admin/permissions.html",
+        AdminTierPermission=AdminTierPermission,
+        admin_tiers=admin_tiers,
+    )
 
 
 @alt_formats({"json"})

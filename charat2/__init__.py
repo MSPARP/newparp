@@ -190,6 +190,8 @@ make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
 
+make_rules("admin", "/admin/permissions", admin.permissions_get, formats=True)
+
 make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
