@@ -19,7 +19,7 @@
         {% endfor %}
     </nav>
 
-    <form action="{{request.path}}" method="get">
+    <form action="{{url_for("admin_user_list")}}" method="get">
         {% if request.args.group %}<input type="hidden" name="group" value="{{ request.args.group }}">{% endif %}
         <p>Username: <input type="text" name="username" value="{{ request.args.username }}"></p>
         <p>IP address: <input type="text" name="ip" value="{{ request.args.ip }}"></p>
