@@ -312,7 +312,7 @@ def permissions(fmt=None):
 def new_admin_tier():
     if not request.form.get("name"):
         abort(400)
-    admin_tier = AdminTier(name=request.form["name"][:50])
+    admin_tier = AdminTier(name=request.form["name"].strip()[:50])
     g.db.add(admin_tier)
     g.db.flush()
     return redirect(url_for("admin_admin_tier_get", admin_tier_id=admin_tier.id))
@@ -366,6 +366,9 @@ def admin_tier_post(admin_tier_id, fmt=None):
         )
     except NoResultFound:
         abort(404)
+
+    if request.form.get("name"):
+        admin_tier.name = request.form["name"].strip()[:50]
 
     old_permissions = set(admin_tier.permissions)
     new_permissions = {
