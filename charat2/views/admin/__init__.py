@@ -281,7 +281,10 @@ def user_set_admin_tier(username):
     else:
         user.admin_tier_id = None
 
-    return redirect(url_for("admin_user", username=user.username))
+    return redirect(
+        request.headers.get("Referer")
+        or url_for("admin_user", username=user.username)
+    )
 
 
 @alt_formats({"json"})
