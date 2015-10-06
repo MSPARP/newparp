@@ -277,9 +277,19 @@ def user_set_admin_tier(username):
             admin_tier = g.db.query(AdminTier).filter(AdminTier.id == request.form["admin_tier"]).one()
         except NoResultFound:
             abort(404)
-        user.admin_tier_id = admin_tier.id
+        new_admin_tier_id = admin_tier.id
     else:
-        user.admin_tier_id = None
+        new_admin_tier_id = None
+
+    if new_admin_tier_id != user.admin_tier_id:
+        g.db.add(AdminLogEntry(
+            action_user=g.user,
+            type="user_set_admin_tier",
+            description=admin_tier.name if new_admin_tier_id else None,
+            affected_user=user,
+        ))
+
+    user.admin_tier_id = new_admin_tier_id
 
     return redirect(
         request.headers.get("Referer")
