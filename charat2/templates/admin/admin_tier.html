@@ -57,5 +57,9 @@
     {% else: %}
     <p>No users.</p>
     {% endif %}
+    <form action="{{url_for("admin_admin_tier_add_user", admin_tier_id=admin_tier.id)}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
+        <p><label>Username: <input type="text" name="username"></label> <button type="submit">Add</button></p>
+    </form>
 {% endblock %}
 

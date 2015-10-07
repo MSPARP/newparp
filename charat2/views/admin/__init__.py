@@ -364,10 +364,9 @@ def admin_tier_get(admin_tier_id, fmt=None):
     )
 
 
-@alt_formats({"json"})
 @use_db
 @permission_required("permissions")
-def admin_tier_post(admin_tier_id, fmt=None):
+def admin_tier_post(admin_tier_id):
 
     if admin_tier_id == 1:
         abort(404)
@@ -404,6 +403,39 @@ def admin_tier_post(admin_tier_id, fmt=None):
     return redirect(
         request.headers.get("Referer")
         or url_for("admin_tier_get", admin_tier_id=admin_tier_id)
+    )
+
+
+@use_db
+@permission_required("permissions")
+def admin_tier_add_user(admin_tier_id):
+
+    if not request.form.get("username"):
+        abort(404)
+
+    try:
+        admin_tier = g.db.query(AdminTier).filter(AdminTier.id == admin_tier_id).one()
+    except NoResultFound:
+        abort(404)
+
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == request.form["username"].lower()).one()
+    except NoResultFound:
+        abort(404)
+
+    if admin_tier.id != user.admin_tier_id:
+        g.db.add(AdminLogEntry(
+            action_user=g.user,
+            type="user_set_admin_tier",
+            description=admin_tier.name if admin_tier.id else None,
+            affected_user=user,
+        ))
+
+    user.admin_tier_id = admin_tier.id
+
+    return redirect(
+        request.headers.get("Referer")
+        or url_for("admin_admin_tier_get", admin_tier_id=admin_tier.id)
     )
 
 
