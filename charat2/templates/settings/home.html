@@ -12,16 +12,6 @@
         <p><label><input type="checkbox" name="typing_notifications"{% if g.user.typing_notifications: %} checked="checked"{% endif %}> Typing notifications</label></p>
         <button type="submit">Save</button>
     </form>
-    <h2>Time zone</h2>
-    <form action="{{url_for("settings_timezone")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <select name="timezone">
-{% for timezone in timezones: %}
-            <option{% if timezone == g.user.timezone or (timezone == "UTC" and g.user.timezone == None)  %} selected="selected"{% endif %}>{{timezone.replace("_", " ")}}</option>
-{% endfor %}
-        </select>
-        <button type="submit">Save</button>
-    </form>
     <h2>Chat theme</h2>
     <form action="{{url_for("settings_theme")}}" method="post">
         <input type="hidden" name="token" value="{{g.csrf_token}}">
@@ -29,6 +19,16 @@
             <option value=""{% if g.user.theme == None %} selected="selected"{% endif %}>Default</option>
 {% for theme, name in themes.items(): %}
             <option value="{{theme}}"{% if theme == g.user.theme %} selected="selected"{% endif %}>{{name}}</option>
+{% endfor %}
+        </select>
+        <button type="submit">Save</button>
+    </form>
+    <h2>Time zone</h2>
+    <form action="{{url_for("settings_timezone")}}" method="post">
+        <input type="hidden" name="token" value="{{g.csrf_token}}">
+        <select name="timezone">
+{% for timezone in timezones: %}
+            <option{% if timezone == g.user.timezone or (timezone == "UTC" and g.user.timezone == None)  %} selected="selected"{% endif %}>{{timezone.replace("_", " ")}}</option>
 {% endfor %}
         </select>
         <button type="submit">Save</button>

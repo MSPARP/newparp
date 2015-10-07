@@ -10,7 +10,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import account, admin, errors, rp
+from charat2.views import account, admin, errors, rp, settings
 from charat2.views.admin import spamless
 from charat2.views.rp import (
     chat, chat_api, chat_list, characters, request_search, roulette, search,
@@ -74,10 +74,10 @@ app.add_url_rule("/register", "register_post", account.register_post, methods=("
 app.add_url_rule("/reset_password", "reset_password", account.reset_password_get, methods=("GET",))
 app.add_url_rule("/reset_password", "reset_password_post", account.reset_password_post, methods=("POST",))
 
-app.add_url_rule("/settings", "settings", account.settings_get, methods=("GET",))
-app.add_url_rule("/settings", "settings_post", account.settings_post, methods=("POST",))
-app.add_url_rule("/settings/timezone", "settings_timezone", account.settings_timezone, methods=("POST",))
-app.add_url_rule("/settings/theme", "settings_theme", account.settings_theme, methods=("POST",))
+app.add_url_rule("/settings", "settings", settings.home_get, methods=("GET",))
+app.add_url_rule("/settings", "settings_post", settings.home_post, methods=("POST",))
+app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, methods=("POST",))
+app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
 
 # 2. Chats list
 
