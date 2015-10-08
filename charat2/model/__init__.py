@@ -4,6 +4,7 @@ import os
 import sys
 import time
 
+from bcrypt import gensalt, hashpw
 from pytz import timezone, utc
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
@@ -155,6 +156,14 @@ class User(Base):
 
     def __repr__(self):
         return "<User #%s: %s>" % (self.id, self.username)
+
+    def set_password(self, password):
+        if not password:
+            raise ValueError("Password can't be blank.")
+        self.password = hashpw(password.encode("utf8"), gensalt())
+
+    def check_password(self, password):
+        return hashpw(password.encode("utf8"), self.password.encode()) == self.password
 
     @property
     def is_admin(self):

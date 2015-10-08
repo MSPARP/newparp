@@ -42,10 +42,7 @@ def log_in_post(fmt=None):
         return redirect(referer_or_home() + "?log_in_error=no_user")
 
     # Check password.
-    if hashpw(
-        request.form["password"].encode("utf8"),
-        user.password.encode()
-    ) != user.password:
+    if not user.check_password(request.form["password"]):
         if fmt == "json":
             return jsonify({"error": "wrong_password"}), 400
         return redirect(referer_or_home() + "?log_in_error=wrong_password")
@@ -112,7 +109,6 @@ def register_post():
 
     new_user = User(
         username=username,
-        password=hashpw(request.form["password"].encode("utf8"), gensalt()),
         secret_question=request.form["secret_question"][:50],
         secret_answer=hashpw(
             secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
@@ -123,6 +119,7 @@ def register_post():
         #group="active",
         last_ip=request.headers["X-Forwarded-For"],
     )
+    new_user.set_password(request.form["password"])
     g.db.add(new_user)
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id)
@@ -175,7 +172,7 @@ def reset_password_post():
     if request.form["password"] != request.form["password_again"]:
         return render_template("account/secret_question.html", user=user, error="passwords_didnt_match")
 
-    user.password = hashpw(request.form["password"].encode("utf8"), gensalt())
+    user.set_password(request.form["password"])
 
     return redirect(url_for("log_in"))
 
