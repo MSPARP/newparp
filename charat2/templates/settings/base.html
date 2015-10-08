@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content: %}
+    <h2>Settings</h2>
+    <nav id="subnav">
+        {% if request.url_rule.endpoint == "settings": %}
+        Chat settings
+        {% else %}
+        <a href="{{url_for("settings")}}">Chat settings</a>
+        {% endif %}
+        {% if request.url_rule.endpoint in ("settings_log_in_details", "settings_change_password"): %}
+        Log in details
+        {% else %}
+        <a href="{{url_for("settings_log_in_details")}}">Log in details</a>
+        {% endif %}
+    </nav>
+{% endblock %}
+

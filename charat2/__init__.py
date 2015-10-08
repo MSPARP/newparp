@@ -78,6 +78,8 @@ app.add_url_rule("/settings", "settings", settings.home_get, methods=("GET",))
 app.add_url_rule("/settings", "settings_post", settings.home_post, methods=("POST",))
 app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, methods=("POST",))
 app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
+app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
+app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
 
 # 2. Chats list
 

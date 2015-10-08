@@ -250,13 +250,13 @@ var msparp = (function() {
 		// Registration
 		"register": function() {
 			$("#register_show_password_input").change(function(e) {
-				$("#register_password_input, #register_password_again_input").attr("type", this.checked ? "text" : "password")
+				$("#register_password_input, #register_password_again_input").attr("type", this.checked ? "text" : "password");
 			});
 		},
 		// Logging in
 		"log_in": function() {
 			$("#log_in_show_password_input").change(function(e) {
-				$("#log_in_password_input").attr("type", this.checked ? "text" : "password")
+				$("#log_in_password_input").attr("type", this.checked ? "text" : "password");
 			});
 		},
 		// Homepage
@@ -317,6 +317,12 @@ var msparp = (function() {
 		"search_character": function() {
 			initialize_character_form();
 			$("#text_preview_input").keyup(function() { $("#text_preview").text(this.value); });
+		},
+		// Settings: log in details
+		"settings_log_in_details": function() {
+			$("#change_password_show_password").change(function(e) {
+				$("#change_password_old_password, #change_password_new_password, #change_password_new_password_again").attr("type", this.checked ? "text" : "password");
+			});
 		},
 		// Chat window
 		"chat": function(chat, user, character_shortcuts, latest_message_id, latest_time, token) {

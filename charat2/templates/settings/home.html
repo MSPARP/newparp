@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends "settings/base.html" %}
 {% block title: %}Settings - {% endblock %}
 {% block content: %}
+    {{ super() }}
     <h2>Default settings for new chats</h2>
     <form action="{{url_for("settings_post")}}" method="post">
         <input type="hidden" name="token" value="{{g.csrf_token}}">

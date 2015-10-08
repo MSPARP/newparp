@@ -70,3 +70,30 @@ def theme():
         return "", 204
     return redirect(url_for("settings"))
 
+
+@use_db
+@log_in_required
+def log_in_details():
+    return render_template("settings/log_in_details.html")
+
+
+@use_db
+@log_in_required
+def change_password():
+
+    if (
+        not request.form.get("old_password")
+        or not request.form.get("new_password")
+        or not request.form.get("new_password_again")
+    ):
+        return render_template("settings/log_in_details.html", error="blank_password")
+        return redirect(url_for("settings_log_in_details"))
+
+    if request.form["new_password"] != request.form["new_password_again"]:
+        return render_template("settings/log_in_details.html", error="passwords_didnt_match")
+
+    if not g.user.check_password(request.form["old_password"]):
+        return render_template("settings/log_in_details.html", error="wrong_password")
+
+    return redirect(url_for("settings_log_in_details", saved="password"))
+
