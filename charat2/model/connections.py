@@ -49,7 +49,9 @@ def redis_connect():
     g.csrf_token = g.redis.get("session:%s:csrf" % g.session_id)
     if g.csrf_token is None:
         g.csrf_token = str(uuid4())
-        g.redis.set("session:%s:csrf" % g.session_id, g.csrf_token)
+        g.redis.set("session:%s:csrf" % g.session_id, g.csrf_token, 2592000)
+    else:
+        g.redis.expire("session:%s:csrf" % g.session_id, 2592000)
 
 
 def redis_disconnect(response):
