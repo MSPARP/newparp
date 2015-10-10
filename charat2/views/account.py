@@ -11,7 +11,7 @@ from charat2.helpers import alt_formats
 from charat2.helpers.auth import not_logged_in_required
 from charat2.model import User
 from charat2.model.connections import use_db
-from charat2.model.validators import username_validator, email_validator, reserved_usernames, secret_answer_replacer
+from charat2.model.validators import username_validator, email_validator, reserved_usernames
 
 
 def referer_or_home():
@@ -109,11 +109,6 @@ def register_post():
 
     new_user = User(
         username=username,
-        secret_question=request.form["secret_question"][:50],
-        secret_answer=hashpw(
-            secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
-            gensalt(),
-        ),
         email_address=email_address if email_address != "" else None,
         # XXX uncomment this when we release it to the public.
         #group="active",
@@ -131,48 +126,4 @@ def register_post():
     if redirect_url == url_for("register", _external=True):
         return redirect(url_for("home"))
     return redirect(redirect_url)
-
-
-@not_logged_in_required
-@use_db
-def reset_password_get():
-    username = request.args.get("username", "").strip()[:50].lower()
-    if not username:
-        return render_template("account/reset_password.html")
-    try:
-        user = g.db.query(User).filter(func.lower(User.username) == username).one()
-    except NoResultFound:
-        return render_template("account/reset_password.html", error="no_user")
-    return render_template("account/secret_question.html", user=user)
-
-
-@not_logged_in_required
-@use_db
-def reset_password_post():
-
-    try:
-        user = g.db.query(User).filter(
-            func.lower(User.username) == request.form["username"].lower(),
-        ).one()
-    except NoResultFound:
-        abort(404)
-
-    # Verify secret answer.
-    if hashpw(
-        secret_answer_replacer.sub("", request.form["secret_answer"].lower()).encode("utf8"),
-        user.secret_answer.encode(),
-    ) != user.secret_answer:
-        return render_template("account/secret_question.html", user=user, error="wrong_answer")
-
-    # Don't accept a blank password.
-    if request.form["password"] == "":
-        return render_template("account/secret_question.html", user=user, error="blank")
-
-    # Make sure the two passwords match.
-    if request.form["password"] != request.form["password_again"]:
-        return render_template("account/secret_question.html", user=user, error="passwords_didnt_match")
-
-    user.set_password(request.form["password"])
-
-    return redirect(url_for("log_in"))
 

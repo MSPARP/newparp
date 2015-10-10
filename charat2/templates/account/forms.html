@@ -37,14 +37,6 @@
                     <input type="email" name="email_address" id="register_email_address_input" maxlength="100">
                 </p>
                 <p>
-                    <label for="register_secret_question_input">Password recovery question:</label>
-                    <input type="text" name="secret_question" id="register_secret_question_input" maxlength="50" required>
-                </p>
-                <p>
-                    <label for="register_secret_answer_input">Password recovery answer:</label>
-                    <input type="text" name="secret_answer" id="register_secret_answer_input" maxlength="50" required>
-                </p>
-                <p>
                     <label>Is Gamquius canon?</label>
                     <span><label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></span>
                 </p>
@@ -77,6 +69,6 @@
                     <input type="checkbox" id="log_in_show_password_input">
                 </p>
             </div>
-            <p><button type="submit">Log in</button> <a href="{{url_for("reset_password")}}">Forgotten your password?</a></p>
+            <p><button type="submit">Log in</button></p>
         </form>
 {% endmacro %}

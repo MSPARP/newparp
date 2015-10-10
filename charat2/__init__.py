@@ -71,8 +71,6 @@ app.add_url_rule("/log_in.<fmt>", "log_in_post", account.log_in_post, methods=("
 app.add_url_rule("/log_out", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register_get, methods=("GET",))
 app.add_url_rule("/register", "register_post", account.register_post, methods=("POST",))
-app.add_url_rule("/reset_password", "reset_password", account.reset_password_get, methods=("GET",))
-app.add_url_rule("/reset_password", "reset_password_post", account.reset_password_post, methods=("POST",))
 
 app.add_url_rule("/settings", "settings", settings.home_get, methods=("GET",))
 app.add_url_rule("/settings", "settings_post", settings.home_post, methods=("POST",))
