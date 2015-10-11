@@ -8,6 +8,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required, permission_required
@@ -295,6 +296,28 @@ def user_set_admin_tier(username):
         request.headers.get("Referer")
         or url_for("admin_user", username=user.username)
     )
+
+
+@use_db
+@permission_required("user_list")
+def user_reset_password_get(username):
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
+    except NoResultFound:
+        abort(404)
+    return render_template("admin/user_reset_password.html", user=user)
+
+
+@use_db
+@permission_required("user_list")
+def user_reset_password_post(username):
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
+    except NoResultFound:
+        abort(404)
+    new_password = str(uuid4())
+    user.set_password(new_password)
+    return render_template("admin/user_reset_password_done.html", user=user, new_password=new_password)
 
 
 @alt_formats({"json"})

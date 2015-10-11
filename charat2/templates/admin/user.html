@@ -38,6 +38,10 @@
             </tr>
             {% endif %}
             <tr>
+                <td>Password</td>
+                <td><a href="{{url_for("admin_user_reset_password", username=user.username)}}">Reset password</a></td>
+            </tr>
+            <tr>
                 <td>Email address</td>
                 <td>{{user.email_address}}</td>
             </tr>

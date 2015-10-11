@@ -189,6 +189,8 @@ make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
 make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
+app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password", admin.user_reset_password_get, methods=("GET",))
+app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password_post", admin.user_reset_password_post, methods=("POST",))
 
 make_rules("admin", "/admin/permissions", admin.permissions, formats=True)
 app.add_url_rule("/admin/permissions/new", "admin_new_admin_tier", admin.new_admin_tier, methods=("POST",))
