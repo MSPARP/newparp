@@ -299,7 +299,7 @@ def user_set_admin_tier(username):
 
 
 @use_db
-@permission_required("user_list")
+@permission_required("reset_password")
 def user_reset_password_get(username):
     try:
         user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
@@ -309,7 +309,7 @@ def user_reset_password_get(username):
 
 
 @use_db
-@permission_required("user_list")
+@permission_required("reset_password")
 def user_reset_password_post(username):
     try:
         user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()

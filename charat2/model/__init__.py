@@ -977,6 +977,7 @@ class AdminTierPermission(Base):
         u"announcements",
         u"broadcast",
         u"user_list",
+        u"reset_password",
         u"permissions",
         u"groups",
         u"log",

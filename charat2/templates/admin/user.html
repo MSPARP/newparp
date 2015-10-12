@@ -37,10 +37,12 @@
                 {% endif %}
             </tr>
             {% endif %}
+            {% if g.user.has_permission("reset_password"): %}
             <tr>
                 <td>Password</td>
                 <td><a href="{{url_for("admin_user_reset_password", username=user.username)}}">Reset password</a></td>
             </tr>
+            {% endif %}
             <tr>
                 <td>Email address</td>
                 <td>{{user.email_address}}</td>
