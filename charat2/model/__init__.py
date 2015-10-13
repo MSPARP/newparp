@@ -139,6 +139,7 @@ class User(Base):
         Enum(u"sfw", u"nsfw", name="user_search_level"),
         nullable=False, default=u"sfw",
     )
+    search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
     group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=[u"script"])
