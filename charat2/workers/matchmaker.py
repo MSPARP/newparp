@@ -22,6 +22,7 @@ def get_searcher_info(redis, searcher_ids):
             "search_character_id": search_character_id,
             "character": redis.hgetall("searcher:%s:character" % searcher_id),
             "options": redis.hgetall("searcher:%s:options" % searcher_id),
+            "filters": redis.lrange("searcher:%s:filters" % searcher_id, 0, -1),
             "choices": {int(_) for _ in redis.smembers("searcher:%s:choices" % searcher_id)},
         })
     return searchers
@@ -57,6 +58,20 @@ def check_compatibility(redis, s1, s2):
         return False, None
     else:
         options.append(s1["options"]["level"])
+
+    # Check filters.
+    s1_name = s1["character"]["name"].lower()
+    for search_filter in s2["filters"]:
+        print "comparing %s and %s" % (s1_name, search_filter)
+        if search_filter in s1_name:
+            print "FILTER %s MATCHED" % search_filter
+            return False, None
+    s2_name = s2["character"]["name"].lower()
+    for search_filter in s1["filters"]:
+        print "comparing %s and %s" % (s2_name, search_filter)
+        if search_filter in s2_name:
+            print "FILTER %s MATCHED" % search_filter
+            return False, None
 
     if (
         # Match if either person has wildcard, or if they're otherwise compatible.

@@ -100,6 +100,10 @@ def search_post():
     })
     g.redis.expire("searcher:%s:options" % searcher_id, 30)
 
+    if g.user.search_filters:
+        g.redis.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters)
+    g.redis.expire("searcher:%s:filters" % searcher_id, 30)
+
     g.redis.delete("searcher:%s:choices" % searcher_id)
     choices = [_[0] for _ in g.db.query(
         SearchCharacterChoice.search_character_id,
@@ -126,6 +130,7 @@ def search_continue():
     g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
     g.redis.expire("searcher:%s:options" % searcher_id, 30)
+    g.redis.expire("searcher:%s:filters" % searcher_id, 30)
     g.redis.expire("searcher:%s:choices" % searcher_id, 30)
 
     pubsub = g.redis.pubsub()
