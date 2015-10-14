@@ -271,6 +271,33 @@ var msparp = (function() {
 
 			initialize_character_form();
 
+			// Filter list
+			function delete_filter(e) {
+				if (this.parentNode.parentNode.childElementCount == 1) {
+					add_filter();
+				}
+				$(this.parentNode).remove();
+				return false;
+			}
+			function add_filter() {
+				new_item = $("<li><input type=\"text\" name=\"search_filter\" size=\"25\" maxlength=\"50\"> <button type=\"button\" class=\"delete_filter\">x</button></li>");
+				$(new_item).find('.delete_filter').click(delete_filter);
+				$(new_item).appendTo('#filter_list');
+				return false;
+			}
+			function clear_filters(e) {
+				$('#filter_list').empty();
+				return false;
+			}
+			function clear_filters_and_add(e) {
+				$('#filter_list').empty();
+				add_filter();
+				return false;
+			}
+			$('.delete_filter').click(delete_filter);
+			$('#add_filter').click(add_filter);
+			$('#clear_filters').click(clear_filters_and_add);
+
 			// Picky checkboxes
 			$(".character_list legend input").click(function() {
 				var group = $(this).parentsUntil(".toggle_box").last();
@@ -1170,21 +1197,21 @@ var msparp = (function() {
 			});
 			$("#theme_form").submit(function() {
 				var form_data = $(this).serializeArray();
-                var new_theme = $(this).find("select").val();
+				var new_theme = $(this).find("select").val();
 				form_data.push({ name: "chat_id", value: chat.id });
 				$.post(this.action, form_data, function() {
-                    var theme_stylesheet = $("#theme_stylesheet");
-                    if (new_theme) {
-                        var stylesheet_url = "/static/css/themes/" + new_theme + ".css";
-                        if (theme_stylesheet.length == 1) {
-                            theme_stylesheet.attr("href", stylesheet_url);
-                        } else {
-                            $("<link>").attr({id: "theme_stylesheet", rel: "stylesheet", href: stylesheet_url}).appendTo(document.head);
-                        }
-                    } else {
-                        theme_stylesheet.remove();
-                    }
-                });
+					var theme_stylesheet = $("#theme_stylesheet");
+					if (new_theme) {
+						var stylesheet_url = "/static/css/themes/" + new_theme + ".css";
+						if (theme_stylesheet.length == 1) {
+							theme_stylesheet.attr("href", stylesheet_url);
+						} else {
+							$("<link>").attr({id: "theme_stylesheet", rel: "stylesheet", href: stylesheet_url}).appendTo(document.head);
+						}
+					} else {
+						theme_stylesheet.remove();
+					}
+				});
 				return false;
 			});
 

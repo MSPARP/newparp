@@ -105,6 +105,17 @@
                     </select>
                 </p>
             </div>
+            <h3>Filter names containing...</h3>
+            <ul id="filter_list">
+                {% if g.user.search_filters|length != 0: %}
+                {% for filter in g.user.search_filters: %}
+                <li><input type="text" name="search_filter" size="25" maxlength="50" value="{{filter}}"> <button type="button" class="delete_filter">x</button></li>
+                {% endfor %}
+                {% else %}
+                <li><input type="text" name="search_filter" size="25" maxlength="50"> <button type="button" class="delete_filter">x</button></li>
+                {% endif %}
+            </ul>
+            <p><button type="button" id="add_filter">Add</button> <button type="button" id="clear_filters">Clear</button></p>
             <div class="toggle_box">
                 <input type="checkbox" id="toggle_search_for_characters" name="use_picky"{% if picky: %} checked="checked"{% endif %}>
                 <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>

@@ -37,6 +37,15 @@ def search_save():
     if request.form["level"] in User.search_level.type.enums:
         g.user.search_level = request.form["level"]
 
+    search_filters = set()
+    for search_filter in request.form.getlist("search_filter"):
+        search_filter = search_filter.strip().lower()
+        if search_filter:
+            search_filters.add(search_filter)
+        if len(search_filters) == 100:
+            break
+    g.user.search_filters = sorted(list(search_filters))
+
     all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
 
     # Picky checkboxes
