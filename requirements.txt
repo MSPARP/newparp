@@ -17,4 +17,4 @@ tornado-redis==2.4.18
 alembic==0.7.6
 pytz==2015.4
 paginate==0.4.3
-
+requests==2.8.1

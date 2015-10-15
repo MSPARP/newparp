@@ -10,7 +10,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from charat2.views import account, admin, errors, rp, settings
+from charat2.views import account, admin, errors, guides, rp, settings
 from charat2.views.admin import spamless
 from charat2.views.rp import (
     chat, chat_api, chat_list, characters, request_search, roulette, search,
@@ -213,6 +213,10 @@ app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))
 app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip_ban, methods=("POST",))
+
+# 11. Guides
+
+app.add_url_rule("/userguide", "guides_user_guide", guides.user_guide, methods=("GET",))
 
 # 12. Error handlers
 
