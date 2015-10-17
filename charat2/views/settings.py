@@ -95,5 +95,7 @@ def change_password():
     if not g.user.check_password(request.form["old_password"]):
         return render_template("settings/log_in_details.html", error="wrong_password")
 
+    g.user.set_password(request.form["new_password"])
+
     return redirect(url_for("settings_log_in_details", saved="password"))
 
