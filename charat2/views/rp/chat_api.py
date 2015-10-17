@@ -11,6 +11,7 @@ from charat2.helpers.chat import (
     group_chat_only,
     mark_alive,
     send_message,
+    send_temporary_message,
     send_userlist,
     disconnect,
     disconnect_user,
@@ -648,6 +649,69 @@ def save_variables():
 
 @use_db_chat
 @mark_alive
+def request_username():
+    try:
+        chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == g.chat.id,
+            ChatUser.number == int(request.form["number"]),
+        )).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+    # Don't allow another request for a minute.
+    request_key = "request_username:%s:%s:%s" % (g.chat.id, g.user.id, chat_user.user_id)
+    if g.redis.exists(request_key):
+        return "", 204
+    g.redis.setex(request_key, 60, "1")
+    # Allow requests to be accepted for an hour.
+    g.redis.setex("exchange_usernames:%s:%s:%s" % (g.chat.id, chat_user.user_id, g.user.id), 3600, "1")
+    send_temporary_message(
+        g.redis, g.chat, chat_user.user_id, g.chat_user.number, "username_request",
+        "%s would like to exchange usernames." % g.chat_user.name,
+    )
+    return "", 204
+
+
+@use_db_chat
+@mark_alive
+def exchange_usernames():
+    try:
+        chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == g.chat.id,
+            ChatUser.number == int(request.form["number"]),
+        )).options(joinedload(ChatUser.user)).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+    exchange_key = "exchange_usernames:%s:%s:%s" % (g.chat.id, g.user.id, chat_user.user_id)
+    if not g.redis.exists(exchange_key):
+        send_temporary_message(
+            g.redis, g.chat, g.user.id, None, "username",
+            "This request has expired. Please try again later.",
+        )
+        return "", 204
+    send_temporary_message(
+        g.redis, g.chat, chat_user.user_id, g.chat_user.number, "username",
+        "%s is #%s %s. [url=%s]Private message[/url]" % (
+            g.chat_user.name,
+            g.user.id,
+            g.user.username,
+            url_for("rp_chat", url="pm/" + g.user.username, _external=True),
+        ),
+    )
+    send_temporary_message(
+        g.redis, g.chat, g.user.id, chat_user.number, "username",
+        "%s is #%s %s. [url=%s]Private message[/url]" % (
+            chat_user.name,
+            chat_user.user.id,
+            chat_user.user.username,
+            url_for("rp_chat", url="pm/" + chat_user.user.username, _external=True),
+        ),
+    )
+    g.redis.delete(exchange_key)
+    return "", 204
+
+
+@use_db_chat
+@mark_alive
 def look_up_user():
     if not g.user.is_admin:
         abort(403)
@@ -658,22 +722,16 @@ def look_up_user():
         )).options(joinedload(ChatUser.user)).one()
     except (ValueError, NoResultFound):
         abort(404)
-    g.redis.publish("channel:%s:%s" % (g.chat.id, g.user.id), json.dumps({"messages": [{
-        "id": None,
-        "user_number": None,
-        "posted": time.time(),
-        "type": "chat_meta",
-        "color": "000000",
-        "acronym": "",
-        "name": "",
-        "text": "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
+    send_temporary_message(
+        g.redis, g.chat, g.user.id, None, "chat_meta",
+        "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
             chat_user.number,
             url_for("admin_user", username=chat_user.user.username, _external=True),
             chat_user.user.id,
             chat_user.user.username,
             chat_user.user.last_ip,
         ),
-    }]}))
+    )
     return "", 204
 
 

@@ -667,6 +667,16 @@ var msparp = (function() {
 						$.post("/" + chat.url + "/unban", {"number": message.user_number});
 						return false;
 					}).appendTo(p);
+				} else if (message.type == "username_request") {
+					$("<a>").attr("href", "#").addClass("message_action").text("Allow").click(function() {
+						$.post("/chat_api/exchange_usernames", {"chat_id": chat.id, "number": message.user_number});
+						$(this.parentNode.parentNode).remove();
+						return false;
+					}).appendTo(p);
+					$("<a>").attr("href", "#").addClass("message_action").text("Deny").click(function() {
+						$(this.parentNode.parentNode).remove();
+						return false;
+					}).appendTo(p);
 				}
 				$("<span>").addClass("timestamp").text(message_date.toLocaleTimeString()).appendTo(p);
 				p.appendTo(div);
@@ -1127,6 +1137,9 @@ var msparp = (function() {
 							if (reason == null) { return; }
 						}
 						user_action(action_user.meta.number, this.id.substr(7), reason || "");
+					});
+					$("#action_request_username").click(function() {
+						$.post("/chat_api/request_username", { "chat_id": chat.id, "number": action_user.meta.number });
 					});
 					$("#action_look_up_user").click(function() {
 						$.post("/chat_api/look_up_user", { "chat_id": chat.id, "number": action_user.meta.number });

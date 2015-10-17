@@ -61,6 +61,7 @@
         {{#if (can_set_group "silent")}}<li id="action_silent">Silence</li>{{/if}}
         {{#if (can_perform_action "kick")}}<li id="action_kick">Kick</li>{{/if}}
         {{#if (can_perform_action "ban")}}<li id="action_ban">Ban</li>{{/if}}
+        {{#unless is_you}}<li id="action_request_username">Request username</li>{{/unless}}
         {{#if (admin)}}<li id="action_look_up_user">Look up user</li>{{/if}}
         <li id="action_close">Close</li>
     </ul>

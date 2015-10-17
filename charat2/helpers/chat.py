@@ -205,6 +205,19 @@ def send_message(db, redis, message, force_userlist=False):
             )).update({ "last_online": message.posted }, synchronize_session=False)
 
 
+def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
+    redis.publish("channel:%s:%s" % (chat.id, to_id), json.dumps({"messages": [{
+        "id": None,
+        "user_number": user_number,
+        "posted": time.time(),
+        "type": message_type,
+        "color": "000000",
+        "acronym": "",
+        "name": "",
+        "text": text
+    }]}))
+
+
 def get_userlist(db, redis, chat):
     online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat.id))
     # Don't bother querying if the list is empty.
