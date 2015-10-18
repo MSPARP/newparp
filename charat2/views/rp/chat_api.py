@@ -650,6 +650,7 @@ def save_variables():
 @use_db_chat
 @mark_alive
 def request_username():
+
     try:
         chat_user = g.db.query(ChatUser).filter(and_(
             ChatUser.chat_id == g.chat.id,
@@ -657,23 +658,32 @@ def request_username():
         )).one()
     except (ValueError, NoResultFound):
         abort(404)
+
+    # This is pointless.
+    if chat_user == g.chat_user:
+        abort(400)
+
     # Don't allow another request for a minute.
     request_key = "request_username:%s:%s:%s" % (g.chat.id, g.user.id, chat_user.user_id)
     if g.redis.exists(request_key):
         return "", 204
     g.redis.setex(request_key, 60, "1")
+
     # Allow requests to be accepted for an hour.
     g.redis.setex("exchange_usernames:%s:%s:%s" % (g.chat.id, chat_user.user_id, g.user.id), 3600, "1")
+
     send_temporary_message(
         g.redis, g.chat, chat_user.user_id, g.chat_user.number, "username_request",
         "%s would like to exchange usernames." % g.chat_user.name,
     )
+
     return "", 204
 
 
 @use_db_chat
 @mark_alive
 def exchange_usernames():
+
     try:
         chat_user = g.db.query(ChatUser).filter(and_(
             ChatUser.chat_id == g.chat.id,
@@ -681,6 +691,7 @@ def exchange_usernames():
         )).options(joinedload(ChatUser.user)).one()
     except (ValueError, NoResultFound):
         abort(404)
+
     exchange_key = "exchange_usernames:%s:%s:%s" % (g.chat.id, g.user.id, chat_user.user_id)
     if not g.redis.exists(exchange_key):
         send_temporary_message(
@@ -688,6 +699,7 @@ def exchange_usernames():
             "This request has expired. Please try again later.",
         )
         return "", 204
+
     send_temporary_message(
         g.redis, g.chat, chat_user.user_id, g.chat_user.number, "username",
         "%s is #%s %s. [url=%s]Private message[/url]" % (
@@ -697,6 +709,7 @@ def exchange_usernames():
             url_for("rp_chat", url="pm/" + g.user.username, _external=True),
         ),
     )
+
     send_temporary_message(
         g.redis, g.chat, g.user.id, chat_user.number, "username",
         "%s is #%s %s. [url=%s]Private message[/url]" % (
@@ -706,7 +719,9 @@ def exchange_usernames():
             url_for("rp_chat", url="pm/" + chat_user.user.username, _external=True),
         ),
     )
+
     g.redis.delete(exchange_key)
+
     return "", 204
 
 
