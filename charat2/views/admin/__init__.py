@@ -140,7 +140,7 @@ user_orders = OrderedDict([
 @permission_required("user_list")
 def user_list(fmt=None, page=1):
 
-    users = g.db.query(User)
+    users = g.db.query(User).options(joinedload(User.admin_tier))
     users = _filter_users(users)
 
     if request.args.get("order") in user_orders:

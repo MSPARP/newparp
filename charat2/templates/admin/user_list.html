@@ -39,6 +39,7 @@
                 <th>#</th>
                 <th>Username</th>
                 <th>Group</th>
+                <th>Admin tier</th>
                 <th>Created</th>
                 <th>Last online</th>
                 <th>Last IP</th>
@@ -51,6 +52,13 @@
                 <td>{{user.id}}</td>
                 <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
                 <td>{{user.group.capitalize()}}</td>
+                <td>
+                    {% if user.admin_tier: %}
+                    <a href="{{url_for("admin_admin_tier_get", admin_tier_id=user.admin_tier_id)}}">{{user.admin_tier.name}}</a>
+                    {% else: %}
+                    {{user.admin_tier.name}}
+                    {% endif %}
+                </td>
                 <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{user.last_ip}}</td>
