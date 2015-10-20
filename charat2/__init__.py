@@ -139,22 +139,22 @@ make_rules("rp", "/groups", rp.groups, formats=True)
 
 # 8. Chats
 
-make_rules("rp", "/<path:url>", chat.chat, formats=True)
+make_rules("rp", "/<url>", chat.chat, formats=True)
 
 # Push the previous rules to the bottom so it doesn't catch /chats.json, /groups.json etc.
 app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
-make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
+make_rules("rp", "/<url>/log", chat.log, formats=True, paging=True)
 
-make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
-make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
+make_rules("rp", "/<url>/users", chat.users, formats=True, paging=True)
+make_rules("rp", "/<url>/invites", chat.invites, formats=True, paging=True)
 
-app.add_url_rule("/<path:url>/uninvite", "rp_chat_uninvite", chat.uninvite, methods=("POST",))
-app.add_url_rule("/<path:url>/invite", "rp_chat_invite", chat.invite, methods=("POST",))
-app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POST",))
-app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
-app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
+app.add_url_rule("/<url>/uninvite", "rp_chat_uninvite", chat.uninvite, methods=("POST",))
+app.add_url_rule("/<url>/invite", "rp_chat_invite", chat.invite, methods=("POST",))
+app.add_url_rule("/<url>/unban", "rp_chat_unban", chat.unban, methods=("POST",))
+app.add_url_rule("/<url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
+app.add_url_rule("/<url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
 # 9. Chat API
 
