@@ -1,4 +1,4 @@
-from flask import abort, g, render_template, request, url_for
+from flask import abort, g, render_template, redirect, request, url_for
 from functools import wraps
 from sqlalchemy import and_, func
 
@@ -31,7 +31,7 @@ def not_logged_in_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user_id is not None:
-            abort(403)
+            return redirect(url_for("home"))
         return f(*args, **kwargs)
     return decorated_function
 
