@@ -227,7 +227,7 @@ class Character(Base):
     id = Column(Integer, primary_key=True)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    title = Column(Unicode(50), nullable=False)
+    title = Column(Unicode(50), nullable=False, default=u"New character")
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     shortcut = Column(Unicode(15))
 

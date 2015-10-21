@@ -1,65 +1,65 @@
 {% extends "base.html" %}
-{% block title: %}{{character.title if character else "New character"}} - Character creator - {% endblock %}
+{% block title: %}{{character.title}} - Character creator - {% endblock %}
 {% block content: %}
-{% if character: %}
+{% if character.id: %}
     <form action="{{url_for("rp_save_character", character_id=character.id)}}" method="post">
 {% else: %}
     <form action="{{url_for("rp_new_character_post")}}" method="post">
 {% endif %}
         <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title if character else "New character"}}"></h2>
+        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></h2>
         <h2>Roleplay as <select name="search_character_id">
             {% for group in search_character_groups: %}
             <optgroup label="{{group.name}}">
                 {% for search_character in group.characters: %}
-                <option value="{{search_character.id}}"{% if character and search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
+                <option value="{{search_character.id}}"{% if search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
                 {% endfor %}
             </optgroup>
             {% endfor %}
         </select></h2>
-        <p><label for="shortcut_input">Shortcut: /<input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut if character and character.shortcut else ""}}" pattern="^[-a-zA-Z0-9_]+$"><span class="pattern_error"> (shortcuts can only contain letters, numbers, hyphens and underscores)</span></label></p>
-        <p>Type <span id="shortcut_preview">{% if character and character.shortcut: %}"/{{character.shortcut}}"{% else: %}the shortcut{% endif %}</span> to use this character's name and typing quirks for a single line.</p>
+        <p><label for="shortcut_input">Shortcut: /<input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut or ""}}" pattern="^[-a-zA-Z0-9_]+$"><span class="pattern_error"> (shortcuts can only contain letters, numbers, hyphens and underscores)</span></label></p>
+        <p>Type <span id="shortcut_preview">{% if character.shortcut: %}"/{{character.shortcut}}"{% else: %}the shortcut{% endif %}</span> to use this character's name and typing quirks for a single line.</p>
         <h2>With settings</h2>
         <div class="input_table">
             <p>
                 <label for="name_input">Name:</label>
-                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name if character else "anonymous"}}">
+                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name}}">
             </p>
             <p>
                 <label for="acronym_input">Acronym:</label>
-                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym if character else "??"}}">
+                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym}}">
             </p>
             <p>
                 <label for="color_input">Color:</label>
-                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color if character else "000000"}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color if character else "000000"}}">
+                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
             </p>
         </div>
-        <p id="text_preview_container" style="color: #{{character.color if character else "000000"}};">
-            <span id="text_preview_acronym">{% if not character or character.acronym != "": %}{{character.acronym if character else "??"}}: {% endif %}</span><span id="text_preview">{{character.search_character.text_preview if character else search_character_groups[0].characters[0].text_preview}}</span>
+        <p id="text_preview_container" style="color: #{{character.color}};">
+            <span id="text_preview_acronym">{% if character.acronym: %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.search_character.text_preview}}</span>
         </p>
         <h2>Typing quirks</h2>
         <div class="input_table">
             <p>
                 <label>Prefix:</label>
-                <input type="text" name="quirk_prefix" size="50" maxlength="100" value="{{character.quirk_prefix if character else ""}}">
+                <input type="text" name="quirk_prefix" size="50" maxlength="100" value="{{character.quirk_prefix}}">
             </p>
             <p>
                 <label>Suffix:</label>
-                <input type="text" name="quirk_suffix" size="50" maxlength="100" value="{{character.quirk_suffix if character else ""}}">
+                <input type="text" name="quirk_suffix" size="50" maxlength="100" value="{{character.quirk_suffix}}">
             </p>
             <p>
                 <label>Case:</label>
                 <select name="case">
                     {% for value, name in case_options.items()|sort: %}
-                    <option value="{{value}}"{% if (character and value == character.case) or (value == "normal" and not character) %} selected="selected"{% endif %}>{{name}}</option>
+                    <option value="{{value}}"{% if value == character.case %} selected="selected"{% endif %}>{{name}}</option>
                     {% endfor %}
                 </select>
             </p>
         </div>
         <h3>Simple replacements</h3>
         <ul id="replacement_list">
-            {% if character and character.replacements|length != 0: %}
-            {% for replacement in character.replacements: %}
+            {% if replacements: %}
+            {% for replacement in replacements: %}
             <li><input type="text" name="quirk_from" size="10" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
             {% endfor %}
             {% else %}
@@ -69,8 +69,8 @@
         <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
         <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
         <ul id="regex_list">
-            {% if character and character.regexes|length != 0: %}
-            {% for regex in character.regexes: %}
+            {% if regexes: %}
+            {% for regex in regexes: %}
             <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
             {% endfor %}
             {% else %}
@@ -83,15 +83,15 @@
         <div class="input_table">
             <p>
                 <label>Character(s) you're playing:</label>
-                <input type="text" name="character" maxlength="500" value="{{character_tags["character"] if character_tags else ""}}">
+                <input type="text" name="character" maxlength="500" value="{{character_tags["character"]}}">
             </p>
             <p>
                 <label>Fandom(s) they belong to:</label>
-                <input type="text" name="fandom" maxlength="500" value="{{character_tags["fandom"] if character_tags else ""}}">
+                <input type="text" name="fandom" maxlength="500" value="{{character_tags["fandom"]}}">
             </p>
             <p>
                 <label>Gender(s) they identify as:</label>
-                <input type="text" name="gender" maxlength="500" value="{{character_tags["gender"] if character_tags else ""}}">
+                <input type="text" name="gender" maxlength="500" value="{{character_tags["gender"]}}">
             </p>
         </div>
         <button type="submit">Save</button>

@@ -1,3 +1,5 @@
+import json
+
 from flask import g, jsonify, redirect, request, render_template, url_for
 from sqlalchemy.orm import joinedload
 
@@ -29,11 +31,20 @@ def character_list(fmt=None):
 @use_db
 @log_in_required
 def new_character_get():
+
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
+
+    character_defaults = {_.name: _.default.arg for _ in Character.__table__.columns if _.default}
+    character_defaults["search_character"] = search_character_groups[0].characters[0]
+
     return render_template(
         "rp/characters/character.html",
+        character=character_defaults,
+        replacements=[],
+        regexes=[],
+        character_tags={},
         search_character_groups=search_character_groups,
         case_options=case_options,
     )
@@ -63,13 +74,15 @@ def character(character_id, fmt=None):
 
     return render_template(
         "rp/characters/character.html",
-        character=character.to_dict(include_options=True),
-        search_character_groups=search_character_groups,
-        case_options=case_options,
+        character=character,
+        replacements=json.loads(character.replacements),
+        regexes=json.loads(character.regexes),
         character_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)
             for tag_type, tags in character.tags_by_type().iteritems()
         },
+        search_character_groups=search_character_groups,
+        case_options=case_options,
     )
 
 
