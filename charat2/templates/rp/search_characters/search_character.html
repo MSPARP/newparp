@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title: %}{{character.title if character else "New character"}} - Search character creator - {% endblock %}
+{% block title: %}{{character.title or "New search character"}} - Search character creator - {% endblock %}
 {% block content: %}
-{% if character: %}
+{% if character.id: %}
     <form action="{{url_for("rp_save_search_character", id=character.id)}}" method="post">
 {% else: %}
     <form action="{{url_for("rp_new_search_character_post")}}" method="post">
 {% endif %}
         <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title if character else ""}}"></h2>
-{% if not character: %}
+        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></h2>
+{% if not character.id: %}
         <p>In group <select name="group_id">
             {% for group in groups: %}
             <option value="{{group.id}}"{% if request.args["group_id"] == group.id|string: %} selected="selected"{% endif %}>{{group.name}}</option>
@@ -19,47 +19,47 @@
         <div class="input_table">
             <p>
                 <label for="name_input">Name:</label>
-                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name if character else ""}}">
+                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name}}">
             </p>
             <p>
                 <label for="acronym_input">Acronym:</label>
-                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym if character else ""}}">
+                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym}}">
             </p>
             <p>
                 <label for="color_input">Color:</label>
-                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color if character else "000000"}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color if character else "000000"}}">
+                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
             </p>
             <p>
                 <label for="text_preview_input">Preview:</label>
-                <input type="text" id="text_preview_input" name="text_preview" size="50" required value="{{character.text_preview if character else ""}}">
+                <input type="text" id="text_preview_input" name="text_preview" size="50" required value="{{character.text_preview}}">
             </p>
         </div>
-        <p id="text_preview_container" style="color: #{{character.color if character else "000000"}};">
-            <span id="text_preview_acronym">{% if character and character.acronym != "": %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.text_preview if character else ""}}</span>
+        <p id="text_preview_container" style="color: #{{character.color}};">
+            <span id="text_preview_acronym">{% if character.acronym != "": %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.text_preview}}</span>
         </p>
         <h2>Typing quirks</h2>
         <div class="input_table">
             <p>
                 <label>Prefix:</label>
-                <input type="text" name="quirk_prefix" size="50" maxlength="100" value="{{character.quirk_prefix if character else ""}}">
+                <input type="text" name="quirk_prefix" size="50" maxlength="100" value="{{character.quirk_prefix}}">
             </p>
             <p>
                 <label>Suffix:</label>
-                <input type="text" name="quirk_suffix" size="50" maxlength="100" value="{{character.quirk_suffix if character else ""}}">
+                <input type="text" name="quirk_suffix" size="50" maxlength="100" value="{{character.quirk_suffix}}">
             </p>
             <p>
                 <label>Case:</label>
                 <select name="case">
                     {% for value, name in case_options.items()|sort: %}
-                    <option value="{{value}}"{% if (character and value == character.case) or (value == "normal" and not character) %} selected="selected"{% endif %}>{{name}}</option>
+                    <option value="{{value}}"{% if value == character.case: %} selected="selected"{% endif %}>{{name}}</option>
                     {% endfor %}
                 </select>
             </p>
         </div>
         <h3>Simple replacements</h3>
         <ul id="replacement_list">
-            {% if character and character.replacements|length != 0: %}
-            {% for replacement in character.replacements: %}
+            {% if replacements: %}
+            {% for replacement in replacements: %}
             <li><input type="text" name="quirk_from" size="10" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
             {% endfor %}
             {% else %}
@@ -69,8 +69,8 @@
         <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
         <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
         <ul id="regex_list">
-            {% if character and character.regexes|length != 0: %}
-            {% for regex in character.regexes: %}
+            {% if regexes: %}
+            {% for regex in regexes: %}
             <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
             {% endfor %}
             {% else %}

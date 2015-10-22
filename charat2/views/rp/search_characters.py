@@ -42,21 +42,16 @@ def new_search_character_group_post():
 
 @use_db
 @permission_required("search_characters")
-def search_character(id):
-    character = search_character_query(id)
-    return render_template(
-        "rp/search_characters/search_character.html",
-        character=character.to_dict(include_options=True),
-        case_options=case_options,
-    )
-
-
-@use_db
-@permission_required("search_characters")
 def new_search_character_get():
     groups = g.db.query(SearchCharacterGroup).order_by(SearchCharacterGroup.order).all()
+
+    character_defaults = {_.name: _.default.arg for _ in SearchCharacter.__table__.columns if _.default}
+
     return render_template(
         "rp/search_characters/search_character.html",
+        character=character_defaults,
+        replacements=[],
+        regexes=[],
         groups=groups,
         case_options=case_options,
     )
@@ -87,6 +82,19 @@ def new_search_character_post():
     )
     g.db.add(new_search_character)
     return redirect(url_for("rp_search_character_list"))
+
+
+@use_db
+@permission_required("search_characters")
+def search_character(id):
+    character = search_character_query(id)
+    return render_template(
+        "rp/search_characters/search_character.html",
+        character=character,
+        replacements=json.loads(character.replacements),
+        regexes=json.loads(character.regexes),
+        case_options=case_options,
+    )
 
 
 def search_character_json(id):
