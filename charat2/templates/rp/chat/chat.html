@@ -219,9 +219,9 @@
     <p>Did you enjoy this chat? Neither did we.</p>
     <ul>
 {% if chat.type in ("searched", "roulette"): %}
-        <li><a href="http://www.tumblr.com/share/link?name=Check+out+this+chat+I+just+had+on+MSPARP!&url={{url_for("rp_log", url=chat.url, _external=True)}}&tags=msparp" target="_blank">Share the log on Tumblr</a></li>
+        <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=Check+out+this+chat+I+just+had+on+MSPARP!&content={{url_for("rp_log", url=chat.url, _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_log", url=chat.url, _external=True)}}" target="_blank">Share the log on Tumblr</a></li>
 {% elif chat.type == "group": %}
-        <li><a href="http://www.tumblr.com/share/link?name=Check+out+this+chat+I+just+had+on+MSPARP!&url={{url_for("rp_chat", url=chat.url, _external=True)}}&tags=msparp" target="_blank">Share this chat on Tumblr</a></li>
+        <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title={{chat.title}}&content={{url_for("rp_chat", url=chat.url, _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_chat", url=chat.url, _external=True)}}" target="_blank">Share this chat on Tumblr</a></li>
 {% endif %}
         <li><a href="{{url_for("home", mode="search" if g.user.last_search_mode != "search" else None)}}">Character search</a></li>
         <li><a href="{{url_for("home", mode="roulette" if g.user.last_search_mode != "roulette" else None)}}">Roulette</a></li>
