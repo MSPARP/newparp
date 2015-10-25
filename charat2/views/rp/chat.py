@@ -199,7 +199,10 @@ def chat(chat, pm_user, url, fmt=None):
     # Show the last 50 messages.
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
-    ).options(joinedload(Message.chat_user)).order_by(
+    )
+    if not chat_user.show_system_messages:
+        messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
+    messages = messages.options(joinedload(Message.chat_user)).order_by(
         Message.posted.desc(),
     ).limit(50).all()
     messages.reverse()
