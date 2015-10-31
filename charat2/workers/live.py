@@ -100,13 +100,6 @@ class ChatHandler(WebSocketHandler):
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         print "socket opened:", self.id, self.chat.url, self.user.username
-        try:
-            join(redis, self.db, self)
-            self.joined = True
-        except KickedException:
-            self.write_message(json.dumps({"exit": "kick"}))
-            self.close()
-            return
         # Send backlog.
         try:
             after = int(self.request.query_arguments["after"][0])
@@ -118,6 +111,7 @@ class ChatHandler(WebSocketHandler):
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
+        # Subscribe
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
             "user": "channel:%s:%s" % (self.chat_id, self.user_id),
@@ -125,8 +119,17 @@ class ChatHandler(WebSocketHandler):
         }
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
-        self.db.commit()
+        # XXX what happens to this if you're kicked?
         self.redis_listen()
+        # Join here so we receive our join message/disconnect delete before the backlog.
+        try:
+            join(redis, self.db, self)
+            self.joined = True
+        except KickedException:
+            self.write_message(json.dumps({"exit": "kick"}))
+            self.close()
+            return
+        self.db.commit()
 
     def on_message(self, message):
         print "message:", message

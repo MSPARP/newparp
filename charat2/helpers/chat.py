@@ -136,13 +136,18 @@ def join(redis, db, context):
         if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
             send_userlist(db, redis, context.chat)
         else:
-            send_message(db, redis, Message(
-                chat_id=context.chat.id,
-                user_id=context.user.id,
-                type="join",
-                name=context.chat_user.name,
-                text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.acronym),
-            ))
+            last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.id.desc()).first()
+            # If they just disconnected, delete the disconnect message instead.
+            if last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
+                delete_message(db, redis, last_message, force_userlist=True)
+            else:
+                send_message(db, redis, Message(
+                    chat_id=context.chat.id,
+                    user_id=context.user.id,
+                    type="join",
+                    name=context.chat_user.name,
+                    text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.acronym),
+                ))
 
 
 def send_message(db, redis, message, force_userlist=False):
@@ -216,6 +221,15 @@ def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
         "name": "",
         "text": text
     }]}))
+
+
+def delete_message(db, redis, message, force_userlist=False):
+    redis_message = {"delete": [message.id]}
+    if force_userlist:
+        redis_message["users"] = get_userlist(db, redis, message.chat)
+    redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
+    redis.zremrangebyscore("chat:%s" % message.chat_id, message.id, message.id)
+    db.delete(message)
 
 
 def get_userlist(db, redis, chat):

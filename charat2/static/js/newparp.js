@@ -594,6 +594,12 @@ var msparp = (function() {
 					data.messages.forEach(render_message);
 					if (scroll_after_render) { scroll_to_bottom(); }
 				}
+				if (typeof data.delete != "undefined" && data.delete.length != 0) {
+					data.delete.forEach(function(id) {
+						console.log("delete " + id);
+						$("#message_" + id).remove();
+					});
+				}
 				if (user.meta.typing_notifications && typeof data.typing != "undefined") {
 					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
 						if (previous_status_message) {
