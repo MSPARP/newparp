@@ -24,6 +24,7 @@ from charat2.helpers.chat import (
     TooManyPeopleException,
     KickedException,
     authorize_joining,
+    kick_check,
     join,
     get_userlist,
     disconnect,
@@ -100,17 +101,14 @@ class ChatHandler(WebSocketHandler):
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         print "socket opened:", self.id, self.chat.url, self.user.username
-        # Send backlog.
+
         try:
-            after = int(self.request.query_arguments["after"][0])
-        except (KeyError, IndexError, ValueError):
-            after = 0
-        messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
-        self.write_message(json.dumps({
-            "users": get_userlist(self.db, redis, self.chat),
-            "chat": self.chat.to_dict(),
-            "messages": [json.loads(_) for _ in messages],
-        }))
+            kick_check(redis, self)
+        except KickedException:
+            self.write_message(json.dumps({"exit": "kick"}))
+            self.close()
+            return
+
         # Subscribe
         self.channels = {
             "chat": "channel:%s" % self.chat_id,
@@ -119,16 +117,26 @@ class ChatHandler(WebSocketHandler):
         }
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
-        # XXX what happens to this if you're kicked?
         self.redis_listen()
-        # Join here so we receive our join message/disconnect delete before the backlog.
+
+        # Send backlog.
         try:
-            join(redis, self.db, self)
-            self.joined = True
-        except KickedException:
-            self.write_message(json.dumps({"exit": "kick"}))
-            self.close()
-            return
+            after = int(self.request.query_arguments["after"][0])
+        except (KeyError, IndexError, ValueError):
+            after = 0
+        messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
+        self.write_message(json.dumps({
+            "chat": self.chat.to_dict(),
+            "messages": [json.loads(_) for _ in messages],
+        }))
+
+        join_message_sent = join(redis, self.db, self)
+        self.joined = True
+
+        # Send userlist if nothing was sent by join().
+        if not join_message_sent:
+            self.write_message(json.dumps({"users": get_userlist(self.db, redis, self.chat)}))
+
         self.db.commit()
 
     def on_message(self, message):

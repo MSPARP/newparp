@@ -58,9 +58,10 @@ def mark_alive(f):
             except (UnauthorizedException, BannedException, TooManyPeopleException):
                 abort(403)
             try:
-                join(g.redis, g.db, g)
+                kick_check(g.redis, g)
             except KickedException:
                 return jsonify({"exit": "kick"})
+            join(g.redis, g.db, g)
         g.redis.zadd(
             "chats_alive",
             time.time() + 60,
@@ -116,11 +117,13 @@ def authorize_joining(redis, db, context):
         raise TooManyPeopleException
 
 
-def join(redis, db, context):
-
+def kick_check(redis, context):
     # If they've been kicked recently, don't let them in.
     if redis.exists("kicked:%s:%s" % (context.chat.id, context.user.id)):
         raise KickedException
+
+
+def join(redis, db, context):
 
     # Update their last_online.
     context.chat_user.last_online = datetime.now()
@@ -148,6 +151,8 @@ def join(redis, db, context):
                     name=context.chat_user.name,
                     text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.acronym),
                 ))
+
+    return not user_online
 
 
 def send_message(db, redis, message, force_userlist=False):
