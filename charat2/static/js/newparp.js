@@ -361,6 +361,7 @@ var msparp = (function() {
 			var next_chat_url;
 			var user_data = {};
 			var latest_date = new Date(latest_time * 1000);
+			var new_messages = [];
 
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
@@ -598,6 +599,12 @@ var msparp = (function() {
 					data.delete.forEach(function(id) {
 						console.log("delete " + id);
 						$("#message_" + id).remove();
+						// Remove "New messages" text if this was the only message.
+						if (new_messages.length > 0) {
+							var index = new_messages.indexOf(id);
+							if (index != -1) { new_messages.splice(index, 1); }
+							if (new_messages.length == 0) { document.title = original_title; }
+						}
 					});
 				}
 				if (user.meta.typing_notifications && typeof data.typing != "undefined") {
@@ -696,6 +703,7 @@ var msparp = (function() {
 					// Skip notifications if we're ignoring this person.
 					&& user.meta.ignored_numbers.indexOf(message.user_number) == -1
 				) {
+					new_messages.push(message.id);
 					document.title = "New message - " + original_title;
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
 						var text_without_bbcode = bbremove(text);
@@ -707,7 +715,7 @@ var msparp = (function() {
 			// "New message" notification
 			var original_title = document.title;
 			function visibility_handler() {
-				window.setTimeout(function() { document.title = original_title; }, 200);
+				window.setTimeout(function() { new_messages = []; document.title = original_title; }, 200);
 			}
 			if (typeof document.hidden !== "undefined") {
 				document.addEventListener("visibilitychange", visibility_handler);
