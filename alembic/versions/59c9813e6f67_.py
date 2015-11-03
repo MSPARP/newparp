@@ -1,4 +1,4 @@
-"""empty message
+"""Add show_timestamps setting.
 
 Revision ID: 59c9813e6f67
 Revises: fa7e12c88c5

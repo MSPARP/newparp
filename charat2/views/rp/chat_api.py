@@ -616,6 +616,7 @@ def save_variables():
         "desktop_notifications",
         "show_system_messages",
         "show_bbcode",
+        "show_timestamps",
         "show_preview",
         "typing_notifications",
     ]:

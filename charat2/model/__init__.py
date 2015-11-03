@@ -149,6 +149,7 @@ class User(Base):
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
+    show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
@@ -530,6 +531,7 @@ class ChatUser(Base):
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
+    show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
 
@@ -562,6 +564,7 @@ class ChatUser(Base):
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
             show_bbcode=user.show_bbcode,
+            show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
             theme=user.theme,
@@ -589,6 +592,7 @@ class ChatUser(Base):
                 desktop_notifications=user.desktop_notifications,
                 show_system_messages=user.show_system_messages,
                 show_bbcode=user.show_bbcode,
+                show_timestamps=user.show_timestamps,
                 show_preview=user.show_preview,
                 typing_notifications=user.typing_notifications,
                 theme=user.theme,
@@ -600,6 +604,7 @@ class ChatUser(Base):
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
             show_bbcode=user.show_bbcode,
+            show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
             theme=user.theme,
@@ -674,6 +679,7 @@ class ChatUser(Base):
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
             ucd["meta"]["show_system_messages"] = self.show_system_messages
             ucd["meta"]["show_bbcode"] = self.show_bbcode
+            ucd["meta"]["show_timestamps"] = self.show_timestamps
             ucd["meta"]["show_preview"] = self.show_preview
             ucd["meta"]["typing_notifications"] = self.typing_notifications
             ucd["meta"]["theme"] = self.theme

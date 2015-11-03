@@ -360,7 +360,7 @@ var msparp = (function() {
 			var status;
 			var next_chat_url;
 			var user_data = {};
-			var latest_date = new Date(latest_time * 1000);
+			var latest_date = user.meta.show_timestamps ? new Date(latest_time * 1000) : null;
 			var new_messages = [];
 
 			// Websockets
@@ -644,11 +644,14 @@ var msparp = (function() {
 			}
 			function render_message(message) {
 				// XXX yeah you should be using a template here
-				message_date = new Date(message.posted * 1000);
-				if (latest_date.getDate() != message_date.getDate() || latest_date.getMonth() != message_date.getMonth() || latest_date.getFullYear() != message_date.getFullYear()) {
-					$("<h2>").text(message_date.toDateString()).insertBefore(status_bar);
+				// Use initial setting for consistency.
+				if (latest_date) {
+					message_date = new Date(message.posted * 1000);
+					if (latest_date.getDate() != message_date.getDate() || latest_date.getMonth() != message_date.getMonth() || latest_date.getFullYear() != message_date.getFullYear()) {
+						$("<h2>").text(message_date.toDateString()).insertBefore(status_bar);
+					}
+					latest_date = message_date;
 				}
-				latest_date = message_date;
 				var div = $("<div>");
 				if (message.id) {
 					latest_message_id = message.id;
@@ -691,7 +694,9 @@ var msparp = (function() {
 						return false;
 					}).appendTo(p);
 				}
-				$("<span>").addClass("timestamp").text(message_date.toLocaleTimeString()).appendTo(p);
+				if (latest_date) {
+					$("<time>").addClass("timestamp").text(message_date.toLocaleTimeString()).appendTo(p);
+				}
 				p.appendTo(div);
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }

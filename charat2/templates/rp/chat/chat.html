@@ -178,6 +178,7 @@
     <p><label><input type="checkbox" class="variable" id="desktop_notifications"{% if chat_user.desktop_notifications: %} checked="checked"{% endif %}> Desktop notifications</label></p>
     <p><label><input type="checkbox" class="variable" id="show_system_messages"{% if chat_user.show_system_messages: %} checked="checked"{% endif %}> Show system messages</label></p>
     <p><label><input type="checkbox" class="variable" id="show_bbcode"{% if chat_user.show_bbcode: %} checked="checked"{% endif %}> Show BBCode (refresh to apply)</label></p>
+    <p><label><input type="checkbox" class="variable" id="show_timestamps"{% if chat_user.show_timestamps: %} checked="checked"{% endif %}> Show timestamps (refresh to apply)</label></p>
     <p><label><input type="checkbox" class="variable" id="show_preview"{% if chat_user.show_preview: %} checked="checked"{% endif %}> Show preview</label></p>
     <p><label><input type="checkbox" class="variable" id="typing_notifications"{% if chat_user.typing_notifications: %} checked="checked"{% endif %}> Typing notifications</label></p>
     <p><label><input type="checkbox" id="subscribed"{% if chat_user.subscribed: %} checked="checked"{% endif %}> Subscribed</label></p>
@@ -196,7 +197,7 @@
 
 <section id="conversation">
     <p><a href="{{url_for("rp_log", url=chat.url)}}" target="_blank">View log</a></p>
-    {{render_messages(messages)}}
+    {{render_messages(messages, show_timestamps=chat_user.show_timestamps)}}
     <p id="status_bar">&nbsp;</p>
 </section>
 

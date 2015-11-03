@@ -20,6 +20,7 @@ def home_post():
     g.user.desktop_notifications = "desktop_notifications" in request.form
     g.user.show_system_messages = "show_system_messages" in request.form
     g.user.show_bbcode = "show_bbcode" in request.form
+    g.user.show_timestamps = "show_timestamps" in request.form
     g.user.show_preview = "show_preview" in request.form
     g.user.typing_notifications = "typing_notifications" in request.form
     return redirect(url_for("settings"))
