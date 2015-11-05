@@ -824,6 +824,22 @@ var msparp = (function() {
 					},
 				},
 				{
+					"regex": /^username (\d+)$/,
+					"chat_types": "all",
+					"minimum_rank": 0,
+					"description": function(match) {
+						if (parseInt(match[1]) != user.meta.number) {
+							return "Request " + name_from_user_number(parseInt(match[1])) + "'s username.";
+						}
+					},
+					"action": function(match) {
+						var set_user = user_data[parseInt(match[1])];
+						if (set_user && set_user.meta.number != user.meta.number) {
+							$.post("/chat_api/request_username", { "chat_id": chat.id, "number": match[1] });
+						}
+					},
+				},
+				{
 					"regex": /^topic($|\s.*$)/,
 					"chat_types": "group",
 					"minimum_rank": 1,
