@@ -6,7 +6,7 @@ from alembic import command
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.orm.exc import NoResultFound
 
-from charat2.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm
+from charat2.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm, AdminTier, AdminTierPermission
 
 if __name__ == "__main__":
 
@@ -39,3 +39,19 @@ if __name__ == "__main__":
         db.add(special_other)
         db.flush()
     db.commit()
+
+    # Initalise admin tiers if there are no tiers
+    if not db.query(AdminTier).scalar():
+        supertier = AdminTier(
+            name='Hoofbeast tier'
+        )
+        db.add(supertier)
+        db.commit()
+
+        for permission in AdminTierPermission.permission.property.columns[0].type.enums:
+            db.add(AdminTierPermission(
+                admin_tier_id=supertier.id,
+                permission=permission
+            ))
+
+        db.commit()
