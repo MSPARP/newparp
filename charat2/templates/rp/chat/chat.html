@@ -47,6 +47,7 @@
     <li style="color: #{{character.color}};" id="unum_{{meta.number}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
 {{/each}}
 {% endraw %}</script>
+
 <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
     <ul>
         {{#if (can_block)}}<li id="action_block">Block</li>{{/if}}
@@ -65,6 +66,13 @@
         {{#if (admin)}}<li id="action_look_up_user">Look up user</li>{{/if}}
         <li id="action_close">Close</li>
     </ul>
+{% endraw %}</script>
+
+<script id="announce_template" type="text/x-handlebars-template">{% raw %}
+    <div class="announcement">
+        <h2>{{announce.title}}</h2>
+        <p>{{announce.text}}</p>
+    </div>
 {% endraw %}</script>
 
 <section class="sidebar" id="user_list_container">

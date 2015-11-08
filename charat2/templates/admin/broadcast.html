@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 {% block title: %}Broadcast - {% endblock %}
 {% block content: %}
-    <h2>Broadcast</h2>
-    <form action="{{url_for("admin_broadcast")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p>Color: <input type="color" name="color" value="#000000"></p>
-        <p><textarea name="text" rows="10" required></textarea></p>
-        <p><button type="submit">Send</button></p>
-    </form>
+	<h2>Broadcast</h2>
+	<form action="{{url_for("admin_broadcast")}}" method="post">
+		<input type="hidden" name="token" value="{{g.csrf_token}}">
+		<p>
+			<label for="color">Color:</label>
+			<input type="color" name="color" value="#000000">
+		</p>
+		<p>
+			<label for="title">Title:</label>
+			<input type="text" name="title" value="Global Announcement">
+		</p>
+		<p>
+			<label for="important">Header?</label>
+			<input type="checkbox" name="important">
+		</p>
+		<p>
+			<textarea name="text" rows="10" required></textarea>
+		</p>
+		<p><button type="submit">Send</button></p>
+	</form>
 {% endblock %}
 

@@ -63,6 +63,7 @@ def broadcast_get():
 @permission_required("broadcast")
 def broadcast_post():
 
+    title = request.form.get("title", "Global Announcement").strip()
     text = request.form["text"].strip()
     if not text:
         abort(400)
@@ -90,6 +91,8 @@ def broadcast_post():
             "acronym": "",
             "name": "",
             "text": text,
+            "title": title,
+            "important": "important" in request.form
         }]
     })
 
