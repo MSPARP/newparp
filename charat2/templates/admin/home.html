@@ -30,6 +30,7 @@
         {% if g.user.has_permission("ip_bans"): %}
         <li><a href="{{url_for("admin_ip_bans")}}">IP bans</a></li>
         {% endif %}
+        <li><a href="{{url_for("admin_worker_status")}}">Worker status</a></li>
     </ul>
 {% endblock %}
 

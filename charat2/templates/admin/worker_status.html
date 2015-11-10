@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% macro process_list(processes): %}
+    {% if processes: %}
+    <ul>
+        {% for host, port, granted in processes: %}
+        <li>{{host}}:{{port}}{{" (active)" if granted else ""}}</li>
+        {% endfor %}
+    </ul>
+    {% else: %}
+    <p>No processes.</p>
+    {% endif %}
+{% endmacro %}
+{% block title: %}Worker status - {% endblock %}
+{% block content: %}
+    <h2>Worker status</h2>
+    <h3>Reaper</h3>
+    {{process_list(reaper)}}
+    <h3>Matchmaker</h3>
+    {{process_list(matchmaker)}}
+    <h3>Roulette matchmaker</h3>
+    {{process_list(roulette_matchmaker)}}
+    <h3>Spamless</h3>
+    {{process_list(spamless)}}
+{% endblock %}
+

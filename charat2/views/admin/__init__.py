@@ -4,7 +4,7 @@ import time
 
 from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import func
+from sqlalchemy import and_, column, func, table
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
@@ -646,4 +646,34 @@ def delete_ip_ban():
         description="Unbanned %s." % request.form["address"],
     ))
     return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
+
+
+pg_locks = table("pg_locks", column("locktype"), column("classid"), column("objid"), column("pid"), column("granted"))
+pg_stat_activity = table("pg_stat_activity", column("pid"), column("client_addr"), column("client_port"))
+
+
+def _lock_query(objid):
+    return (
+        g.db.query(pg_stat_activity.c.client_addr, pg_stat_activity.c.client_port, pg_locks.c.granted)
+        .select_from(pg_locks)
+        .join(pg_stat_activity, pg_locks.c.pid == pg_stat_activity.c.pid)
+        .filter(and_(
+            pg_locks.c.locktype == "advisory",
+            pg_locks.c.classid == 413,
+            pg_locks.c.objid == objid,
+        ))
+        .order_by(pg_locks.c.granted.desc(), pg_stat_activity.c.client_addr).all()
+    )
+
+
+@use_db
+@admin_required
+def worker_status():
+    return render_template(
+        "admin/worker_status.html",
+        reaper=_lock_query(1),
+        matchmaker=_lock_query(2),
+        roulette_matchmaker=_lock_query(3),
+        spamless=_lock_query(4),
+    )
 
