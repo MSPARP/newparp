@@ -3,7 +3,7 @@
 import time
 
 from redis import StrictRedis
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -12,8 +12,15 @@ from charat2.model import sm, Message, ChatUser
 from charat2.model.connections import redis_pool
 
 if __name__ == "__main__":
+
     db = sm()
+
+    print "Obtaining lock..."
+    db.query(func.pg_advisory_lock(413, 1)).scalar()
+    print "Lock obtained."
+
     redis = StrictRedis(connection_pool=redis_pool)
+
     while True:
 
         current_time = int(time.time())

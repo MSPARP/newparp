@@ -8,7 +8,7 @@ import time
 
 from random import randint
 from redis import StrictRedis
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import send_message
@@ -183,6 +183,10 @@ def halt(signal=None, frame=None):
 
 
 if __name__ == "__main__":
+
+    print "Obtaining lock..."
+    db.query(func.pg_advisory_lock(413, 4)).scalar()
+    print "Lock obtained."
 
     load_lists()
 

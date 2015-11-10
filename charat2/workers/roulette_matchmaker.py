@@ -80,7 +80,7 @@ def get_character_info(db, searcher):
 
 if __name__ == "__main__":
     run_matchmaker(
-        "roulette_searchers", "roulette", get_searcher_info, check_compatibility,
-        RouletteChat, get_character_info,
+        3, "roulette_searchers", "roulette", get_searcher_info,
+        check_compatibility, RouletteChat, get_character_info,
     )
 

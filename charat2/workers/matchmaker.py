@@ -91,7 +91,7 @@ def get_character_info(db, searcher):
 
 if __name__ == "__main__":
     run_matchmaker(
-        "searchers", "searcher", get_searcher_info, check_compatibility,
-        SearchedChat, get_character_info,
+        2, "searchers", "searcher", get_searcher_info,
+        check_compatibility, SearchedChat, get_character_info,
     )
 

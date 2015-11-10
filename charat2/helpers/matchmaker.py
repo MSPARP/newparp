@@ -20,8 +20,8 @@ option_messages = {
 
 
 def run_matchmaker(
-    searchers_key, searcher_prefix, get_searcher_info, check_compatibility,
-    ChatClass, get_character_info,
+    lock_id, searchers_key, searcher_prefix, get_searcher_info,
+    check_compatibility, ChatClass, get_character_info,
 ):
 
     # XXX get log level from stdin
@@ -29,6 +29,11 @@ def run_matchmaker(
     root.setLevel(logging.DEBUG)
 
     db = sm()
+
+    print "Obtaining lock..."
+    db.query(func.pg_advisory_lock(413, lock_id)).scalar()
+    print "Lock obtained."
+
     redis = StrictRedis(connection_pool=redis_pool)
 
     searcher_ids = redis.smembers(searchers_key)
