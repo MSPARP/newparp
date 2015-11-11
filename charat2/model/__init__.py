@@ -36,7 +36,6 @@ from sqlalchemy import (
 engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
-    pool_recycle=3600,
     echo="ECHO" in os.environ or "--debug" in sys.argv,
 )
 
