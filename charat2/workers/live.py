@@ -13,7 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from tornado.gen import engine, Task
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
-from tornado.web import Application
+from tornado.web import Application, RequestHandler
 from tornado.websocket import WebSocketHandler
 from tornadoredis import Client
 from uuid import uuid4
@@ -30,7 +30,7 @@ from charat2.helpers.chat import (
     disconnect,
     send_quit_message,
 )
-from charat2.model import sm, AnyChat, Ban, ChatUser, Message, User
+from charat2.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
 from charat2.model.connections import redis_pool
 
 redis = StrictRedis(connection_pool=redis_pool)
@@ -208,10 +208,27 @@ def shutdown():
             ioloop.stop()
     stop_loop()
 
+class HealthHandler(RequestHandler):
+    def prepare(self):
+        self.db = sm()
+
+    def get(self):
+        redis.set("health", 1)
+        self.db.query(SearchCharacter).first()
+        self.write("ok")
+
+    def finish(self, *args, **kwargs):
+        if hasattr(self, "db"):
+            self.db.close()
+            del self.db
+        super(HealthHandler, self).finish(*args, **kwargs)
 
 if __name__ == "__main__":
 
-    application = Application([(r"/(\d+)", ChatHandler)])
+    application = Application([
+        (r"/(\d+)", ChatHandler),
+        (r"/health", HealthHandler)
+    ])
 
     http_server = HTTPServer(application)
     http_server.listen(8000)
