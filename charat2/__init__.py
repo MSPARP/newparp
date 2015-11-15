@@ -10,6 +10,7 @@ from charat2.model.connections import (
     redis_disconnect,
     set_cookie,
 )
+from charat2 import views
 from charat2.views import account, admin, errors, guides, rp, settings
 from charat2.views.admin import spamless
 from charat2.views.rp import (
@@ -52,6 +53,8 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
 
 
 # 1. Home/account
+
+app.add_url_rule("/health", "health", views.health, methods=("GET",))
 
 app.add_url_rule("/", "home", rp.home, methods=("GET",))
 
