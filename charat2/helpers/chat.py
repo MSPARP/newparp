@@ -141,7 +141,7 @@ def join(redis, db, context):
         else:
             last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.id.desc()).first()
             # If they just disconnected, delete the disconnect message instead.
-            if last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
+            if last_message is not None and last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
                 delete_message(db, redis, last_message, force_userlist=True)
             else:
                 send_message(db, redis, Message(
