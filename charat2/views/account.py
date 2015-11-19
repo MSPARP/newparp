@@ -88,8 +88,10 @@ def register_post():
 
     # Check email address against email_validator.
     # Silently truncate it because the only way it can be longer is if they've hacked the front end.
-    email_address = request.form["email_address"].strip()[:100]
-    if email_address != "" and email_validator.match(email_address) is None:
+    email_address = request.form.get("email_address").strip()[:100]
+    if not email_address:
+        return redirect(referer_or_home() + "?register_error=blank_email")
+    if email_validator.match(email_address) is None:
         return redirect(referer_or_home() + "?register_error=invalid_email")
 
     # Check username against username_validator.

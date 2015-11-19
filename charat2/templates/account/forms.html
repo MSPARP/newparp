@@ -13,6 +13,8 @@
             <p class="error">Usernames can only contain letters, numbers, hyphens and underscores.</p>
             {% elif request.args["register_error"] == "username_taken": %}
             <p class="error">That username has already been taken.</p>
+            {% elif request.args["register_error"] == "blank_email": %}
+            <p class="error">E-mail address is required.</p>
             {% elif request.args["register_error"] == "invalid_email": %}
             <p class="error">That doesn't look like a valid e-mail address.</p>
             {% endif %}
@@ -35,11 +37,11 @@
                     <input type="checkbox" id="register_show_password_input">
                 </p>
                 <p>
-                    <label for="register_email_address_input">E-mail address (Required):</label>
+                    <label for="register_email_address_input">E-mail address (required):</label>
                     <input type="email" name="email_address" id="register_email_address_input" maxlength="100">
                 </p>
                 <p>
-                    <label>Are you a Robot?</label>
+                    <label>Are you a robot?</label>
                     <span><label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></span>
                 </p>
             </div>
