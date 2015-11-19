@@ -110,8 +110,7 @@ def register_post():
     new_user = User(
         username=username,
         email_address=email_address if email_address != "" else None,
-        # XXX uncomment this when we release it to the public.
-        #group="active",
+        group="active",
         last_ip=request.headers["X-Forwarded-For"],
     )
     new_user.set_password(request.form["password"])
