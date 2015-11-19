@@ -16,10 +16,13 @@
         </li>
         {% endfor %}
         <li>
+            {% if error: %}
+            <p class="error">Not a valid regular expression: {{ error }}</p>
+            {% endif %}
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="add">
-                <input type="text" name="phrase" required>
+                <input type="text" name="phrase" value="{{ request.form.phrase }}" required>
                 <button type="submit">Add</button>
             </form>
         </li>

@@ -1,4 +1,4 @@
-import paginate
+import paginate, re
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
@@ -58,13 +58,18 @@ def home(fmt=None, page=1):
     )
 
 
-@use_db
-@permission_required("spamless")
-def banned_names():
+def _banned_names(**kwargs):
     return render_template(
         "admin/spamless/banned_names.html",
         names=sorted(list(g.redis.smembers("spamless:banned_names"))),
+        **kwargs
     )
+
+
+@use_db
+@permission_required("spamless")
+def banned_names():
+    return _banned_names()
 
 
 @use_db
@@ -78,6 +83,10 @@ def banned_names_post():
     name = request.form["name"].strip().lower()
     if not name:
         abort(400)
+    try:
+        re.compile(name)
+    except re.error as e:
+        return _banned_names(error=e.args[0])
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="spamless:banned_names:%s" % request.form["command"],
@@ -88,16 +97,21 @@ def banned_names_post():
     return redirect(url_for("spamless_banned_names"))
 
 
-@use_db
-@permission_required("spamless")
-def blacklist():
+def _blacklist(**kwargs):
     return render_template(
         "admin/spamless/blacklist.html",
         phrases=sorted(list(
             (phrase, int(score)) for phrase, score in
             g.redis.zrange("spamless:blacklist", 0, -1, withscores=True)
         )),
+        **kwargs
     )
+
+
+@use_db
+@permission_required("spamless")
+def blacklist():
+    return _blacklist()
 
 
 @use_db
@@ -111,6 +125,10 @@ def blacklist_post():
             score = int(request.form["score"].strip())
         except ValueError:
             abort(400)
+        try:
+            re.compile(phrase)
+        except re.error as e:
+            return _blacklist(error=e.args[0])
         g.redis.zadd("spamless:blacklist", score, phrase)
         log_message = "%s (%s)" % (phrase, score)
     elif request.form["command"] == "remove":
@@ -127,13 +145,18 @@ def blacklist_post():
     return redirect(url_for("spamless_blacklist"))
 
 
-@use_db
-@permission_required("spamless")
-def warnlist():
+def _warnlist(**kwargs):
     return render_template(
         "admin/spamless/warnlist.html",
         phrases=sorted(list(g.redis.smembers("spamless:warnlist"))),
+        **kwargs
     )
+
+
+@use_db
+@permission_required("spamless")
+def warnlist():
+    return _warnlist()
 
 
 @use_db
@@ -147,6 +170,10 @@ def warnlist_post():
     phrase = request.form["phrase"].strip().lower()
     if not phrase:
         abort(400)
+    try:
+        re.compile(phrase)
+    except re.error as e:
+        return _warnlist(error=e.args[0])
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="spamless:warnlist:%s" % request.form["command"],
