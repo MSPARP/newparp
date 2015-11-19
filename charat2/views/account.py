@@ -100,13 +100,11 @@ def register_post():
     if username_validator.match(username) is None:
         return redirect(referer_or_home() + "?register_error=invalid_username")
 
-    # XXX DON'T ALLOW USERNAMES STARTING WITH GUEST_.
     # Make sure this username hasn't been taken before.
     # Also check against reserved usernames.
-    existing_username = g.db.query(User.id).filter(
+    if username.startswith("guest_") or g.db.query(User.id).filter(
         func.lower(User.username) == username.lower()
-    ).count()
-    if existing_username == 1 or username.lower() in reserved_usernames:
+    ).count() == 1 or username.lower() in reserved_usernames:
         return redirect(referer_or_home() + "?register_error=username_taken")
 
     new_user = User(
