@@ -71,7 +71,7 @@ class ChatHandler(WebSocketHandler):
         self.id = str(uuid4())
         self.joined = False
         try:
-            self.session_id = self.cookies["session"].value
+            self.session_id = self.cookies["newparp"].value
             self.chat_id = int(self.path_args[0])
             self.user_id = int(redis.get("session:%s" % self.session_id))
         except (KeyError, TypeError, ValueError):

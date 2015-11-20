@@ -11,20 +11,19 @@ from uuid import uuid4
 from charat2.model import sm, AnyChat, Chat, ChatUser, IPBan, User
 
 redis_pool = ConnectionPool(
-    host=os.environ['REDIS_HOST'],
-    port=int(os.environ['REDIS_PORT']),
-    db=int(os.environ['REDIS_DB']),
+    host=os.environ["REDIS_HOST"],
+    port=int(os.environ["REDIS_PORT"]),
+    db=int(os.environ["REDIS_DB"]),
     decode_responses=True,
 )
 
-cookie_domain = "." + os.environ['BASE_DOMAIN']
+cookie_domain = "." + os.environ["BASE_DOMAIN"]
 
 
 def set_cookie(response):
-    if "session" not in request.cookies:
-        # XXX SET DOMAIN
+    if "newparp" not in request.cookies:
         response.set_cookie(
-            "session",
+            "newparp",
             g.session_id,
             max_age=365 * 24 * 60 * 60,
             domain=cookie_domain,
@@ -38,8 +37,8 @@ def set_cookie(response):
 
 def redis_connect():
     g.redis = StrictRedis(connection_pool=redis_pool)
-    if "session" in request.cookies:
-        g.session_id = request.cookies["session"]
+    if "newparp" in request.cookies:
+        g.session_id = request.cookies["newparp"]
         g.user_id = g.redis.get("session:" + g.session_id)
         if g.user_id is not None:
             g.user_id = int(g.user_id)
