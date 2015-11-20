@@ -701,6 +701,12 @@ var msparp = (function() {
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.insertBefore(status_bar);
+
+				// Post all global messages as a notification banner.
+				if (message.type.indexOf("global") !== -1 && message.important) {
+					announcement_banner(message.title, message.text);
+				}
+
 				if (
 					(document.hidden || document.webkitHidden || document.msHidden)
 					// Skip notifications for system messages if we're hiding them.
@@ -1485,6 +1491,28 @@ var msparp = (function() {
 			});
 			$("#switch_character_button").click(function() { set_sidebar(current_sidebar != "switch_character" ? "switch_character" : null); });
 			$("#settings_button").click(function() { set_sidebar(current_sidebar != "settings" ? "settings" : null); });
+
+			// Global announcements
+			var announcement_template = Handlebars.compile($("#announce_template").html());
+
+			function announcement_banner(title, text) {
+				$("#global_announcements").append(announcement_template({
+					announce: {
+						title: title,
+						text: text
+					}
+				}));
+				setTimeout(function(){ $(".announcement").addClass("show"); }, 100);
+			}
+
+			body.on("click", ".announcement", function() {
+				var announcement = $(this);
+
+				announcement.removeClass("show");
+				setTimeout(function() {
+					announcement.remove();
+				}, 1000)
+			});
 
 			// Now all that's done, let's connect
 			connect();
