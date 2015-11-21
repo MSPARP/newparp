@@ -97,7 +97,7 @@
                     </select>
                 </p>
                 <p>
-                    <label for="level_select">SFW or NSFW?</label>
+                    <label for="level_select">SFW, NSFW, or NSFWE?</label>
                     <select name="level" id="level_select">
                         {% for value in User.search_level.type.enums: %}
                         <option value="{{value}}"{% if value == g.user.search_level %} selected="selected"{% endif %}>{{value.upper()}}</option>

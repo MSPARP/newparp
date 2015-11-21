@@ -15,6 +15,7 @@ option_messages = {
     "paragraph": "This is a paragraph style chat.",
     "sfw": "Please keep this chat safe for work.",
     "nsfw": "NSFW content is allowed.",
+    "nsfwe": "Extreme NSFW content is allowed",
     "roulette": "TT: There is a 98.413% chance that you have just connected to someone anonymously. It seems that you should probably say \"Hello\" now.",
 }
 

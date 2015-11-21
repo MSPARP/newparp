@@ -135,7 +135,7 @@ class User(Base):
         nullable=False, default=u"script",
     )
     search_level = Column(
-        Enum(u"sfw", u"nsfw", name="user_search_level"),
+        Enum(u"sfw", u"nsfw", u"nsfwe", name="user_search_level"),
         nullable=False, default=u"sfw",
     )
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
