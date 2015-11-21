@@ -125,8 +125,8 @@ class User(Base):
     acronym = Column(Unicode(15), nullable=False, default=u"??")
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
-    quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(100), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
     case = Column(case_options_enum, nullable=False, default=u"normal")
     replacements = Column(UnicodeText, nullable=False, default=u"[]")
     regexes = Column(UnicodeText, nullable=False, default=u"[]")
@@ -237,8 +237,8 @@ class Character(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(100), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
 
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
@@ -300,8 +300,8 @@ class SearchCharacter(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(100), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
 
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
@@ -518,8 +518,8 @@ class ChatUser(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(100), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
 
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
@@ -823,8 +823,8 @@ class Request(Base):
     # Must be a hex code.
     color = Column(Unicode(6), nullable=False, default=u"000000")
 
-    quirk_prefix = Column(Unicode(100), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(100), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
 
     case = Column(case_options_enum, nullable=False, default=u"normal")
 
