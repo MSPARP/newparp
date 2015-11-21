@@ -132,7 +132,7 @@ class ChatHandler(WebSocketHandler):
             "messages": [json.loads(_) for _ in messages],
         }))
 
-        join_message_sent = join(redis, self.db, self)
+        join_message_sent = self.ping()
         self.joined = True
 
         # Send userlist if nothing was sent by join().
@@ -146,6 +146,8 @@ class ChatHandler(WebSocketHandler):
             print "message:", message
         if message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
+        elif message == "ping":
+            self.ping()
 
     def on_close(self):
         # Unsubscribe here and let the exit callback handle disconnecting.
@@ -193,6 +195,21 @@ class ChatHandler(WebSocketHandler):
 
     def on_redis_unsubscribe(self, callback):
         self.redis_client.disconnect()
+
+    def ping(self):
+        joined = False
+
+        session_online = redis.hexists("chat:%s:online" % self.chat_id, self.session_id)
+        if not session_online:
+            joined = join(redis, self.db, self)
+
+        redis.zadd(
+            "chats_alive",
+            time.time() + 60,
+            "%s/%s" % (self.chat_id, self.session_id),
+        )
+
+        return joined
 
 
 def sig_handler(sig, frame):
