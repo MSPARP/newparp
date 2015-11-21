@@ -41,6 +41,7 @@ origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(
 
 sockets = set()
 
+DEBUG = 'DEBUG' in os.environ
 
 class ChatHandler(WebSocketHandler):
 
@@ -100,7 +101,8 @@ class ChatHandler(WebSocketHandler):
     def open(self, chat_id):
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
-        print "socket opened:", self.id, self.chat.url, self.user.username
+        if DEBUG:
+            print "socket opened:", self.id, self.chat.url, self.user.username
 
         try:
             kick_check(redis, self)
@@ -140,7 +142,8 @@ class ChatHandler(WebSocketHandler):
         self.db.commit()
 
     def on_message(self, message):
-        print "message:", message
+        if DEBUG:
+            print "message:", message
         if message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
 
@@ -155,7 +158,8 @@ class ChatHandler(WebSocketHandler):
                 send_userlist(self.db, redis, self.chat)
             self.db.commit()
         self.set_typing(False)
-        print "socket closed:", self.id
+        if DEBUG:
+            print "socket closed:", self.id
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         sockets.remove(self)
 
@@ -176,7 +180,8 @@ class ChatHandler(WebSocketHandler):
         self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
 
     def on_redis_message(self, message):
-        print "redis message:", message
+        if DEBUG:
+            print "redis message:", message
         if message.kind != "message":
             return
         self.write_message(message.body)
