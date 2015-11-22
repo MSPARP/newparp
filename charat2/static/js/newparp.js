@@ -718,7 +718,16 @@ var msparp = (function() {
 					document.title = "New message - " + original_title;
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
 						var text_without_bbcode = bbremove(text);
-						var notification = new Notification(chat.title || "MSPARP", { "body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "..." });
+						var notification = new Notification(chat.title || "MSPARP", {
+							"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
+							"icon": "/static/img/spinner-big.png"
+						});
+
+						notification.onclick = function() {
+							window.focus();
+							this.close();
+						}
+
 						window.setTimeout(notification.close.bind(notification), 5000);
 					}
 				}
