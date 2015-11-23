@@ -44,7 +44,10 @@
 
 <script id="user_list_template" type="text/x-handlebars-template">{% raw %}
 {{#each users}}
-    <li style="color: #{{character.color}};" id="unum_{{meta.number}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">{{character.name}}{{#if (is_you)}} (you){{/if}}</li>
+    <li style="color: #{{character.color}};" id="unum_{{meta.number}}" class="group_{{meta.group}}" title="{{{group_description meta.group}}}">
+        {{character.name}}{{#if (is_you)}} (you){{/if}}
+        {{#if (admin)}}<span class="userid">user{{meta.number}}</span>{{/if}}
+    </li>
 {{/each}}
 {% endraw %}</script>
 
