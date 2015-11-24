@@ -17,6 +17,7 @@ body.chat {background-color:#1d1f2c;color: #626262}
 .chat input, .chat textarea, .chat button, .chat select {background-color: #535353; color:#ccc;}
 .chat button:hover {background-color: #626262;}
 .chat p, .chat span {color:#626262!important;}
+.chat span {background:none!important;}
 
 /* 4.1. Topbar and info panel */
 

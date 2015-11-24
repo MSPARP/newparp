@@ -12,6 +12,7 @@ a {color: #2c2c2c;}
 /* 4. Chat window */
 
 .chat p, .chat span {color:#000!important;}
+.chat span {background:none!important;}
 
 /* 4.3. Sidebars */
 
