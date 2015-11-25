@@ -276,7 +276,7 @@ section > .close:first-child { float: right; margin: 5px; }
 #user_list li, #action_list li { cursor: pointer; }
 #user_list .userid { display: block; font-size: 11px; }
 .group_admin { text-decoration: underline; }
-.group_creator, .group_mod, .group_mod1, .group_mod2, .group_mod3 { font-style: italic; }
+.group_creator, .group_mod1, .group_mod2, .group_mod3 { font-style: italic; }
 .group_silent { text-decoration: line-through; }
 #action_list { color: #000; text-decoration: none; font-style: normal; }
 
