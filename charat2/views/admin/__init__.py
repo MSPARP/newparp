@@ -416,8 +416,8 @@ def admin_tier_post(admin_tier_id):
 
     remove = old_permissions - new_permissions
     add = new_permissions - old_permissions
-    print "remove:", remove
-    print "add:", add
+    print("remove: " + str(remove))
+    print("add: " + str(add))
 
     for admin_tier_permission in admin_tier.admin_tier_permissions:
         if admin_tier_permission.permission in remove:

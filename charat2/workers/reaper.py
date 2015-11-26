@@ -15,9 +15,9 @@ if __name__ == "__main__":
 
     db = sm()
 
-    print "Obtaining lock..."
+    print("Obtaining lock...")
     db.query(func.pg_advisory_lock(413, 1)).scalar()
-    print "Lock obtained."
+    print("Lock obtained.")
 
     redis = StrictRedis(connection_pool=redis_pool)
 
@@ -37,13 +37,13 @@ if __name__ == "__main__":
 
         # And do the reaping.
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):
-            print current_time, "Reaping ", dead
+            print("%s Reaping %s" % (current_time, dead))
             chat_id, session_id = dead.split('/')
             user_id = redis.hget("chat:%s:online" % chat_id, session_id)
             disconnected = disconnect(redis, chat_id, session_id)
             # Only send a timeout message if they were already online.
             if not disconnected:
-                print "Not sending timeout message."
+                print("Not sending timeout message.")
                 continue
             try:
                 dead_chat_user = db.query(ChatUser).filter(and_(
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                     ChatUser.chat_id == chat_id,
                 )).options(joinedload(ChatUser.chat), joinedload(ChatUser.user)).one()
             except NoResultFound:
-                print "Unable to find ChatUser (chat %s, user %s)." % (chat_id, user_id)
+                print("Unable to find ChatUser (chat %s, user %s)." % (chat_id, user_id))
                 continue
             if dead_chat_user.computed_group == "silent" or dead_chat_user.chat.type in ("pm", "roulette"):
                 send_userlist(db, redis, dead_chat_user.chat)
@@ -63,12 +63,12 @@ if __name__ == "__main__":
                     name=dead_chat_user.name,
                     text="%s's connection timed out." % dead_chat_user.name,
                 ))
-            print "Sent timeout message."
+            print("Sent timeout message.")
         db.commit()
 
         # Generate connected/searching counters every 10 seconds.
         if int(current_time) % 10 == 0:
-            print "Generating user counters."
+            print("Generating user counters.")
             connected_users = set()
             next_index = 0
             while True:

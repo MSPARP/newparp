@@ -31,9 +31,9 @@ def run_matchmaker(
 
     db = sm()
 
-    print "Obtaining lock..."
+    print("Obtaining lock...")
     db.query(func.pg_advisory_lock(413, lock_id)).scalar()
-    print "Lock obtained."
+    print("Lock obtained.")
 
     redis = StrictRedis(connection_pool=redis_pool)
 

@@ -102,7 +102,7 @@ class ChatHandler(WebSocketHandler):
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         if DEBUG:
-            print "socket opened:", self.id, self.chat.url, self.user.username
+            print("socket opened: %s %s %s" % (self.id, self.chat.url, self.user.username))
 
         try:
             kick_check(redis, self)
@@ -143,7 +143,7 @@ class ChatHandler(WebSocketHandler):
 
     def on_message(self, message):
         if DEBUG:
-            print "message:", message
+            print("message: %s" % (message))
         if message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
 
@@ -159,7 +159,7 @@ class ChatHandler(WebSocketHandler):
             self.db.commit()
         self.set_typing(False)
         if DEBUG:
-            print "socket closed:", self.id
+            print("socket closed: %s" % (self.id))
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         sockets.remove(self)
 
@@ -181,7 +181,7 @@ class ChatHandler(WebSocketHandler):
 
     def on_redis_message(self, message):
         if DEBUG:
-            print "redis message:", message
+            print("redis message: %s" % (message))
         if message.kind != "message":
             return
         self.write_message(message.body)
@@ -196,12 +196,12 @@ class ChatHandler(WebSocketHandler):
 
 
 def sig_handler(sig, frame):
-    print "Caught signal %s." % sig
+    print("Caught signal %s." % sig)
     ioloop.add_callback_from_signal(shutdown)
 
 
 def shutdown():
-    print "Shutting down."
+    print("Shutting down.")
     for socket in sockets:
         ioloop.add_callback(socket.close)
     deadline = time.time() + 10

@@ -63,16 +63,16 @@ def check_compatibility(redis, s1, s2):
     s1_name = s1["character"]["name"].lower().encode("utf8")
     for search_filter in s2["filters"]:
         search_filter = search_filter.encode("utf8")
-        print "comparing %s and %s" % (s1_name, search_filter)
+        print("comparing %s and %s" % (s1_name, search_filter))
         if search_filter in s1_name:
-            print "FILTER %s MATCHED" % search_filter
+            print("FILTER %s MATCHED" % search_filter)
             return False, None
     s2_name = s2["character"]["name"].lower().encode("utf8")
     for search_filter in s1["filters"]:
         search_filter = search_filter.encode("utf8")
-        print "comparing %s and %s" % (s2_name, search_filter)
+        print("comparing %s and %s" % (s2_name, search_filter))
         if search_filter in s2_name:
-            print "FILTER %s MATCHED" % search_filter
+            print("FILTER %s MATCHED" % search_filter)
             return False, None
 
     if (

@@ -32,7 +32,7 @@ lists = {}
 
 
 def load_lists(ps_message=None):
-    print "reload"
+    print("reload")
     lists["banned_names"] = [
         re.compile(name, re.IGNORECASE | re.MULTILINE)
         for name in redis.smembers("spamless:banned_names")
@@ -178,15 +178,15 @@ def increx(key, expire=60, incr=1):
 
 
 def halt(signal=None, frame=None):
-    print "Caught signal %s" % signal
+    print("Caught signal %s" % signal)
     ps_thread.stop()
 
 
 if __name__ == "__main__":
 
-    print "Obtaining lock..."
+    print("Obtaining lock...")
     db.query(func.pg_advisory_lock(413, 4)).scalar()
-    print "Lock obtained."
+    print("Lock obtained.")
 
     load_lists()
 
