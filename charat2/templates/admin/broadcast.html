@@ -2,6 +2,13 @@
 {% block title: %}Broadcast - {% endblock %}
 {% block content: %}
 	<h2>Broadcast</h2>
+	<div id="global_announcements_preview">
+		<div class="announcement show">
+			<h2>Global Announcement</h2>
+			<p>[no message]</p>
+		</div>
+	</div>
+
 	<form action="{{url_for("admin_broadcast")}}" method="post">
 		<input type="hidden" name="token" value="{{g.csrf_token}}">
 		<p>
@@ -17,9 +24,17 @@
 			<input type="checkbox" name="important">
 		</p>
 		<p>
+			<label for="color">Header Color:</label>
+			<input type="color" name="headercolor" value="#535353">
+		</p>
+		<p>
 			<textarea name="text" rows="10" required></textarea>
 		</p>
 		<p><button type="submit">Send</button></p>
 	</form>
+{% endblock %}
+
+{% block scripts: %}
+<script>msparp.broadcast();</script>
 {% endblock %}
 

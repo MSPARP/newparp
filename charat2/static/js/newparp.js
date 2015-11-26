@@ -1533,5 +1533,19 @@ var msparp = (function() {
 			// Perform BBCode conversion
 			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
 		},
+		// Broadcast page
+		"broadcast": function() {
+			$("input[name=title]").keyup(function() {
+				$(".announcement h2").text(this.value);
+			});
+
+			$("textarea[name=text]").keyup(function() {
+				$(".announcement p").text(this.value || "[no message]");
+			});
+
+			$("input[name=headercolor]").change(function() {
+				$(".announcement").css("background-color", this.value);
+			});
+		},
 	};
 })();
