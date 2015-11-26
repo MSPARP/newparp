@@ -365,6 +365,7 @@ var msparp = (function() {
 
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
+			var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
 			var ws;
 			var ws_works = false;
 			var ws_connected_time = 0;
@@ -373,7 +374,8 @@ var msparp = (function() {
 				// This prevents problems with eg. double clicking the join button.
 				if (ws && ws.readyState != 3) { return; }
 				status = "connecting";
-				ws = new WebSocket("ws://live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
+
+				ws = new WebSocket(ws_protocol + "live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
 				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); }
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
 				ws.onclose = function(e) {
