@@ -19,7 +19,6 @@ from charat2.model.connections import redis_pool
 db = sm()
 redis = StrictRedis(connection_pool=redis_pool)
 
-
 class Mark(Exception):
     pass
 
@@ -29,7 +28,7 @@ class Silence(Exception):
 
 
 lists = {}
-
+spamless_chat_id = None
 
 def load_lists(ps_message=None):
     print("reload")
@@ -46,6 +45,11 @@ def load_lists(ps_message=None):
         for phrase in redis.smembers("spamless:warnlist")
     ]
 
+    try:
+        spamless_chat_id = db.query(AnyChat).filter(AnyChat.url == "spamless").one().id
+    except NoResultFound:
+        pass
+
 
 def on_ps(ps_message):
 
@@ -54,6 +58,9 @@ def on_ps(ps_message):
         data = json.loads(ps_message["data"])
     except (IndexError, KeyError, ValueError):
         return
+
+    if chat_id == spamless_chat_id:
+        continue
 
     if "messages" not in data or len(data["messages"]) == 0:
         return
@@ -74,6 +81,7 @@ def on_ps(ps_message):
         except Mark, e:
             time.sleep(0.1)
             q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
+            redis.publish("spamless:live", json.dumps(message))
             db.commit()
 
         except Silence, e:
@@ -104,6 +112,8 @@ def on_ps(ps_message):
             db.query(Message).filter(Message.id == message["id"]).update({
                 "spam_flag": e.message + " " + flag_suffix,
             })
+
+            redis.publish("spamless:live", json.dumps(message))
 
             if flag_suffix == "SILENCED":
                 db.query(ChatUser).filter(and_(
