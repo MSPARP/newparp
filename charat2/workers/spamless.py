@@ -28,7 +28,10 @@ class Silence(Exception):
 
 
 lists = {}
-spamless_chat_id = None
+try:
+    spamless_chat_id = db.query(AnyChat).filter(AnyChat.url == "spamless").one().id
+except NoResultFound:
+    spamless_chat_id = None
 
 def load_lists(ps_message=None):
     print("reload")
@@ -44,11 +47,6 @@ def load_lists(ps_message=None):
         re.compile(phrase, re.IGNORECASE | re.MULTILINE)
         for phrase in redis.smembers("spamless:warnlist")
     ]
-
-    try:
-        spamless_chat_id = db.query(AnyChat).filter(AnyChat.url == "spamless").one().id
-    except NoResultFound:
-        pass
 
 
 def on_ps(ps_message):
