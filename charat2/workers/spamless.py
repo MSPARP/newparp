@@ -60,7 +60,7 @@ def on_ps(ps_message):
         return
 
     if chat_id == spamless_chat_id:
-        continue
+        return
 
     if "messages" not in data or len(data["messages"]) == 0:
         return
