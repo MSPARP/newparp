@@ -68,7 +68,10 @@ def on_ps(ps_message):
         if message["user_number"] is None:
             continue
 
-        message["hash"] = hashlib.md5(message["text"].encode("utf-8").lower()).hexdigest()
+        message["hash"] = hashlib.md5(
+            ":".join([message["color"], message["acronym"], message["text"]])
+            .encode("utf-8").lower()
+        ).hexdigest()
 
         try:
             check_connection_spam(chat_id, message)
