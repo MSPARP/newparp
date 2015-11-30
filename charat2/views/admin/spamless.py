@@ -60,8 +60,9 @@ def home(fmt=None, page=1):
 
 def _banned_names(**kwargs):
     return render_template(
-        "admin/spamless/banned_names.html",
-        names=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "banned_names").all(),
+        "admin/spamless/list.html",
+        title="Banned names",
+        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "banned_names").all(),
         **kwargs
     )
 
@@ -80,22 +81,22 @@ def banned_names_post():
         return _banned_names()
 
     # Consume and validate the name.
-    name = request.form["name"].strip().lower()
-    if not name:
+    phrase = request.form["phrase"].strip().lower()
+    if not phrase:
         abort(400)
 
     try:
-        re.compile(name)
+        re.compile(phrase)
     except re.error as e:
         return _banned_names(error=e.args[0])
 
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="spamless:banned_names:%s" % request.form["command"],
-        description=name,
+        description=phrase,
     ))
 
-    handle_command(request.form["command"], name, "banned_names")
+    handle_command(request.form["command"], phrase, "banned_names")
 
     g.redis.publish("spamless:reload", 1)
     return redirect(url_for("spamless_banned_names"))
@@ -103,7 +104,8 @@ def banned_names_post():
 
 def _blacklist(**kwargs):
     return render_template(
-        "admin/spamless/blacklist.html",
+        "admin/spamless/list.html",
+        title="Blacklist",
         phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "blacklist").all(),
         **kwargs
     )
@@ -152,7 +154,8 @@ def blacklist_post():
 
 def _warnlist(**kwargs):
     return render_template(
-        "admin/spamless/warnlist.html",
+        "admin/spamless/list.html",
+        title="Warnlist",
         phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "warnlist").all(),
         **kwargs
     )
