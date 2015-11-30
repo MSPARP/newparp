@@ -9,17 +9,17 @@
         {% else %}
         <a href="{{url_for("spamless_home")}}">Recent messages</a>
         {% endif %}
-        {% if request.url_rule.endpoint == "spamless_banned_names": %}
+        {% if spamless_list == "banned_names": %}
         Banned names
         {% else %}
         <a href="{{url_for("spamless_banned_names")}}">Banned names</a>
         {% endif %}
-        {% if request.url_rule.endpoint == "spamless_blacklist": %}
+        {% if spamless_list == "blacklist": %}
         Blacklist
         {% else %}
         <a href="{{url_for("spamless_blacklist")}}">Blacklist</a>
         {% endif %}
-        {% if request.url_rule.endpoint == "spamless_warnlist": %}
+        {% if spamless_list == "warnlist": %}
         Warnlist
         {% else %}
         <a href="{{url_for("spamless_warnlist")}}">Warnlist</a>

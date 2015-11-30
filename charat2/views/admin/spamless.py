@@ -57,75 +57,35 @@ def home(fmt=None, page=1):
         paginator=paginator,
     )
 
+def _list(spamlist, **kwargs):
+    if spamlist not in ("banned_names", "blacklist", "warnlist"):
+        spamlist = "warnlist"
 
-def _banned_names(**kwargs):
+    if spamlist == "warnlist":
+        title = "Warnlist"
+    elif spamlist == "blacklist":
+        title = "Blacklist"
+    else:
+        title = "Banned names"
+
     return render_template(
         "admin/spamless/list.html",
-        title="Banned names",
-        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "banned_names").all(),
+        title=title,
+        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == spamlist).all(),
+        spamless_list=spamlist,
         **kwargs
     )
 
+def _list_post(spamlist, **kwargs):
+    if spamlist not in ("banned_names", "blacklist", "warnlist"):
+        spamlist = "warnlist"
 
-@use_db
-@permission_required("spamless")
-def banned_names():
-    return _banned_names()
-
-
-@use_db
-@permission_required("spamless")
-def banned_names_post():
     # Validate the command is either adding or removing.
     if request.form["command"] not in ("add", "remove"):
-        return _banned_names()
+        return _list(spamlist)
 
-    # Consume and validate the name.
-    phrase = request.form["phrase"].strip().lower()
-    if not phrase:
-        abort(400)
-
-    try:
-        re.compile(phrase)
-    except re.error as e:
-        return _banned_names(error=e.args[0])
-
-    g.db.add(AdminLogEntry(
-        action_user=g.user,
-        type="spamless:banned_names:%s" % request.form["command"],
-        description=phrase,
-    ))
-
-    handle_command(request.form["command"], phrase, "banned_names")
-
-    g.redis.publish("spamless:reload", 1)
-    return redirect(url_for("spamless_banned_names"))
-
-
-def _blacklist(**kwargs):
-    return render_template(
-        "admin/spamless/list.html",
-        title="Blacklist",
-        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "blacklist").all(),
-        **kwargs
-    )
-
-
-@use_db
-@permission_required("spamless")
-def blacklist():
-    return _blacklist()
-
-
-@use_db
-@permission_required("spamless")
-def blacklist_post():
-    # Validate the command is either adding or removing.
-    if request.form["command"] not in ("add", "remove"):
-        return _blacklist()
-
-    # Consume and validate the phrase.
-    phrase = request.form["phrase"].strip().lower()
+    # Consume and validate the arguments.
+    phrase = log_message = request.form["phrase"].strip().lower()
     score = request.form.get("score")
     if not phrase:
         abort(400)
@@ -133,70 +93,63 @@ def blacklist_post():
     try:
         re.compile(phrase)
     except re.error as e:
-        return _blacklist(error=e.args[0])
+        return _list(
+            spamlist,
+            error=e.args[0]
+        )
 
-    handle_command(request.form["command"], phrase, "blacklist", score)
-
-    if request.form["command"] == "add":
-        log_message = "%s (%s)" % (phrase, score)
-    else:
-        log_message = phrase
+    if spamlist == "blacklist":
+        if request.form["command"] == "add":
+            log_message = "%s (%s)" % (phrase, score)
 
     g.db.add(AdminLogEntry(
         action_user=g.user,
-        type="spamless:blacklist:%s" % request.form["command"],
-        description=log_message,
+        type="spamless:%s:%s" % (spamlist, request.form["command"]),
+        description=log_message
     ))
 
+    handle_command(request.form["command"], phrase, spamlist, score)
+
     g.redis.publish("spamless:reload", 1)
-    return redirect(url_for("spamless_blacklist"))
+
+    return redirect(url_for("spamless_" + spamlist))
 
 
-def _warnlist(**kwargs):
-    return render_template(
-        "admin/spamless/list.html",
-        title="Warnlist",
-        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == "warnlist").all(),
-        **kwargs
-    )
+@use_db
+@permission_required("spamless")
+def banned_names():
+    return _list("banned_names")
+
+
+@use_db
+@permission_required("spamless")
+def banned_names_post():
+    return _list_post("banned_names")
+
+
+@use_db
+@permission_required("spamless")
+def blacklist():
+    return _list("blacklist")
+
+
+@use_db
+@permission_required("spamless")
+def blacklist_post():
+    return _list_post("blacklist")
 
 
 @use_db
 @permission_required("spamless")
 def warnlist():
-    return _warnlist()
+    return _list("warnlist")
 
 
 @use_db
 @permission_required("spamless")
 def warnlist_post():
-    # Validate the command is either adding or removing.
-    if request.form["command"] not in ("add", "remove"):
-        return _warnlist()
+    return _list_post("warnlist")
 
-    # Consume and validate the phrase.
-    phrase = request.form["phrase"].strip().lower()
-    if not phrase:
-        abort(400)
-
-    try:
-        re.compile(phrase)
-    except re.error as e:
-        return _warnlist(error=e.args[0])
-
-    # Add the phrase
-    g.db.add(AdminLogEntry(
-        action_user=g.user,
-        type="spamless:warnlist:%s" % request.form["command"],
-        description=phrase,
-    ))
-
-    handle_command(request.form["command"], phrase, "warnlist")
-
-    # Send the reload command.
-    g.redis.publish("spamless:reload", 1)
-
-    return redirect(url_for("spamless_warnlist"))
 
 # Helper functions
 def handle_command(command, phrase, filtertype, points=0):
