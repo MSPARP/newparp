@@ -6,11 +6,11 @@
     <ul>
         {% for phrase in phrases: %}
         <li>
-            {{ phrase }}
+            {{ phrase.regex }}
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="phrase" value="{{ phrase }}">
+                <input type="hidden" name="phrase" value="{{ phrase.regex }}">
                 <button type="submit">Remove</button>
             </form>
         </li>

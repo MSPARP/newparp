@@ -12,7 +12,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import send_message
-from charat2.model import sm, AnyChat, ChatUser, Message, User
+from charat2.model import sm, AnyChat, ChatUser, Message, User, SpamlessFilter
 from charat2.model.connections import redis_pool
 
 
@@ -36,16 +36,16 @@ except NoResultFound:
 def load_lists(ps_message=None):
     print("reload")
     lists["banned_names"] = [
-        re.compile(name, re.IGNORECASE | re.MULTILINE)
-        for name in redis.smembers("spamless:banned_names")
+        re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
+        for _ in db.query(SpamlessFilter).filter(SpamlessFilter.type == "banned_names").all()
     ]
     lists["blacklist"] = [
-        (re.compile(phrase, re.IGNORECASE | re.MULTILINE), points)
-        for phrase, points in redis.zrange("spamless:blacklist", 0, -1, withscores=True)
+        (re.compile(_.regex, re.IGNORECASE | re.MULTILINE), _.points)
+        for _ in db.query(SpamlessFilter).filter(SpamlessFilter.type == "blacklist").all()
     ]
     lists["warnlist"] = [
-        re.compile(phrase, re.IGNORECASE | re.MULTILINE)
-        for phrase in redis.smembers("spamless:warnlist")
+        re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
+        for _ in db.query(SpamlessFilter).filter(SpamlessFilter.type == "warnlist").all()
     ]
 
 
