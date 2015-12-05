@@ -675,7 +675,7 @@ var msparp = (function() {
 				user.meta.show_bbcode ? p.html(bbencode(text, admin)) : p.text(bbremove(text));
 				if (chat.type == "searched" && (message.type == "disconnect" || message.type == "timeout") && message.user_number != user.meta.number) {
 					$("<a>").attr("href", "#").addClass("message_action").text("Block").click(function() { block(message.user_number); return false; }).appendTo(p);
-				} else if (message.type == "user_group" && ranks[user.meta.group] >= ranks["mod3"] && user_data[message.user_number].meta.group == "silent") {
+				} else if (message.type == "user_group" && ranks[user.meta.group] >= ranks["mod3"] && user_data[message.user_number] && user_data[message.user_number].meta.group == "silent") {
 					$("<a>").attr("href", "#").addClass("message_action").text("Unsilence").click(function() {
 						if (user_data[message.user_number].meta.group == "silent") { set_group(message.user_number, "user"); }
 						return false;
