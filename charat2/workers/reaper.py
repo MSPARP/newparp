@@ -36,8 +36,11 @@ if __name__ == "__main__":
                 redis.zrem("longpoll_timeout", chat_id)
 
         # And do the reaping.
+        disconnected_users = set()
+
+        # Long poll sessions.
         for dead in redis.zrangebyscore("chats_alive", 0, current_time):
-            print("%s Reaping %s" % (current_time, dead))
+            print("Reaping %s" % dead)
             chat_id, session_id = dead.split('/')
             user_id = redis.hget("chat:%s:online" % chat_id, session_id)
             disconnected = disconnect(redis, chat_id, session_id)
@@ -45,6 +48,23 @@ if __name__ == "__main__":
             if not disconnected:
                 print("Not sending timeout message.")
                 continue
+            disconnected_users.add((chat_id, user_id, False))
+
+        # Sockets.
+        for dead in redis.zrangebyscore("sockets_alive", 0, current_time):
+            print("Reaping %s" % dead)
+            chat_id, session_id, socket_id = dead.split('/')
+            user_id = redis.hget("chat:%s:online" % chat_id, socket_id)
+            disconnected = disconnect(redis, chat_id, socket_id)
+            redis.srem("chat:%s:sockets:%s" % (chat_id, session_id), socket_id)
+            redis.zrem("sockets_alive", "%s/%s/%s" % (chat_id, session_id, socket_id))
+            # Only send a timeout message if they were already online.
+            if not disconnected:
+                print("Not sending timeout message.")
+                continue
+            disconnected_users.add((chat_id, user_id, True))
+
+        for chat_id, user_id, reaped_socket in disconnected_users:
             try:
                 dead_chat_user = db.query(ChatUser).filter(and_(
                     ChatUser.user_id == user_id,
@@ -53,6 +73,14 @@ if __name__ == "__main__":
             except NoResultFound:
                 print("Unable to find ChatUser (chat %s, user %s)." % (chat_id, user_id))
                 continue
+
+            if reaped_socket:
+                typing_key = "chat:%s:typing" % chat_id
+                if redis.srem(typing_key, dead_chat_user.number):
+                    redis.publish("channel:%s:typing" % chat_id, json.dumps({
+                        "typing": list(int(_) for _ in redis.smembers(typing_key)),
+                    }))
+
             if dead_chat_user.computed_group == "silent" or dead_chat_user.chat.type in ("pm", "roulette"):
                 send_userlist(db, redis, dead_chat_user.chat)
             else:
@@ -63,7 +91,8 @@ if __name__ == "__main__":
                     name=dead_chat_user.name,
                     text="%s's connection timed out." % dead_chat_user.name,
                 ))
-            print("Sent timeout message.")
+            print("Sent timeout message for ChatUser (chat %s, user %s)." % (chat_id, user_id))
+
         db.commit()
 
         # Generate connected/searching counters every 10 seconds.

@@ -1,9 +1,11 @@
 #!/usr/bin/python
+from __future__ import print_function
 
 import json
 import os
 import re
 import signal
+import sys
 import time
 
 from datetime import datetime
@@ -41,7 +43,7 @@ origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(
 
 sockets = set()
 
-DEBUG = 'DEBUG' in os.environ
+DEBUG = "DEBUG" in os.environ or "--debug" in sys.argv
 
 class ChatHandler(WebSocketHandler):
 
@@ -99,6 +101,7 @@ class ChatHandler(WebSocketHandler):
             return
 
     def open(self, chat_id):
+        redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         if DEBUG:
@@ -142,8 +145,12 @@ class ChatHandler(WebSocketHandler):
         self.db.commit()
 
     def on_message(self, message):
+        if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
+            # We've been reaped, so disconnect.
+            self.close()
+            return
         if DEBUG:
-            print("message: %s" % (message))
+            print("message: %s" % message)
         if message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
 
@@ -161,6 +168,7 @@ class ChatHandler(WebSocketHandler):
         if DEBUG:
             print("socket closed: %s" % (self.id))
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
+        redis.zrem("sockets_alive", "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
         sockets.remove(self)
 
     def finish(self, *args, **kwargs):
@@ -181,7 +189,7 @@ class ChatHandler(WebSocketHandler):
 
     def on_redis_message(self, message):
         if DEBUG:
-            print("redis message: %s" % (message))
+            print("redis message: %s" % str(message))
         if message.kind != "message":
             return
         self.write_message(message.body)
