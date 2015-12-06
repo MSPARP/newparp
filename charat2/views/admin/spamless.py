@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import permission_required
-from charat2.model import AdminLogEntry, Message
+from charat2.model import AdminLogEntry, Message, SpamlessFilter
 from charat2.model.connections import use_db
 
 
@@ -57,129 +57,117 @@ def home(fmt=None, page=1):
         paginator=paginator,
     )
 
+def _list(spamlist, **kwargs):
+    if spamlist not in ("banned_names", "blacklist", "warnlist"):
+        spamlist = "warnlist"
 
-def _banned_names(**kwargs):
+    if spamlist == "warnlist":
+        title = "Warnlist"
+    elif spamlist == "blacklist":
+        title = "Blacklist"
+    else:
+        title = "Banned names"
+
     return render_template(
-        "admin/spamless/banned_names.html",
-        names=sorted(list(g.redis.smembers("spamless:banned_names"))),
+        "admin/spamless/list.html",
+        title=title,
+        phrases=g.db.query(SpamlessFilter).filter(SpamlessFilter.type == spamlist).all(),
+        spamless_list=spamlist,
         **kwargs
     )
+
+def _list_post(spamlist, **kwargs):
+    if spamlist not in ("banned_names", "blacklist", "warnlist"):
+        spamlist = "warnlist"
+
+    # Validate the command is either adding or removing.
+    if request.form["command"] not in ("add", "remove"):
+        return _list(spamlist)
+
+    # Consume and validate the arguments.
+    phrase = log_message = request.form["phrase"].strip().lower()
+    score = request.form.get("score")
+    if not phrase:
+        abort(400)
+
+    try:
+        re.compile(phrase)
+    except re.error as e:
+        return _list(
+            spamlist,
+            error=e.args[0]
+        )
+
+    if spamlist == "blacklist":
+        if request.form["command"] == "add":
+            log_message = "%s (%s)" % (phrase, score)
+
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="spamless:%s:%s" % (spamlist, request.form["command"]),
+        description=log_message
+    ))
+
+    handle_command(request.form["command"], phrase, spamlist, score)
+
+    g.redis.publish("spamless:reload", 1)
+
+    return redirect(url_for("spamless_" + spamlist))
 
 
 @use_db
 @permission_required("spamless")
 def banned_names():
-    return _banned_names()
+    return _list("banned_names")
 
 
 @use_db
 @permission_required("spamless")
 def banned_names_post():
-    command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
-    try:
-        command = command_functions[request.form["command"]]
-    except KeyError:
-        abort(400)
-    name = request.form["name"].strip().lower()
-    if not name:
-        abort(400)
-    try:
-        re.compile(name)
-    except re.error as e:
-        return _banned_names(error=e.args[0])
-    g.db.add(AdminLogEntry(
-        action_user=g.user,
-        type="spamless:banned_names:%s" % request.form["command"],
-        description=name,
-    ))
-    command("spamless:banned_names", name)
-    g.redis.publish("spamless:reload", 1)
-    return redirect(url_for("spamless_banned_names"))
-
-
-def _blacklist(**kwargs):
-    return render_template(
-        "admin/spamless/blacklist.html",
-        phrases=sorted(list(
-            (phrase, int(score)) for phrase, score in
-            g.redis.zrange("spamless:blacklist", 0, -1, withscores=True)
-        )),
-        **kwargs
-    )
+    return _list_post("banned_names")
 
 
 @use_db
 @permission_required("spamless")
 def blacklist():
-    return _blacklist()
+    return _list("blacklist")
 
 
 @use_db
 @permission_required("spamless")
 def blacklist_post():
-    phrase = request.form["phrase"].strip().lower()
-    if not phrase:
-        abort(400)
-    if request.form["command"] == "add":
-        try:
-            score = int(request.form["score"].strip())
-        except ValueError:
-            abort(400)
-        try:
-            re.compile(phrase)
-        except re.error as e:
-            return _blacklist(error=e.args[0])
-        g.redis.zadd("spamless:blacklist", score, phrase)
-        log_message = "%s (%s)" % (phrase, score)
-    elif request.form["command"] == "remove":
-        g.redis.zrem("spamless:blacklist", phrase)
-        log_message = phrase
-    else:
-        abort(400)
-    g.db.add(AdminLogEntry(
-        action_user=g.user,
-        type="spamless:blacklist:%s" % request.form["command"],
-        description=log_message,
-    ))
-    g.redis.publish("spamless:reload", 1)
-    return redirect(url_for("spamless_blacklist"))
-
-
-def _warnlist(**kwargs):
-    return render_template(
-        "admin/spamless/warnlist.html",
-        phrases=sorted(list(g.redis.smembers("spamless:warnlist"))),
-        **kwargs
-    )
+    return _list_post("blacklist")
 
 
 @use_db
 @permission_required("spamless")
 def warnlist():
-    return _warnlist()
+    return _list("warnlist")
 
 
 @use_db
 @permission_required("spamless")
 def warnlist_post():
-    command_functions = {"add": g.redis.sadd, "remove": g.redis.srem}
+    return _list_post("warnlist")
+
+
+# Helper functions
+def handle_command(command, phrase, filtertype, points=0):
     try:
-        command = command_functions[request.form["command"]]
-    except KeyError:
+        points = int(points.strip())
+    except ValueError:
         abort(400)
-    phrase = request.form["phrase"].strip().lower()
-    if not phrase:
-        abort(400)
-    try:
-        re.compile(phrase)
-    except re.error as e:
-        return _warnlist(error=e.args[0])
-    g.db.add(AdminLogEntry(
-        action_user=g.user,
-        type="spamless:warnlist:%s" % request.form["command"],
-        description=phrase,
-    ))
-    command("spamless:warnlist", phrase)
-    g.redis.publish("spamless:reload", 1)
-    return redirect(url_for("spamless_warnlist"))
+    except AttributeError:
+        pass
+
+    if command == "add":
+        g.db.add(SpamlessFilter(
+            type=filtertype,
+            regex=phrase,
+            points=points
+        ))
+    else:
+        g.db.query(SpamlessFilter).filter(SpamlessFilter.type == filtertype).filter(SpamlessFilter.regex == phrase).delete()
+
+    g.db.commit()
 

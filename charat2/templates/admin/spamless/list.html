@@ -1,16 +1,16 @@
 {% extends "admin/spamless/base.html" %}
-{% block title: %}Warnlist - Spamless - {% endblock %}
+{% block title: %}{{title}} - Spamless - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>Warnlist</h2>
+    <h2>{{title}}</h2>
     <ul>
         {% for phrase in phrases: %}
         <li>
-            {{ phrase }}
+            {{ phrase.regex }} {{ phrase.points if phrase.points != 0 }}
             <form action="" method="post">
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="phrase" value="{{ phrase }}">
+                <input type="hidden" name="phrase" value="{{ phrase.regex }}">
                 <button type="submit">Remove</button>
             </form>
         </li>
@@ -23,6 +23,7 @@
                 <input type="hidden" name="token" value="{{ g.csrf_token }}">
                 <input type="hidden" name="command" value="add">
                 <input type="text" name="phrase" value="{{ request.form.phrase }}" required>
+                {% if request.url_rule.endpoint == "spamless_blacklist": %}<input type="number" name="score" value="{{ request.form.score }}" required>{% endif %}
                 <button type="submit">Add</button>
             </form>
         </li>

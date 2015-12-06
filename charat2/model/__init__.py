@@ -995,6 +995,20 @@ class AdminTierPermission(Base):
     def __repr__(self):
         return "<AdminTierPermission: %s has %s>" % (self.admin_tier_id, self.permission)
 
+class SpamlessFilter(Base):
+    __tablename__ = "spamless_filters"
+    id = Column(Integer, primary_key=True)
+    type = Column(Enum(
+        u"banned_names",
+        u"blacklist",
+        u"warnlist",
+        name="spamless_filter_types"
+    ), nullable=False)
+    regex = Column(UnicodeText, nullable=False)
+    points = Column(Integer, default=0)
+
+    def __repr__(self):
+        return "<SpamlessFilter: '%s'>" % (self.id, self.regex)
 
 # 2. Indexes
 
