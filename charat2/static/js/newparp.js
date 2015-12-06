@@ -1141,7 +1141,6 @@ var msparp = (function() {
 			Handlebars.registerHelper("group_description", function(group) { return group_descriptions[group]; });
 			Handlebars.registerHelper("is_you", function() { return this.meta.number == user.meta.number; });
 			Handlebars.registerHelper("is_highlighted", function() { return user.meta.highlighted_numbers.indexOf(this.meta.number) != -1; });
-			Handlebars.registerHelper("can_ignore", function() { return this.meta.number !== user.meta.number;} );
 			Handlebars.registerHelper("is_ignored", function() { return user.meta.ignored_numbers.indexOf(this.meta.number) != -1; });
 			Handlebars.registerHelper("admin", function() { return user.meta.group == "admin"; });
 
