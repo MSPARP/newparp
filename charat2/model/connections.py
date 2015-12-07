@@ -91,6 +91,8 @@ def use_db(f):
             )).scalar()
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
+            # Commit the changes to last_online and last_ip
+            g.db.commit()
         ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers["X-Forwarded-For"])).scalar()
         g.ip_banned = ip_bans > 0
         if g.ip_banned and (g.user is None or not g.user.is_admin):
@@ -115,6 +117,8 @@ def get_chat_user():
         abort(400)
     g.user.last_online = datetime.now()
     g.user.last_ip = request.headers["X-Forwarded-For"]
+    # Commit the changes to last_online and last_ip
+    g.db.commit()
     if g.user.group == "banned":
         abort(403)
     ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers["X-Forwarded-For"])).scalar()
