@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import time
+import json
 
 from redis import StrictRedis
 from sqlalchemy import and_, func
@@ -101,7 +102,7 @@ if __name__ == "__main__":
             connected_users = set()
             next_index = 0
             while True:
-                next_index, keys = redis.scan(next_index,"chat:*:online")
+                next_index, keys = redis.scan(next_index, "chat:*:online")
                 for key in keys:
                     for user_id in redis.hvals(key):
                         connected_users.add(user_id)

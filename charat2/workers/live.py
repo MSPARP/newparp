@@ -28,6 +28,7 @@ from charat2.helpers.chat import (
     authorize_joining,
     kick_check,
     join,
+    send_userlist,
     get_userlist,
     disconnect,
     send_quit_message,
