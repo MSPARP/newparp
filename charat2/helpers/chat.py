@@ -134,6 +134,9 @@ def join(redis, db, context):
     online_id = context.id if hasattr(context, "id") else context.session_id
     redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
 
+    # Commit early because of the potential of deadlocks on the last_online.
+    db.commit()
+
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:
         if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
