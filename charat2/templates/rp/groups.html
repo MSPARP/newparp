@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block title: %}Group chats - {% endblock %}
 {% block content: %}
-    <div class="toggle_box">
-        <input type="checkbox" id="toggle_create_chat"{% if "create_chat_error" in request.args: %} checked="checked"{% endif %}>
-        <h2>&gt; <label for="toggle_create_chat">Create a group chat</label></h2>
+    <div id="create_chat">
+        <h2>&gt; <label>Create a group chat</label></h2>
         {% if "create_chat_error" in request.args: %}
         {% if request.args["create_chat_error"] == "url_invalid": %}
         <p class="error">That URL isn't valid. Chat URLs can only contain letters, numbers, hyphens and underscores.</p>
