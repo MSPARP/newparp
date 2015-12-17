@@ -16,7 +16,7 @@ from tornado.gen import engine, Task
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
-from tornado.websocket import WebSocketHandler
+from tornado.websocket import WebSocketHandler, WebSocketClosedError
 from tornadoredis import Client
 from uuid import uuid4
 
@@ -196,7 +196,12 @@ class ChatHandler(WebSocketHandler):
             print("redis message: %s" % str(message))
         if message.kind != "message":
             return
-        self.write_message(message.body)
+
+        try:
+            self.write_message(message.body)
+        except WebSocketClosedError:
+            self.close()
+
         if message.channel == self.channels["user"]:
             data = json.loads(message.body)
             if "exit" in data:
