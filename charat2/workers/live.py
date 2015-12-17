@@ -12,7 +12,7 @@ from datetime import datetime
 from redis import StrictRedis
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
-from tornado.gen import engine, Task
+from tornado.gen import coroutine, Task
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
@@ -101,7 +101,9 @@ class ChatHandler(WebSocketHandler):
             self.send_error(403)
             return
 
+    @coroutine
     def open(self, chat_id):
+
         redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
         sockets.add(self)
         redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
@@ -123,7 +125,7 @@ class ChatHandler(WebSocketHandler):
         }
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
-        self.redis_listen()
+        yield self.redis_listen()
 
         # Send backlog.
         try:
@@ -178,16 +180,15 @@ class ChatHandler(WebSocketHandler):
             del self.db
         super(ChatHandler, self).finish(*args, **kwargs)
 
-    @engine
+    @coroutine
     def redis_listen(self):
         self.redis_client = Client(
             host=os.environ["REDIS_HOST"],
             port=int(os.environ["REDIS_PORT"]),
             selected_db=int(os.environ["REDIS_DB"]),
         )
-
         # Set the connection name, subscribe, and listen.
-        self.redis_client.execute_command("CLIENT", "SETNAME", "live:%s:%s" % (self.chat_id, self.user_id))
+        yield Task(self.redis_client.execute_command, "CLIENT", "SETNAME", "live:%s:%s" % (self.chat_id, self.user_id))
         yield Task(self.redis_client.subscribe, self.channels.values())
         self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
 
