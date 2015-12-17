@@ -185,6 +185,9 @@ class ChatHandler(WebSocketHandler):
             port=int(os.environ["REDIS_PORT"]),
             selected_db=int(os.environ["REDIS_DB"]),
         )
+
+        # Set the connection name, subscribe, and listen.
+        self.redis_client.execute_command("CLIENT", "SETNAME", "live:%s:%s" % (self.chat_id, self.user_id))
         yield Task(self.redis_client.subscribe, self.channels.values())
         self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
 
