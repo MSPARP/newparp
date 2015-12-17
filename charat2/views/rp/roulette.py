@@ -68,16 +68,16 @@ def roulette_continue():
     g.redis.expire("roulette:%s:session_id" % searcher_id, 30)
     g.redis.expire("roulette:%s:search_character_id" % searcher_id, 30)
     g.redis.expire("roulette:%s:character_id" % searcher_id, 30)
-    pubsub = g.redis.pubsub()
-    pubsub.subscribe("roulette:%s" % searcher_id)
+    g.pubsub = g.redis.pubsub()
+    g.pubsub.subscribe("roulette:%s" % searcher_id)
     g.redis.sadd("roulette_searchers", searcher_id)
-    for msg in pubsub.listen():
+    for msg in g.pubsub.listen():
         if msg["type"] == "message":
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
-            pubsub.close()
+            g.pubsub.close()
             return resp
 
 

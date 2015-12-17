@@ -55,7 +55,13 @@ def redis_connect():
 
 
 def redis_disconnect(response):
-    del g.redis
+    if hasattr(g, "pubsub"):
+        g.pubsub.close()
+        del g.pubsub
+
+    if hasattr(g, "redis"):
+        del g.redis
+
     return response
 
 
