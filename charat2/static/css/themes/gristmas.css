@@ -32,23 +32,23 @@
 	100% { background-position: 0px bottom, center bottom, 0px 300px; }
 }
 
-#pm_chat_list_container, #info_panel, #conversation, .chat .pager, #archive_conversation  {background: url('static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('static/img/sn0w.gif') repeat; background-position: 0px bottom, 0px 0px; animation: snowdrift_main 41.3s ease-in-out infinite; }
+#pm_chat_list_container, #info_panel, #conversation, .chat .pager, #archive_conversation  {background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, 0px 0px; animation: snowdrift_main 41.3s ease-in-out infinite; }
 
 #info_panel { background-color: #eee; }
 
-.sidebar, .sidebar.kringle { background: url('static/img/sn0wfloor.gif') repeat-x, url('static/img/kringlefucker.png') no-repeat, rgba(255,255,255,.67) url('static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
+.sidebar, .sidebar.kringle { background: url('/static/img/sn0wfloor.gif') repeat-x, url('/static/img/kringlefucker.png') no-repeat, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
 
-.sidebar.manorah { background: url('static/img/sn0wfloor.gif') repeat-x, url('static/img/manorah.gif') no-repeat, rgba(255,255,255,.67) url('static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
+.sidebar.manorah { background: url('/static/img/sn0wfloor.gif') repeat-x, url('/static/img/manorah.gif') no-repeat, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
 
-.sidebar.geromy { background: url('static/img/sn0wfloor.gif') repeat-x, url('static/img/geromy.png') no-repeat, rgba(255,255,255,.67) url('static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
+.sidebar.geromy { background: url('/static/img/sn0wfloor.gif') repeat-x, url('/static/img/geromy.png') no-repeat, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
 
-.sidebar.omg { background: url('static/img/sn0wfloor.gif') repeat-x, url('static/img/omg.png') no-repeat, rgba(255,255,255,.67) url('static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
+.sidebar.omg { background: url('/static/img/sn0wfloor.gif') repeat-x, url('/static/img/omg.png') no-repeat, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
 
 
 /* conksuck list styles */
 
 li {
-	background: url('static/img/minisuck.png') no-repeat 3px 0px transparent;
+	background: url('/static/img/minisuck.png') no-repeat 3px 0px transparent;
     list-style-type: none;
     vertical-align: middle;
 	position:relative;
@@ -85,7 +85,7 @@ body { overflow:hidden; }
 	top: 50%;
 	right: -500px;
 	z-index: -1;
-	background: url('static/img/secret.gif') 0 0 repeat;
+	background: url('/static/img/secret.gif') 0 0 repeat;
 	animation: thebigmancomes 6120s linear infinite;
 }
 
@@ -112,7 +112,7 @@ h2:before, h2:after {
 	display:inline-block;
 	width:70px;
 	height:25px;
-	background: url('static/img/minilights.gif') 0 0 repeat;
+	background: url('/static/img/minilights.gif') 0 0 repeat;
 	background-size:100% 100%;
 	vertical-align:middle;
 }
