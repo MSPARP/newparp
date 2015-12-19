@@ -7,6 +7,8 @@ themes = OrderedDict([
     ("default_monochrome", "Default (monochrome)"),
     ("darkskin", "Dark skin"),
     ("darkskin_monochrome", "Dark skin (monochrome)"),
+    ("gristmas", "Gristmas"),
+    ("gristmas_dark", "Gristmas (dark)"),
 ])
 
 

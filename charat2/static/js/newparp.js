@@ -1269,6 +1269,7 @@ var msparp = (function() {
 					var theme_stylesheet = $("#theme_stylesheet");
 					if (new_theme) {
 						var stylesheet_url = "/static/css/themes/" + new_theme + ".css";
+						update_theme(new_theme);
 						if (theme_stylesheet.length == 1) {
 							theme_stylesheet.attr("href", stylesheet_url);
 						} else {
@@ -1524,6 +1525,34 @@ var msparp = (function() {
 					announcement.remove();
 				}, 1000)
 			});
+
+			// Theme specific code
+			function update_theme(theme) {
+				$(".sidebar").removeClass("omg kringle manorah geromy");
+
+				if (theme === "gristmas" || theme === "gristmas_dark") {
+					userAgent = window.navigator.userAgent;
+					if(/iP(hone|od|ad)/.test(userAgent) == false) {
+						$( "body" ).append( '<div class="sbigman"></div>' );
+					}
+
+					if(/Android/i.test(userAgent) || /iP(hone|od|ad)/.test(userAgent)) {
+						$( "body" ).addClass("nodrift");
+					}
+
+					// randomised sidebar in here 8ecause them's the 8r8ks
+					var rnjesus = Math.floor((Math.random() * 100) + 1);
+					if (rnjesus < 2) {
+						$('.sidebar').addClass("omg");
+					} else if (rnjesus < 46) {
+						$('.sidebar').addClass("kringle");
+					} else if (rnjesus < 90) {
+						$('.sidebar').addClass("manorah");
+					} else {
+						$('.sidebar').addClass("geromy");
+					}
+				}
+			}
 
 			// Now all that's done, let's connect
 			connect();
