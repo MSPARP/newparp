@@ -178,11 +178,10 @@ class ChatHandler(WebSocketHandler):
         except KeyError:
             pass
 
-    def finish(self, *args, **kwargs):
+    def on_finish(self):
         if hasattr(self, "db"):
             self.db.close()
             del self.db
-        super(ChatHandler, self).finish(*args, **kwargs)
 
     @coroutine
     def redis_listen(self):
@@ -244,11 +243,10 @@ class HealthHandler(RequestHandler):
         self.db.query(SearchCharacter).first()
         self.write("ok")
 
-    def finish(self, *args, **kwargs):
+    def on_finish(self):
         if hasattr(self, "db"):
             self.db.close()
             del self.db
-        super(HealthHandler, self).finish(*args, **kwargs)
 
 if __name__ == "__main__":
 
