@@ -172,7 +172,11 @@ class ChatHandler(WebSocketHandler):
             print("socket closed: %s" % (self.id))
         redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         redis.zrem("sockets_alive", "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
-        sockets.remove(self)
+
+        try:
+            sockets.remove(self)
+        except KeyError:
+            pass
 
     def finish(self, *args, **kwargs):
         if hasattr(self, "db"):
