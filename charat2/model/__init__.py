@@ -37,7 +37,8 @@ engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
     echo="ECHO" in os.environ or "--debug" in sys.argv,
-    pool_size=25,
+    pool_size=50,
+    max_overflow=100,
 )
 
 sm = sessionmaker(
