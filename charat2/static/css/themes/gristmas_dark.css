@@ -124,8 +124,6 @@ li {
 	100% { top:-200px; right:100%; transform:rotate(250deg) }
 } */
 
-body { overflow:hidden }
-
 .sbigman  {
 	content: "";
 	position:absolute;
