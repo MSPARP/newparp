@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 from flask import abort, g, redirect, request, url_for
 from functools import wraps
@@ -13,8 +14,14 @@ themes = OrderedDict([
 
 
 def check_csrf_token():
+    # Check CSRF only for POST requests.
     if request.method != "POST":
         return
+
+    # Ignore CSRF only for local debugging.
+    if 'NOCSRF' in os.environ:
+        return
+
     token = g.redis.get("session:%s:csrf" % g.session_id)
     if "token" in request.form and request.form["token"] == token:
         return
