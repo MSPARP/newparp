@@ -1529,6 +1529,7 @@ var msparp = (function() {
 			// Theme specific code
 			function update_theme(theme) {
 				$(".sidebar").removeClass("omg kringle manorah geromy");
+				$(".sbigman").remove();
 
 				if (theme === "gristmas" || theme === "gristmas_dark") {
 					userAgent = window.navigator.userAgent;
@@ -1553,6 +1554,9 @@ var msparp = (function() {
 					}
 				}
 			}
+
+			// Run theme specific code.
+			update_theme($("theme_form select").val());
 
 			// Now all that's done, let's connect
 			connect();
