@@ -1531,7 +1531,13 @@ var msparp = (function() {
 				$(".sidebar").removeClass("omg kringle manorah geromy");
 				$(".sbigman").remove();
 
-				if (theme === "gristmas" || theme === "gristmas_dark") {
+				if (typeof theme === "string" && theme.match(/gristmas/)) {
+					if (theme.match(/noanimate/)) {
+						$('body').addClass('stopmoving');
+					} else {
+						$('body').removeClass('stopmoving');
+					}
+
 					userAgent = window.navigator.userAgent;
 					if(/iP(hone|od|ad)/.test(userAgent) == false) {
 						$( "body" ).append( '<div class="sbigman"></div>' );

@@ -148,3 +148,16 @@ h2:after { margin-left:6px; }
 *::-webkit-scrollbar-track, *::-webkit-scrollbar-corner { background: transparent; }
 *::-webkit-scrollbar-thumb { background-color: #b9b9b9; }
 
+/* disable animation button */
+
+.stopmoving .sbigman { display: none !important; }
+
+.stopmoving .sidebar, .stopmoving .sidebar.kringle { background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/kringlefucker.png') no-repeat; background-position: 0px bottom, center bottom; animation: none; }
+
+.stopmoving .sidebar.manorah { background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/manorah.gif') no-repeat; background-position: 0px bottom, center bottom; animation: none; }
+
+.stopmoving .sidebar.geromy { background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/geromy.png') no-repeat; background-position: 0px bottom, center bottom; animation: none; }
+
+.stopmoving .sidebar.omg { background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/omg.png') no-repeat; background-position: 0px bottom, center bottom; animation: none; }
+
+.stopmoving #pm_chat_list_container, .stopmoving #info_panel, .stopmoving #conversation, .stopmoving .chat .pager, .stopmoving #archive_conversation  { background: rgba(255,255,255,.67) url('/static/img/sn0wfloor.gif') repeat-x; background-position: 0px bottom; animation: none; }

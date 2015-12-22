@@ -9,7 +9,9 @@ themes = OrderedDict([
     ("darkskin", "Dark skin"),
     ("darkskin_monochrome", "Dark skin (monochrome)"),
     ("gristmas", "Gristmas"),
-    ("gristmas_dark", "Gristmas (dark)"),
+    ("gristmas_noanimate", "Gristmas (No animations)"),
+    ("gristmas_dark", "Dark Gristmas"),
+    ("gristmas_dark_noanimate", "Dark Gristmas (No animations)"),
 ])
 
 
