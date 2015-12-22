@@ -32,7 +32,7 @@
 	100% { background-position: 0px bottom, center bottom, 0px 300px; }
 }
 
-#pm_chat_list_container, #info_panel, #conversation, .chat .pager, #archive_conversation  {background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, 0px 0px; animation: snowdrift_main 41.3s ease-in-out infinite; }
+#pm_chat_list_container, #info_panel, #conversation, .chat .pager, #archive_conversation  { background: url('/static/img/sn0wfloor.gif') repeat-x, rgba(255,255,255,.67) url('/static/img/sn0w.gif') repeat; background-position: 0px bottom, 0px 0px; animation: snowdrift_main 41.3s ease-in-out infinite; }
 
 #info_panel { background-color: #eee; }
 

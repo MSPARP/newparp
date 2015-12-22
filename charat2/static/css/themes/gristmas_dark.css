@@ -9,7 +9,7 @@
 
 /* 4. Chat window */
 
-body.chat { background-color:#1d1f2c; color: #626262 }
+body.chat { background-color:#1d1f2c; color: #626262; }
 .chat input, .chat textarea, .chat button, .chat select { background-color: #535353; color:#ccc; }
 
 /* 4.1. Topbar and info panel */
@@ -51,14 +51,14 @@ body.chat { background-color:#1d1f2c; color: #626262 }
 
 /* override character colours */
 
-*[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{ color: #2323ed !important }
-*[style*="color: #2b0057"],*[style*="color: #2B0057"],*[style*="color: rgb(43, 0, 87)"]{ color: #6d03de !important }
-*[style*="color: #0715cd"],*[style*="color: #0715CD"],*[style*="color: rgb(7, 20, 205)"]{ color: #172aff !important }
+*[style*="color: #000056"], *[style*="color: rgb(0, 0, 86)"] { color: #2323ed !important; }
+*[style*="color: #2b0057"], *[style*="color: #2B0057"], *[style*="color: rgb(43, 0, 87)"]{ color: #6d03de !important; }
+*[style*="color: #0715cd"], *[style*="color: #0715CD"], *[style*="color: rgb(7, 20, 205)"]{ color: #172aff !important; }
 
 
 /* Transparency instead of solid colour for shenanigans */
 
-#text_preview, #topbar { background-color: rgba(0,0,0,.67) !important }
+#text_preview, #topbar { background-color: rgba(0,0,0,.67) !important; }
 
 
 /* Gristmas snow */
@@ -83,7 +83,7 @@ body.chat { background-color:#1d1f2c; color: #626262 }
 
 #pm_chat_list_container, #info_panel, #conversation, .chat .pager, #archive_conversation { background: url('/static/img/sn0wfloor_b.gif') repeat-x, rgba(0,0,0,.67) url('/static/img/sn0w_b.gif') repeat; background-position: 0px bottom, 0px 0px; animation: snowdrift_main 41.3s ease-in-out infinite; }
 
-#info_panel { background-color: #000}
+#info_panel { background-color: #000; }
 
 .sidebar, .sidebar.kringle { background: url('/static/img/sn0wfloor_b.gif') repeat-x, url('/static/img/kringlefucker.png') no-repeat, rgba(0,0,0,.67) url('/static/img/sn0w_b.gif') repeat; background-position: 0px bottom, center bottom, 0px 0px; animation: snowdrift_side 41.3s ease-in-out infinite; }
 
@@ -169,8 +169,8 @@ h2:before, h2:after {
 	#switch_character h2:before, #switch_character h2:after,#settings h2:before { content:none; }
 }
 	
-h2:before { margin-right:6px }
-h2:after { margin-left:6px}  
+h2:before { margin-right:6px; }
+h2:after { margin-left:6px; }
  
 .chat button, #log_button { background-color: #d12614; color:#0a0a0e; }
 .chat button:hover, #log_button:hover { background-color: #e13624; }
