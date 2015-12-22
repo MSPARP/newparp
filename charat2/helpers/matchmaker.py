@@ -1,3 +1,4 @@
+import os
 import time
 import json
 import logging
@@ -25,15 +26,15 @@ def run_matchmaker(
     check_compatibility, ChatClass, get_character_info,
 ):
 
-    # XXX get log level from stdin
     root = logging.getLogger()
-    root.setLevel(logging.DEBUG)
+    if 'DEBUG' in os.environ:
+        root.setLevel(logging.DEBUG)
 
     db = sm()
 
-    print("Obtaining lock...")
+    logging.info("Obtaining lock...")
     db.query(func.pg_advisory_lock(413, lock_id)).scalar()
-    print("Lock obtained.")
+    logging.info("Lock obtained.")
 
     redis = StrictRedis(connection_pool=redis_pool)
 
