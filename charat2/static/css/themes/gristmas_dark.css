@@ -207,4 +207,5 @@ h2:after { margin-left:6px; }
 
 .stopmoving .sidebar.omg { background: url('/static/img/sn0wfloor_b.gif') repeat-x, rgba(0,0,0,.67) url('/static/img/omg.png') no-repeat; background-position: 0px bottom, center bottom; animation: none; }
 
-.stopmoving #pm_chat_list_container, .stopmoving #info_panel, .stopmoving #conversation, .stopmoving .chat .pager, .stopmoving #archive_conversation  { background: rgba(0,0,0,.67) url('/static/img/sn0wfloor_b.gif') repeat-x; background-position: 0px bottom; animation: none; }
+.stopmoving #pm_chat_list_container, .stopmoving #info_panel, .stopmoving #conversation, .stopmoving .chat .pager, .stopmoving #archive_conversation  { background: rgb(0, 0, 0) url('/static/img/sn0wfloor_b.gif') repeat-x; background-position: 0px bottom; animation: none; }
+
