@@ -145,7 +145,7 @@ li {
 
 body.chat, .chat p, .sidebar h3  { color: #29ab22; }
  
-a, #user_list_container a,  h2, h3 label { color: #d12614; }
+a, #user_list_container a,  h2, h3 label, .sidebar ul { color: #d12614; }
 
 .sidebar ul, .sidebar p, .sidebar h2, #mod_tools { background-color:rgba(10,10,14,.8); border-radius:8px; }
 
