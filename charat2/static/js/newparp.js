@@ -1562,7 +1562,7 @@ var msparp = (function() {
 			}
 
 			// Run theme specific code.
-			update_theme($("theme_form select").val());
+			update_theme($("#theme_form select").val());
 
 			// Now all that's done, let's connect
 			connect();
