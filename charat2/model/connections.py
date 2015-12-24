@@ -90,11 +90,7 @@ def use_db(f):
                 return f(*args, **kwargs)
             g.user.last_online = datetime.now()
             g.user.last_ip = request.headers["X-Forwarded-For"]
-            g.unread_chats = g.db.query(func.count('*')).select_from(ChatUser).join(Chat).filter(and_(
-                ChatUser.user_id == g.user.id,
-                ChatUser.subscribed == True,
-                Chat.last_message > ChatUser.last_online,
-            )).scalar()
+            g.unread_chats = 0
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
             # Commit the changes to last_online and last_ip
