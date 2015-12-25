@@ -1,4 +1,5 @@
 from celery import Celery, Task
+from classtools import reify
 from redis import StrictRedis
 
 from charat2.model import sm
@@ -15,19 +16,19 @@ celery.config_from_object('charat2.tasks.config')
 
 class WorkerTask(Task):
     abstrct = True
-    _db = None
-    _redis = None
 
-    @property
+    @reify
     def db(self):
-        if self._db is None:
-            self._db = sm()
+        return sm()
 
-        return self._db
-
-    @property
+    @reify
     def redis(self):
-        if self._redis is None:
-            self._redis = StrictRedis(connection_pool=redis_pool)
+        return StrictRedis(connection_pool=redis_pool)
 
-        return self._redis
+    def after_return(self, *args, **kwargs):
+        if hasattr(self, "db"):
+            self.db.close()
+            del self.db
+
+        if hasattr(self, "redis"):
+            del self.redis
