@@ -37,8 +37,6 @@ def run_matchmaker(
 
     logging.info("Starting match loop.")
 
-    searcher_ids = redis.smembers(searchers_key)
-
     # We can't do anything with less than 2 people, so don't bother.
     if len(searcher_ids) < 2:
         logging.info("Not enough searchers, skipping.")
