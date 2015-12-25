@@ -98,7 +98,7 @@ def broadcast_post():
 
     next_index = 0
     while True:
-        next_index, keys = g.redis.scan(next_index,"chat:*:online")
+        next_index, keys = g.redis.scan(next_index, "chat:*:online")
         for key in keys:
             chat_id = key[5:-7]
             g.redis.publish("channel:%s" % chat_id, message_json)
@@ -669,9 +669,9 @@ def new_ip_ban():
 
     try:
         g.db.add(IPBan(
-            address = full_address[:42],
-            creator_id = g.user.id,
-            reason = request.form["reason"][:255],
+            address=full_address[:42],
+            creator_id=g.user.id,
+            reason=request.form["reason"][:255],
         ))
         g.db.flush()
     except DataError:

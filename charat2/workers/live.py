@@ -233,6 +233,7 @@ def shutdown():
     for socket in sockets:
         ioloop.add_callback(socket.close)
     deadline = time.time() + 10
+
     def stop_loop():
         now = time.time()
         if now < deadline and (ioloop._callbacks or ioloop._timeouts):

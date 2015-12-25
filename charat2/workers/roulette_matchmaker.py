@@ -27,7 +27,7 @@ def get_searcher_info(redis, searcher_ids):
 
 
 def check_compatibility(redis, s1, s2):
-	# Don't pair people with themselves.
+    # Don't pair people with themselves.
     if s1["user_id"] == s2["user_id"]:
         return False, ("roulette",)
     # Don't match if they've already been paired up recently.

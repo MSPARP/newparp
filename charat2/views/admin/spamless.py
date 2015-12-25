@@ -1,4 +1,5 @@
-import paginate, re
+import paginate
+import re
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
