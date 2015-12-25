@@ -1,6 +1,10 @@
+from celery.utils.log import get_task_logger
+
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import SearchedChat
 from charat2.tasks import celery, WorkerTask
+
+logger = get_task_logger(__name__)
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
@@ -59,16 +63,16 @@ def check_compatibility(redis, s1, s2):
     s1_name = s1["character"]["name"].lower().encode("utf8")
     for search_filter in s2["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s1_name, search_filter))
+        logger.debug("comparing %s and %s" % (s1_name, search_filter))
         if search_filter in s1_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
     s2_name = s2["character"]["name"].lower().encode("utf8")
     for search_filter in s1["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s2_name, search_filter))
+        logger.debug("comparing %s and %s" % (s2_name, search_filter))
         if search_filter in s2_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
 
     if (
