@@ -14,6 +14,7 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT", "redis://localhost/1")
 # Time
 CELERY_TIMEZONE = "UTC"
 CELERY_ENABLE_UTC = True
+CELERY_TASK_RESULT_EXPIRES = 21600  # 21600 seconds = 6 hours
 
 # Logging
 CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
