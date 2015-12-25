@@ -17,6 +17,8 @@ def generate_counters():
     redis = generate_counters.redis
 
     logger.info("Generating user counters.")
+
+    # Online user counter
     connected_users = set()
     next_index = 0
     while True:
@@ -27,6 +29,8 @@ def generate_counters():
         if int(next_index) == 0:
             break
     redis.set("connected_users", len(connected_users))
+
+    # Searching counter
     searching_users = set()
     for searcher_id in redis.smembers("searchers"):
         session_id = redis.get("searcher:%s:session_id" % searcher_id)
@@ -34,6 +38,8 @@ def generate_counters():
         if user_id is not None:
             searching_users.add(user_id)
     redis.set("searching_users", len(searching_users))
+
+    # Roulette counter
     rouletting_users = set()
     for searcher_id in redis.smembers("roulette_searchers"):
         session_id = redis.get("roulette:%s:session_id" % searcher_id)
