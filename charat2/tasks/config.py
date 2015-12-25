@@ -5,18 +5,25 @@ from datetime import timedelta
 if 'DEBUG' in os.environ:
     CELERY_REDIRECT_STDOUTS_LEVEL = "DEBUG"
 
-# URLs
+# Broker and Result backends
 BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost/1")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT", "redis://localhost/1")
+
+# Time
+CELERY_TIMEZONE = "UTC"
+CELERY_ENABLE_UTC = True
+
+# Logging
+CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
 
 # Serialization
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
 
+# Performance
 CELERYD_PREFETCH_MULTIPLIER = 1
 CELERY_DISABLE_RATE_LIMITS = True
-CELERY_TIMEZONE = "UTC"
-CELERY_ENABLE_UTC = True
 
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
