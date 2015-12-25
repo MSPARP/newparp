@@ -15,7 +15,7 @@ celery = Celery("newparp", include=[
 celery.config_from_object('charat2.tasks.config')
 
 class WorkerTask(Task):
-    abstrct = True
+    abstract = True
 
     @reify
     def db(self):
