@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 
+from kombu import Exchange, Queue
+
 # Debug
 if 'DEBUG' in os.environ:
     CELERY_REDIRECT_STDOUTS_LEVEL = "DEBUG"
@@ -25,6 +27,17 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERYD_PREFETCH_MULTIPLIER = 1
 CELERY_DISABLE_RATE_LIMITS = True
 
+# Queue config
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_QUEUES = (
+    # Default queue
+    Queue('default', Exchange('default'), routing_key='default'),
+
+    # Worker queue
+    Queue('worker', Exchange('worker'), routing_key='worker'),
+)
+
+# Beats config
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
         "task": "charat2.tasks.reaper.generate_counters",
