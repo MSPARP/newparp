@@ -1,5 +1,4 @@
 import os
-import time
 import json
 import logging
 
@@ -35,8 +34,6 @@ def run_matchmaker(
     for searcher in searcher_ids:
         logging.debug("Waking unmatched searcher %s." % searcher)
         redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
-
-    time.sleep(10)
 
     logging.info("Starting match loop.")
 
