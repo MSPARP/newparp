@@ -1,10 +1,6 @@
-#!/usr/bin/python
-
-import time
-
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import SearchedChat
-
+from charat2.tasks import celery, WorkerTask
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
@@ -90,10 +86,13 @@ def check_compatibility(redis, s1, s2):
 def get_character_info(db, searcher):
     return searcher["character"]
 
+@celery.task(base=WorkerTask)
+def run():
+    db = run.db
+    redis = run.redis
 
-if __name__ == "__main__":
     run_matchmaker(
-        2, "searchers", "searcher", get_searcher_info,
+        db, redis, 2, "searchers", "searcher", get_searcher_info,
         check_compatibility, SearchedChat, get_character_info,
     )
 

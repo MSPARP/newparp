@@ -4,12 +4,10 @@ import json
 import logging
 
 from random import shuffle
-from redis import StrictRedis
 from sqlalchemy import and_, func
 from uuid import uuid4
 
-from charat2.model import sm, Block, ChatUser, Message, User
-from charat2.model.connections import redis_pool
+from charat2.model import Block, ChatUser, Message, User
 
 option_messages = {
     "script": "This is a script style chat.",
@@ -22,108 +20,98 @@ option_messages = {
 
 
 def run_matchmaker(
-    lock_id, searchers_key, searcher_prefix, get_searcher_info,
-    check_compatibility, ChatClass, get_character_info,
+    db, redis, lock_id, searchers_key, searcher_prefix, get_searcher_info,
+    check_compatibility, ChatClass, get_character_info
 ):
 
     root = logging.getLogger()
     if 'DEBUG' in os.environ:
         root.setLevel(logging.DEBUG)
 
-    db = sm()
+    searcher_ids = redis.smembers(searchers_key)
 
-    logging.info("Obtaining lock...")
-    db.query(func.pg_advisory_lock(413, lock_id)).scalar()
-    logging.info("Lock obtained.")
+    # Reset the searcher list for the next iteration.
+    redis.delete(searchers_key)
+    for searcher in searcher_ids:
+        logging.debug("Waking unmatched searcher %s." % searcher)
+        redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
 
-    redis = StrictRedis(connection_pool=redis_pool)
+    time.sleep(10)
+
+    logging.info("Starting match loop.")
 
     searcher_ids = redis.smembers(searchers_key)
 
-    while True:
+    # We can't do anything with less than 2 people, so don't bother.
+    if len(searcher_ids) < 2:
+        logging.info("Not enough searchers, skipping.")
+        return
 
-        # Reset the searcher list for the next iteration.
-        redis.delete(searchers_key)
-        for searcher in searcher_ids:
-            logging.debug("Waking unmatched searcher %s." % searcher)
-            redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
+    searchers = get_searcher_info(redis, searcher_ids)
+    logging.debug("Searcher list: %s" % searchers)
+    shuffle(searchers)
 
-        time.sleep(10)
+    already_matched = set()
+    # Range hack so we don't check opposite pairs or against itself.
+    for n in range(len(searchers)):
+        s1 = searchers[n]
 
-        logging.info("Starting match loop.")
+        for m in range(n + 1, len(searchers)):
+            s2 = searchers[m]
 
-        searcher_ids = redis.smembers(searchers_key)
+            if s1["id"] in already_matched or s2["id"] in already_matched:
+                continue
 
-        # We can't do anything with less than 2 people, so don't bother.
-        if len(searcher_ids) < 2:
-            logging.info("Not enough searchers, skipping.")
-            continue
+            logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
 
-        searchers = get_searcher_info(redis, searcher_ids)
-        logging.debug("Searcher list: %s" % searchers)
-        shuffle(searchers)
+            match, options = check_compatibility(redis, s1, s2)
+            if not match:
+                logging.debug("No match.")
+                continue
 
-        already_matched = set()
-        # Range hack so we don't check opposite pairs or against itself.
-        for n in range(len(searchers)):
-            s1 = searchers[n]
+            blocked = (
+                db.query(func.count("*")).select_from(Block).filter(and_(
+                    Block.blocking_user_id == s1["user_id"],
+                    Block.blocked_user_id == s2["user_id"]
+                )).scalar() != 0
+                or db.query(func.count("*")).select_from(Block).filter(and_(
+                    Block.blocking_user_id == s2["user_id"],
+                    Block.blocked_user_id == s1["user_id"]
+                )).scalar() != 0
+            )
+            if blocked:
+                logging.debug("Blocked.")
+                continue
 
-            for m in range(n + 1, len(searchers)):
-                s2 = searchers[m]
+            new_url = str(uuid4()).replace("-", "")
+            logging.info(
+                "Matched %s and %s, sending to %s."
+                % (s1["id"], s2["id"], new_url)
+            )
+            new_chat = ChatClass(url=new_url)
+            db.add(new_chat)
+            db.flush()
 
-                if s1["id"] in already_matched or s2["id"] in already_matched:
-                    continue
+            s1_user = db.query(User).filter(User.id == s1["user_id"]).one()
+            s2_user = db.query(User).filter(User.id == s2["user_id"]).one()
+            db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, **get_character_info(db, s1)))
+            db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, **get_character_info(db, s2)))
 
-                logging.debug("Comparing %s and %s." % (s1["id"], s2["id"]))
+            if options:
+                db.add(Message(
+                    chat_id=new_chat.id,
+                    type="search_info",
+                    text=" ".join(option_messages[_] for _ in options),
+                ))
 
-                match, options = check_compatibility(redis, s1, s2)
-                if not match:
-                    logging.debug("No match.")
-                    continue
+            db.commit()
 
-                blocked = (
-                    db.query(func.count("*")).select_from(Block).filter(and_(
-                        Block.blocking_user_id == s1["user_id"],
-                        Block.blocked_user_id == s2["user_id"]
-                    )).scalar() != 0
-                    or db.query(func.count("*")).select_from(Block).filter(and_(
-                        Block.blocking_user_id == s2["user_id"],
-                        Block.blocked_user_id == s1["user_id"]
-                    )).scalar() != 0
-                )
-                if blocked:
-                    logging.debug("Blocked.")
-                    continue
+            already_matched.add(s1["id"])
+            already_matched.add(s2["id"])
 
-                new_url = str(uuid4()).replace("-", "")
-                logging.info(
-                    "Matched %s and %s, sending to %s."
-                    % (s1["id"], s2["id"], new_url)
-                )
-                new_chat = ChatClass(url=new_url)
-                db.add(new_chat)
-                db.flush()
-
-                s1_user = db.query(User).filter(User.id == s1["user_id"]).one()
-                s2_user = db.query(User).filter(User.id == s2["user_id"]).one()
-                db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, **get_character_info(db, s1)))
-                db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, **get_character_info(db, s2)))
-
-                if options:
-                    db.add(Message(
-                        chat_id=new_chat.id,
-                        type="search_info",
-                        text=" ".join(option_messages[_] for _ in options),
-                    ))
-
-                db.commit()
-
-                already_matched.add(s1["id"])
-                already_matched.add(s2["id"])
-
-                match_message = json.dumps({ "status": "matched", "url": new_url })
-                redis.publish("%s:%s" % (searcher_prefix, s1["id"]), match_message)
-                redis.publish("%s:%s" % (searcher_prefix, s2["id"]), match_message)
-                searcher_ids.remove(s1["id"])
-                searcher_ids.remove(s2["id"])
+            match_message = json.dumps({ "status": "matched", "url": new_url })
+            redis.publish("%s:%s" % (searcher_prefix, s1["id"]), match_message)
+            redis.publish("%s:%s" % (searcher_prefix, s2["id"]), match_message)
+            searcher_ids.remove(s1["id"])
+            searcher_ids.remove(s2["id"])
 

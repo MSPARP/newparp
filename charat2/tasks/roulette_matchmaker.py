@@ -1,10 +1,8 @@
-#!/usr/bin/python
-
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import Character, RouletteChat, SearchCharacter
-
+from charat2.tasks import celery, WorkerTask
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
@@ -77,10 +75,13 @@ def get_character_info(db, searcher):
         "regexes": search_character.regexes,
     }
 
+@celery.task(base=WorkerTask)
+def run():
+    db = run.db
+    redis = run.redis
 
-if __name__ == "__main__":
     run_matchmaker(
-        3, "roulette_searchers", "roulette", get_searcher_info,
+        db, redis, 3, "roulette_searchers", "roulette", get_searcher_info,
         check_compatibility, RouletteChat, get_character_info,
     )
 
