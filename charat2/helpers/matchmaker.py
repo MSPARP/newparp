@@ -31,9 +31,6 @@ def run_matchmaker(
 
     # Reset the searcher list for the next iteration.
     redis.delete(searchers_key)
-    for searcher in searcher_ids:
-        logging.debug("Waking unmatched searcher %s." % searcher)
-        redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
 
     logging.info("Starting match loop.")
 
@@ -109,4 +106,8 @@ def run_matchmaker(
             redis.publish("%s:%s" % (searcher_prefix, s2["id"]), match_message)
             searcher_ids.remove(s1["id"])
             searcher_ids.remove(s2["id"])
+
+    for searcher in searcher_ids:
+        logging.debug("Waking unmatched searcher %s." % searcher)
+        redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
 
