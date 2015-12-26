@@ -210,12 +210,8 @@ def send_message(db, redis, message, force_userlist=False):
 
         message.chat.last_message = message.posted
 
-        # Update last_online field for everyone who is online.
-        # if len(online_user_ids) != 0:
-        #     db.query(ChatUser).filter(and_(
-        #         ChatUser.user_id.in_(online_user_ids),
-        #         ChatUser.chat_id == message.chat.id,
-        #     )).update({ "last_online": message.posted }, synchronize_session=False)
+        # Queue an update for the last_online field.
+        redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()))
 
 
 def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
