@@ -75,7 +75,7 @@ def get_character_info(db, searcher):
         "regexes": search_character.regexes,
     }
 
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def run():
     db = run.db
     redis = run.redis

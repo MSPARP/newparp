@@ -35,7 +35,7 @@ CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
 
     # Worker queue
-    Queue('worker', Exchange('worker'), routing_key='worker'),
+    Queue('worker', Exchange('worker'), routing_key='worker', delivery_mode=1),
 )
 
 # Beats config

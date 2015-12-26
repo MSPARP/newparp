@@ -12,7 +12,7 @@ from charat2.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
 
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def generate_counters():
     redis = generate_counters.redis
 
@@ -51,7 +51,7 @@ def generate_counters():
 # Make sure a message is sent every 25 seconds so the long poll requests
 # don't time out.
 # XXX INCREASE THIS TO SEVERAL MINUTES
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def ping_longpolls():
     redis = ping_longpolls.redis
 
@@ -64,7 +64,7 @@ def ping_longpolls():
         else:
             redis.zrem("longpoll_timeout", chat_id)
 
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def reap():
     redis = reap.redis
     db = reap.db
