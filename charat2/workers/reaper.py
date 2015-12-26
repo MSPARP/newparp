@@ -125,8 +125,7 @@ if __name__ == "__main__":
                     rouletting_users.add(user_id)
             redis.set("rouletting_users", len(rouletting_users))
 
-        # Update the last_online fields for chat users every 15 seconds.
-        if int(current_time) % 15 == 0:
+            # Updates the last_online fields here
             chat_ids = redis.hgetall("queue:lastonline")
 
             # Reset the list for the next iteration.
