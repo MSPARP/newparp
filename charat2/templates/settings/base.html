@@ -12,6 +12,11 @@
         {% else %}
         <a href="{{url_for("settings_log_in_details")}}">Log in details</a>
         {% endif %}
+        {% if request.url_rule.endpoint in ("settings_blocks"): %}
+        Blocked users
+        {% else %}
+        <a href="{{url_for("settings_blocks")}}">Blocked users</a>
+        {% endif %}
     </nav>
 {% endblock %}
 

@@ -1,7 +1,8 @@
 from flask import g, redirect, render_template, request, url_for
 
-from charat2.helpers import themes
+from charat2.helpers import alt_formats, themes
 from charat2.helpers.auth import log_in_required
+from charat2.model import Block
 from charat2.model.connections import use_db
 
 @use_db
@@ -99,4 +100,13 @@ def change_password():
     g.user.set_password(request.form["new_password"])
 
     return redirect(url_for("settings_log_in_details", saved="password"))
+
+@alt_formats({"json"})
+@use_db
+@log_in_required
+def blocks():
+    return render_template(
+        "settings/blocks.html",
+        blocks=g.db.query(Block).order_by(Block.created.desc()).all(),
+    )
 

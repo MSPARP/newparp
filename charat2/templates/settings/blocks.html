@@ -1,0 +1,33 @@
+{% extends "settings/base.html" %}
+{% block title: %}Blocked users - {% endblock %}
+{% block content: %}
+    {{ super() }}
+    <h2>Blocked users</h2>
+    {% if blocks: %}
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for block in blocks: %}
+            <tr>
+                <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{block.reason}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+
+
+    {% else: %}
+    <p>You haven't blocked anyone.</p>
+    {% endif %}
+{% endblock %}
+

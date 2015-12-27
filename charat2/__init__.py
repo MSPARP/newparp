@@ -81,6 +81,7 @@ app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, m
 app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
 app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
 app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
+make_rules("settings", "/settings/blocks", settings.blocks, formats=True)
 
 # 2. Chats list
 

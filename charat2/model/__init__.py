@@ -221,6 +221,9 @@ class Block(Base):
     def __repr__(self):
         return "<Block: %s blocked %s>" % (self.blocking_user, self.blocked_user)
 
+    def to_dict(self):
+        return {"created": time.mktime(self.created.timetuple()), "reason": self.reason}
+
 
 class Character(Base):
 
