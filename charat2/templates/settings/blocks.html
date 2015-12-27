@@ -4,8 +4,6 @@
     {{ super() }}
     <h2>Blocked users</h2>
     {% if blocks: %}
-
-
     <table>
         <thead>
             <tr>
@@ -22,10 +20,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-
-
-
     {% else: %}
     <p>You haven't blocked anyone.</p>
     {% endif %}
