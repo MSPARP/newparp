@@ -1,4 +1,5 @@
 from flask import g, redirect, render_template, request, url_for
+from sqlalchemy import and_
 
 from charat2.helpers import alt_formats, themes
 from charat2.helpers.auth import log_in_required
@@ -101,7 +102,7 @@ def change_password():
 
     return redirect(url_for("settings_log_in_details", saved="password"))
 
-@alt_formats({"json"})
+
 @use_db
 @log_in_required
 def blocks():
@@ -109,4 +110,15 @@ def blocks():
         "settings/blocks.html",
         blocks=g.db.query(Block).order_by(Block.created.desc()).all(),
     )
+
+
+@use_db
+@log_in_required
+def unblock():
+    g.db.query(Block).filter(and_(
+        Block.blocking_user_id == g.user.id,
+        # created date because the client mustn't know the blocked_user_id
+        Block.created == request.form["created"],
+    )).delete()
+    return redirect(url_for("settings_blocks"))
 

@@ -9,6 +9,7 @@
             <tr>
                 <th>Time</th>
                 <th>Reason</th>
+                <th>Unblock</th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +17,11 @@
             <tr>
                 <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{block.reason}}</td>
+                <td><form action="{{url_for("settings_unblock")}}" method="post">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <input type="hidden" name="created" value="{{block.created.isoformat()}}">
+                    <button type="submit">Unblock</button>
+                </form></td>
             </tr>
             {% endfor %}
         </tbody>

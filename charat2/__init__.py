@@ -82,6 +82,7 @@ app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("
 app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
 app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
 make_rules("settings", "/settings/blocks", settings.blocks, formats=True)
+app.add_url_rule("/settings/unblock", "settings_unblock", settings.unblock, methods=("POST",))
 
 # 2. Chats list
 
