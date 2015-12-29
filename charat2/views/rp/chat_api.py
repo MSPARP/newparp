@@ -173,6 +173,7 @@ def block():
         g.db.add(Block(
             blocking_user_id=g.user.id,
             blocked_user_id=blocked_chat_user.user_id,
+            chat_id=g.chat.id,
             reason=reason if reason else None,
         ))
 

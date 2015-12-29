@@ -8,6 +8,7 @@
         <thead>
             <tr>
                 <th>Time</th>
+                <th>Chat</th>
                 <th>Reason</th>
                 <th>Unblock</th>
             </tr>
@@ -16,6 +17,7 @@
             {% for block in blocks: %}
             <tr>
                 <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{% if block.chat: %}<a href="{{url_for("rp_chat", url=block.chat.url)}}">{{block.chat.url}}</a>{% endif %}</td>
                 <td>{{block.reason}}</td>
                 <td><form action="{{url_for("settings_unblock")}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">

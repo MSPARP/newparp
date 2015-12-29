@@ -215,6 +215,7 @@ class Block(Base):
     __tablename__ = "blocks"
     blocking_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     blocked_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"))
     created = Column(DateTime(), nullable=False, default=now)
     reason = Column(UnicodeText)
 
@@ -1073,6 +1074,7 @@ User.roulette_character = relation(Character, foreign_keys=User.roulette_charact
 
 Block.blocking_user = relation(User, primaryjoin=Block.blocking_user_id == User.id)
 Block.blocked_user = relation(User, primaryjoin=Block.blocked_user_id == User.id)
+Block.chat = relation(Chat)
 
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)

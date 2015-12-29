@@ -1,5 +1,6 @@
 from flask import g, redirect, render_template, request, url_for
 from sqlalchemy import and_
+from sqlalchemy.orm import joinedload
 
 from charat2.helpers import alt_formats, themes
 from charat2.helpers.auth import log_in_required
@@ -108,7 +109,11 @@ def change_password():
 def blocks():
     return render_template(
         "settings/blocks.html",
-        blocks=g.db.query(Block).order_by(Block.created.desc()).all(),
+        blocks=(
+            g.db.query(Block)
+            .options(joinedload(Block.chat))
+            .order_by(Block.created.desc()).all()
+        ),
     )
 
 
