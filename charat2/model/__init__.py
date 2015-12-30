@@ -1075,6 +1075,14 @@ User.roulette_character = relation(Character, foreign_keys=User.roulette_charact
 Block.blocking_user = relation(User, primaryjoin=Block.blocking_user_id == User.id)
 Block.blocked_user = relation(User, primaryjoin=Block.blocked_user_id == User.id)
 Block.chat = relation(Chat)
+Block.blocked_chat_user = relation(
+    ChatUser,
+    primaryjoin=and_(
+        Block.chat_id == ChatUser.chat_id,
+        Block.blocked_user_id == ChatUser.user_id,
+    ),
+    foreign_keys=[Block.chat_id, Block.blocked_user_id],
+)
 
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
