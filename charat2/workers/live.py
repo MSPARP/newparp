@@ -167,6 +167,10 @@ class ChatHandler(WebSocketHandler):
             except NoResultFound:
                 send_userlist(self.db, redis, self.chat)
             self.db.commit()
+        # Delete the database connection here and on_finish just to be sure.
+        if hasattr(self, "db"):
+            self.db.close()
+            del self.db
         self.set_typing(False)
         if DEBUG:
             print("socket closed: %s" % (self.id))
