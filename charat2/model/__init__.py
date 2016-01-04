@@ -39,7 +39,7 @@ engine = create_engine(
     echo="ECHO" in os.environ or "--debug" in sys.argv,
     pool_size=100,
     max_overflow=200,
-    timeout=30,
+    pool_timeout=30,
     pool_recycle=3600,
 )
 
