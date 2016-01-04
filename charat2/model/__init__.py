@@ -38,8 +38,9 @@ engine = create_engine(
     convert_unicode=True,
     echo="ECHO" in os.environ or "--debug" in sys.argv,
     pool_size=100,
-    timeout=30,
     max_overflow=200,
+    timeout=30,
+    pool_recycle=3600,
 )
 
 sm = sessionmaker(
