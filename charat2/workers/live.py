@@ -72,7 +72,7 @@ class ChatHandler(WebSocketHandler):
         try:
             self.write_message(message)
         except WebSocketClosedError:
-            self.close()
+            return
 
     def check_origin(self, origin):
         return origin_regex.match(origin) is not None
