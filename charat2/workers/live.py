@@ -266,6 +266,7 @@ if __name__ == "__main__":
     http_server.listen(8000)
 
     ioloop = IOLoop.instance()
+    ioloop.set_blocking_log_threshold(1.0)
 
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
