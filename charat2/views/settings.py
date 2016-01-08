@@ -111,6 +111,7 @@ def blocks():
         "settings/blocks.html",
         blocks=(
             g.db.query(Block)
+            .filter(Block.blocking_user_id == g.user.id)
             .options(joinedload(Block.chat), joinedload(Block.blocked_chat_user))
             .order_by(Block.created.desc()).all()
         ),
