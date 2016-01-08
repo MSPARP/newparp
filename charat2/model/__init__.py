@@ -37,8 +37,8 @@ engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
     echo="ECHO" in os.environ or "--debug" in sys.argv,
-    pool_size=60,
-    max_overflow=120,
+    pool_size=100,
+    max_overflow=200,
     pool_timeout=60,
     pool_recycle=1800,
 )
