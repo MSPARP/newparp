@@ -283,6 +283,7 @@ section > .close:first-child { float: right; margin: 5px; }
 /* 4.4. Conversation and send form */
 
 #conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; -webkit-overflow-scrolling: touch; }
+#conversation div, #archive_conversation div { clear: both; overflow: hidden; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #666; }
 
