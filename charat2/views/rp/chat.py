@@ -282,7 +282,7 @@ def log(chat, pm_user, url, fmt=None, page=None):
 
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
-    ).order_by(Message.id).options(
+    ).order_by(Message.posted).options(
         joinedload(Message.chat_user),
     )
     if own_chat_user is not None and not own_chat_user.show_system_messages:
