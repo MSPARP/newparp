@@ -196,8 +196,11 @@ def send_message(db, redis, message, force_userlist=False):
     # And send notifications last.
     if message.type in (u"ic", u"ooc", u"me", u"spamless"):
 
-        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
+        # Queue an update for the last_online field.
+        # TODO move the PM stuff here too
+        redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()))
 
+        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
         if message.chat.type == "pm":
             offline_chat_users = db.query(ChatUser).filter(and_(
                 ~ChatUser.user_id.in_(online_user_ids),
@@ -207,11 +210,6 @@ def send_message(db, redis, message, force_userlist=False):
                 # Only send a notification if it's not already unread.
                 if message.chat.last_message <= chat_user.last_online:
                     redis.publish("channel:pm:%s" % chat_user.user_id, "{\"pm\":\"1\"}")
-
-        message.chat.last_message = message.posted
-
-        # Queue an update for the last_online field.
-        redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()))
 
 
 def send_temporary_message(redis, chat, to_id, user_number, message_type, text):

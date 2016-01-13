@@ -10,7 +10,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.helpers.chat import disconnect, send_message, send_userlist
-from charat2.model import sm, Message, ChatUser
+from charat2.model import sm, Message, Chat, ChatUser
 from charat2.model.connections import redis_pool
 
 if __name__ == "__main__":
@@ -99,6 +99,7 @@ if __name__ == "__main__":
 
         # Generate connected/searching counters every 10 seconds.
         if int(current_time) % 10 == 0:
+
             print("Generating user counters.")
             connected_users = set()
             next_index = 0
@@ -127,24 +128,21 @@ if __name__ == "__main__":
 
             # Updates the last_online fields here
             chat_ids = redis.hgetall("queue:lastonline")
-
-            # Reset the list for the next iteration.
             redis.delete("queue:lastonline")
+            print("Updating last_online values: %s" % chat_ids)
 
             for chat_id, posted in chat_ids.iteritems():
                 online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat_id))
-
                 try:
-                    posted = float(posted)
+                    posted = datetime.datetime.utcfromtimestamp(float(posted))
                 except ValueError:
                     continue
-
+                db.query(Chat).filter(Chat.id == chat_id).update({"last_message": posted}, synchronize_session=False)
                 if len(online_user_ids) != 0:
                     db.query(ChatUser).filter(and_(
                         ChatUser.user_id.in_(online_user_ids),
                         ChatUser.chat_id == chat_id,
-                    )).update({ "last_online": datetime.datetime.utcfromtimestamp(posted) }, synchronize_session=False)
-
+                    )).update({"last_online": posted}, synchronize_session=False)
                 db.commit()
 
         time.sleep(1)
