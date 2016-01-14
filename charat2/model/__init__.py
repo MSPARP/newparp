@@ -507,6 +507,8 @@ class ChatUser(Base):
     number = Column(Integer, nullable=False)
 
     subscribed = Column(Boolean, nullable=False, default=True)
+    title = Column(Unicode(50))
+    notes = Column(UnicodeText)
 
     last_online = Column(DateTime(), nullable=False, default=now)
 
