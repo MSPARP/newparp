@@ -316,8 +316,6 @@ def user_action():
             # Don't send a message if there wasn't an invite.
             if not deleted:
                 return "", 204
-            # Unsubscribe if necessary.
-            set_chat_user.subscribed = False
             ban_message = (
                 "%s [%s] un-invited %s [%s] from the chat."
             ) % (
@@ -367,6 +365,7 @@ def user_action():
             name=g.chat_user.name,
             text=ban_message,
         ))
+        # Unsubscribe if necessary.
         set_chat_user.subscribed = False
         return "", 204
 

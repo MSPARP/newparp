@@ -506,7 +506,7 @@ class ChatUser(Base):
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     number = Column(Integer, nullable=False)
 
-    subscribed = Column(Boolean, nullable=False, default=True)
+    subscribed = Column(Boolean, nullable=False, default=False)
     title = Column(Unicode(50))
     notes = Column(UnicodeText)
 

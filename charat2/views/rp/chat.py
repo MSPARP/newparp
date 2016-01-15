@@ -81,7 +81,7 @@ def get_chat(f):
                 g.db.add(chat)
                 g.db.flush()
                 # Create ChatUser for the other user.
-                pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id, number=1)
+                pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id, number=1, subscribed=True)
                 g.db.add(pm_chat_user)
                 g.db.flush()
 
@@ -189,10 +189,12 @@ def chat(chat, pm_user, url, fmt=None):
         if chat.type == "group":
             # Disable typing notifications by default in group chats.
             chat_user.typing_notifications = False
-            if g.user.id != chat.creator_id:
-                chat_user.subscribed = False
+            if g.user.id == chat.creator_id:
+                chat_user.subscribed = True
             if chat.autosilence and not g.user.is_admin and g.user.id != chat.creator_id:
                 chat_user.group = "silent"
+        elif chat.type == "pm":
+            chat_user.subscribed = True
         g.db.add(chat_user)
         g.db.flush()
 
