@@ -85,18 +85,25 @@ def groups(fmt=None):
         GroupChat.publicity.in_(("listed", "pinned")),
         GroupChat.style.in_(style_filter),
         GroupChat.level.in_(level_filter),
-    ))
-    groups = []
+    )).all()
+
+    pipeline = g.redis.pipeline()
     for group in groups_query:
-        online_users = len(set(g.redis.hvals("chat:%s:online" % group.id)))
-        if online_users > 0:
-            groups.append((group, online_users))
+        pipeline.hvals("chat:%s:online" % group.id)
+
+    groups = []
+    for group, online_users in zip(groups_query, pipeline.execute()):
+        online_user_count = len(set(online_users))
+        if online_user_count > 0:
+            groups.append((group, online_user_count))
     groups.sort(key=lambda _: (_[0].publicity, _[1]), reverse=True)
+
     chat_dicts = []
     for chat, online in groups:
         cd = chat.to_dict()
         cd["online"] = online
         chat_dicts.append(cd)
+
     if fmt == "json":
         return jsonify({
             "chats": chat_dicts,
