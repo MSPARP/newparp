@@ -663,7 +663,7 @@ class ChatUser(Base):
     def can(self, action):
         return self.group_ranks[self.computed_group] >= self.action_ranks[action]
 
-    def to_dict(self, include_user=False, include_options=False):
+    def to_dict(self, include_user=False, include_options=False, include_title_and_notes=False):
         ucd = {
             "character": {
                 "name": self.name,
@@ -695,6 +695,11 @@ class ChatUser(Base):
             ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
             ucd["meta"]["ignored_numbers"] = self.ignored_numbers
             ucd["draft"] = self.draft or ""
+        if include_options or include_title_and_notes:
+            ucd["info"] = {
+                "title": self.title or "",
+                "notes": self.notes or "",
+            }
         if include_user:
             ucd["user"] = {
                 "user_id": self.user.id,
