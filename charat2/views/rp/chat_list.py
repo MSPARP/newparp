@@ -89,17 +89,29 @@ def chat_list(fmt=None, type=None, page=1):
 
     chat_dicts = []
     for c in chats:
-        cd = c[1].to_dict()
+
+        if len(c) == 2:
+            chat_user, chat = c
+            pm_chat_user = None
+        else:
+            chat_user, chat, pm_chat_user = c
+
+        cd = chat.to_dict()
         online_user_ids = g.redis.hvals("chat:%s:online" % cd["id"])
         cd["online"] = len(set(online_user_ids))
-        if c[1].type == "pm":
-            cd["title"] = "Messaging " + c[2].user.username
-            cd["url"] = "pm/" + c[2].user.username
-            cd["partner_online"] = c[2].user.id in (int(_) for _ in online_user_ids)
-        elif c[1].type != "group":
+
+        if chat.type == "pm":
+            cd["title"] = "Messaging " + pm_chat_user.user.username
+            cd["url"] = "pm/" + pm_chat_user.user.username
+            cd["partner_online"] = pm_chat_user.user.id in (int(_) for _ in online_user_ids)
+        elif chat.type != "group":
             cd["title"] = cd["url"]
-        cd["unread"] = c[1].last_message > c[0].last_online
-        chat_dicts.append(cd)
+        cd["unread"] = chat.last_message > chat_user.last_online
+
+        chat_dicts.append({
+            "chat_user": chat_user.to_dict(include_title_and_notes=True),
+            "chat": cd,
+        })
 
     if fmt == "json":
 

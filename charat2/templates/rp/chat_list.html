@@ -43,17 +43,17 @@
         </thead>
         <tbody>
             {% for chat in chats: %}
-            <tr{% if type != "unread" and chat.unread: %} class="unread"{% endif %}>
-                <td><a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}{% if chat.type == "pm" and chat.partner_online: %} (online){% endif %}</a></td>
-                <td><a href="{{url_for("rp_log", url=chat.url)}}">View log</a></td>
+            <tr{% if type != "unread" and chat.chat.unread: %} class="unread"{% endif %}>
+                <td><a href="{{url_for("rp_chat", url=chat.chat.url)}}">{{chat.chat.title}}{% if chat.chat.type == "pm" and chat.chat.partner_online: %} (online){% endif %}</a></td>
+                <td><a href="{{url_for("rp_log", url=chat.chat.url)}}">View log</a></td>
                 {% if type in (None, "unread"): %}
-                <td><a href="{{url_for("rp_chat_list", type=chat.type)}}">{{"PM" if chat.type == "pm" else chat.type.capitalize()}}</a></td>
+                <td><a href="{{url_for("rp_chat_list", type=chat.chat.type)}}">{{"PM" if chat.chat.type == "pm" else chat.chat.type.capitalize()}}</a></td>
                 {% endif %}
                 {% if type in (None, "group", "unread"): %}
-                <td>{% if chat.type == "group": %}{{chat.style.capitalize()}}{% endif %}</td>
-                <td>{% if chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}{% endif %}</td>
+                <td>{% if chat.chat.type == "group": %}{{chat.chat.style.capitalize()}}{% endif %}</td>
+                <td>{% if chat.chat.type == "group": %}{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.chat.level] }}{% endif %}</td>
                 {% endif %}
-                <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Unsubscribe</button></form></td>
+                <td><form action="{{url_for("rp_chat_unsubscribe", url=chat.chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Unsubscribe</button></form></td>
             </tr>
             {% endfor %}
         </tbody>
