@@ -87,8 +87,12 @@ def chat_list(fmt=None, type=None, page=1):
         chat_count = chat_count.join(ChatClass).filter(ChatClass.type == type)
     chat_count = chat_count.scalar()
 
-    chat_dicts = []
+    pipeline = g.redis.pipeline()
     for c in chats:
+        pipeline.hvals("chat:%s:online" % c[1].id)
+
+    chat_dicts = []
+    for c, online_user_ids in zip(chats, pipeline.execute()):
 
         if len(c) == 2:
             chat_user, chat = c
@@ -97,7 +101,6 @@ def chat_list(fmt=None, type=None, page=1):
             chat_user, chat, pm_chat_user = c
 
         cd = chat.to_dict()
-        online_user_ids = g.redis.hvals("chat:%s:online" % cd["id"])
         cd["online"] = len(set(online_user_ids))
 
         if chat.type == "pm":
