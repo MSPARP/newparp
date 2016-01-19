@@ -696,10 +696,8 @@ class ChatUser(Base):
             ucd["meta"]["ignored_numbers"] = self.ignored_numbers
             ucd["draft"] = self.draft or ""
         if include_options or include_title_and_notes:
-            ucd["info"] = {
-                "title": self.title or "",
-                "notes": self.notes or "",
-            }
+            ucd["title"] = self.title or ""
+            ucd["notes"] = self.notes or ""
         if include_user:
             ucd["user"] = {
                 "user_id": self.user.id,
