@@ -37,7 +37,11 @@
                 {% if chat.chat.type == "group": %}
                     {{chat.chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.chat.level] }},
                 {% endif %}
+                {% if chat.chat.type == "pm": %}
+                {{"online" if chat.chat.partner_online else "offline"}}.
+                {% else: %}
                 {{chat.chat.online}} online.
+                {% endif %}
             </p>
             {% if chat.chat_user.notes: %}
             <p>{{chat.chat_user.notes}}</p>
