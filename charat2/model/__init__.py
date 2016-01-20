@@ -391,11 +391,18 @@ class Chat(Base):
     # messages.
     last_message = Column(DateTime(), nullable=False, default=now)
 
-    def to_dict(self):
+    # Group chats: self.title
+    # PM chats: "Messaging (username)"
+    # Searched and roulette chats: same as the URL
+    def computed_title(self, *args, **kwargs):
+        return self.url
+
+    def to_dict(self, *args, **kwargs):
         return {
             "id": self.id,
             "url": self.url,
             "type": self.type,
+            "title": self.computed_title(*args, **kwargs),
         }
 
 
@@ -445,20 +452,19 @@ class GroupChat(Chat):
     def __repr__(self):
         return "<GroupChat #%s: %s>" % (self.id, self.url)
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "url": self.url,
-            "type": self.type,
-            "title": self.title,
-            "topic": self.topic,
-            "description": self.description,
-            "rules": self.rules,
-            "autosilence": self.autosilence,
-            "style": self.style,
-            "level": self.level,
-            "publicity": self.publicity,
-        }
+    def computed_title(self, *args, **kwargs):
+        return self.title
+
+    def to_dict(self, *args, **kwargs):
+        cd = super(GroupChat, self).to_dict(*args, **kwargs)
+        cd["topic"] = self.topic
+        cd["description"] = self.description
+        cd["rules"] = self.rules
+        cd["autosilence"] = self.autosilence
+        cd["style"] = self.style
+        cd["level"] = self.level
+        cd["publicity"] = self.publicity
+        return cd
 
 
 class PMChat(Chat):
@@ -467,11 +473,16 @@ class PMChat(Chat):
     def __repr__(self):
         return "<PMChat #%s: %s>" % (self.id, self.url)
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "type": self.type,
-        }
+    def computed_title(self, *args, **kwargs):
+        if "pm_user" in kwargs:
+            return "Messaging " + kwargs["pm_user"].username
+        return super(PMChat, self).computed_title(*args, **kwargs)
+
+    def to_dict(self, *args, **kwargs):
+        cd = super(PMChat, self).to_dict(*args, **kwargs)
+        if "pm_user" in kwargs:
+            cd["url"] = "pm/" + kwargs["pm_user"].username
+        return cd
 
 
 class RequestedChat(Chat):

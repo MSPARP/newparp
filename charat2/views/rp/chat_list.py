@@ -100,15 +100,12 @@ def chat_list(fmt=None, type=None, page=1):
         else:
             chat_user, chat, pm_chat_user = c
 
-        cd = chat.to_dict()
-        cd["online"] = len(set(online_user_ids))
+        cd = chat.to_dict(pm_user=pm_chat_user.user if pm_chat_user is not None else None)
 
+        cd["online"] = len(set(online_user_ids))
         if chat.type == "pm":
-            cd["title"] = "Messaging " + pm_chat_user.user.username
-            cd["url"] = "pm/" + pm_chat_user.user.username
             cd["partner_online"] = pm_chat_user.user.id in (int(_) for _ in online_user_ids)
-        elif chat.type != "group":
-            cd["title"] = cd["url"]
+
         cd["unread"] = chat.last_message > chat_user.last_online
 
         chat_dicts.append({

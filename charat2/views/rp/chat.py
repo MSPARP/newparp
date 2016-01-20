@@ -167,12 +167,7 @@ def create_chat():
 @get_chat
 def chat(chat, pm_user, url, fmt=None):
 
-    chat_dict = chat.to_dict()
-
-    if chat.type == "pm":
-        # Override title with the other person's username.
-        chat_dict['title'] = "Messaging " + pm_user.username
-        chat_dict['url'] = url
+    chat_dict = chat.to_dict(pm_user=pm_user)
 
     # Get or create ChatUser.
     try:
@@ -250,13 +245,6 @@ def chat(chat, pm_user, url, fmt=None):
 @use_db
 @get_chat
 def log(chat, pm_user, url, fmt=None, page=None):
-
-    chat_dict = chat.to_dict()
-
-    if chat.type == "pm":
-        # Override title with the other person's username.
-        chat_dict['title'] = "Log with " + pm_user.username
-        chat_dict['url'] = url
 
     try:
         own_chat_user = g.db.query(ChatUser).filter(and_(
