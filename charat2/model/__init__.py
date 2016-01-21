@@ -391,6 +391,11 @@ class Chat(Base):
     # messages.
     last_message = Column(DateTime(), nullable=False, default=now)
 
+    # PM chats: "/pm/(username)"
+    # Everything else: self.url
+    def computed_url(self, *args, **kwargs):
+        return self.url
+
     # Group chats: self.title
     # PM chats: "Messaging (username)"
     # Searched and roulette chats: same as the URL
@@ -400,7 +405,7 @@ class Chat(Base):
     def to_dict(self, *args, **kwargs):
         return {
             "id": self.id,
-            "url": self.url,
+            "url": self.computed_url(*args, **kwargs),
             "type": self.type,
             "title": self.computed_title(*args, **kwargs),
         }
@@ -473,16 +478,15 @@ class PMChat(Chat):
     def __repr__(self):
         return "<PMChat #%s: %s>" % (self.id, self.url)
 
+    def computed_url(self, *args, **kwargs):
+        if "pm_user" in kwargs:
+            return "pm/" + kwargs["pm_user"].username
+        return super(PMChat, self).computed_title(*args, **kwargs)
+
     def computed_title(self, *args, **kwargs):
         if "pm_user" in kwargs:
             return "Messaging " + kwargs["pm_user"].username
         return super(PMChat, self).computed_title(*args, **kwargs)
-
-    def to_dict(self, *args, **kwargs):
-        cd = super(PMChat, self).to_dict(*args, **kwargs)
-        if "pm_user" in kwargs:
-            cd["url"] = "pm/" + kwargs["pm_user"].username
-        return cd
 
 
 class RequestedChat(Chat):
