@@ -112,7 +112,7 @@ def get_chat(f):
             abort(403)
         except TooManyPeopleException:
             if request.endpoint == "rp_chat":
-                abort(403)
+                return render_template("rp/chat/too_many_people.html", chat=chat), 403
 
         return f(chat, None, url, fmt, *args, **kwargs)
 
