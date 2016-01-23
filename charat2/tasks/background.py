@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import and_
 
-from charat2.model import ChatUser
+from charat2.model import Chat, ChatUser
 from charat2.tasks import celery, WorkerTask
 
 @celery.task(base=WorkerTask)
@@ -19,14 +19,16 @@ def update_lastonline():
         online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat_id))
 
         try:
-            posted = float(posted)
+            posted = datetime.datetime.utcfromtimestamp(float(posted))
         except ValueError:
             continue
+
+        db.query(Chat).filter(Chat.id == chat_id).update({"last_message": posted}, synchronize_session=False)
 
         if len(online_user_ids) != 0:
             db.query(ChatUser).filter(and_(
                 ChatUser.user_id.in_(online_user_ids),
                 ChatUser.chat_id == chat_id,
-            )).update({ "last_online": datetime.datetime.utcfromtimestamp(posted) }, synchronize_session=False)
+            )).update({"last_online": posted}, synchronize_session=False)
 
         db.commit()
