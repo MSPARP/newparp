@@ -1302,7 +1302,7 @@ var msparp = (function() {
 			var typing_timeout;
 			var text_preview = $("#text_preview");
 			function set_text_preview(text) {
-				text_preview.text(text);
+				text_preview.html(bbencode(text));
 				resize_conversation();
 			}
 
