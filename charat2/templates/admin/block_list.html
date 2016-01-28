@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title: %}Blocks - {% endblock %}
+{% block content: %}
+    <h2>Blocks</h2>
+
+    {{ pager() }}
+    {% if blocks: %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>#</th>
+                <th>Blocking user</th>
+                <th>#</th>
+                <th>Blocked user</th>
+                <th>Log</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for block in blocks: %}
+            <tr>
+                <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                <td>{{block.blocking_user.id}}</td>
+                <td><a href="{{url_for("admin_user", username=block.blocking_user.username)}}">{{block.blocking_user.username}}</a></td>
+                <td>{{block.blocked_user.id}}</td>
+                <td><a href="{{url_for("admin_user", username=block.blocked_user.username)}}">{{block.blocked_user.username}}</a></td>
+                <td>{% if block.chat: %}<a href="{{url_for("rp_log", url=block.chat.computed_url())}}">{{block.chat.computed_title()}}</a>{% endif %}</td>
+                <td>{{block.reason}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else: %}
+    <p>Nobody has blocked anyone.</p>
+    {% endif %}
+    {{ pager() }}
+{% endblock %}
+

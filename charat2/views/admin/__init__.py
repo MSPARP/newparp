@@ -12,7 +12,7 @@ from uuid import uuid4
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required, permission_required
-from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -321,6 +321,47 @@ def user_reset_password_post(username):
     new_password = str(uuid4())
     user.set_password(new_password)
     return render_template("admin/user_reset_password_done.html", user=user, new_password=new_password)
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("user_list")
+def block_list(fmt=None, page=1):
+
+    blocks = g.db.query(Block).options(
+        joinedload(Block.blocking_user),
+        joinedload(Block.blocked_user),
+        joinedload(Block.chat),
+    ).order_by(
+        Block.blocking_user_id,
+        Block.blocked_user_id,
+    ).offset((page - 1) * 50).limit(50).all()
+
+    if len(blocks) == 0 and page != 1:
+        abort(404)
+
+    block_count = g.db.query(func.count('*')).select_from(Block).scalar()
+
+    if fmt == "json":
+        return jsonify({
+            "total": block_count,
+            "blocks": [_.to_dict() for _ in blocks],
+        })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=block_count,
+        url_maker=lambda page: url_for("admin_block_list", page=page, **request.args),
+    )
+
+    return render_template(
+        "admin/block_list.html",
+        blocks=blocks,
+        paginator=paginator,
+    )
+
 
 
 @alt_formats({"json"})
