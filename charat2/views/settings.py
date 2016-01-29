@@ -1,4 +1,4 @@
-from flask import g, redirect, render_template, request, url_for
+from flask import g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
@@ -106,16 +106,16 @@ def change_password():
 
 @use_db
 @log_in_required
-def blocks():
-    return render_template(
-        "settings/blocks.html",
-        blocks=(
+def blocks(fmt=None):
+    blocks = (
             g.db.query(Block)
             .filter(Block.blocking_user_id == g.user.id)
             .options(joinedload(Block.chat), joinedload(Block.blocked_chat_user))
             .order_by(Block.created.desc()).all()
-        ),
-    )
+        )
+    if fmt == "json":
+        return jsonify({"blocks": [_.to_dict() for _ in blocks]})
+    return render_template("settings/blocks.html", blocks=blocks)
 
 
 @use_db

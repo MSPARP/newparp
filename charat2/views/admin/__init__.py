@@ -345,7 +345,7 @@ def block_list(fmt=None, page=1):
     if fmt == "json":
         return jsonify({
             "total": block_count,
-            "blocks": [_.to_dict() for _ in blocks],
+            "blocks": [_.to_dict(include_users=True) for _ in blocks],
         })
 
     paginator = paginate.Page(
