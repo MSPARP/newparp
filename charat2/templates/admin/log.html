@@ -62,7 +62,7 @@
             <tr>
                 <td>{{entry.id}}</td>
                 <td>{{ g.user.localize_time(entry.date).strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                <td><a href="{{url_for("admin_user", username=entry.action_user.username)}}">{{entry.action_user.username}}</a></td>
+                <td><a href="{{url_for("admin_user", userid=entry.action_user.id)}}">{{entry.action_user.username}}</a></td>
                 {% if entry.type == "announcements": %}
                 <td>Announcements</td>
                 <td><pre>{{entry.description}}</pre></td>
@@ -74,10 +74,10 @@
                 <td><pre>{{entry.description}}</pre></td>
                 {% elif entry.type == "user_set_group": %}
                 <td>User group</td>
-                <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
+                <td>Set <a href="{{url_for("admin_user", userid=entry.affected_user.id)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
                 {% elif entry.type == "user_set_admin_tier": %}
                 <td>User group</td>
-                <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a>'s admin tier to <strong>{{entry.description}}</strong>.</td>
+                <td>Set <a href="{{url_for("admin_user", userid=entry.affected_user.id)}}">{{entry.affected_user.username}}</a>'s admin tier to <strong>{{entry.description}}</strong>.</td>
                 {% elif entry.type == "spamless:banned_names:add": %}
                 <td>Spamless</td>
                 <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>

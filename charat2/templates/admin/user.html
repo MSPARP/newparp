@@ -6,7 +6,7 @@
         <tbody>
             <tr>
                 <td>Group</td>
-                <td><form action="{{url_for("admin_user_set_group", username=user.username)}}" method="post">
+                <td><form action="{{url_for("admin_user_set_group", userid=user.id)}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
                     <select name="group"{% if user.is_admin and not g.user.has_permission("permissions"): %} disabled{% endif %}>
                         {% for value in User.group.type.enums: %}
@@ -20,7 +20,7 @@
             <tr>
                 <td>Admin tier</td>
                 {% if g.user.has_permission("permissions"): %}
-                <td><form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
+                <td><form action="{{url_for("admin_user_set_admin_tier", userid=user.id)}}" method="post">
                     <input type="hidden" name="token" value="{{g.csrf_token}}">
                     <select name="admin_tier">
                         <option value=""{% if user.admin_tier ==  None %} selected="selected"{% endif %}>None</option>
@@ -40,7 +40,7 @@
             {% if g.user.has_permission("reset_password"): %}
             <tr>
                 <td>Password</td>
-                <td><a href="{{url_for("admin_user_reset_password", username=user.username)}}">Reset password</a></td>
+                <td><a href="{{url_for("admin_user_reset_password", userid=user.id)}}">Reset password</a></td>
             </tr>
             {% endif %}
             <tr>

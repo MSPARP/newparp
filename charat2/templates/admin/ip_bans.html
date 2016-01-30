@@ -33,7 +33,7 @@
             {% for ip_ban in ip_bans: %}
             <tr>
                 <td>{{ip_ban.address}}</td>
-                <td><a href="{{url_for("admin_user", username=ip_ban.creator.username)}}">{{ip_ban.creator.username}}</a></td>
+                <td><a href="{{url_for("admin_user", userid=ip_ban.creator.id)}}">{{ip_ban.creator.username}}</a></td>
                 <td>{{g.user.localize_time(ip_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{ip_ban.reason}}</td>
                 <td><form action="{{url_for("admin_delete_ip_ban")}}" method="post">

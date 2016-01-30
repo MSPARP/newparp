@@ -18,7 +18,7 @@
         {% for chat_user in users: %}
         <tr>
             {% if g.user.is_admin: %}
-            <td><a href="{{url_for("admin_user", username=chat_user.user.username)}}">{{chat_user.user.username}}</a></td>
+            <td><a href="{{url_for("admin_user", userid=chat_user.user.id)}}">{{chat_user.user.username}}</a></td>
             {% endif %}
             <td>{{chat_user.number}}</td>
             <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
