@@ -10,7 +10,7 @@ def get_searcher_info(redis, searcher_ids):
     searchers = []
     for searcher_id in searcher_ids:
         session_id = redis.get("searcher:%s:session_id" % searcher_id)
-        # This will fail they've logged out since sending the request.
+        # This will fail if they've logged out since sending the request.
         try:
             user_id = int(redis.get("session:%s" % session_id))
             search_character_id = int(redis.get("searcher:%s:search_character_id" % searcher_id))

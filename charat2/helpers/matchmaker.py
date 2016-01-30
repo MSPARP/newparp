@@ -18,6 +18,12 @@ option_messages = {
 }
 
 
+def wake_unmatched_searchers(redis, searcher_prefix, searcher_ids):
+    for searcher in searcher_ids:
+        logging.debug("Waking unmatched searcher %s." % searcher)
+        redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
+
+
 def run_matchmaker(
     db, redis, lock_id, searchers_key, searcher_prefix, get_searcher_info,
     check_compatibility, ChatClass, get_character_info
@@ -37,6 +43,7 @@ def run_matchmaker(
     # We can't do anything with less than 2 people, so don't bother.
     if len(searcher_ids) < 2:
         logging.info("Not enough searchers, skipping.")
+        wake_unmatched_searchers(redis, searcher_prefix, searcher_ids)
         return
 
     searchers = get_searcher_info(redis, searcher_ids)
@@ -107,7 +114,5 @@ def run_matchmaker(
             searcher_ids.remove(s1["id"])
             searcher_ids.remove(s2["id"])
 
-    for searcher in searcher_ids:
-        logging.debug("Waking unmatched searcher %s." % searcher)
-        redis.publish("%s:%s" % (searcher_prefix, searcher), "{ \"status\": \"unmatched\" }")
+    wake_unmatched_searchers(redis, searcher_prefix, searcher_ids)
 
