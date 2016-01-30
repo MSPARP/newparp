@@ -1082,7 +1082,7 @@ var msparp = (function() {
 				Handlebars.registerHelper("pm_username", function() { return this.chat.url.substr(3); });
 				function refresh_pm_chat_list() {
 					$.get("/chats/pm.json", {}, function(data) {
-						pm_chat_list.html(pm_chat_list_template(data.chats));
+						pm_chat_list.html(pm_chat_list_template(data));
 						var pm_chat_links = $("#pm_chat_list a").click(function() {
 							// Hide PM chat list on mobile.
 							if (pm_chat_list_container.css("display")) { pm_chat_list_container.css("display", ""); }
