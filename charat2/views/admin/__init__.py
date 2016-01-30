@@ -192,45 +192,32 @@ def user_list(fmt=None, page=1):
 @alt_formats({"json"})
 @use_db
 @permission_required("user_list")
-def user(username=None, fmt=None, userid=None):
-    query = g.db.query(User).options(
-        joinedload_all(User.admin_tier, AdminTier.admin_tier_permissions),
-        joinedload(User.default_character),
-        joinedload(User.roulette_search_character),
-        joinedload(User.search_character),
-    )
-
+def user(username, fmt=None):
     try:
-        if username:
-            user = (
-                query.filter(func.lower(User.username) == username.lower()).one()
-            )
-        elif userid:
-            user = (
-                query.filter(User.id == userid).one()
-            )
-            username = user.username
+        user = (
+            g.db.query(User).filter(func.lower(User.username) == username.lower())
+            .options(
+                joinedload_all(User.admin_tier, AdminTier.admin_tier_permissions),
+                joinedload(User.default_character),
+                joinedload(User.roulette_search_character),
+                joinedload(User.search_character),
+            ).one()
+        )
     except NoResultFound:
         abort(404)
-
-    # Redirect to the user ID page
-    if not userid:
-        return redirect(url_for("admin_user", userid=user.id))
-
-    # Get IP bans
+    # Redirect to fix capitalisation.
+    if username != user.username:
+        return redirect(url_for("admin_user", username=user.username))
     ip_bans = (
         g.db.query(IPBan)
         .filter(IPBan.address.op(">>=")(user.last_ip))
         .order_by(IPBan.address).all()
     )
-
-    # Format
     if fmt == "json":
         user = user.to_dict(include_options=True)
         user["ip_bans"] = [_.to_dict() for _ in ip_bans]
         return jsonify(user)
 
-    # Search info
     search_characters = ", ".join(_.title for _ in (
         g.db.query(SearchCharacter)
         .select_from(SearchCharacterChoice)
@@ -238,7 +225,6 @@ def user(username=None, fmt=None, userid=None):
         .filter(SearchCharacterChoice.user_id == user.id)
         .order_by(SearchCharacter.name).all()
     ))
-
     return render_template(
         "admin/user.html",
         User=User,
@@ -251,13 +237,13 @@ def user(username=None, fmt=None, userid=None):
 
 @use_db
 @permission_required("user_list")
-def user_set_group(userid):
+def user_set_group(username):
 
     if request.form["group"] not in User.group.type.enums:
         abort(400)
 
     try:
-        user = g.db.query(User).filter(User.id == userid).one()
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
     except NoResultFound:
         abort(404)
 
@@ -278,15 +264,15 @@ def user_set_group(userid):
             affected_user=user,
         ))
 
-    return redirect(url_for("admin_user", userid=user.id))
+    return redirect(url_for("admin_user", username=user.username))
 
 
 @use_db
 @permission_required("permissions")
-def user_set_admin_tier(userid):
+def user_set_admin_tier(username):
 
     try:
-        user = g.db.query(User).filter(User.id == userid).one()
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
     except NoResultFound:
         abort(404)
 
@@ -311,26 +297,25 @@ def user_set_admin_tier(userid):
 
     return redirect(
         request.headers.get("Referer")
-        or url_for("admin_user", userid=user.id)
+        or url_for("admin_user", username=user.username)
     )
 
 
 @use_db
 @permission_required("reset_password")
-def user_reset_password_get(userid):
+def user_reset_password_get(username):
     try:
-        user = g.db.query(User).filter(User.id == userid).one()
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
     except NoResultFound:
         abort(404)
-
     return render_template("admin/user_reset_password.html", user=user)
 
 
 @use_db
 @permission_required("reset_password")
-def user_reset_password_post(userid):
+def user_reset_password_post(username):
     try:
-        user = g.db.query(User).filter(User.id == userid).one()
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
     except NoResultFound:
         abort(404)
     new_password = str(uuid4())

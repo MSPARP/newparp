@@ -23,7 +23,7 @@
                 <td>{{chat.style.capitalize()}}</td>
                 <td>{{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}</td>
                 <td>{{chat.publicity.capitalize()}}</td>
-                <td><a href="{{url_for("admin_user", userid=chat.creator.id)}}">{{chat.creator.username}}</a></td>
+                <td><a href="{{url_for("admin_user", username=chat.creator.username)}}">{{chat.creator.username}}</a></td>
             </tr>
             {% endfor %}
         </tbody>

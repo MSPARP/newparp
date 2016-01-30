@@ -41,6 +41,5 @@ reserved_usernames = {
     "aradia", "tavros", "sollux", "karkat", "nepeta", "kanaya", "terezi", "vriska",
     "equius", "gamzee", "eridan", "feferi", "damara", "rufioh", "mituna", "kankri",
     "meulin", "porrim", "latula", "aranea", "horuss", "kurloz", "cronus", "meenah",
-    "id",
 }
 

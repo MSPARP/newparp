@@ -23,7 +23,7 @@
                 <td>{{ g.user.localize_time(message.posted).strftime("%Y-%m-%d %H:%M:%S") }}</td>
                 <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
                 <td>{{ message.spam_flag }}</td>
-                <td>{% if message.user: %}<a href="{{ url_for("admin_user", userid=message.user.id) }}">{{ message.user.username }}</a>{% endif %}</td>
+                <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
                 <td>{{ message.chat_user.number }}</td>
                 <td>{{ message.name }}</td>
                 <td style="color: #{{ message.color }}">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
