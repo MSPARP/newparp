@@ -25,7 +25,7 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ["json"]
 
 # Performance
-CELERYD_PREFETCH_MULTIPLIER = 1
+CELERYD_PREFETCH_MULTIPLIER = 10
 CELERY_DISABLE_RATE_LIMITS = True
 
 # Queue config
@@ -50,7 +50,7 @@ CELERYBEAT_SCHEDULE = {
     },
     "reap": {
         "task": "charat2.tasks.reaper.reap",
-        "schedule": timedelta(seconds=15),
+        "schedule": timedelta(seconds=1),
     },
     "matchmaker": {
         "task": "charat2.tasks.matchmaker.run",
@@ -62,6 +62,6 @@ CELERYBEAT_SCHEDULE = {
     },
     "update_lastonline": {
         "task": "charat2.tasks.background.update_lastonline",
-        "schedule": timedelta(seconds=15),
+        "schedule": timedelta(seconds=5),
     }
 }
