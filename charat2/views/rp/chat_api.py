@@ -742,7 +742,7 @@ def look_up_user():
         g.redis, g.chat, g.user.id, None, "chat_meta",
         "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
             chat_user.number,
-            url_for("admin_user", userid=chat_user.user.id, _external=True),
+            url_for("admin_user", username=chat_user.user.username, _external=True),
             chat_user.user.id,
             chat_user.user.username,
             chat_user.user.last_ip,

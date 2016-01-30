@@ -39,13 +39,13 @@
             {% for user in users: %}
             <tr>
                 <td>{{user.id}}</td>
-                <td><a href="{{url_for("admin_user", userid=user.id)}}">{{user.username}}</a></td>
+                <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
                 <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                 <td>{{user.last_ip}}</td>
                 <td>{{user.timezone}}</td>
                 <td>
-                    <form action="{{url_for("admin_user_set_admin_tier", userid=user.id)}}" method="post">
+                    <form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
                         <input type="hidden" name="token" value="{{g.csrf_token}}">
                         <button type="submit">Un-admin</button>
                     </form>

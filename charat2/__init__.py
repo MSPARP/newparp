@@ -187,13 +187,12 @@ app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.annou
 app.add_url_rule("/admin/broadcast", "admin_broadcast", admin.broadcast_get, methods=("GET",))
 app.add_url_rule("/admin/broadcast", "admin_broadcast_post", admin.broadcast_post, methods=("POST",))
 
-make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
+make_rules("admin", "/admin/users", admin.user_list, formats=True)
 make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
-make_rules("admin", "/admin/users/id/<userid>", admin.user, formats=True)
-app.add_url_rule("/admin/users/id/<userid>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
-app.add_url_rule("/admin/users/id/<userid>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
-app.add_url_rule("/admin/users/id/<userid>/reset_password", "admin_user_reset_password", admin.user_reset_password_get, methods=("GET",))
-app.add_url_rule("/admin/users/id/<userid>/reset_password", "admin_user_reset_password_post", admin.user_reset_password_post, methods=("POST",))
+app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
+app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
+app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password", admin.user_reset_password_get, methods=("GET",))
+app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password_post", admin.user_reset_password_post, methods=("POST",))
 
 make_rules("admin", "/admin/blocks", admin.block_list, formats=True, paging=True)
 
