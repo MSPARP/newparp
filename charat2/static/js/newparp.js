@@ -1072,11 +1072,17 @@ var msparp = (function() {
 				$("#pm_chat_list_container .close").click(function() { pm_chat_list_container.css("display", ""); });
 				var pm_chat_list = $("#pm_chat_list");
 				var pm_chat_list_template = Handlebars.compile($("#pm_chat_list_template").html());
-				Handlebars.registerHelper("current_chat", function() { return this.url == chat.url; });
-				Handlebars.registerHelper("pm_username", function() { return this.url.substr(3); });
+				Handlebars.registerHelper("current_chat", function() {
+					if ("url" in this) {
+						return this.url == chat.url;
+					} else if ("chat" in this) {
+						return this.chat.url == chat.url;
+					}
+				});
+				Handlebars.registerHelper("pm_username", function() { return this.chat.url.substr(3); });
 				function refresh_pm_chat_list() {
 					$.get("/chats/pm.json", {}, function(data) {
-						pm_chat_list.html(pm_chat_list_template(data));
+						pm_chat_list.html(pm_chat_list_template(data.chats));
 						var pm_chat_links = $("#pm_chat_list a").click(function() {
 							// Hide PM chat list on mobile.
 							if (pm_chat_list_container.css("display")) { pm_chat_list_container.css("display", ""); }
