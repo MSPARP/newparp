@@ -141,7 +141,12 @@ user_orders = OrderedDict([
 @alt_formats({"json"})
 @use_db
 @permission_required("user_list")
-def user_list(fmt=None, page=1):
+def user_list(fmt=None):
+
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        abort(404)
 
     users = g.db.query(User).options(joinedload(User.admin_tier))
     users = _filter_users(users)
@@ -169,22 +174,21 @@ def user_list(fmt=None, page=1):
             "users": [_.to_dict() for _ in users],
         })
 
+    paginator_args = {k: v for k, v in request.args.items() if k != "page"}
     paginator = paginate.Page(
         [],
         page=page,
         items_per_page=50,
         item_count=user_count,
-        url_maker=lambda page: url_for("admin_user_list", page=page, **request.args),
+        url_maker=lambda page: url_for("admin_user_list", page=page, **paginator_args),
     )
-    group_link_args = request.args.copy()
-    if "group" in group_link_args:
-        del group_link_args["group"]
+
     return render_template(
         "admin/user_list.html",
         User=User,
         users=users,
         paginator=paginator,
-        group_link_args=group_link_args,
+        group_link_args={k: v for k, v in request.args.items() if k not in ("page", "group")},
         user_orders=user_orders,
     )
 
