@@ -1,16 +1,16 @@
-#!/usr/bin/python
-
-import time
+from celery.utils.log import get_task_logger
 
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import SearchedChat
+from charat2.tasks import celery, WorkerTask
 
+logger = get_task_logger(__name__)
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
     for searcher_id in searcher_ids:
         session_id = redis.get("searcher:%s:session_id" % searcher_id)
-        # This will fail they've logged out since sending the request.
+        # This will fail if they've logged out since sending the request.
         try:
             user_id = int(redis.get("session:%s" % session_id))
             search_character_id = int(redis.get("searcher:%s:search_character_id" % searcher_id))
@@ -63,16 +63,16 @@ def check_compatibility(redis, s1, s2):
     s1_name = s1["character"]["name"].lower().encode("utf8")
     for search_filter in s2["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s1_name, search_filter))
+        logger.debug("comparing %s and %s" % (s1_name, search_filter))
         if search_filter in s1_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
     s2_name = s2["character"]["name"].lower().encode("utf8")
     for search_filter in s1["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s2_name, search_filter))
+        logger.debug("comparing %s and %s" % (s2_name, search_filter))
         if search_filter in s2_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
 
     if (
@@ -90,10 +90,13 @@ def check_compatibility(redis, s1, s2):
 def get_character_info(db, searcher):
     return searcher["character"]
 
+@celery.task(base=WorkerTask, queue="worker")
+def run():
+    db = run.db
+    redis = run.redis
 
-if __name__ == "__main__":
     run_matchmaker(
-        2, "searchers", "searcher", get_searcher_info,
+        db, redis, 2, "searchers", "searcher", get_searcher_info,
         check_compatibility, SearchedChat, get_character_info,
     )
 

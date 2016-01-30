@@ -58,7 +58,7 @@ def search_save():
                 character_id = int(key[6:])
             except:
                 continue
-            if not character_id in all_character_ids:
+            if character_id not in all_character_ids:
                 continue
             g.db.add(SearchCharacterChoice(user_id=g.user.id, search_character_id=character_id))
 

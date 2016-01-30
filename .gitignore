@@ -4,3 +4,4 @@ logs/
 .c9/
 build/
 dist/
+celerybeat*
