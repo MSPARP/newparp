@@ -23,7 +23,16 @@ def bbremove(text):
 
     return text
 
-def safe_message(text):
+def notification_render(message, user):
+    if message.type == "me":
+        text = "* " + message.name + " " + message.text
+    elif message.chat.type == "roulette" and message.type in ["ic", "ooc"]:
+        text = ("▲" if message.user_number == user.number else "▼") + ": " + message.text
+    elif message.acronym != "":
+        text = message.acronym + ": " + message.text
+    else:
+        text = message.text
+
     text_without_bbcode = bbremove(text)
 
     if len(text_without_bbcode) <= 50:
@@ -49,7 +58,7 @@ def notify(message_dict):
         pipeline.rpush("user:%s:notifications" % (user.user_id), json.dumps({
             "id": message_dict["message"]["id"],
             "title": user.chat.computed_title(),
-            "body": safe_message(message_dict["message"]["text"]),
+            "body": notification_render(message_dict, user),
             "url": "/" + user.chat.computed_url(),
             "tag": "newparp:chat:%s" % (message_dict["chat"]["id"])
         }))
