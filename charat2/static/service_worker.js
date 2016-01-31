@@ -27,6 +27,7 @@ self.addEventListener("push", function(event) {
 			return response.json();
 		}).then(function(data) {
 			let latest = data.latest;
+			let promises = [];
 
 			for (let notification of data.notifications) {
 				// Parse the messages inside the array of JSON blobs.
@@ -47,26 +48,28 @@ self.addEventListener("push", function(event) {
 					for (let client of clientList) {   
 						if (client.visibilityState !== "visible" && (client.url.match(new RegExp(notification.url)))) return;
 
-						self.registration.showNotification(notification.title, {  
+						promises.push(self.registration.showNotification(notification.title, {  
 							body: notification.body,
 							icon: "/static/img/spinner-big.png" + "?url=" + encodeURIComponent(notification.url),
 							tag: notification.tag || "newparp"
-						});
+						}));
 					}
 				});
 
 				// Tell the server what our latest value is.
 				if (notification.id !== -1) {
-					fetch("/api/notifications", {
+					promises.push(fetch("/api/notifications", {
 						method: "POST",
 						credentials: "same-origin",
 						headers: {
 							"Content-type": "application/x-www-form-urlencoded"
 						},
 						body: "token=" + response.token + "&latest=" + notification.id
-					});
+					}));
 				}
 			}
+
+			return Promise.all(promises);
 		}).catch(function(err) {
 			console.log("Fetch Error ", err);
 		});
