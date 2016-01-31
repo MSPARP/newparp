@@ -1613,6 +1613,11 @@ var msparp = (function() {
 			// Run theme specific code.
 			update_theme($("#theme_form select").val());
 
+			// Initalize push if notifications are enabled.
+			if (user.meta.desktop_notifications && typeof Notification != "undefined") {
+				init_push();
+			}
+
 			// Now all that's done, let's connect
 			connect();
 
