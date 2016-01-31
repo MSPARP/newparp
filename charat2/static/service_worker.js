@@ -10,11 +10,7 @@ self.addEventListener("install", function(event) {
 self.addEventListener("push", function(event) {  
 	console.log("Received a push message", event);
 
-	event.waitUntil(fetch("/api/token", {
-		credentials: "same-origin"
-	}).then(function(data) {
-		return data.json();
-	}).then(function(response) {
+	event.waitUntil(
 		fetch("/api/notifications", {
 			credentials: "same-origin"
 		}).then(function(response) {
@@ -27,7 +23,6 @@ self.addEventListener("push", function(event) {
 			return response.json();
 		}).then(function(data) {
 			let latest = data.latest;
-			let promises = [];
 
 			for (let notification of data.notifications) {
 				// Parse the messages inside the array of JSON blobs.
@@ -41,6 +36,24 @@ self.addEventListener("push", function(event) {
 				// Ignore messages that are older than the latest and are not system pushes.
 				if ((latest > notification.id) && !data.id !== -1) continue;
 
+				// Tell the server what our latest value is.
+				if (notification.id !== -1) {
+					fetch("/api/token", {
+						credentials: "same-origin"
+					}).then(function(data) {
+						return data.json();
+					}).then(function(response) {
+						fetch("/api/notifications", {
+							method: "POST",
+							credentials: "same-origin",
+							headers: {
+								"Content-type": "application/x-www-form-urlencoded"
+							},
+							body: "token=" + response.token + "&latest=" + notification.id
+						});
+					});
+				}
+
 				// Shows the notification.
 				self.clients.matchAll({  
 					type: "window"  
@@ -48,32 +61,18 @@ self.addEventListener("push", function(event) {
 					for (let client of clientList) {   
 						if (client.visibilityState !== "visible" && (client.url.match(new RegExp(notification.url)))) return;
 
-						promises.push(self.registration.showNotification(notification.title, {  
+						return self.registration.showNotification(notification.title, {  
 							body: notification.body,
 							icon: "/static/img/spinner-big.png" + "?url=" + encodeURIComponent(notification.url),
 							tag: notification.tag || "newparp"
-						}));
+						});
 					}
 				});
-
-				// Tell the server what our latest value is.
-				if (notification.id !== -1) {
-					promises.push(fetch("/api/notifications", {
-						method: "POST",
-						credentials: "same-origin",
-						headers: {
-							"Content-type": "application/x-www-form-urlencoded"
-						},
-						body: "token=" + response.token + "&latest=" + notification.id
-					}));
-				}
 			}
-
-			return Promise.all(promises);
 		}).catch(function(err) {
 			console.log("Fetch Error ", err);
-		});
-	}));
+		})
+	);
 });
 
 self.addEventListener("message", function(event) {
