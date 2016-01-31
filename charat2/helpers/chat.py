@@ -212,10 +212,11 @@ def send_message(db, redis, message, force_userlist=False):
                 if message.chat.last_message <= chat_user.last_online:
                     redis.publish("channel:pm:%s" % chat_user.user_id, "{\"pm\":\"1\"}")
 
-    notify.delay({
-        "message": message.to_dict(),
-        "chat": message.chat.to_dict(),
-    })
+        # Push notifications
+        notify.delay({
+            "message": message.to_dict(),
+            "chat": message.chat.to_dict(),
+        })
 
 
 def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
