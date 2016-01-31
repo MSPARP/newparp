@@ -1261,6 +1261,7 @@ var msparp = (function() {
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
+				user.meta.show_user_numbers ? conversation.removeClass("hide_user_numbers") : conversation.addClass("hide_user_numbers");
 				resize_conversation();
 			}
 			$("#subscribed").click(function() {
