@@ -151,6 +151,7 @@ class User(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_user_numbers = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
@@ -562,6 +563,7 @@ class ChatUser(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_user_numbers = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
@@ -595,6 +597,7 @@ class ChatUser(Base):
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
+            show_user_numbers=user.show_user_numbers,
             show_bbcode=user.show_bbcode,
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
@@ -623,6 +626,7 @@ class ChatUser(Base):
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
                 show_system_messages=user.show_system_messages,
+                show_user_numbers=user.show_user_numbers,
                 show_bbcode=user.show_bbcode,
                 show_timestamps=user.show_timestamps,
                 show_preview=user.show_preview,
@@ -635,6 +639,7 @@ class ChatUser(Base):
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
+            show_user_numbers=user.show_user_numbers,
             show_bbcode=user.show_bbcode,
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
@@ -710,6 +715,7 @@ class ChatUser(Base):
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
             ucd["meta"]["show_system_messages"] = self.show_system_messages
+            ucd["meta"]["show_user_numbers"] = self.show_user_numbers
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_timestamps"] = self.show_timestamps
             ucd["meta"]["show_preview"] = self.show_preview

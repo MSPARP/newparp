@@ -615,6 +615,7 @@ def save_variables():
         "confirm_disconnect",
         "desktop_notifications",
         "show_system_messages",
+        "show_user_numbers",
         "show_bbcode",
         "show_timestamps",
         "show_preview",

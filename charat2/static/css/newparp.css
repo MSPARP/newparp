@@ -296,6 +296,7 @@ section > .close:first-child { float: right; margin: 5px; }
 .hide_system_messages > .message_chat_meta { display: none; }
 
 .unum { float: left; padding: 2px 0 2px 5px; }
+.hide_user_numbers .unum { display: none; }
 .highlighted { background-color: #fff; }
 .ignored { display: none; }
 
