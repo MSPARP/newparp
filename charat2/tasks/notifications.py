@@ -51,7 +51,15 @@ def notify(message_dict):
         "other": []
     }
 
-    users = db.query(ChatUser, PushToken).filter(ChatUser.chat_id == message_dict["chat"]["id"]).filter(ChatUser.desktop_notifications == True).filter(ChatUser.user_id == PushToken.creator_id).all()
+    users = db.query(ChatUser, PushToken).filter(
+        ChatUser.chat_id == message_dict["chat"]["id"]
+    ).filter(
+        ChatUser.desktop_notifications == True
+    ).filter(
+        ChatUser.subscribed == True
+    ).filter(
+        ChatUser.user_id == PushToken.creator_id
+    ).all()
 
     pipeline = redis.pipeline()
 
