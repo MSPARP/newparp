@@ -82,7 +82,7 @@ def notify_gcm(tokens, chat_id):
     db = notify_gcm.db
 
     online = set(redis.hvals("chat:%s:online" % chat_id))
-    registration_ids = [token["token"] for token in tokens if token["user"] not in online]
+    registration_ids = [token["token"] for token in tokens if str(token["user"]) not in online]
 
     if len(registration_ids) == 0:
         return
@@ -116,6 +116,7 @@ def notify_webpush(tokens, chat_id):
     redis = notify_webpush.redis
 
     online = set(redis.hvals("chat:%s:online" % chat_id))
+
     for token in tokens:
-        if token["user"] not in online:
+        if str(token["user"]) not in online:
             requests.post(token["endpoint"])
