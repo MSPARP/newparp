@@ -53,7 +53,7 @@ def notify(message_dict):
             "url": "/" + user.chat.computed_url(),
             "tag": "newparp:chat:%s" % (message_dict["chat"]["id"])
         }))
-        pipeline.expire("user:%s:notifications" % (user.user_id), 10)
+        pipeline.expire("user:%s:notifications" % (user.user_id), 60)
 
         gcm_token = re.search("gcm/send/(.+)", token.endpoint)
 
