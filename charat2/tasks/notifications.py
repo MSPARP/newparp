@@ -59,7 +59,7 @@ def notify(message_dict):
         pipeline.rpush("user:%s:notifications" % (user.user_id), json.dumps({
             "id": message_dict["message"]["id"],
             "title": user.chat.computed_title(),
-            "body": notification_render(message_dict, user),
+            "body": notification_render(message_dict["message"], user),
             "url": "/" + user.chat.computed_url(),
             "tag": "newparp:chat:%s" % (message_dict["chat"]["id"])
         }))
