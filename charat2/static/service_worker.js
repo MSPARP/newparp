@@ -59,14 +59,14 @@ self.addEventListener("push", function(event) {
 					type: "window"  
 				}).then(function(clientList) {  
 					for (let client of clientList) {   
-						if (client.visibilityState !== "visible" && (client.url.match(new RegExp(notification.url)))) return;
-
-						return self.registration.showNotification(notification.title, {  
-							body: notification.body,
-							icon: "/static/img/spinner-big.png" + "?url=" + encodeURIComponent(notification.url),
-							tag: notification.tag || "newparp"
-						});
+						if (client.visibilityState === "visible" && (client.url.match(new RegExp(notification.url)))) return;
 					}
+
+					return self.registration.showNotification(notification.title, {  
+						body: notification.body,
+						icon: "/static/img/spinner-big.png" + "?url=" + encodeURIComponent(notification.url),
+						tag: notification.tag || "newparp"
+					});
 				});
 			}
 		}).catch(function(err) {
