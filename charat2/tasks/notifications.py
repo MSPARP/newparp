@@ -25,14 +25,14 @@ def bbremove(text):
     return text
 
 def notification_render(message, user):
-    if message.type == "me":
-        text = "* " + message.name + " " + message.text
-    elif message.chat.type == "roulette" and message.type in ["ic", "ooc"]:
-        text = ("▲" if message.user_number == user.number else "▼") + ": " + message.text
-    elif message.acronym != "":
-        text = message.acronym + ": " + message.text
+    if message["type"] == "me":
+        text = "* " + message["name"] + " " + message["text"]
+    elif user.chat.type == "roulette" and message["type"] in ["ic", "ooc"]:
+        text = ("▲" if message["user_number"] == user.number else "▼") + ": " + message["text"]
+    elif message["acronym"] != "":
+        text = message["acronym"] + ": " + message["text"]
     else:
-        text = message.text
+        text = message["text"]
 
     text_without_bbcode = bbremove(text)
 
