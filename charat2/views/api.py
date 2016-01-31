@@ -31,6 +31,9 @@ def notifications():
             ))
 
             return "", 204
+    elif "revoke" in request.form:
+        g.db.query(PushToken).filter(PushToken.creator_id == g.user_id).filter(func.lower(PushToken.endpoint) == endpoint.lower()).delete()
+        return "", 204
 
     return jsonify({
         "notifications": g.redis.lrange("user:%s:notifications" % (g.user_id), 0, -1),
