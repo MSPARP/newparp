@@ -10,8 +10,7 @@ self.addEventListener("install", function(event) {
 self.addEventListener("push", function(event) {  
 	console.log("Received a push message", event);
 
-
-	fetch("/api/token", {
+	event.waitUntil(fetch("/api/token", {
 		credentials: "same-origin"
 	}).then(function(data) {
 		return data.json();
@@ -71,7 +70,7 @@ self.addEventListener("push", function(event) {
 		}).catch(function(err) {
 			console.log("Fetch Error ", err);
 		});
-	});
+	}));
 });
 
 self.addEventListener("message", function(event) {
