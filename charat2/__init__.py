@@ -9,9 +9,10 @@ from charat2.model.connections import (
     redis_connect,
     redis_disconnect,
     set_cookie,
+    set_headers,
 )
 from charat2 import views
-from charat2.views import account, admin, errors, guides, rp, settings
+from charat2.views import account, admin, api, errors, guides, rp, settings
 from charat2.views.admin import spamless
 from charat2.views.rp import (
     chat, chat_api, chat_list, characters, request_search, roulette, search,
@@ -28,6 +29,7 @@ app.before_request(redis_connect)
 
 app.before_request(check_csrf_token)
 
+app.after_request(set_headers)
 app.after_request(set_cookie)
 app.after_request(db_commit)
 
@@ -48,8 +50,6 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
 
 
 # 1. Home/account
-
-app.add_url_rule("/health", "health", views.health, methods=("GET",))
 
 app.add_url_rule("/", "home", rp.home, methods=("GET",))
 
@@ -229,6 +229,16 @@ app.add_url_rule("/userguide", "guides_user_guide", guides.user_guide, methods=(
 app.error_handler_spec[None][403] = errors.error_403
 app.error_handler_spec[None][404] = errors.error_404
 app.error_handler_spec[None][500] = errors.error_500
+
+# 13. Other APIs
+app.add_url_rule("/api/notifications", "notifications", api.notifications, methods=("GET", "POST",))
+app.add_url_rule("/api/token", "token", api.token, methods=("GET",))
+
+# 14. Other
+
+app.add_url_rule("/health", "health", views.health, methods=("GET",))
+app.add_url_rule("/manifest.json", "manifest", views.manifest, methods=("GET",))
+app.add_url_rule("/service_worker.js", "service_worker", views.service_worker, methods=("GET",))
 
 # XXX dear fucking lord we need traversal
 

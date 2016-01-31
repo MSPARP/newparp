@@ -1,10 +1,28 @@
 import re
+from urlparse import urlparse
 
 color_validator = re.compile("^[A-Fa-f0-9]{6}$")
 username_validator = re.compile("^[-a-zA-Z0-9_]+$")
 url_validator = re.compile("^[-a-zA-Z0-9_]+$")
 email_validator = re.compile("^.+@.+\..+$")
 secret_answer_replacer = re.compile("""[!?"'(),.\s]+""")
+gcm_push = re.compile("^/gcm/send/(.+)")
+moz_push = re.compile("^/push/(.+)")
+
+def valid_push_endpoint(endpoint):
+    parsed = urlparse(endpoint)
+
+    # We only support Google and Mozilla push backends for now.
+    if parsed.netloc not in ("android.googleapis.com", "updates.push.services.mozilla.com"):
+        return False
+
+    if gcm_push.match(parsed.path):
+        return True
+
+    if moz_push.match(parsed.path):
+        return True
+
+    return False
 
 reserved_usernames = {
     "admin", "charat", "msparp", "official", "staff",

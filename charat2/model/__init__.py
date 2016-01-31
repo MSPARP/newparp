@@ -1031,6 +1031,7 @@ class AdminTierPermission(Base):
     def __repr__(self):
         return "<AdminTierPermission: %s has %s>" % (self.admin_tier_id, self.permission)
 
+
 class SpamlessFilter(Base):
     __tablename__ = "spamless_filters"
     id = Column(Integer, primary_key=True)
@@ -1045,6 +1046,15 @@ class SpamlessFilter(Base):
 
     def __repr__(self):
         return "<SpamlessFilter: '%s'>" % (self.id, self.regex)
+
+
+class PushToken(Base):
+    __tablename__ = "push_tokens"
+    id = Column(Integer, primary_key=True)
+
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    endpoint = Column(String(4096), nullable=False)
+
 
 # 2. Indexes
 
