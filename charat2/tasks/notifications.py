@@ -3,9 +3,10 @@ import json
 import re
 import requests
 
+from sqlalchemy import func
+
 from charat2.tasks import celery, WorkerTask
 from charat2.model import ChatUser, PushToken
-from charat2.model.validators import gcm_push
 
 def bbremove_(text):
     if hasattr(text, "groups"):
@@ -78,6 +79,7 @@ def notify(message_dict):
 @celery.task(base=WorkerTask, queue="worker")
 def notify_gcm(tokens, chat_id):
     redis = notify_gcm.redis
+    db = notify_gcm.db
 
     online = set(redis.hvals("chat:%s:online" % chat_id))
     registration_ids = [token["token"] for token in tokens if token["user"] not in online]
@@ -96,6 +98,18 @@ def notify_gcm(tokens, chat_id):
         results = results.json()
     except ValueError:
         print("GCM ValueError", results.text)
+        return
+
+    tokenresults = zip(tokens, results["results"])
+
+    for token, result in tokenresults:
+        if "error" in result:
+            if result["error"] in ("NotRegistered", "InvalidRegistration"):
+                db.query(PushToken).filter(func.lower(PushToken.endpoint) == token["token"].lower()).delete()
+                db.commit()
+            else:
+                print("Caught unknown GCM error: %s %s" % (token, result))
+
 
 @celery.task(base=WorkerTask, queue="worker")
 def notify_webpush(tokens, chat_id):
