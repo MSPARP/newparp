@@ -15,7 +15,7 @@ def notifications():
         except (TypeError, ValueError):
             latest = 0
 
-        g.redis.setex("user:%s:notifications:latest" % (g.user_id), latest, 60)
+        g.redis.setex("user:%s:notifications:latest" % (g.user_id), 60, latest)
 
         return "", 204
     elif "endpoint" in request.form:
