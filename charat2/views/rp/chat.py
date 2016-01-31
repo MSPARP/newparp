@@ -109,7 +109,8 @@ def get_chat(f):
                 abort(404)
             return redirect(url_for(request.endpoint, url="theoubliette", fmt=fmt))
         except UnauthorizedException:
-            return render_template("rp/chat/private.html", chat=chat), 403
+            if request.endpoint != "rp_chat_unsubscribe":
+                return render_template("rp/chat/private.html", chat=chat), 403
         except TooManyPeopleException:
             if request.endpoint == "rp_chat":
                 return render_template("rp/chat/too_many_people.html", chat=chat), 403
