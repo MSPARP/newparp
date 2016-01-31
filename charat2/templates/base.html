@@ -10,59 +10,75 @@
 <head>
 <title>{% block title: %}{% endblock %}MSPARP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<meta name="theme-color" content="#626262">
+<link rel="icon" sizes="32x32" href="/static/img/icon-32.png">
+<link rel="icon" sizes="192x192" href="/static/img/icon-hires.png">
+<link rel="icon" sizes="16x16" href="/static/img/icon-16.png">
+<link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="/static/css/normalize.css">
 <link rel="stylesheet" href="/static/css/newparp.css">
 </head>
 <body>
+<script> // Enable form element fallback, avoid flashing
+basic_forms=localStorage.getItem("basic_forms");
+if (basic_forms == "true") {
+document.body.className += ' no_forms';
+}
+</script>
+<div id="wrapper">
+    <div id="content">
+        <header>
+            <div id="users_online">
+                <p>{{g.redis.get("connected_users") or 0}} connected</p>
+                <p>{{g.redis.get("searching_users") or 0}} searching</p>
+                <p>{{g.redis.get("rouletting_users") or 0}} rouletting</p>
+            </div>
+            <h1><span id="logo"><a href="{{url_for("home")}}"><img src="/static/img/logo-spacer.png" alt="MSPARP"></a></span> <span id="prompt">CHAT TERMINAL <span id="prompt-cursor"></span></span></h1>
+        </header>
 
-<header>
-    <div id="users_online">
-        <p>{{g.redis.get("connected_users") or 0}} connected</p>
-        <p>{{g.redis.get("searching_users") or 0}} searching</p>
-        <p>{{g.redis.get("rouletting_users") or 0}} rouletting</p>
-    </div>
-    <h1><a href="{{url_for("home")}}"><img src="/static/img/logo.gif" alt="MSPARP"></a></h1>
-</header>
 
-
-<nav id="global_navigation">
-    {% if g.user and g.unread_chats and g.unread_chats > 0: %}
-    <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}">{{g.unread_chats}}</a>
-    {% endif %}
-    <label for="nav_toggle">Menu</label>
-    <input type="checkbox" id="nav_toggle">
-    <ul>
-        <li><a href="{{url_for("home", mode="search")}}">Character search</a></li>
-        <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
-        <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
-        <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
-        {% if g.user: %}
-        {% if g.user.is_admin: %}
-        <li><a href="{{url_for("admin_home")}}">Admin</a></li>
-        {% endif %}
-        <li class="user">
-            <a href="#">{{g.user.username}}</a>
+        <nav id="global_navigation">
+            {% if g.user and g.unread_chats and g.unread_chats > 0: %}
+            <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}">{{g.unread_chats}}</a>
+            {% endif %}
+            <label for="nav_toggle">Menu</label>
+            <input type="checkbox" id="nav_toggle">
             <ul>
-                <li><a href="{{url_for("rp_chat_list")}}">Your chats</a></li>
-                <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
-                <li><a href="{{url_for("settings")}}">Settings</a></li>
-                <li><form action="{{url_for("log_out")}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Log out</button></form></li>
+                <li><a href="{{url_for("home", mode="search")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
+                <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
+                <li><a href="{{url_for("rp_groups")}}"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
+                <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
+                {% if g.user: %}
+                {% if g.user.is_admin: %}
+                <li><a href="{{url_for("admin_home")}}">Admin</a></li>
+                {% endif %}
+                <li class="user">
+                    <a href="#">{{g.user.username}}</a>
+                    <ul>
+                        <li><a href="{{url_for("rp_chat_list")}}">Your chats</a></li>
+                        <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
+                        <li><a href="{{url_for("settings")}}">Settings</a></li>
+                        <li><form action="{{url_for("log_out")}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Log out</button></form></li>
+                    </ul>
+                </li>
+                {% endif %}
             </ul>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
+        </nav>
 
-<main>
-    {% if g.user and g.ip_banned %}<p><strong>LOL UR IP BANNED</strong></p>{% endif %}
-    <section id="announcements">
-        <h2>Announcements</h2>
-        {{(g.redis.get("announcements") or "<p>No announcements.</p>")|safe}}
-    </section>
-{% block content: %}{% endblock %}
-</main>
+        <main>
+            {% if g.user and g.ip_banned %}<p><strong>LOL UR IP BANNED</strong></p>{% endif %}
+            <section id="announcements">
+                <h2>Announcements</h2>
+                {{(g.redis.get("announcements") or "<p>No announcements.</p>")|safe}}
+            </section>
+        {% block content: %}{% endblock %}
+        </main>
+    </div>
+</div>
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="/static/js/ui.js"></script>
 <script src="/static/js/newparp.js"></script>
 {% block scripts: %}{% endblock %}
 

@@ -1,37 +1,83 @@
 {% extends "base.html" %}
 {% block title: %}Broadcast - {% endblock %}
 {% block content: %}
-	<h2>Broadcast</h2>
-	<div id="global_announcements_preview">
-		<div class="announcement show">
-			<h2>Global Announcement</h2>
-			<p>[no message]</p>
-		</div>
-	</div>
+    <div class="common_box">
+        <h2><label><span>Broadcast</span></label></h2>
+        <div class="common_box_wrap">
+            <div id="global_announcements_preview">
+                <div class="announcement show">
+                    <h2>Global Announcement</h2>
+                    <p>[no message]</p>
+                </div>
+            </div>
 
-	<form action="{{url_for("admin_broadcast")}}" method="post">
-		<input type="hidden" name="token" value="{{g.csrf_token}}">
-		<p>
-			<label for="color">Color:</label>
-			<input type="color" name="color" value="#000000">
-		</p>
-		<p>
-			<label for="title">Title:</label>
-			<input type="text" name="title" value="Global Announcement">
-		</p>
-		<p>
-			<label for="important">Header?</label>
-			<input type="checkbox" name="important">
-		</p>
-		<p>
-			<label for="color">Header Color:</label>
-			<input type="color" name="headercolor" value="#535353">
-		</p>
-		<p>
-			<textarea name="text" rows="10" required></textarea>
-		</p>
-		<p><button type="submit">Send</button></p>
-	</form>
+            <form action="{{url_for("admin_broadcast")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <p class="color-double">
+                    <label for="color_input" class="textlabel">Color:</label>
+                    <input type="color" name="color" id="color_input" value="#000000" list="canon_hexes">
+                    <datalist id="canon_hexes">
+                        <option value="#E00707"/>
+                        <option value="#4AC925"/>
+                        <option value="#0715CD"/>
+                        <option value="#B536DA"/>
+                        <option value="#F2A400"/>
+                        <option value="#1F9400"/>
+                        <option value="#00D5F2"/>
+                        <option value="#FF6FF2"/>
+                        <option value="#A10000"/>
+                        <option value="#A15000"/>
+                        <option value="#A1A100"/>
+                        <option value="#658200"/>
+                        <option value="#416600"/>
+                        <option value="#008141"/>
+                        <option value="#008282"/>
+                        <option value="#005682"/>
+                        <option value="#000056"/>
+                        <option value="#2B0057"/>
+                        <option value="#6A006A"/>
+                        <option value="#77003C"/>
+                        <option value="#FF0000"/>
+                        <option value="#626262"/>
+                        <option value="#323232"/>
+                        <option value="#929292"/>
+                        <option value="#2ED73A"/>
+                        <option value="#FF00FF"/>
+                        <option value="#FFAC9F"/>
+                        <option value="#FF83FB"/>
+                        <option value="#00BFFF"/>
+                        <option value="#9370DB"/>
+                        <option value="#FF69B4"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFDAB9"/>
+                        <option value="#FFFFE0"/>
+                        <option value="#98FB98"/>
+                        <option value="#000000"/>
+                        <option value="#696969"/>
+                        <option value="#A9A9A9"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFFFFF"/>
+                    </datalist>
+                </p>
+                <div class="input"><p>
+                    <input type="text" name="title" id="title_input" value="Global Announcement">
+                    <label for="title_input">Title</label>
+                </p></div>
+                <div class="input"><p>
+                    <input type="checkbox" name="important" id="important_tick">
+                    <label for="important_tick">Header?</label>
+                </p></div>
+                <p class="color-double">
+                    <label for="color_header_set" class="textlabel">Header Color:</label>
+                    <input type="color" id="color_header_set" name="headercolor" value="#535353" list="canon_hexes">
+                </p>
+                <div class="input nolabel_text"><p>
+                    <textarea name="text" rows="10" required></textarea>
+                </p></div>
+                <p><button type="submit">Send</button></p>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts: %}

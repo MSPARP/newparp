@@ -2,31 +2,35 @@
 {% block title: %}{{title}} - Spamless - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>{{title}}</h2>
-    <ul>
-        {% for phrase in phrases: %}
-        <li>
-            {{ phrase.regex }} {{ phrase.points if phrase.points != 0 }}
-            <form action="" method="post">
-                <input type="hidden" name="token" value="{{ g.csrf_token }}">
-                <input type="hidden" name="command" value="remove">
-                <input type="hidden" name="phrase" value="{{ phrase.regex }}">
-                <button type="submit">Remove</button>
-            </form>
-        </li>
-        {% endfor %}
-        <li>
-            {% if error: %}
-            <p class="error">Not a valid regular expression: {{ error }}</p>
-            {% endif %}
-            <form action="" method="post">
-                <input type="hidden" name="token" value="{{ g.csrf_token }}">
-                <input type="hidden" name="command" value="add">
-                <input type="text" name="phrase" value="{{ request.form.phrase }}" required>
-                {% if request.url_rule.endpoint == "spamless_blacklist": %}<input type="number" name="score" value="{{ request.form.score }}" required>{% endif %}
-                <button type="submit">Add</button>
-            </form>
-        </li>
-    </ul>
+    <div class="settings_box spamless_box admin_wide">
+        <div class="settings_box_wrap">
+            <h2>{{title}}</h2>
+            <ul>
+                {% for phrase in phrases: %}
+                <li class="sl_item_wrap">
+                    <form action="" method="post" class="sl_item">
+                        <input type="hidden" name="token" value="{{ g.csrf_token }}">
+                        <input type="hidden" name="command" value="remove">
+                        <input type="hidden" name="phrase" value="{{ phrase.regex }}">
+                        <button type="submit" class="remove_sl_item">x</button>
+                    </form>
+                    {{ phrase.regex }} {% if phrase.points != 0 %}<span class="sl_points">{{phrase.points}}</span>{% endif %}
+                </li>
+                {% endfor %}
+                <li class="sl_add">
+                    {% if error: %}
+                    <p class="error">Not a valid regular expression: {{ error }}</p>
+                    {% endif %}
+                    <form action="" method="post">
+                        <input type="hidden" name="token" value="{{ g.csrf_token }}">
+                        <input type="hidden" name="command" value="add">
+                        <div class="input tags_box"><input type="text" name="phrase" value="{{ request.form.phrase }}" required></div>
+                        {% if request.url_rule.endpoint == "spamless_blacklist": %}<div class="input tags_box"><input type="number" name="score" value="{{ request.form.score }}" required></div>{% endif %}
+                        <button type="submit">Add</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 

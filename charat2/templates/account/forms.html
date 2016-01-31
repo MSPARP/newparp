@@ -1,78 +1,76 @@
 {% macro register() %}
-        <h2>Register</h2>
-        <form action="{{url_for("register")}}" method="post">
-            <input type="hidden" name="token" value="{{g.csrf_token}}">
-            {% if "register_error" in request.args: %}
-            {% if request.args["register_error"] == "ip": %}
-            <p class="error">It looks like you've already registered recently. Please wait before trying again.</p>
-            {% elif request.args["register_error"] == "blank": %}
-            <p class="error">Please enter a username and password.</p>
-            {% elif request.args["register_error"] == "passwords_didnt_match": %}
-            <p class="error">The two passwords didn't match.</p>
-            {% elif request.args["register_error"] == "invalid_username": %}
-            <p class="error">Usernames can only contain letters, numbers, hyphens and underscores.</p>
-            {% elif request.args["register_error"] == "username_taken": %}
-            <p class="error">That username has already been taken.</p>
-            {% elif request.args["register_error"] == "blank_email": %}
-            <p class="error">E-mail address is required.</p>
-            {% elif request.args["register_error"] == "invalid_email": %}
-            <p class="error">That doesn't look like a valid e-mail address.</p>
-            {% endif %}
-            {% endif %}
-            <div class="input_table">
-                <p>
-                    <label for="register_username_input">Username:</label>
-                    <input type="text" name="username" id="register_username_input" maxlength="50" required>
-                </p>
-                <p>
-                    <label for="register_password_input">Password:</label>
-                    <input type="password" name="password" id="register_password_input" required>
-                </p>
-                <p>
-                    <label for="register_password_again_input">Password again:</label>
-                    <input type="password" name="password_again" id="register_password_again_input" required>
-                </p>
-                <p>
-                    <label for="register_show_password_input">Show password?</label>
-                    <input type="checkbox" id="register_show_password_input">
-                </p>
-                <p>
-                    <label for="register_email_address_input">E-mail address (required):</label>
-                    <input type="email" name="email_address" id="register_email_address_input" maxlength="100">
-                </p>
-                <p>
-                    <label>Are you a robot?</label>
-                    <span><label><input type="checkbox" name="bot_yes"> Yes</label> <label><input type="checkbox" name="bot_no"> No</label></span>
-                </p>
-            </div>
-            <p><button type="submit">Register</button> <a href="http://help.msparp.com/">Having problems? Get help here.</a></p>
-        </form>
+    <div class="common_box">
+        <h2><label><span>Register</span></label></h2>
+        <div class="common_box_wrap">
+            <form action="{{url_for("register")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                {% if "register_error" in request.args: %}
+                {% if request.args["register_error"] == "ip": %}
+                <p class="error">It looks like you've already registered recently. Please wait before trying again.</p>
+                {% elif request.args["register_error"] == "blank": %}
+                <p class="error">Please enter a username and password.</p>
+                {% elif request.args["register_error"] == "passwords_didnt_match": %}
+                <p class="error">The two passwords didn't match.</p>
+                {% elif request.args["register_error"] == "invalid_username": %}
+                <p class="error">Usernames can only contain letters, numbers, hyphens and underscores.</p>
+                {% elif request.args["register_error"] == "username_taken": %}
+                <p class="error">That username has already been taken.</p>
+                {% elif request.args["register_error"] == "blank_email": %}
+                <p class="error">E-mail address is required.</p>
+                {% elif request.args["register_error"] == "invalid_email": %}
+                <p class="error">That doesn't look like a valid e-mail address.</p>
+                {% endif %}
+                {% endif %}
+                <div class="input snap_top"><p>
+                <input type="text" name="username" id="register_username_input" maxlength="50" required><label for="register_username_input">Username</label>
+                </p></div>
+                <div class="input tags_box"><p>
+                <input type="password" name="password" id="register_password_input" required><label for="register_password_input">Password</label>
+                </p></div>
+                <div class="input tags_box"><p>
+                <input type="password" name="password_again" id="register_password_again_input" required><label for="register_password_again_input">Password again</label>
+                </p></div>
+                <div class="input snap_top_double"><p>
+                <input type="checkbox" id="register_show_password_input"><label for="register_show_password_input">Show password?</label>
+                </p></div>
+                <div class="input"><p>
+                <input type="email" name="email_address" id="register_email_address_input" maxlength="100"><label for="register_email_address_input">E-mail address (required)</label>
+                </p></div>
+                <label class="textlabel robo_q">Are you a robot?</label>
+                <div class="robo_calculate"><div class="input"><input type="checkbox" id="bot_yes" name="bot_yes"><label for="bot_yes">Yes</label></div> <div class="input"><input type="checkbox" id="bot_no" name="bot_no"><label for="bot_no">No</label></div></div>
+                <div class="not_input"><p><input type="checkbox" id="basic_forms" class="device_settings" name="basic_form_elements"><label for="basic_forms"> Use basic form elements</label></p></div>
+                <span class="textlabel">(Tick this option if the form above does not render properly on your device or browser.)</span>
+                <p><button type="submit">Register</button> <a href="http://help.msparp.com/" class="reg_help">Having problems? Get help here.</a></p>
+            </form>
+        </div>
+    </div>
 {% endmacro %}
 {% macro log_in() %}
-        <h2>Log in</h2>
-        <form action="{{url_for("log_in")}}" method="post">
-            <input type="hidden" name="token" value="{{g.csrf_token}}">
-            {% if "log_in_error" in request.args: %}
-            {% if request.args["log_in_error"] == "no_user": %}
-            <p class="error">There doesn't seem to be an account with that username.</p>
-            {% elif request.args["log_in_error"] == "wrong_password": %}
-            <p class="error">That password is incorrect.</p>
-            {% endif %}
-            {% endif %}
-            <div class="input_table">
-                <p>
-                    <label for="log_in_username_input">Username:</label>
-                    <input type="text" name="username" id="log_in_username_input" maxlength="50" required>
-                </p>
-                <p>
-                    <label for="log_in_password_input">Password:</label>
-                    <input type="password" name="password" id="log_in_password_input" required>
-                </p>
-                <p>
-                    <label for="log_in_show_password_input">Show password?</label>
-                    <input type="checkbox" id="log_in_show_password_input">
-                </p>
-            </div>
-            <p><button type="submit">Log in</button></p>
-        </form>
+    <div class="common_box">
+        <h2><label><span>Log in</span></label></h2>
+        <div class="common_box_wrap">
+            <form action="{{url_for("log_in")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                {% if "log_in_error" in request.args: %}
+                {% if request.args["log_in_error"] == "no_user": %}
+                <p class="error">There doesn't seem to be an account with that username.</p>
+                {% elif request.args["log_in_error"] == "wrong_password": %}
+                <p class="error">That password is incorrect.</p>
+                {% endif %}
+                {% endif %}
+                <div class="input_table">
+                    <div class="input"><p>
+                        <input type="text" name="username" id="log_in_username_input" maxlength="50" required><label for="log_in_username_input">Username</label>
+                    </p></div>
+                    <div class="input"><p>
+                        <input type="password" name="password" id="log_in_password_input" required><label for="log_in_password_input">Password</label>
+                    </p></div>
+                    <div class="input"><p>
+                        <input type="checkbox" id="log_in_show_password_input"><label for="log_in_show_password_input">Show password?</label>
+                    </p></div>
+                </div>
+                <p><button type="submit">Log in</button></p>
+            </form>
+        </div>
+    </div>
 {% endmacro %}

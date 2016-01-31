@@ -1,35 +1,39 @@
 {% extends "base.html" %}
 {% block title: %}Search character creator - {% endblock %}
 {% block content: %}
-    <h2>Search character creator</h2>
-    {% for group in search_character_groups: %}
-    <h3>{{group.name}}</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Character</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for character in group.characters: %}
-            <tr>
-                <td>{{character.title}}</td>
-                <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
-                <td><a href="{{url_for("rp_search_character", id=character.id)}}">Edit</a></td>
-                <td>{% if character.id != 1: %}<a href="{{url_for("rp_delete_search_character_get", id=character.id)}}">Delete</a>{% endif %}</td>
-            </tr>
+    <div class="common_box">
+    <h2><label><span>Search character creator</span></label></h2>
+        <div class="common_box_wrap">
+            {% for group in search_character_groups: %}
+            <h3>{{group.name}}</h3>
+            <table class="chartable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Character</th>
+                        <th><span class="t_edit"><span>Edit</span></span></th>
+                        <th><span class="t_delete"><span>Delete<span></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for character in group.characters: %}
+                    <tr>
+                        <td>{{character.title}}</td>
+                        <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
+                        <td><a href="{{url_for("rp_search_character", id=character.id)}}"><span class="t_edit"><span>Edit<span></span></a></td>
+                        <td>{% if character.id != 1: %}<a href="{{url_for("rp_delete_search_character_get", id=character.id)}}"><span class="t_delete"><span>Delete<span></span></a>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p><a href="{{url_for("rp_new_search_character_get", group_id=group.id)}}">New character in {{group.name}}</a></p>
             {% endfor %}
-        </tbody>
-    </table>
-    <p><a href="{{url_for("rp_new_search_character_get", group_id=group.id)}}">New character in {{group.name}}</a></p>
-    {% endfor %}
-    <h3>New group</h3>
-    <form action="{{url_for("rp_new_search_character_group_post")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><input type="text" name="name" required> <button type="submit">Create</button></p>
-    </form>
+            <h3>New group</h3>
+            <form action="{{url_for("rp_new_search_character_group_post")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input newgroup_box"><p><input type="text" name="name" required> <button type="submit">Create</button></p></div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

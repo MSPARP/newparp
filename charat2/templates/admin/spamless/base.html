@@ -1,29 +1,33 @@
 {% extends "base.html" %}
 {% block content: %}
-    <h2>Spamless</h2>
-    <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
-    <nav id="subnav">
-        Show:
-        {% if request.url_rule.endpoint == "spamless_home": %}
-        Recent messages
-        {% else %}
-        <a href="{{url_for("spamless_home")}}">Recent messages</a>
-        {% endif %}
-        {% if spamless_list == "banned_names": %}
-        Banned names
-        {% else %}
-        <a href="{{url_for("spamless_banned_names")}}">Banned names</a>
-        {% endif %}
-        {% if spamless_list == "blacklist": %}
-        Blacklist
-        {% else %}
-        <a href="{{url_for("spamless_blacklist")}}">Blacklist</a>
-        {% endif %}
-        {% if spamless_list == "warnlist": %}
-        Warnlist
-        {% else %}
-        <a href="{{url_for("spamless_warnlist")}}">Warnlist</a>
-        {% endif %}
-    </nav>
+    <div class="common_box admin_wide">
+        <h2><label><span>Spamless</span></label></h2>
+        <div class="common_box_wrap">
+            <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
+            <nav id="subnav">
+                Show:
+                {% if request.url_rule.endpoint == "spamless_home": %}
+                <span class="tab_active">Recent messages</span>
+                {% else %}
+                <a href="{{url_for("spamless_home")}}">Recent messages</a>
+                {% endif %}
+                {% if spamless_list == "banned_names": %}
+                <span class="tab_active">Banned names</span>
+                {% else %}
+                <a href="{{url_for("spamless_banned_names")}}">Banned names</a>
+                {% endif %}
+                {% if spamless_list == "blacklist": %}
+                <span class="tab_active">Blacklist</span>
+                {% else %}
+                <a href="{{url_for("spamless_blacklist")}}">Blacklist</a>
+                {% endif %}
+                {% if spamless_list == "warnlist": %}
+                <span class="tab_active">Warnlist</span>
+                {% else %}
+                <a href="{{url_for("spamless_warnlist")}}">Warnlist</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
 {% endblock %}
 

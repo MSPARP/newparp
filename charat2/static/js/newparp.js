@@ -2,13 +2,95 @@ var msparp = (function() {
 
 	var body = $(document.body);
 
-	// Remember toggle box state
-	$(".toggle_box > input:first-child").change(function() {
-		if (this.id) { localStorage.setItem(this.id, this.checked); }
-	}).each(function() {
-		if (this.id && !this.checked) { this.checked = localStorage.getItem(this.id) == "true"; }
+	// Prevent breaking browsers and settings that don't like localStorage
+	try {
+		localStorage.setItem("supported", "yes");
+		// Remember toggle box state
+		$(".toggle_box > input:first-child, .group_toggle, .device_settings").change(function() {
+			if (this.id) { localStorage.setItem(this.id, this.checked); }
+		}).each(function() {
+			if (this.id && !this.checked) { this.checked = localStorage.getItem(this.id) == "true"; }
+		});
+		
+		if ($("#toggle_with_settings").is(':checked')) {
+			$("#player_select").addClass('tabbed_select');
+		}
+		
+		$(".character_list ul input").each(function() {
+				var group = $(this).parentsUntil("#filter_settings").last();
+				var group_input = group.find("legend input");
+				var counter = group.find(".groupcount");
+				var characters = group.find("li input");
+				var checked_characters = group.find("li input:checked");
+				if (checked_characters.length == 0) {
+					group_input.prop("checked", false).prop("indeterminate", false);
+					group_input.attr("class", "");
+					counter.html("");
+				} else if (checked_characters.length == characters.length) {
+					group_input.prop("checked", true).prop("indeterminate", false);
+					group_input.attr("class", "");
+					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
+				} else {
+					group_input.prop("checked", false).prop("indeterminate", true);
+					group_input.attr("class","indeterminate");
+					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
+				}
+			});
+			var localstorage = "yes";
+	
+	} catch (e) {}
+	
+	// Apply toggle box state to filter & stem column, hide small toggle if open, wait for IE
+	$("#toggle_search_for_characters").ready(function() {
+		if ($("#toggle_search_for_characters").is(':checked')) {
+			$("#filter_column").addClass("open");
+			$("#stem_column").addClass("open");
+			$("#toggle_filter").prop("checked", true);
+			$("#small_search_toggle").hide();
+		}
+	});	
+	
+	// Keep "be" tab appearance updated
+	$(".toggle_box > #toggle_with_settings").change(function() {
+		if ($("#toggle_with_settings").is(':checked')) {
+			$("#player_select").addClass('tabbed_select');
+		} else {
+			$("#player_select").removeClass('tabbed_select');
+		}
 	});
-
+	
+	// Enable animation on these elements only when interacted with
+	$(".enable_anim").click(function() {
+					$(this).addClass("init_anim");
+					$(this).removeClass("enable_anim");
+				});
+	
+				
+	/* Enable per-device settings that don't require pre-render hooks */
+	if (localstorage) {
+		$( document ).ready(function() {
+			material_feedback=localStorage.getItem("material_feedback");
+			if (material_feedback == "true") {
+				$("body").addClass("material");
+			}
+			disable_animations=localStorage.getItem("disable_animations");
+			if (disable_animations == "true") {
+				$("body").addClass("no_moving");
+			}
+		});
+	} 
+	
+	// Live update when switching in settings
+	$("#basic_forms").click(function() {
+		$("body").toggleClass("no_forms");
+	});
+	$("#material_feedback").click(function() {
+		$("body").toggleClass("material");
+	});
+	$("#disable_animations").click(function() {
+		$("body").toggleClass("no_moving");
+	});
+				
 	// Character info
 	function update_character(data) {
 		if (typeof data["search_character"]!= "undefined") {
@@ -18,7 +100,9 @@ var msparp = (function() {
 		}
 		$("#toggle_with_settings").prop("checked", true).change();
 		$("input[name=name]").val(data["name"]);
+		$("input[name=name]").attr("value", data["name"]); /* update attr as well for css targetting */
 		$("input[name=acronym]").val(data["acronym"]).keyup();
+		$("input[name=acronym]").attr("value", data["acronym"]);
 		$("input[name=color]").val("#"+data["color"]).change();
 		if (!body.hasClass("chat")) {
 			if (typeof data["text_preview"]!= "undefined") {
@@ -31,7 +115,9 @@ var msparp = (function() {
 			$("#toggle_typing_quirks").prop("checked", true).change();
 		}
 		$("input[name=quirk_prefix]").val(data["quirk_prefix"]);
+		data["quirk_prefix"] ? $("input[name=quirk_prefix]").attr("value", data["quirk_prefix"]) : $("input[name=quirk_prefix]").removeAttr('value');
 		$("input[name=quirk_suffix]").val(data["quirk_suffix"]);
+		data["quirk_suffix"] ? $("input[name=quirk_suffix]").attr("value", data["quirk_suffix"]) : $("input[name=quirk_suffix]").removeAttr('value');
 		$("select[name=case]").val(data["case"]);
 		clear_replacements();
 		if (data["replacements"].length == 0) {
@@ -57,7 +143,7 @@ var msparp = (function() {
 	}
 	function add_replacement(e, from, to) {
 		var size = body.hasClass("chat") ? 7 : 10;
-		new_item = $("<li><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
+		new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
 		if (from || to) {
 			var inputs = $(new_item).find('input');
 			inputs[0].value = from;
@@ -87,7 +173,7 @@ var msparp = (function() {
 	}
 	function add_regex(e, from, to) {
 		var size = body.hasClass("chat") ? 7 : 10;
-		new_item = $("<li><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"> to <input type=\"text\" name=\"regex_to\" size=\"" + size + "\"> <button type=\"button\" class=\"delete_regex\">x</button></li>");
+		new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"regex_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_regex\">x</button></li>");
 		if (from && to) {
 			var inputs = $(new_item).find('input');
 			inputs[0].value = from;
@@ -136,6 +222,20 @@ var msparp = (function() {
 			if (this.value.length == 6) {
 				color_input.val("#" + this.value);
 				text_preview_container.css("color", "#" + this.value);
+			}
+		});
+		// Toggle filter box
+		$("#toggle_search_for_characters").change(function() {
+			if ($("#toggle_search_for_characters").is(':checked')) {
+				$("#filter_column").addClass("open");
+				$("#stem_column").addClass("open");
+				$("#toggle_filter").prop("checked", true);
+				$("#small_search_toggle").hide();
+			} else {
+				$("#filter_column").removeClass("open");
+				$("#stem_column").removeClass("open");
+				$("#toggle_filter").prop("checked", false);
+				$("#small_search_toggle").show();
 			}
 		});
 		// Replacement list
@@ -280,7 +380,7 @@ var msparp = (function() {
 				return false;
 			}
 			function add_filter() {
-				new_item = $("<li><input type=\"text\" name=\"search_filter\" size=\"25\" maxlength=\"50\"> <button type=\"button\" class=\"delete_filter\">x</button></li>");
+				new_item = $("<li><div class=\"input\"><input type=\"text\" name=\"search_filter\" size=\"25\" maxlength=\"50\"></div> <button type=\"button\" class=\"delete_filter\">x</button></li>");
 				$(new_item).find('.delete_filter').click(delete_filter);
 				$(new_item).appendTo('#filter_list');
 				return false;
@@ -299,21 +399,37 @@ var msparp = (function() {
 			$('#clear_filters').click(clear_filters_and_add);
 
 			// Picky checkboxes
-			$(".character_list legend input").click(function() {
-				var group = $(this).parentsUntil(".toggle_box").last();
+			$(".character_list legend .input input").change(function() {
+				var group = $(this).parentsUntil("#filter_settings").last();
 				group.find("li input").prop("checked", this.checked);
+				var characters = group.find("li input");
+				var counter = group.find(".groupcount");
+				var checked_characters = group.find("li input:checked");
+				if (checked_characters.length > 0) {
+					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
+				} else {
+					counter.html("");
+				}
+				$(this).attr("class", "");
 			});
-			$(".character_list ul input").click(function() {
-				var group = $(this).parentsUntil(".toggle_box").last();
+			$(".character_list ul input").change(function() {
+				var group = $(this).parentsUntil("#filter_settings").last();
 				var group_input = group.find("legend input");
+				var counter = group.find(".groupcount");
 				var characters = group.find("li input");
 				var checked_characters = group.find("li input:checked");
 				if (checked_characters.length == 0) {
 					group_input.prop("checked", false).prop("indeterminate", false);
+					group_input.attr("class", "");
+					counter.html("");
 				} else if (checked_characters.length == characters.length) {
 					group_input.prop("checked", true).prop("indeterminate", false);
+					group_input.attr("class", "");
+					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
 				} else {
 					group_input.prop("checked", false).prop("indeterminate", true);
+					group_input.attr("class","indeterminate");
+					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
 				}
 			});
 

@@ -1,61 +1,65 @@
 {% extends "base.html" %}
 {% block title: %}Users in {{chat.title}} - {% endblock %}
 {% block content: %}
-<h2>Users in {{chat.title}}</h2>
-{{ pager() }}
-<table>
-    <thead>
-        <tr>
-            {% if g.user.is_admin: %}
-            <th>Username</th>
-            {% endif %}
-            <th>#</th>
-            <th>Character</th>
-            <th>Group</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for chat_user in users: %}
-        <tr>
-            {% if g.user.is_admin: %}
-            <td><a href="{{url_for("admin_user", username=chat_user.user.username)}}">{{chat_user.user.username}}</a></td>
-            {% endif %}
-            <td>{{chat_user.number}}</td>
-            <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
-            {% if chat_user.ban == None: %}
-            <td>
-                {% if (g.user.is_admin or g.user.id == chat.creator_id) and not chat_user.user.is_admin and chat_user.user_id != chat.creator_id: %}
-                    <form action="/chat_api/set_group" method="post">
-                        <input type="hidden" name="token" value="{{g.csrf_token}}">
-                        <input type="hidden" name="chat_id" value="{{chat.id}}">
-                        <input type="hidden" name="number" value="{{chat_user.number}}">
-                        <select name="group">
-                            <option value="mod3"{% if chat_user.group == "mod3": %} selected="selected"{% endif %}>Professional Wet Blanket</option>
-                            <option value="mod2"{% if chat_user.group == "mod2": %} selected="selected"{% endif %}>Bum's Rusher</option>
-                            <option value="mod1"{% if chat_user.group == "mod1": %} selected="selected"{% endif %}>Amateur Gavel-Slinger</option>
-                            <option value="user"{% if chat_user.group == "user": %} selected="selected"{% endif %}>User</option>
-                            <option value="silent"{% if chat_user.group == "silent": %} selected="selected"{% endif %}>Silenced</option>
-                        </select>
-                        <button>Set group</button>
-                    </form>
-                {% else: %}
-                {{{"admin": "God tier moderator", "creator": "Chat creator", "mod3": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod1": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}
-                {% endif %}
-                {% if chat.publicity == "private" and chat_user.invite != None: %}, invited by <span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.name}}</span>
-                {% if chat_user.invite.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.invite.creator_chat_user.number}}).{% endif %}
-            </td>
-            {% else: %}
-            <td>
-                Banned {{g.user.localize_time(chat_user.ban.created).strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}).{% if chat_user.ban.reason: %} Reason: {{chat_user.ban.reason}}{% endif %}
-                {% if own_chat_user != None and own_chat_user.can("ban"): %}
-                <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
-                {% endif %}
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{{ pager() }}
+<div class="common_box">
+    <h2><label class="user_edit_box_header"><span>Users in {{chat.title}}</span></label></h2>
+    <div class="common_box_wrap">
+        {{ pager() }}
+        <table class="chat_user_table">
+            <thead>
+                <tr>
+                    {% if g.user.is_admin: %}
+                    <th>Username</th>
+                    {% endif %}
+                    <th>#</th>
+                    <th>Character</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chat_user in users: %}
+                <tr>
+                    {% if g.user.is_admin: %}
+                    <td><a href="{{url_for("admin_user", username=chat_user.user.username)}}">{{chat_user.user.username}}</a></td>
+                    {% endif %}
+                    <td>{{chat_user.number}}</td>
+                    <td><span style="color: #{{chat_user.color}}">{{chat_user.name}}</span>{% if chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.acronym}}</span>]{% endif %}</td>
+                    {% if chat_user.ban == None: %}
+                    <td>
+                        {% if (g.user.is_admin or g.user.id == chat.creator_id) and not chat_user.user.is_admin and chat_user.user_id != chat.creator_id: %}
+                            <form action="/chat_api/set_group" method="post">
+                                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                                <input type="hidden" name="chat_id" value="{{chat.id}}">
+                                <input type="hidden" name="number" value="{{chat_user.number}}">
+                                <div class="input select"><select name="group">
+                                    <option value="mod3"{% if chat_user.group == "mod3": %} selected="selected"{% endif %}>Professional Wet Blanket</option>
+                                    <option value="mod2"{% if chat_user.group == "mod2": %} selected="selected"{% endif %}>Bum's Rusher</option>
+                                    <option value="mod1"{% if chat_user.group == "mod1": %} selected="selected"{% endif %}>Amateur Gavel-Slinger</option>
+                                    <option value="user"{% if chat_user.group == "user": %} selected="selected"{% endif %}>User</option>
+                                    <option value="silent"{% if chat_user.group == "silent": %} selected="selected"{% endif %}>Silenced</option>
+                                </select></div>
+                                <button>Set<span class="full_label"> group</span></button>
+                            </form>
+                        {% else: %}
+                        {{{"admin": "God tier moderator", "creator": "Chat creator", "mod3": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod1": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}
+                        {% endif %}
+                        {% if chat.publicity == "private" and chat_user.invite != None: %}, invited by <span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.name}}</span>
+                        {% if chat_user.invite.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.invite.creator_chat_user.color}}">{{chat_user.invite.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.invite.creator_chat_user.number}}).{% endif %}
+                    </td>
+                    {% else: %}
+                    <td>
+                        Banned {{g.user.localize_time(chat_user.ban.created).strftime("%d %b %Y")}} by <span style="color: #{{chat_user.ban.creator_chat_user.color}}">{{chat_user.ban.creator_chat_user.name}}</span>{% if chat_user.ban.creator_chat_user.acronym != "": %} [<span style="color: #{{chat_user.color}}">{{chat_user.ban.creator_chat_user.acronym}}</span>]{% endif %} (user number {{chat_user.ban.creator_chat_user.number}}).{% if chat_user.ban.reason: %} Reason: {{chat_user.ban.reason}}{% endif %}
+                        {% if own_chat_user != None and own_chat_user.can("ban"): %}
+                        <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ pager() }}
+    </div>
+</div>
 {% endblock %}
 

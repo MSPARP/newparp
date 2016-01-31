@@ -1,17 +1,25 @@
 {% extends "base.html" %}
 {% block title: %}Edit announcements - {% endblock %}
 {% block content: %}
-    <h2>Announcements</h2>
-    <form action="{{url_for("admin_announcements")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><textarea name="announcements" rows="10">{{g.redis.get("announcements") or ""}}</textarea></p>
-        <p><button type="submit">Save</button></p>
-    </form>
-    <h2>Chat links</h2>
-    <form action="{{url_for("admin_announcements")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><textarea name="chat_links" rows="10">{{g.redis.get("chat_links") or ""}}</textarea></p>
-        <p><button type="submit">Save</button></p>
-    </form>
+    <div class="common_box">
+        <h2><label><span>Announcements</span></label></h2>
+        <div class="common_box_wrap">
+            <form action="{{url_for("admin_announcements")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input nolabel_text"><p><textarea name="announcements" rows="10">{{g.redis.get("announcements") or ""}}</textarea></p></div>
+                <p><button type="submit">Save</button></p>
+            </form>
+        </div>
+    </div>
+    <div class="common_box">
+        <h2><label><span>Chat links</span></label></h2>
+        <div class="common_box_wrap">
+            <form action="{{url_for("admin_announcements")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input nolabel_text"><p><textarea name="chat_links" rows="10">{{g.redis.get("chat_links") or ""}}</textarea></p></div>
+                <p><button type="submit">Save</button></p>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

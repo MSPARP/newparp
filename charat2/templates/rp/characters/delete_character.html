@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block title: %}Character creator - {% endblock %}
 {% block content: %}
-    <h2>Delete {{character.title}}?</h2>
-    <p>Are you sure you want to delete this character? Deleting a character is irreversible and cannot be undone.</p>
-    <form action="{{url_for("rp_delete_character_post", character_id=character.id)}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><button type="submit">Delete {{character.title}}</button></p>
-    </form>
+    <div class="common_box">
+        <h2><label class="user_edit_box_header"><span>Delete {{character.title}}?</span></label></h2>
+        <div class="common_box_wrap">
+            <p>Are you sure you want to delete this character? Deleting a character is irreversible and cannot be undone.</p>
+            <form action="{{url_for("rp_delete_character_post", character_id=character.id)}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <p><button type="submit">Delete {{character.title}}</button></p>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

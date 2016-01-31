@@ -2,36 +2,40 @@
 {% block title: %}Blocked users - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>Blocked users</h2>
-    {% if blocks: %}
-    <table>
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Chat</th>
-                <th>Name</th>
-                <th>Reason</th>
-                <th>Unblock</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for block in blocks: %}
-            <tr>
-                <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
-                <td>{% if block.chat: %}<a href="{{url_for("rp_chat", url=block.chat.url)}}">{{block.chat.url}}</a>{% endif %}</td>
-                <td>{% if block.blocked_chat_user: %}<span style="color: #{{block.blocked_chat_user.color}}">{{block.blocked_chat_user.name}}</span>{% if block.blocked_chat_user.acronym != "": %} [<span style="color: #{{block.blocked_chat_user.color}}">{{block.blocked_chat_user.acronym}}</span>]{% endif %}{% endif %}</td>
-                <td>{{block.reason}}</td>
-                <td><form action="{{url_for("settings_unblock")}}" method="post">
-                    <input type="hidden" name="token" value="{{g.csrf_token}}">
-                    <input type="hidden" name="created" value="{{block.created.isoformat()}}">
-                    <button type="submit">Unblock</button>
-                </form></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else: %}
-    <p>You haven't blocked anyone.</p>
-    {% endif %}
+    <div class="settings_box">
+        <div class="settings_box_wrap">
+        <h2>Blocked users</h2>
+            {% if blocks: %}
+            <table class="user_blocked">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Chat</th>
+                        <th>Name</th>
+                        <th>Reason</th>
+                        <th>Unblock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for block in blocks: %}
+                    <tr>
+                        <td>{{g.user.localize_time(block.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                        <td>{% if block.chat: %}<a href="{{url_for("rp_chat", url=block.chat.url)}}">{{block.chat.url}}</a>{% endif %}</td>
+                        <td>{% if block.blocked_chat_user: %}<span style="color: #{{block.blocked_chat_user.color}}">{{block.blocked_chat_user.name}}</span>{% if block.blocked_chat_user.acronym != "": %} [<span style="color: #{{block.blocked_chat_user.color}}">{{block.blocked_chat_user.acronym}}</span>]{% endif %}{% endif %}</td>
+                        <td>{{block.reason}}</td>
+                        <td><form action="{{url_for("settings_unblock")}}" method="post">
+                            <input type="hidden" name="token" value="{{g.csrf_token}}">
+                            <input type="hidden" name="created" value="{{block.created.isoformat()}}">
+                            <button type="submit">Unblock</button>
+                        </form></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>You haven't blocked anyone.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
 

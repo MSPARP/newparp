@@ -2,38 +2,42 @@
 {% block title: %}Spamless - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>Recent messages</h2>
-    {% if messages: %}
-    {{ pager() }}
-    <table>
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Chat</th>
-                <th>Flag</th>
-                <th>Username</th>
-                <th>#</th>
-                <th>Character</th>
-                <th>Message</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for message in messages: %}
-            <tr>
-                <td>{{ g.user.localize_time(message.posted).strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
-                <td>{{ message.spam_flag }}</td>
-                <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
-                <td>{{ message.chat_user.number }}</td>
-                <td>{{ message.name }}</td>
-                <td style="color: #{{ message.color }}">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {{ pager() }}
-    {% else: %}
-    <p>No messages.</p>
-    {% endif %}
+    <div class="settings_box spamless_box admin_wide">
+        <div class="settings_box_wrap">
+            <h2>Recent messages</h2>
+            {% if messages: %}
+            {{ pager() }}
+            <table class="spam_table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Chat</th>
+                        <th>Flag</th>
+                        <th>Username</th>
+                        <th>#</th>
+                        <th>Character</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages: %}
+                    <tr>
+                        <td>{{ g.user.localize_time(message.posted).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td><a href="{{ url_for("rp_log", url=message.chat.url) }}">{{ message.chat.url }}</a></td>
+                        <td>{{ message.spam_flag }}</td>
+                        <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
+                        <td>{{ message.chat_user.number }}</td>
+                        <td>{{ message.name }}</td>
+                        <td style="color: #{{ message.color }}" class="abridged_message" tabindex="0" title="expand message">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {{ pager() }}
+            {% else: %}
+            <p>No messages.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
 

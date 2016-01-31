@@ -1,65 +1,69 @@
 {% extends "base.html" %}
 {% block title: %}{{admin_tier.name}} - {% endblock %}
 {% block content: %}
-    <h2>{{admin_tier.name}}</h2>
-    {% if admin_tier.id == 1: %}
-    <h3>Permissions</h3>
-    <p>{{admin_tier.name}}'s permissions can't be edited.</p>
-    {% else: %}
-    <form action="{{url_for("admin_admin_tier_post", admin_tier_id=admin_tier.id)}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><label>Name: <input type="text" name="name" value="{{admin_tier.name}}"></label></p>
-        <h3>Permissions</h3>
-        <ul class="checkbox_list">
-            {% for permission in AdminTierPermission.permission.type.enums: %}
-            <li><label>
-                <input type="checkbox" name="{{permission}}"{% if permission in admin_tier.permissions: %} checked="checked"{% endif %}>
-                <span>{{permission.replace("_", " ").capitalize()}}</span>
-            </label></li>
-            {% endfor %}
-        </ul>
-        <p><button type="submit">Save</button></p>
-    </form>
-    {% endif %}
-    <h3>Users</h3>
-    {% if users: %}
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Created</th>
-                <th>Last online</th>
-                <th>Last IP</th>
-                <th>Time zone</th>
-                <th>Un-admin</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users: %}
-            <tr>
-                <td>{{user.id}}</td>
-                <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
-                <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
-                <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
-                <td>{{user.last_ip}}</td>
-                <td>{{user.timezone}}</td>
-                <td>
-                    <form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
-                        <input type="hidden" name="token" value="{{g.csrf_token}}">
-                        <button type="submit">Un-admin</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else: %}
-    <p>No users.</p>
-    {% endif %}
-    <form action="{{url_for("admin_admin_tier_add_user", admin_tier_id=admin_tier.id)}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><label>Username: <input type="text" name="username"></label> <button type="submit">Add</button></p>
-    </form>
+    <div class="common_box admin_wide">
+        <h2><label><span>{{admin_tier.name}}</span></label></h2>
+        <div class="common_box_wrap">
+            {% if admin_tier.id == 1: %}
+            <h3>Permissions</h3>
+            <p>{{admin_tier.name}}'s permissions can't be edited.</p>
+            {% else: %}
+            <form action="{{url_for("admin_admin_tier_post", admin_tier_id=admin_tier.id)}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input"><input type="text" id="at_name" name="name" value="{{admin_tier.name}}"><label for="at_name">Name</label></div>
+                <h3>Permissions</h3>
+                <ul class="checkbox_list">
+                    {% for permission in AdminTierPermission.permission.type.enums: %}
+                    <li><div class="input">
+                        <input type="checkbox" id="{{permission}}_check" name="{{permission}}"{% if permission in admin_tier.permissions: %} checked="checked"{% endif %}>
+                        <label for="{{permission}}_check"><span>{{permission.replace("_", " ").capitalize()}}</span></label>
+                    </div></li>
+                    {% endfor %}
+                </ul>
+                <p><button type="submit">Save</button></p>
+            </form>
+            {% endif %}
+            <h3>Users</h3>
+            {% if users: %}
+            <table class="admin_userlist admin_userlist_permissions">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Created</th>
+                        <th>Last online</th>
+                        <th>Last IP</th>
+                        <th>Time zone</th>
+                        <th>Un-admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users: %}
+                    <tr>
+                        <td>{{user.id}}</td>
+                        <td><a href="{{url_for("admin_user", username=user.username)}}">{{user.username}}</a></td>
+                        <td>{{g.user.localize_time(user.created).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                        <td>{{g.user.localize_time(user.last_online).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                        <td>{{user.last_ip}}</td>
+                        <td>{{user.timezone}}</td>
+                        <td>
+                            <form action="{{url_for("admin_user_set_admin_tier", username=user.username)}}" method="post">
+                                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                                <button type="submit">Un-admin</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>No users.</p>
+            {% endif %}
+            <form action="{{url_for("admin_admin_tier_add_user", admin_tier_id=admin_tier.id)}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input user_admin_add_box"><input id="user_admin_add" type="text" name="username"><label for="user_admin_add">Username</label></div> <button type="submit" class="labelled_button">Add</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

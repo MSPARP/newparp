@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content: %}
-    <form action="{{url_for("rp_search_save")}}" method="post">
+<form action="{{url_for("rp_search_save")}}" method="post">
+    <div id="stem_column">
         <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <h2>Roleplay as <select name="id">
+        <h2>Be <div class="input select"><select name="id" id="player_select">
             {% if characters: %}
             <optgroup label="Saved characters">
                 {% for character in characters: %}
@@ -17,126 +18,186 @@
                 {% endfor %}
             </optgroup>
             {% endfor %}
-        </select></h2>
+        </select></div></h2>
         <input type="hidden" name="search_character_id" value="{{g.user.search_character_id}}">
-        <div class="toggle_box">
+        <div class="toggle_box toggle_box_chars">
             <input type="checkbox" id="toggle_with_settings">
-            <h2>&gt; <label for="toggle_with_settings">With settings</label></h2>
-            <div class="input_table">
-                <p>
-                    <label for="name_input">Name:</label>
-                    <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{g.user.name}}">
-                </p>
-                <p>
-                    <label for="acronym_input">Acronym:</label>
-                    <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{g.user.acronym}}">
-                </p>
-                <p>
-                    <label for="color_input">Color:</label>
-                    <input type="color" id="color_input" name="color" size="7" required value="#{{g.user.color}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{g.user.color}}">
-                </p>
+            <h2 class="enable_anim"><label for="toggle_with_settings"><span>With settings</span></label></h2>
+            <div id="character_settings">
+                <div class="input_table">
+                    <div class="input"><p>
+                        <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{g.user.name}}">
+                        <label for="name_input">Name</label>
+                    </p></div>
+                    <div class="input acronym"><p>
+                        <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" {% if g.user.acronym != "": %}value="{{g.user.acronym}}"{% endif %}>
+                        <label for="acronym_input">Acronym</label>
+                    </p></div>
+                    <p class="color-double">
+                        <label for="color_input">Color</label>
+                        <input type="color" id="color_input" name="color" size="7" required value="#{{g.user.color}}" list="canon_hexes">
+                        <datalist id="canon_hexes">
+                        <option value="#E00707"/>
+                        <option value="#4AC925"/>
+                        <option value="#0715CD"/>
+                        <option value="#B536DA"/>
+                        <option value="#F2A400"/>
+                        <option value="#1F9400"/>
+                        <option value="#00D5F2"/>
+                        <option value="#FF6FF2"/>
+                        <option value="#A10000"/>
+                        <option value="#A15000"/>
+                        <option value="#A1A100"/>
+                        <option value="#658200"/>
+                        <option value="#416600"/>
+                        <option value="#008141"/>
+                        <option value="#008282"/>
+                        <option value="#005682"/>
+                        <option value="#000056"/>
+                        <option value="#2B0057"/>
+                        <option value="#6A006A"/>
+                        <option value="#77003C"/>
+                        <option value="#FF0000"/>
+                        <option value="#626262"/>
+                        <option value="#323232"/>
+                        <option value="#929292"/>
+                        <option value="#2ED73A"/>
+                        <option value="#FF00FF"/>
+                        <option value="#FFAC9F"/>
+                        <option value="#FF83FB"/>
+                        <option value="#00BFFF"/>
+                        <option value="#9370DB"/>
+                        <option value="#FF69B4"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFDAB9"/>
+                        <option value="#FFFFE0"/>
+                        <option value="#98FB98"/>
+                        <option value="#000000"/>
+                        <option value="#696969"/>
+                        <option value="#A9A9A9"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFFFFF"/>
+                        </datalist>
+                        <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{g.user.color}}">
+                    </p>
+                </div>
+                <p id="text_preview_container" style="color: #{{g.user.color}};">
+                   <span id="text_preview_acronym">{% if g.user.acronym != "": %}{{g.user.acronym}}: {% endif %}</span><span id="text_preview">{{g.user.search_character.text_preview}}</span>
+                    </p>
             </div>
-            <p id="text_preview_container" style="color: #{{g.user.color}};">
-                <span id="text_preview_acronym">{% if g.user.acronym != "": %}{{g.user.acronym}}: {% endif %}</span><span id="text_preview">{{g.user.search_character.text_preview}}</span>
-            </p>
         </div>
-        <div class="toggle_box">
+        <div class="toggle_box toggle_box_quirks">
             <input type="checkbox" id="toggle_typing_quirks">
-            <h2>&gt; <label for="toggle_typing_quirks">Typing quirks</label></h2>
-            <div class="input_table">
-                <p>
-                    <label>Prefix:</label>
-                    <input type="text" name="quirk_prefix" size="50" maxlength="2000" value="{{g.user.quirk_prefix}}">
-                </p>
-                <p>
-                    <label>Suffix:</label>
-                    <input type="text" name="quirk_suffix" size="50" maxlength="2000" value="{{g.user.quirk_suffix}}">
-                </p>
-                <p>
-                    <label>Case:</label>
+            <h2 class="enable_anim"><label for="toggle_typing_quirks"><span>Typing quirks</span></label></h2>
+            <div id="quirk_settings" class="quirk_creator">
+                <div class="input_table">
+                <div class="input short"><p>
+                    <input type="text" id="quirk_prefix" name="quirk_prefix" size="50" maxlength="2000" {% if g.user.quirk_prefix != "": %}value="{{g.user.quirk_prefix}}"{% endif %}>
+                    <label for="quirk_prefix">Prefix</label>
+                </p></div>
+                <div class="input short"><p>
+                    <input type="text" id="quirk_suffix" name="quirk_suffix" size="50" maxlength="2000" {% if g.user.quirk_suffix != "": %}value="{{g.user.quirk_suffix}}"{% endif %}>
+                    <label for="quirk_suffix">Suffix</label>
+                </p></div>
+                <label class="textlabel">Case</label>
+                <div class="input select"><p>
                     <select name="case">
-                        {% for value, name in case_options.items()|sort: %}
-                        <option value="{{value}}"{% if value == g.user.case %} selected="selected"{% endif %}>{{name}}</option>
-                        {% endfor %}
+                    {% for value, name in case_options.items()|sort: %}
+                    <option value="{{value}}"{% if value == g.user.case %} selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
                     </select>
-                </p>
+                </p></div>
+                </div>
+                <div class="simple_column">
+                    <h3>Simple replacements</h3>
+                    <ul id="replacement_list">
+                    {% if replacements|length != 0: %}
+                    {% for replacement in replacements: %}
+                    <li><div class="input fromto"><input type="text" name="quirk_from" size="" value="{{replacement[0]}}"></div> to <div class="input fromto"><input type="text" name="quirk_to" size="" value="{{replacement[1]}}"></div> <button type="button" class="delete_replacement">x</button></li>
+                    {% endfor %}
+                    {% else %}
+                    <li><div class="input fromto"><input type="text" name="quirk_from" size=""></div> to <div class="input fromto"><input type="text" name="quirk_to" size=""></div> <button type="button" class="delete_replacement">x</button></li>
+                    {% endif %}
+                    </ul>
+                    <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
+                </div>
+                <div class="regex_column">
+                    <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
+                    <ul id="regex_list">
+                    {% if regexes|length != 0: %}
+                    {% for regex in regexes: %}
+                    <li><div class="input fromto"><input type="text" name="regex_from" size="" value="{{regex[0]}}"></div> to <div class="input fromto"><input type="text" name="regex_to" size="" value="{{regex[1]}}"></div> <button type="button" class="delete_regex">x</button></li>
+                    {% endfor %}
+                    {% else %}
+                    <li><div class="input fromto"><input type="text" name="regex_from" size=""></div> to <div class="input fromto"><input type="text" name="regex_to" size=""></div> <button type="button" class="delete_regex">x</button></li>
+                    {% endif %}
+                    </ul>
+                    <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
+                </div>
             </div>
-            <h3>Simple replacements</h3>
-            <ul id="replacement_list">
-                {% if replacements|length != 0: %}
-                {% for replacement in replacements: %}
-                <li><input type="text" name="quirk_from" size="10" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
-                {% endfor %}
-                {% else %}
-                <li><input type="text" name="quirk_from" size="10"> to <input type="text" name="quirk_to" size="10"> <button type="button" class="delete_replacement">x</button></li>
-                {% endif %}
-            </ul>
-            <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
-            <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
-            <ul id="regex_list">
-                {% if regexes|length != 0: %}
-                {% for regex in regexes: %}
-                <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
-                {% endfor %}
-                {% else %}
-                <li><input type="text" name="regex_from" size="10"> to <input type="text" name="regex_to" size="10"> <button type="button" class="delete_regex">x</button></li>
-                {% endif %}
-            </ul>
-            <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
         </div>
-        <div class="toggle_box">
+        <div class="toggle_box toggle_box_search">
             <input type="checkbox" id="toggle_search_for">
-            <h2>&gt; <label for="toggle_search_for">Search for</label></h2>
-            <div class="input_table">
-                <p>
-                    <label for="style_select">Script or paragraph?</label>
-                    <select name="style" id="style_select">
-                        {% for value in User.search_style.type.enums: %}
-                        <option value="{{value}}"{% if value == g.user.search_style %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-                <p>
-                    <label for="level_select">SFW, NSFW, or NSFWE?</label>
-                    <select name="level" id="level_select">
-                        {% for value in User.search_level.type.enums: %}
-                        <option value="{{value}}"{% if value == g.user.search_level %} selected="selected"{% endif %}>{{value.upper()}}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-            </div>
-            <h3>Filter out names containing...</h3>
-            <ul id="filter_list">
+            <h2 class="enable_anim"><label for="toggle_search_for"><span>Search for</span></label></h2>
+            <div id="search_settings">
+                <div class="input_table">
+                <div>
+                    <span class="textlabel">Style: </span>
+                    {% for value in User.search_style.type.enums: %}
+                    <div class="input"><input type="radio" name="style" id="radio_{{value}}" value="{{value}}" {% if value == g.user.search_style %} checked{% endif %}><label for ="radio_{{value}}">{{value.capitalize()}}</label></div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <span class="textlabel">Content:</span>
+                    {% for value in User.search_level.type.enums: %}
+                    <div class="input"><input type="radio" name="level" id="radio_{{value}}" value="{{value}}" {% if value == g.user.search_level %} checked{% endif %}><label for ="radio_{{value}}">{{value.upper()}}</label></div>
+                    {% endfor %}
+                </div>
+                </div>
+                <h3>Filter out names containing...</h3>
+                <ul id="filter_list">
                 {% if g.user.search_filters|length != 0: %}
                 {% for filter in g.user.search_filters: %}
-                <li><input type="text" name="search_filter" size="25" maxlength="50" value="{{filter}}"> <button type="button" class="delete_filter">x</button></li>
+                <li><div class="input"><input type="text" name="search_filter" size="25" maxlength="50" value="{{filter}}"></div> <button type="button" class="delete_filter">x</button></li>
                 {% endfor %}
                 {% else %}
-                <li><input type="text" name="search_filter" size="25" maxlength="50"> <button type="button" class="delete_filter">x</button></li>
+                <li><div class="input"><input type="text" name="search_filter" size="25" maxlength="50"></div> <button type="button" class="delete_filter">x</button></li>
                 {% endif %}
-            </ul>
-            <p><button type="button" id="add_filter">Add</button> <button type="button" id="clear_filters">Clear</button></p>
-            <div class="toggle_box">
-                <input type="checkbox" id="toggle_search_for_characters" name="use_picky"{% if picky: %} checked="checked"{% endif %}>
-                <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>
+                </ul>
+                <p><button type="button" id="add_filter">Add</button> <button type="button" id="clear_filters">Clear</button></p>
+            </div>
+            <div class="toggle_box" id="small_search_toggle">
+            <input type="checkbox" id="toggle_search_for_characters" name="use_picky"{% if picky: %} checked="checked"{% endif %}>
+            <h3>&gt; <label for="toggle_search_for_characters">Look for specific characters</label></h3>
+            </div>
+        </div>
+    </div>
+    <div id="filter_column">
+        <div class="toggle_box toggle_box_filter">
+            <input id="toggle_filter" type="checkbox">
+            <h2 class="enable_anim"><label for="toggle_search_for_characters"><span>With filters</span></label></h2>
+            <div id="filter_settings">
+        <span class="textlabel">click &#x25BE;/&#x25B4; to expand or collapse categories</span>
                 {% for group in search_character_groups: %}
                 <fieldset class="character_list">
-                    <legend><label><input type="checkbox" name="group_{{group.id}}"> {{group.name}}</label></legend>
+                    <legend><div class='input'><input id="group_{{group.id}}" name="group_{{group.id}}" type="checkbox"><label for="group_{{group.id}}">{{group.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_group_{{group.id}}"><label for="toggle_group_{{group.id}}"><span class="groupcount"></span></label>
                     <ul>
-                        {% for character in group.characters: %}
-                        <li><label>
-                            <input type="checkbox" name="picky_{{character.id}}"{% if character.id in picky: %} checked="checked"{% endif %}>
-                            <span class="character_name">{{character.title}}</span>
-                        </label></li>
-                        {% endfor %}
+                    {% for character in group.characters: %}
+                    <li><div class='input'>
+                        <input id="picky_{{character.id}}" name="picky_{{character.id}}" type="checkbox" {% if character.id in picky: %} checked="checked"{% endif %}>
+                        <label for="picky_{{character.id}}"><span class="character_name">{{character.title}}</span>
+                    </label></div></li>
+                    {% endfor %}
                     </ul>
                 </fieldset>
                 {% endfor %}
             </div>
         </div>
-        <button type="submit">==&gt; Enter</button>
-    </form>
+    </div>
+    <button type="submit" class="enter">==&gt; Enter</button>
+</form>
 {% endblock %}
 {% block scripts: %}
 <script>msparp.home();</script>
+<script src="/static/js/ui.js"></script>
 {% endblock %}

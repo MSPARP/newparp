@@ -2,38 +2,47 @@
 {% block title: %}Settings - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>Default settings for new chats</h2>
-    <form action="{{url_for("settings_post")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <p><label><input type="checkbox" name="confirm_disconnect"{% if g.user.confirm_disconnect: %} checked="checked"{% endif %}> Confirm disconnect</label></p>
-        <p><label><input type="checkbox" name="desktop_notifications"{% if g.user.desktop_notifications: %} checked="checked"{% endif %}> Desktop notifications</label></p>
-        <p><label><input type="checkbox" name="show_system_messages"{% if g.user.show_system_messages: %} checked="checked"{% endif %}> Show system messages</label></p>
-        <p><label><input type="checkbox" name="show_bbcode"{% if g.user.show_bbcode: %} checked="checked"{% endif %}> Show BBCode</label></p>
-        <p><label><input type="checkbox" name="show_timestamps"{% if g.user.show_timestamps: %} checked="checked"{% endif %}> Show timestamps</label></p>
-        <p><label><input type="checkbox" name="show_preview"{% if g.user.show_preview: %} checked="checked"{% endif %}> Show preview</label></p>
-        <p><label><input type="checkbox" name="typing_notifications"{% if g.user.typing_notifications: %} checked="checked"{% endif %}> Typing notifications</label></p>
-        <button type="submit">Save</button>
-    </form>
-    <h2>Chat theme</h2>
-    <form action="{{url_for("settings_theme")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <select name="theme">
-            <option value=""{% if g.user.theme == None %} selected="selected"{% endif %}>Default</option>
-{% for theme, name in themes.items(): %}
-            <option value="{{theme}}"{% if theme == g.user.theme %} selected="selected"{% endif %}>{{name}}</option>
-{% endfor %}
-        </select>
-        <button type="submit">Save</button>
-    </form>
-    <h2>Time zone</h2>
-    <form action="{{url_for("settings_timezone")}}" method="post">
-        <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <select name="timezone">
-{% for timezone in timezones: %}
-            <option{% if timezone == g.user.timezone or (timezone == "UTC" and g.user.timezone == None)  %} selected="selected"{% endif %}>{{timezone.replace("_", " ")}}</option>
-{% endfor %}
-        </select>
-        <button type="submit">Save</button>
-    </form>
+    <div class="settings_box">
+        <div class="settings_box_wrap">
+            <h2>Default settings for new chats</h2>
+            <form action="{{url_for("settings_post")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input"><p><input type="checkbox" id="confirm_disconnect" name="confirm_disconnect"{% if g.user.confirm_disconnect: %} checked="checked"{% endif %}><label for="confirm_disconnect"> Confirm disconnect</label></p></div>
+                <div class="input"><p><input type="checkbox" id="desktop_notifications" name="desktop_notifications"{% if g.user.desktop_notifications: %} checked="checked"{% endif %}><label for="desktop_notifications"> Desktop notifications</label></p></div>
+                <div class="input"><p><input type="checkbox" id="show_system_messages" name="show_system_messages"{% if g.user.show_system_messages: %} checked="checked"{% endif %}><label for="show_system_messages"> Show system messages</label></p></div>
+                <div class="input"><p><input type="checkbox" id="show_bbcode" name="show_bbcode"{% if g.user.show_bbcode: %} checked="checked"{% endif %}><label for="show_bbcode"> Show BBCode</label></p></div>
+                <div class="input"><p><input type="checkbox" id="show_timestamps" name="show_timestamps"{% if g.user.show_timestamps: %} checked="checked"{% endif %}><label for="show_timestamps"> Show timestamps</label></p></div>
+                <div class="input"><p><input type="checkbox" id="show_preview" name="show_preview"{% if g.user.show_preview: %} checked="checked"{% endif %}><label for="show_preview"> Show preview</label></p></div>
+                <div class="input"><p><input type="checkbox" id="typing_notifications" name="typing_notifications"{% if g.user.typing_notifications: %} checked="checked"{% endif %}><label for="typing_notifications"> Typing notifications</label></p></div>
+                <button type="submit">Save</button>
+            </form>
+            <h2>Device settings</h2>
+            <span class="textlabel">These settings are specific to your current device/browser to allow better control.</span>
+            <div class="not_input"><p><input type="checkbox" id="basic_forms" class="device_settings" name="basic_form_elements"><label for="basic_forms"> Use basic form elements</label></p></div>
+            <div class="input"><p><input type="checkbox" id="material_feedback" class="device_settings" name="material_feedback"><label for="material_feedback"> Enable visual feedback for touch/click events on buttons</label></p></div>
+            <div class="input"><p><input type="checkbox" id="disable_animations" class="device_settings" name="disable_animations"><label for="disable_animations"> Disable all theme animations</label></p></div>
+            <h2>Chat theme</h2>
+            <form action="{{url_for("settings_theme")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input select"><select name="theme">
+                    <option value=""{% if g.user.theme == None %} selected="selected"{% endif %}>Default</option>
+                    {% for theme, name in themes.items(): %}
+                    <option value="{{theme}}"{% if theme == g.user.theme %} selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select></div>
+                <button type="submit" class="fit_select_button">Save</button>
+            </form>
+            <h2>Time zone</h2>
+            <form action="{{url_for("settings_timezone")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input select"> <select name="timezone">
+                    {% for timezone in timezones: %}
+                    <option{% if timezone == g.user.timezone or (timezone == "UTC" and g.user.timezone == None)  %} selected="selected"{% endif %}>{{timezone.replace("_", " ")}}</option>
+                    {% endfor %}
+                </select></div>
+                <button type="submit" class="fit_select_button">Save</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 

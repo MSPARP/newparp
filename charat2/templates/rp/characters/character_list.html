@@ -1,41 +1,45 @@
 {% extends "base.html" %}
 {% block title: %}Character creator - {% endblock %}
 {% block content: %}
-    <h2>Character creator</h2>
-    {% if characters: %}
-    <table>
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Character</th>
-                <th>Shortcut</th>
-                <th>Default</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for character in characters: %}
-            <tr>
-                <td>{{character.title}}</td>
-                <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
-                <td>{% if character.shortcut: %}/{{character.shortcut}}{% endif %}</td>
-                <td>
-                    {% if character != g.user.default_character: %}
-                    <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Set as default</button></form>
-                    {% else: %}
-                    Default character
-                    {% endif %}
-                </td>
-                <td><a href="{{url_for("rp_character", character_id=character.id)}}">Edit</a></td>
-                <td><a href="{{url_for("rp_delete_character_get", character_id=character.id)}}">Delete</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else: %}
-    <p>You don't have any saved characters.</p>
-    {% endif %}
-    <p><a href="{{url_for("rp_new_character_get")}}">Create a new character</a></p>
+    <div class="common_box">
+        <h2><label><span>Character creator</span></label></h2>
+        <div class="common_box_wrap">
+            {% if characters: %}
+            <table class="user_chartable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Character</th>
+                        <th>Shortcut</th>
+                        <th>Default</th>
+                        <th><span class="t_edit"><span>Edit</span></span></th>
+                        <th><span class="t_delete"><span>Delete<span></span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for character in characters: %}
+                    <tr>
+                        <td>{{character.title}}</td>
+                        <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
+                        <td>{% if character.shortcut: %}/{{character.shortcut}}{% endif %}</td>
+                        <td>
+                            {% if character != g.user.default_character: %}
+                            <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Set<span class="t_default_long"> as default</span></button></form>
+                            {% else: %}
+                            Default character
+                            {% endif %}
+                        </td>
+                        <td><a href="{{url_for("rp_character", character_id=character.id)}}"><span class="t_edit"><span>Edit</span></span></a></td>
+                        <td><a href="{{url_for("rp_delete_character_get", character_id=character.id)}}"><span class="t_delete"><span>Delete<span></span></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>You don't have any saved characters.</p>
+            {% endif %}
+            <p><a href="{{url_for("rp_new_character_get")}}">Create a new character</a></p>
+        </div>
+    </div>
 {% endblock %}
 

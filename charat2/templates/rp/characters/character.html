@@ -7,94 +7,152 @@
     <form action="{{url_for("rp_new_character_post")}}" method="post">
 {% endif %}
         <input type="hidden" name="token" value="{{g.csrf_token}}">
-        <h2>Save as <input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></h2>
-        <h2>Roleplay as <select name="search_character_id">
-            {% for group in search_character_groups: %}
-            <optgroup label="{{group.name}}">
-                {% for search_character in group.characters: %}
-                <option value="{{search_character.id}}"{% if search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
-                {% endfor %}
-            </optgroup>
-            {% endfor %}
-        </select></h2>
-        <p><label for="shortcut_input">Shortcut: /<input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut or ""}}" pattern="^[-a-zA-Z0-9_]+$"><span class="pattern_error"> (shortcuts can only contain letters, numbers, hyphens and underscores)</span></label></p>
-        <p>Type <span id="shortcut_preview">{% if character.shortcut: %}"/{{character.shortcut}}"{% else: %}the shortcut{% endif %}</span> to use this character's name and typing quirks for a single line.</p>
-        <h2>With settings</h2>
-        <div class="input_table">
-            <p>
-                <label for="name_input">Name:</label>
-                <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name}}">
-            </p>
-            <p>
-                <label for="acronym_input">Acronym:</label>
-                <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" value="{{character.acronym}}">
-            </p>
-            <p>
-                <label for="color_input">Color:</label>
-                <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}"><input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
-            </p>
-        </div>
-        <p id="text_preview_container" style="color: #{{character.color}};">
-            <span id="text_preview_acronym">{% if character.acronym: %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.search_character.text_preview}}</span>
-        </p>
-        <h2>Typing quirks</h2>
-        <div class="input_table">
-            <p>
-                <label>Prefix:</label>
-                <input type="text" name="quirk_prefix" size="50" maxlength="2000" value="{{character.quirk_prefix}}">
-            </p>
-            <p>
-                <label>Suffix:</label>
-                <input type="text" name="quirk_suffix" size="50" maxlength="2000" value="{{character.quirk_suffix}}">
-            </p>
-            <p>
-                <label>Case:</label>
-                <select name="case">
-                    {% for value, name in case_options.items()|sort: %}
-                    <option value="{{value}}"{% if value == character.case %} selected="selected"{% endif %}>{{name}}</option>
+        <h2>Save as <div class="input charname_box"><input type="text" id="title_input" name="title" size="50" maxlength="50" required value="{{character.title}}"></div></h2>
+        <div class="common_box creator_box">
+            <h2><label><span>Roleplay as</span></label></h2>
+            <div class="common_box_wrap">
+                <div class="input select player_select_box"><select name="search_character_id" id="player_select">
+                    {% for group in search_character_groups: %}
+                    <optgroup label="{{group.name}}">
+                        {% for search_character in group.characters: %}
+                        <option value="{{search_character.id}}"{% if search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
+                        {% endfor %}
+                    </optgroup>
                     {% endfor %}
-                </select>
-            </p>
+                </select></div>
+                <br>
+                <label for="shortcut_input" class="shortcut_label"><span>Shortcut: /</span></label><div class="input shortname_box"><input type="text" id="shortcut_input" name="shortcut" size="15" maxlength="15" value="{{character.shortcut or ""}}" pattern="^[-a-zA-Z0-9_]+$"><div class="pattern_error"> (shortcuts can only contain letters, numbers, hyphens and underscores)</div></div>
+                <p class="textlabel">Type <span id="shortcut_preview">{% if character.shortcut: %}"/{{character.shortcut}}"{% else: %}the shortcut{% endif %}</span> to use this character's name and typing quirks for a single line.</p>
+            </div>
         </div>
-        <h3>Simple replacements</h3>
-        <ul id="replacement_list">
-            {% if replacements: %}
-            {% for replacement in replacements: %}
-            <li><input type="text" name="quirk_from" size="10" value="{{replacement[0]}}"> to <input type="text" name="quirk_to" size="10" value="{{replacement[1]}}"> <button type="button" class="delete_replacement">x</button></li>
-            {% endfor %}
-            {% else %}
-            <li><input type="text" name="quirk_from" size="10"> to <input type="text" name="quirk_to" size="10"> <button type="button" class="delete_replacement">x</button></li>
-            {% endif %}
-        </ul>
-        <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
-        <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
-        <ul id="regex_list">
-            {% if regexes: %}
-            {% for regex in regexes: %}
-            <li><input type="text" name="regex_from" size="10" value="{{regex[0]}}"> to <input type="text" name="regex_to" size="10" value="{{regex[1]}}"> <button type="button" class="delete_regex">x</button></li>
-            {% endfor %}
-            {% else %}
-            <li><input type="text" name="regex_from" size="10"> to <input type="text" name="regex_to" size="10"> <button type="button" class="delete_regex">x</button></li>
-            {% endif %}
-        </ul>
-        <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
-        <h2>Tags</h2>
-        <p>Enter some tags for this character, separated by commas:</p>
-        <div class="input_table">
-            <p>
-                <label>Character(s) you're playing:</label>
-                <input type="text" name="character" maxlength="500" value="{{character_tags["character"]}}">
-            </p>
-            <p>
-                <label>Fandom(s) they belong to:</label>
-                <input type="text" name="fandom" maxlength="500" value="{{character_tags["fandom"]}}">
-            </p>
-            <p>
-                <label>Gender(s) they identify as:</label>
-                <input type="text" name="gender" maxlength="500" value="{{character_tags["gender"]}}">
-            </p>
+        <div class="common_box creator_box">
+            <h2><label><span>With settings</span></label></h2>
+            <div class="common_box_wrap">
+                <div class="input_table">
+                    <div class="input"><p>
+                    <input type="text" id="name_input" name="name" size="50" maxlength="50" required value="{{character.name}}">
+                    <label for="name_input">Name</label>
+                    </p></div>
+                    <div class="input acronym"><p>
+                    <input type="text" id="acronym_input" name="acronym" size="15" maxlength="15" {% if character.acronym != "": %}value="{{character.acronym}}"{% endif %}>
+                    <label for="acronym_input">Acronym</label>
+                    </p></div>
+                    <p class="color-double">
+                    <label for="color_input">Color</label>
+                    <input type="color" id="color_input" name="color" size="7" required value="#{{character.color}}" list="canon_hexes">
+                    <datalist id="canon_hexes">
+                        <option value="#E00707"/>
+                        <option value="#4AC925"/>
+                        <option value="#0715CD"/>
+                        <option value="#B536DA"/>
+                        <option value="#F2A400"/>
+                        <option value="#1F9400"/>
+                        <option value="#00D5F2"/>
+                        <option value="#FF6FF2"/>
+                        <option value="#A10000"/>
+                        <option value="#A15000"/>
+                        <option value="#A1A100"/>
+                        <option value="#658200"/>
+                        <option value="#416600"/>
+                        <option value="#008141"/>
+                        <option value="#008282"/>
+                        <option value="#005682"/>
+                        <option value="#000056"/>
+                        <option value="#2B0057"/>
+                        <option value="#6A006A"/>
+                        <option value="#77003C"/>
+                        <option value="#FF0000"/>
+                        <option value="#626262"/>
+                        <option value="#323232"/>
+                        <option value="#929292"/>
+                        <option value="#2ED73A"/>
+                        <option value="#FF00FF"/>
+                        <option value="#FFAC9F"/>
+                        <option value="#FF83FB"/>
+                        <option value="#00BFFF"/>
+                        <option value="#9370DB"/>
+                        <option value="#FF69B4"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFDAB9"/>
+                        <option value="#FFFFE0"/>
+                        <option value="#98FB98"/>
+                        <option value="#000000"/>
+                        <option value="#696969"/>
+                        <option value="#A9A9A9"/>
+                        <option value="#DCDCDC"/>
+                        <option value="#FFFFFF"/>
+                        </datalist>
+                    <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
+                    </p>
+                </div>
+                <p id="text_preview_container" style="color: #{{character.color}};">
+                    <span id="text_preview_acronym">{% if character.acronym: %}{{character.acronym}}: {% endif %}</span><span id="text_preview">{{character.search_character.text_preview}}</span>
+                </p>
+            </div>
         </div>
-        <button type="submit">Save</button>
+        <div class="common_box creator_box">
+            <h2><label><span>Typing quirks</span></label></h2>
+            <div class="common_box_wrap quirk_creator">
+                <div class="input_table">
+                    <div class="input short"><p>
+                        <input type="text" id="quirk_prefix" name="quirk_prefix" size="50" maxlength="2000" {% if character.quirk_prefix != "": %}value="{{character.quirk_prefix}}"{% endif %}>
+                        <label for="quirk_prefix">Prefix</label>
+                    </p></div>
+                    <div class="input short"><p>
+                        <input type="text" id="quirk_suffix" name="quirk_suffix" size="50" maxlength="2000" {% if character.quirk_suffix != "": %}value="{{character.quirk_suffix}}"{% endif %}>
+                        <label for="quirk_suffix">Suffix</label>
+                    </p></div>
+                    <label class="textlabel">Case</label>
+                    <div class="input select"><p><select name="case">
+                        {% for value, name in case_options.items()|sort: %}
+                        <option value="{{value}}"{% if value == character.case %} selected="selected"{% endif %}>{{name}}</option>
+                        {% endfor %}
+                        </select>
+                    </p></div>
+                </div>
+                <div class="simple_column">
+                    <h3>Simple replacements</h3>
+                    <ul id="replacement_list">
+                        {% if replacements: %}
+                        {% for replacement in replacements: %}
+                        <li><div class="input fromto"><input type="text" name="quirk_from" size="" value="{{replacement[0]}}"></div> to <div class="input fromto"><input type="text" name="quirk_to" size="" value="{{replacement[1]}}"></div> <button type="button" class="delete_replacement">x</button></li>
+                        {% endfor %}
+                        {% else %}
+                        <li><div class="input fromto"><input type="text" name="quirk_from" size=""></div> to <div class="input fromto"><input type="text" name="quirk_to" size=""></div> <button type="button" class="delete_replacement">x</button></li>
+                        {% endif %}
+                    </ul>
+                    <p><button type="button" id="add_replacement">Add</button> <button type="button" id="clear_replacements">Clear</button></p>
+                </div>
+                <div class="regex_column">
+                    <h3>Regex replacements (<a href="http://en.wikipedia.org/wiki/Regular_expression">?</a>)</h3>
+                    <ul id="regex_list">
+                        {% if regexes: %}
+                        {% for regex in regexes: %}
+                        <li><div class="input fromto"><input type="text" name="regex_from" size="" value="{{regex[0]}}"></div> to <div class="input fromto"><input type="text" name="regex_to" size="" value="{{regex[1]}}"></div> <button type="button" class="delete_regex">x</button></li>
+                        {% endfor %}
+                        {% else %}
+                        <li><div class="input fromto"><input type="text" name="regex_from" size=""></div> to <div class="input fromto"><input type="text" name="regex_to" size=""></div> <button type="button" class="delete_regex">x</button></li>
+                        {% endif %}
+                    </ul>
+                    <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
+                </div>
+            </div>
+            </div>
+        <div class="common_box creator_box">
+            <h2><label><span>Tags</span></label></h2>
+            <div class="common_box_wrap">
+                <p class="textlabel">Enter some tags for this character, separated by commas:</p>
+                <div class="input_table">
+                    <label class="tag_label">Character(s) you're playing:</label>
+                    <div class="input tags_box"><input type="text" name="character" maxlength="500" value="{{character_tags["character"]}}"></div>
+                    <br><label class="tag_label">Fandom(s) they belong to:</label>
+                    <div class="input tags_box"><input type="text" name="fandom" maxlength="500" value="{{character_tags["fandom"]}}"></div>
+                    <br><label class="tag_label">Gender(s) they identify as:</label>
+                    <div class="input tags_box"><input type="text" name="gender" maxlength="500" value="{{character_tags["gender"]}}"></div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="save_character">Save</button>
     </form>
 {% endblock %}
 {% block scripts: %}

@@ -1,59 +1,64 @@
 {% extends "base.html" %}
 {% block title: %}Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats - {% endblock %}
 {% block content: %}
-    <h2>Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats</h2>
-    <nav id="subnav">
-        Show:
-        {% for key in chat_classes|sort: %}
-        {% if type == key: %}
-        {% if key == 'pm': %}
-        PM
-        {% elif key == None: %}
-        All
-        {% else %}
-        {{key|capitalize}}
-        {% endif %}
-        {% else %}
-        {% if key == 'pm': %}
-        <a href="{{url_for('rp_chat_list', type='pm')}}">PM</a>
-        {% elif key == None: %}
-        <a href="{{url_for('rp_chat_list')}}">All</a>
-        {% else %}
-        <a href="{{url_for('rp_chat_list', type=key)}}">{{key|capitalize}}</a>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-    </nav>
-    {{ pager() }}
-    {% if chats: %}
-    <ul id="group_chats">
-        {% for chat in chats: %}
-        <li{% if type != "unread" and chat.chat.unread: %} class="unread" title="Unread"{% endif %}>
-            <h3>{% if chat.chat.type == "group" and chat.chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.chat.url)}}">{{chat.chat_user.title or chat.chat.title}}{% if chat.chat.type == "pm" and chat.chat.partner_online: %} (online){% endif %}</a></h3>
-            <p class="subtitle">
-                {% if type in (None, "unread"): %}
-                    <a href="{{url_for("rp_chat_list", type=chat.chat.type)}}">{{"PM" if chat.chat.type == "pm" else chat.chat.type.capitalize()}}</a>,
+    <div class="common_box" id="filter_chats">
+        <h2><label><span>Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats</span></label></h2>
+        <div class="common_box_wrap">
+            <nav id="subnav">
+                <span class="textlabel">Show:</span>
+                {% for key in chat_classes|sort: %}
+                {% if type == key: %}
+                {% if key == 'pm': %}
+                <span class="tab_active">PM</span>
+                {% elif key == None: %}
+                <span class="tab_active">All</span>
+                {% else %}
+                <span class="tab_active">{{key|capitalize}}</span>
                 {% endif %}
-                {% if chat.chat.type == "group": %}
-                    {{chat.chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.chat.level] }},
+                {% else %}
+                {% if key == 'pm': %}
+                <a href="{{url_for('rp_chat_list', type='pm')}}">PM</a>
+                {% elif key == None: %}
+                <a href="{{url_for('rp_chat_list')}}">All</a>
+                {% else %}
+                <a href="{{url_for('rp_chat_list', type=key)}}">{{key|capitalize}}</a>
                 {% endif %}
-                {{chat.chat.online}} online.
-            </p>
-            {% if chat.chat_user.notes: %}
-            <p>{{chat.chat_user.notes}}</p>
-            {% elif chat.chat.topic: %}
-            <p>{{chat.chat.topic}}</p>
+                {% endif %}
+                {% endfor %}
+            </nav>
+            {{ pager() }}
+            {% if chats: %}
+            <ul id="group_chats">
+                {% for chat in chats: %}
+                <li{% if type != "unread" and chat.chat.unread: %} class="unread" title="Unread"{% endif %}>
+                    <h3>{% if chat.chat.type == "group" and chat.chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.chat.url)}}">{{chat.chat_user.title or chat.chat.title}}{% if chat.chat.type == "pm" and chat.chat.partner_online: %} (online){% endif %}</a></h3>
+                    <p class="subtitle">
+                        {% if type in (None, "unread"): %}
+                            <a href="{{url_for("rp_chat_list", type=chat.chat.type)}}">{{"PM" if chat.chat.type == "pm" else chat.chat.type.capitalize()}}</a>,
+                        {% endif %}
+                        {% if chat.chat.type == "group": %}
+                            {{chat.chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.chat.level] }},
+                        {% endif %}
+                        {{chat.chat.online}} online.
+                    </p>
+                    <p class="desc" tabindex="0">
+                    {% if chat.chat_user.notes: %}
+                    <span title="expand notes">{{chat.chat_user.notes}}</span>
+                    {% elif chat.chat.topic: %}
+                    <span title="expand description">{{chat.chat.topic}}</span>
+                    {% endif %}</p>
+                    <form action="{{url_for("rp_chat_unsubscribe", url=chat.chat.url)}}" method="post">
+                        <input type="hidden" name="token" value="{{g.csrf_token}}">
+                        <p><button type="submit" class="unsubscribe">Unsubscribe</button></p>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else: %}
+            <p>No chats.</p>
             {% endif %}
-            <form action="{{url_for("rp_chat_unsubscribe", url=chat.chat.url)}}" method="post">
-                <input type="hidden" name="token" value="{{g.csrf_token}}">
-                <p><button type="submit">Unsubscribe</button></p>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else: %}
-    <p>No chats.</p>
-    {% endif %}
-    {{ pager() }}
+            {{ pager() }}
+        </div>
+    </div>
 {% endblock %}
 

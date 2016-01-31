@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 {% block content: %}
-    <h2>Settings</h2>
-    <nav id="subnav">
-        {% if request.url_rule.endpoint == "settings": %}
-        Chat settings
-        {% else %}
-        <a href="{{url_for("settings")}}">Chat settings</a>
-        {% endif %}
-        {% if request.url_rule.endpoint in ("settings_log_in_details", "settings_change_password"): %}
-        Log in details
-        {% else %}
-        <a href="{{url_for("settings_log_in_details")}}">Log in details</a>
-        {% endif %}
-        {% if request.url_rule.endpoint == "settings_blocks": %}
-        Blocked users
-        {% else %}
-        <a href="{{url_for("settings_blocks")}}">Blocked users</a>
-        {% endif %}
-    </nav>
+    <div class="common_box">
+        <h2><label><span>Settings</span></label></h2>
+        <div class="common_box_wrap">
+            <nav id="subnav">
+                {% if request.url_rule.endpoint == "settings": %}
+                <span class="tab_active">Chat settings</span>
+                {% else %}
+                <a href="{{url_for("settings")}}">Chat settings</a>
+                {% endif %}
+                {% if request.url_rule.endpoint in ("settings_log_in_details", "settings_change_password"): %}
+                <span class="tab_active">Log in details</span>
+                {% else %}
+                <a href="{{url_for("settings_log_in_details")}}">Log in details</a>
+                {% endif %}
+                {% if request.url_rule.endpoint == "settings_blocks": %}
+                <span class="tab_active">Blocked users</span>
+                {% else %}
+                <a href="{{url_for("settings_blocks")}}">Blocked users</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
 {% endblock %}
 

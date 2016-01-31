@@ -1,112 +1,116 @@
 {% extends "base.html" %}
 {% block title: %}Log - {% endblock %}
 {% block content: %}
-    <h2>Log</h2>
-    <nav id="subnav">
-        Show:
-        {% if not request.args.type: %}
-        All
-        {% else %}
-        <a href="{{url_for("admin_log")}}">All</a>
-        {% endif %}
-        {% if request.args.type == "announcements": %}
-        Announcements
-        {% else %}
-        <a href="{{url_for("admin_log", type="announcements")}}">Announcements</a>
-        {% endif %}
-        {% if request.args.type == "chat_links": %}
-        Chat links
-        {% else %}
-        <a href="{{url_for("admin_log", type="chat_links")}}">Chat links</a>
-        {% endif %}
-        {% if request.args.type == "broadcast": %}
-        Broadcast
-        {% else %}
-        <a href="{{url_for("admin_log", type="broadcast")}}">Broadcast</a>
-        {% endif %}
-        {% if request.args.type == "user_set_group": %}
-        User group
-        {% else %}
-        <a href="{{url_for("admin_log", type="user_set_group")}}">User group</a>
-        {% endif %}
-        {% if request.args.type == "user_set_admin_tier": %}
-        User admin tier
-        {% else %}
-        <a href="{{url_for("admin_log", type="user_set_admin_tier")}}">User admin tier</a>
-        {% endif %}
-        {% if request.args.type == "spamless": %}
-        Spamless
-        {% else %}
-        <a href="{{url_for("admin_log", type="spamless")}}">Spamless</a>
-        {% endif %}
-        {% if request.args.type == "ip_ban": %}
-        IP ban
-        {% else %}
-        <a href="{{url_for("admin_log", type="ip_ban")}}">IP ban</a>
-        {% endif %}
-    </nav>
-    {{ pager() }}
-    {% if entries: %}
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Time</th>
-                <th>User</th>
-                <th>Type</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in entries: %}
-            <tr>
-                <td>{{entry.id}}</td>
-                <td>{{ g.user.localize_time(entry.date).strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                <td><a href="{{url_for("admin_user", username=entry.action_user.username)}}">{{entry.action_user.username}}</a></td>
-                {% if entry.type == "announcements": %}
-                <td>Announcements</td>
-                <td><pre>{{entry.description}}</pre></td>
-                {% elif entry.type == "broadcast": %}
-                <td>Broadcast</td>
-                <td>{{entry.description}}</td>
-                {% elif entry.type == "chat_links": %}
-                <td>Chat links</td>
-                <td><pre>{{entry.description}}</pre></td>
-                {% elif entry.type == "user_set_group": %}
-                <td>User group</td>
-                <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
-                {% elif entry.type == "user_set_admin_tier": %}
-                <td>User group</td>
-                <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a>'s admin tier to <strong>{{entry.description}}</strong>.</td>
-                {% elif entry.type == "spamless:banned_names:add": %}
-                <td>Spamless</td>
-                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
-                {% elif entry.type == "spamless:banned_names:remove": %}
-                <td>Spamless</td>
-                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
-                {% elif entry.type == "spamless:blacklist:add": %}
-                <td>Spamless</td>
-                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
-                {% elif entry.type == "spamless:blacklist:remove": %}
-                <td>Spamless</td>
-                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
-                {% elif entry.type == "spamless:warnlist:add": %}
-                <td>Spamless</td>
-                <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
-                {% elif entry.type == "spamless:warnlist:remove": %}
-                <td>Spamless</td>
-                <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
-                {% elif entry.type == "ip_ban": %}
-                <td>IP ban</td>
-                <td>{{entry.description}}</td>
+    <div class="common_box admin_wide">
+        <h2><label><span>Log</span></label></h2>
+        <div class="common_box_wrap">
+            <nav id="subnav">
+                Show:
+                {% if not request.args.type: %}
+                All
+                {% else %}
+                <a href="{{url_for("admin_log")}}">All</a>
                 {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else: %}
-    <p>No log entries.</p>
-    {% endif %}
-    {{ pager() }}
+                {% if request.args.type == "announcements": %}
+                <span class="tab_active">Announcements</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="announcements")}}">Announcements</a>
+                {% endif %}
+                {% if request.args.type == "chat_links": %}
+                <span class="tab_active">Chat links</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="chat_links")}}">Chat links</a>
+                {% endif %}
+                {% if request.args.type == "broadcast": %}
+                <span class="tab_active">Broadcast</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="broadcast")}}">Broadcast</a>
+                {% endif %}
+                {% if request.args.type == "user_set_group": %}
+                <span class="tab_active">User group</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="user_set_group")}}">User group</a>
+                {% endif %}
+                {% if request.args.type == "user_set_admin_tier": %}
+                <span class="tab_active">User admin tier</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="user_set_admin_tier")}}">User admin tier</a>
+                {% endif %}
+                {% if request.args.type == "spamless": %}
+                <span class="tab_active">Spamless</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="spamless")}}">Spamless</a>
+                {% endif %}
+                {% if request.args.type == "ip_ban": %}
+                <span class="tab_active">IP ban</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="ip_ban")}}">IP ban</a>
+                {% endif %}
+            </nav>
+            {{ pager() }}
+            {% if entries: %}
+            <table class="admin_log">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries: %}
+                    <tr>
+                        <td>{{entry.id}}</td>
+                        <td>{{ g.user.localize_time(entry.date).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td><a href="{{url_for("admin_user", username=entry.action_user.username)}}">{{entry.action_user.username}}</a></td>
+                        {% if entry.type == "announcements": %}
+                        <td>Announcements</td>
+                        <td><pre>{{entry.description}}</pre></td>
+                        {% elif entry.type == "broadcast": %}
+                        <td>Broadcast</td>
+                        <td>{{entry.description}}</td>
+                        {% elif entry.type == "chat_links": %}
+                        <td>Chat links</td>
+                        <td><pre>{{entry.description}}</pre></td>
+                        {% elif entry.type == "user_set_group": %}
+                        <td>User group</td>
+                        <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
+                        {% elif entry.type == "user_set_admin_tier": %}
+                        <td>User group</td>
+                        <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a>'s admin tier to <strong>{{entry.description}}</strong>.</td>
+                        {% elif entry.type == "spamless:banned_names:add": %}
+                        <td>Spamless</td>
+                        <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
+                        {% elif entry.type == "spamless:banned_names:remove": %}
+                        <td>Spamless</td>
+                        <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_banned_names")}}">banned names</a> list.</td>
+                        {% elif entry.type == "spamless:blacklist:add": %}
+                        <td>Spamless</td>
+                        <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
+                        {% elif entry.type == "spamless:blacklist:remove": %}
+                        <td>Spamless</td>
+                        <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_blacklist")}}">blacklist</a>.</td>
+                        {% elif entry.type == "spamless:warnlist:add": %}
+                        <td>Spamless</td>
+                        <td>Added <strong>{{entry.description}}</strong> to the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
+                        {% elif entry.type == "spamless:warnlist:remove": %}
+                        <td>Spamless</td>
+                        <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
+                        {% elif entry.type == "ip_ban": %}
+                        <td>IP ban</td>
+                        <td>{{entry.description}}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>No log entries.</p>
+            {% endif %}
+            {{ pager() }}
+        </div>
+    </div>
 {% endblock %}
 
