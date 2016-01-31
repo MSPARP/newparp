@@ -1,3 +1,7 @@
+"use strict";
+
+/*eslint-env serviceworker */
+
 self.addEventListener("activate", function(event) {
 	event.waitUntil(self.clients.claim());
 	console.log("Event activated!");
