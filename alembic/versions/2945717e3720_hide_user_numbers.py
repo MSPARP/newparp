@@ -1,7 +1,7 @@
 """hide user numbers
 
 Revision ID: 2945717e3720
-Revises: 33f94a71e3a0
+Revises: f8acbd22162
 Create Date: 2016-01-31 00:43:02.777003
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.sql import table, column
 
 # revision identifiers, used by Alembic.
 revision = '2945717e3720'
-down_revision = '33f94a71e3a0'
+down_revision = 'f8acbd22162'
 branch_labels = None
 depends_on = None
 
