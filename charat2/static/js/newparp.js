@@ -982,7 +982,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^lookup (\d+)$/,
-					"chat_types": "group",
+					"chat_types": "all",
 					"minimum_rank": Infinity,
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
