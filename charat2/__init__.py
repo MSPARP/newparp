@@ -223,6 +223,7 @@ app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_sta
 # 11. Guides
 
 app.add_url_rule("/userguide", "guides_user_guide", guides.user_guide, methods=("GET",))
+app.add_url_rule("/bbcodeguide", "guides_bbcode_guide", guides.bbcode_guide, methods=("GET",))
 
 # 12. Error handlers
 
