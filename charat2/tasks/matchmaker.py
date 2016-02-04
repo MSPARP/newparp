@@ -21,7 +21,8 @@ def get_searcher_info(redis, searcher_ids):
             "user_id": user_id,
             "search_character_id": search_character_id,
             "character": redis.hgetall("searcher:%s:character" % searcher_id),
-            "options": redis.hgetall("searcher:%s:options" % searcher_id),
+            "style": redis.get("searcher:%s:style" % searcher_id),
+            "levels": redis.smembers("searcher:%s:levels" % searcher_id),
             "filters": redis.lrange("searcher:%s:filters" % searcher_id, 0, -1),
             "choices": {int(_) for _ in redis.smembers("searcher:%s:choices" % searcher_id)},
         })
@@ -43,21 +44,27 @@ def check_compatibility(redis, s1, s2):
 
     # Style options should be matched with themselves or "either".
     if (
-        s1["options"]["style"] != "either"
-        and s2["options"]["style"] != "either"
-        and s1["options"]["style"] != s2["options"]["style"]
+        s1["style"] != "either"
+        and s2["style"] != "either"
+        and s1["style"] != s2["style"]
     ):
         return False, None
-    if s1["options"]["style"] != "either":
-        options.append(s1["options"]["style"])
-    elif s2["options"]["style"] != "either":
-        options.append(s2["options"]["style"])
+    if s1["style"] != "either":
+        options.append(s1["style"])
+    elif s2["style"] != "either":
+        options.append(s2["style"])
 
-    # Level has to be the same.
-    if s1["options"]["level"] != s2["options"]["level"]:
-        return False, None
+    # Levels have to overlap.
+    levels_in_common = s1["levels"] & s2["levels"]
+    logger.debug("Levels in common: %s" % levels_in_common)
+    if levels_in_common:
+        options.append(
+            "nsfw-extreme" if "nsfw-extreme" in levels_in_common
+            else "nsfw" if "nsfw" in levels_in_common
+            else "sfw"
+        )
     else:
-        options.append(s1["options"]["level"])
+        return False, None
 
     # Check filters.
     s1_name = s1["character"]["name"].lower().encode("utf8")

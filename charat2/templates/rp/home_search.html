@@ -87,24 +87,20 @@
         <div class="toggle_box">
             <input type="checkbox" id="toggle_search_for">
             <h2>&gt; <label for="toggle_search_for">Search for</label></h2>
-            <div class="input_table">
-                <p>
-                    <label for="style_select">Script or paragraph?</label>
-                    <select name="style" id="style_select">
-                        {% for value in User.search_style.type.enums: %}
-                        <option value="{{value}}"{% if value == g.user.search_style %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-                <p>
-                    <label for="level_select">SFW, NSFW, or NSFWE?</label>
-                    <select name="level" id="level_select">
-                        {% for value in User.search_level.type.enums: %}
-                        <option value="{{value}}"{% if value == g.user.search_level %} selected="selected"{% endif %}>{{value.upper()}}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-            </div>
+            <p><label>
+                Script or paragraph?
+                <select name="style" id="style_select">
+                    {% for value in User.search_style.type.enums: %}
+                    <option value="{{value}}"{% if value == g.user.search_style %} selected="selected"{% endif %}>{{value.capitalize()}}</option>
+                    {% endfor %}
+                </select>
+            </label></p>
+            <h3>SFW, NSFW, or NSFW extreme?</h3>
+            <p>
+                <label><input type="checkbox" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> SFW</label>
+                <label><input type="checkbox" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> NSFW</label>
+                <label><input type="checkbox" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> NSFW extreme</label>
+            </p>
             <h3>Filter out names containing...</h3>
             <ul id="filter_list">
                 {% if g.user.search_filters|length != 0: %}

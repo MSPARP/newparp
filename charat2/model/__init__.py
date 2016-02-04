@@ -138,10 +138,7 @@ class User(Base):
         Enum(u"script", u"paragraph", u"either", name="user_search_style"),
         nullable=False, default=u"script",
     )
-    search_level = Column(
-        Enum(u"sfw", u"nsfw", u"nsfwe", name="user_search_level"),
-        nullable=False, default=u"sfw",
-    )
+    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=[u"sfw"])
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
@@ -198,7 +195,7 @@ class User(Base):
             "acronym": self.acronym,
             "color": self.color,
             "search_style": self.search_style,
-            "search_level": self.search_level,
+            "search_levels": self.search_levels,
         }
         if include_options:
             ud["admin_tier"] = self.admin_tier.to_dict() if self.is_admin else None
