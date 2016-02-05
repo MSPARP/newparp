@@ -1073,11 +1073,7 @@ var msparp = (function() {
 				var pm_chat_list = $("#pm_chat_list");
 				var pm_chat_list_template = Handlebars.compile($("#pm_chat_list_template").html());
 				Handlebars.registerHelper("current_chat", function() {
-					if ("url" in this) {
-						return this.url == chat.url;
-					} else if ("chat" in this) {
-						return this.chat.url == chat.url;
-					}
+					return this.chat.url == chat.url;
 				});
 				Handlebars.registerHelper("pm_username", function() { return this.chat.url.substr(3); });
 				function refresh_pm_chat_list() {
