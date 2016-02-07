@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, abort, redirect, request, send_from_directory
+from werkzeug.routing import BaseConverter
 
 from charat2.helpers import check_csrf_token
 from charat2.model.connections import (
@@ -33,6 +34,14 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+app.url_map.converters['regex'] = RegexConverter
 
 
 def make_rules(subdomain, path, func, formats=False, paging=False):
@@ -146,6 +155,7 @@ app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
 make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
+make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
 make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)

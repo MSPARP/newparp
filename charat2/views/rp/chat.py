@@ -1,7 +1,7 @@
 import paginate
 import time
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from functools import wraps
 from math import ceil
@@ -305,6 +305,49 @@ def log(chat, pm_user, url, fmt=None, page=None):
         chat=chat,
         messages=messages,
         paginator=paginator,
+    )
+
+
+@use_db
+@get_chat
+def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
+
+    # TODO don't allow days before the first message/after the last message
+    # TODO timezone shit
+    try:
+        day_start = datetime(int(year), int(month), int(day))
+    except ValueError:
+        abort(404)
+    day_end = day_start + timedelta(1)
+
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except:
+        own_chat_user = None
+
+    messages = g.db.query(Message).filter(and_(
+        Message.chat_id == chat.id,
+        Message.posted >= day_start,
+        Message.posted < day_end,
+    )).order_by(Message.posted).options(
+        joinedload(Message.chat_user),
+    )
+    if own_chat_user is not None and not own_chat_user.show_system_messages:
+        messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
+    messages = messages.all()
+
+    if fmt == "json":
+        return jsonify({"messages": [_.to_dict() for _ in messages]})
+
+    return render_template(
+        "rp/chat/log.html",
+        own_chat_user=own_chat_user,
+        url=url,
+        chat=chat,
+        messages=messages,
     )
 
 
