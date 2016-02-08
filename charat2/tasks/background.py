@@ -32,3 +32,13 @@ def update_lastonline():
             )).update({"last_online": posted}, synchronize_session=False)
 
         db.commit()
+
+
+@celery.task(base=WorkerTask)
+def unlist_chats():
+    unlist_chats.db.query(GroupChat).filter(and_(
+        GroupChat.publicity == "listed",
+        GroupChat.last_message < datetime.datetime.now() - datetime.timedelta(7)
+    )).update({"publicity": "unlisted"})
+    unlist_chats_db.commit()
+
