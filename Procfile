@@ -3,6 +3,6 @@ setup: python charat2/model/init_db.py
 migrate: alembic upgrade head
 live: python charat2/workers/live.py
 spamless: python charat2/workers/spamless.py
-celery: celery -A charat2.tasks worker -P gevent --autoscale=4,1
+celery: celery -A charat2.tasks worker
 celerybeat: celery -A charat2.tasks beat
 
