@@ -348,6 +348,7 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         url=url,
         chat=chat,
         messages=messages,
+        paginator=None,
     )
 
 
