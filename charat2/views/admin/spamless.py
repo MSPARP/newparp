@@ -16,46 +16,38 @@ from charat2.model.connections import use_db
 @permission_required("spamless")
 def home(fmt=None, page=1):
 
+    before_id = None
+    try:
+        before_id = int(request.args["before_id"])
+    except (KeyError, ValueError):
+        pass
+
     messages = (
         g.db.query(Message)
         .filter(Message.spam_flag != None)
-        .order_by(Message.id.desc())
+        .order_by(Message.posted.desc())
         .options(
             joinedload(Message.chat),
             joinedload(Message.user),
             joinedload(Message.chat_user)
         )
-        .offset((page - 1) * 50).limit(50).all()
     )
+    if before_id:
+        messages = messages.filter(Message.id < before_id)
+    messages = messages.limit(200).all()
 
     if len(messages) == 0 and page != 1:
         abort(404)
 
-    message_count = (
-        g.db.query(func.count('*'))
-        .select_from(Message)
-        .filter(Message.spam_flag != None)
-        .scalar()
-    )
-
     if fmt == "json":
         return jsonify({
-            "total": message_count,
             "messages": [_.to_dict(include_spam_flag=True) for _ in messages],
         })
-
-    paginator = paginate.Page(
-        [],
-        page=page,
-        items_per_page=50,
-        item_count=message_count,
-        url_maker=lambda page: url_for("spamless_home", page=page),
-    )
 
     return render_template(
         "admin/spamless/home.html",
         messages=messages,
-        paginator=paginator,
+        before_id=before_id,
     )
 
 def _list(spamlist, **kwargs):

@@ -2,9 +2,11 @@
 {% block title: %}Spamless - {% endblock %}
 {% block content: %}
     {{ super() }}
-    <h2>Recent messages</h2>
+    <h2>Message log</h2>
+    {% if before_id: %}
+    <p><a href="{{url_for("spamless_home")}}">First page</a></p>
+    {% endif %}
     {% if messages: %}
-    {{ pager() }}
     <table>
         <thead>
             <tr>
@@ -31,7 +33,7 @@
             {% endfor %}
         </tbody>
     </table>
-    {{ pager() }}
+    <p><a href="{{url_for("spamless_home", before_id=messages[-1].id)}}">Next page</a></p>
     {% else: %}
     <p>No messages.</p>
     {% endif %}

@@ -216,7 +216,7 @@ make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 
-make_rules("spamless", "/admin/spamless", spamless.home, formats=True, paging=True)
+make_rules("spamless", "/admin/spamless", spamless.home, formats=True)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names", spamless.banned_names)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names_post", spamless.banned_names_post, methods=("POST",))
 app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist", spamless.blacklist)
