@@ -1,7 +1,19 @@
 {% extends "rp/chat/base.html" %}
+{% macro day_navigation(): %}
+{% if previous_message or next_message: %}
+<p class="pager">
+{% if previous_message: %}
+  <span class="previous_day">&laquo; <a href="{{url_for("rp_log_day", url=url, year=previous_message.posted.year, month=previous_message.posted.strftime("%m"), day=previous_message.posted.strftime("%d"))}}">{{previous_message.posted.strftime("%Y-%m-%d")}}</a></span>
+{% endif %}
+{% if next_message: %}
+  <span class="next_day"><a href="{{url_for("rp_log_day", url=url, year=next_message.posted.year, month=next_message.posted.strftime("%m"), day=next_message.posted.strftime("%d"))}}">{{next_message.posted.strftime("%Y-%m-%d")}}</a> &raquo;</span>
+{% endif %}
+</p>
+{% endif %}
+{% endmacro %}
 {% block content: %}
 
-{{pager()}}
+{{day_navigation()}}
 
 {% if own_chat_user: %}
 <form action="{{url_for("save_variables")}}" method="POST">
@@ -14,12 +26,12 @@
 
 <section id="archive_conversation">
     {{render_messages(messages)}}
-    {% if paginator.page == paginator.last_page and (chat.type != "roulette" or own_chat_user): %}
+    {% if next_message == None: %}
     <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
     {% endif %}
 </section>
 
-{{pager()}}
+{{day_navigation()}}
 
 {% endblock %}
 {% block scripts: %}

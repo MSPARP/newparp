@@ -334,7 +334,8 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 /* 4.5. Log pages */
 
 .chat .pager, #archive_conversation { margin: 5px; padding: 2px 0; background-color: #eee; }
-.chat .pager { padding: 2px 5px; }
+.chat .pager { padding: 2px 5px; overflow: hidden; }
+.next_day { float: right; }
 
 /* 4.6. Global Announcements */
 

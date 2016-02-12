@@ -339,16 +339,30 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
     messages = messages.all()
 
+    previous_message = g.db.query(Message).filter(and_(
+        Message.chat_id == chat.id,
+        Message.posted < day_start,
+    )).order_by(Message.posted.desc()).first()
+    next_message = g.db.query(Message).filter(and_(
+        Message.chat_id == chat.id,
+        Message.posted >= day_end,
+    )).order_by(Message.posted).first()
+
     if fmt == "json":
-        return jsonify({"messages": [_.to_dict() for _ in messages]})
+        return jsonify({
+            "messages": [_.to_dict() for _ in messages],
+            "previous_day": previous_message.posted.strftime("%Y-%m-%d") if previous_message else None,
+            "next_day": next_message.posted.strftime("%Y-%m-%d") if next_message else None,
+        })
 
     return render_template(
-        "rp/chat/log.html",
+        "rp/chat/log_day.html",
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
         messages=messages,
-        paginator=None,
+        previous_message=previous_message,
+        next_message=next_message,
     )
 
 
