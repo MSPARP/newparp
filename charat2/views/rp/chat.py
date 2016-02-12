@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from functools import wraps
 from math import ceil
+from pytz import timezone, utc
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
@@ -312,11 +313,12 @@ def log(chat, pm_user, url, fmt=None, page=None):
 @get_chat
 def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
 
-    # TODO timezone shit
     try:
         day_start = datetime(int(year), int(month), int(day))
     except ValueError:
         abort(404)
+    if g.user and g.user.timezone:
+        day_start = timezone(g.user.timezone).localize(day_start).astimezone(utc)
     day_end = day_start + timedelta(1)
 
     try:
@@ -347,27 +349,34 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         Message.posted >= day_end,
     )).order_by(Message.posted).first()
 
+    if g.user and g.user.timezone:
+        previous_day = g.user.localize_time(previous_message.posted) if previous_message else None
+        next_day = g.user.localize_time(next_message.posted) if next_message else None
+    else:
+        previous_day = previous_message.posted if previous_message else None
+        next_day = next_message.posted if next_message else None
+
     if not messages:
-        if previous_message and not next_message:
+        if previous_day and not next_day:
             return redirect(url_for(
                 "rp_log_day", url=url,
-                year=previous_message.posted.year,
-                month=previous_message.posted.strftime("%m"),
-                day=previous_message.posted.strftime("%d"),
+                year=previous_day.posted.year,
+                month=previous_day.posted.strftime("%m"),
+                day=previous_day.posted.strftime("%d"),
             )) if not fmt else abort(404)
-        elif next_message and not previous_message:
+        elif next_day and not previous_day:
             return redirect(url_for(
                 "rp_log_day", url=url,
-                year=next_message.posted.year,
-                month=next_message.posted.strftime("%m"),
-                day=next_message.posted.strftime("%d"),
+                year=next_day.posted.year,
+                month=next_day.posted.strftime("%m"),
+                day=next_day.posted.strftime("%d"),
             )) if not fmt else abort(404)
 
     if fmt == "json":
         return jsonify({
             "messages": [_.to_dict() for _ in messages],
-            "previous_day": previous_message.posted.strftime("%Y-%m-%d") if previous_message else None,
-            "next_day": next_message.posted.strftime("%Y-%m-%d") if next_message else None,
+            "previous_day": previous_day.strftime("%Y-%m-%d") if previous_day else None,
+            "next_day": next_day.strftime("%Y-%m-%d") if next_day else None,
         })
 
     return render_template(
@@ -376,8 +385,8 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         url=url,
         chat=chat,
         messages=messages,
-        previous_message=previous_message,
-        next_message=next_message,
+        previous_day=previous_day,
+        next_day=next_day,
     )
 
 

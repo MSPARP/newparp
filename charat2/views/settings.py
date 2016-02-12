@@ -57,8 +57,9 @@ timezones = {
 @use_db
 @log_in_required
 def timezone():
-    if request.form["timezone"] in timezones:
-        g.user.timezone = request.form["timezone"]
+    chosen_timezone = request.form.get("timezone", "").replace(" ", "_")
+    if chosen_timezone in timezones:
+        g.user.timezone = chosen_timezone
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return "", 204
     return redirect(url_for("settings"))
