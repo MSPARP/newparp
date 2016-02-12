@@ -312,7 +312,6 @@ def log(chat, pm_user, url, fmt=None, page=None):
 @get_chat
 def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
 
-    # TODO don't allow days before the first message/after the last message
     # TODO timezone shit
     try:
         day_start = datetime(int(year), int(month), int(day))
@@ -347,6 +346,22 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         Message.chat_id == chat.id,
         Message.posted >= day_end,
     )).order_by(Message.posted).first()
+
+    if not messages:
+        if previous_message and not next_message:
+            return redirect(url_for(
+                "rp_log_day", url=url,
+                year=previous_message.posted.year,
+                month=previous_message.posted.strftime("%m"),
+                day=previous_message.posted.strftime("%d"),
+            )) if not fmt else abort(404)
+        elif next_message and not previous_message:
+            return redirect(url_for(
+                "rp_log_day", url=url,
+                year=next_message.posted.year,
+                month=next_message.posted.strftime("%m"),
+                day=next_message.posted.strftime("%d"),
+            )) if not fmt else abort(404)
 
     if fmt == "json":
         return jsonify({
