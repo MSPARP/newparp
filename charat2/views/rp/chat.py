@@ -244,9 +244,7 @@ def chat(chat, pm_user, url, fmt=None):
     )
 
 
-@use_db
-@get_chat
-def log(chat, pm_user, url, fmt=None, page=None):
+def _log_page(chat, pm_user, url, fmt, page=None):
 
     try:
         own_chat_user = g.db.query(ChatUser).filter(and_(
@@ -285,7 +283,6 @@ def log(chat, pm_user, url, fmt=None, page=None):
         return redirect(url_for("rp_log", url=url, fmt=fmt))
 
     if fmt == "json":
-
         return jsonify({
             "total": message_count,
             "messages": [_.to_dict() for _ in messages],
@@ -309,16 +306,28 @@ def log(chat, pm_user, url, fmt=None, page=None):
     )
 
 
-@use_db
-@get_chat
-def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
+def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
 
-    try:
-        day_start = datetime(int(year), int(month), int(day))
-    except ValueError:
-        abort(404)
+    if year is not None and month is not None and day is not None:
+        try:
+            day_start = datetime(int(year), int(month), int(day))
+        except ValueError:
+            abort(404)
+
+    else:
+        last_message = g.db.query(Message.posted).filter(and_(
+            Message.chat_id == chat.id,
+        )).order_by(Message.posted.desc()).first()
+        last_day = last_message.posted if last_message else datetime.now()
+
+        if g.user and g.user.timezone:
+            last_day = g.user.localize_time(last_day)
+
+        day_start = datetime(last_day.year, last_day.month, last_day.day)
+
     if g.user and g.user.timezone:
         day_start = timezone(g.user.timezone).localize(day_start).astimezone(utc)
+
     day_end = day_start + timedelta(1)
 
     try:
@@ -340,11 +349,11 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
     messages = messages.all()
 
-    previous_message = g.db.query(Message).filter(and_(
+    previous_message = g.db.query(Message.posted).filter(and_(
         Message.chat_id == chat.id,
         Message.posted < day_start,
     )).order_by(Message.posted.desc()).first()
-    next_message = g.db.query(Message).filter(and_(
+    next_message = g.db.query(Message.posted).filter(and_(
         Message.chat_id == chat.id,
         Message.posted >= day_end,
     )).order_by(Message.posted).first()
@@ -360,16 +369,16 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         if previous_day and not next_day:
             return redirect(url_for(
                 "rp_log_day", url=url,
-                year=previous_day.posted.year,
-                month=previous_day.posted.strftime("%m"),
-                day=previous_day.posted.strftime("%d"),
+                year=previous_day.year,
+                month=previous_day.strftime("%m"),
+                day=previous_day.strftime("%d"),
             )) if not fmt else abort(404)
         elif next_day and not previous_day:
             return redirect(url_for(
                 "rp_log_day", url=url,
-                year=next_day.posted.year,
-                month=next_day.posted.strftime("%m"),
-                day=next_day.posted.strftime("%d"),
+                year=next_day.year,
+                month=next_day.strftime("%m"),
+                day=next_day.strftime("%d"),
             )) if not fmt else abort(404)
 
     if fmt == "json":
@@ -388,6 +397,30 @@ def log_day(chat, pm_user, url, fmt=None, year=None, month=None, day=None):
         previous_day=previous_day,
         next_day=next_day,
     )
+
+
+@use_db
+@get_chat
+def log(chat, pm_user, url, fmt):
+    if chat.type in ("group", "pm"):
+        return _log_day(chat, pm_user, url, fmt)
+    return _log_page(chat, pm_user, url, fmt)
+
+
+@use_db
+@get_chat
+def log_page(chat, pm_user, url, fmt, page):
+    if chat.type in ("group", "pm"):
+        abort(404)
+    return _log_page(chat, pm_user, url, fmt, page)
+
+
+@use_db
+@get_chat
+def log_day(chat, pm_user, url, fmt, year, month, day):
+    if chat.type not in ("group", "pm"):
+        abort(404)
+    return _log_day(chat, pm_user, url, fmt, year, month, day)
 
 
 @alt_formats({"json"})

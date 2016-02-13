@@ -154,7 +154,8 @@ make_rules("rp", "/<path:url>", chat.chat, formats=True)
 app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
-make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
+make_rules("rp", "/<path:url>/log", chat.log, formats=True)
+make_rules("rp", "/<path:url>/log/<int:page>", chat.log_page, formats=True)
 make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
