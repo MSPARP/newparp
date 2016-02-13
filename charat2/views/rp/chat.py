@@ -308,6 +308,18 @@ def _log_page(chat, pm_user, url, fmt, page=None):
 
 def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
 
+    try:
+        own_chat_user = g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == g.user.id,
+        )).one()
+    except:
+        own_chat_user = None
+
+    posted_query = g.db.query(Message.posted).filter(Message.chat_id == chat.id)
+    if own_chat_user is not None and not own_chat_user.show_system_messages:
+        posted_query = posted_query.filter(Message.type.in_(("ic", "ooc", "me")))
+
     if year is not None and month is not None and day is not None:
         try:
             day_start = datetime(int(year), int(month), int(day))
@@ -315,11 +327,10 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
             abort(404)
 
     else:
-        last_message = g.db.query(Message.posted).filter(and_(
-            Message.chat_id == chat.id,
-        )).order_by(Message.posted.desc()).first()
-        last_day = last_message.posted if last_message else datetime.now()
-
+        last_day = (
+            posted_query.order_by(Message.posted.desc()).limit(1).scalar()
+            or datetime.now()
+        )
         if g.user and g.user.timezone:
             last_day = g.user.localize_time(last_day)
 
@@ -329,14 +340,6 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
         day_start = timezone(g.user.timezone).localize(day_start).astimezone(utc)
 
     day_end = day_start + timedelta(1)
-
-    try:
-        own_chat_user = g.db.query(ChatUser).filter(and_(
-            ChatUser.chat_id == chat.id,
-            ChatUser.user_id == g.user.id,
-        )).one()
-    except:
-        own_chat_user = None
 
     messages = g.db.query(Message).filter(and_(
         Message.chat_id == chat.id,
@@ -349,21 +352,18 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
         messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
     messages = messages.all()
 
-    previous_message = g.db.query(Message.posted).filter(and_(
-        Message.chat_id == chat.id,
-        Message.posted < day_start,
-    )).order_by(Message.posted.desc()).first()
-    next_message = g.db.query(Message.posted).filter(and_(
-        Message.chat_id == chat.id,
-        Message.posted >= day_end,
-    )).order_by(Message.posted).first()
+    previous_day = (
+        posted_query.filter(Message.posted < day_start)
+        .order_by(Message.posted.desc()).limit(1).scalar()
+    )
+    next_day = (
+        posted_query.filter(Message.posted >= day_end)
+        .order_by(Message.posted).limit(1).scalar()
+    )
 
     if g.user and g.user.timezone:
-        previous_day = g.user.localize_time(previous_message.posted) if previous_message else None
-        next_day = g.user.localize_time(next_message.posted) if next_message else None
-    else:
-        previous_day = previous_message.posted if previous_message else None
-        next_day = next_message.posted if next_message else None
+        previous_day = g.user.localize_time(previous_day) if previous_day else None
+        next_day = g.user.localize_time(next_day) if next_day else None
 
     if not messages:
         if previous_day and not next_day:
