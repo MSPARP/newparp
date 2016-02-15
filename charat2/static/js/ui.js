@@ -50,8 +50,7 @@ var addRippleEffect = function (e) {
 }
 
 
-$('button[type!=submit][type!=hidden]').click(addRippleEffect);
-$('.input.select select').click(addRippleEffect);
+$('button[type!=submit][type!=hidden], .input.select select, .add_ripple').click(addRippleEffect);
 
 
 // handle form elements

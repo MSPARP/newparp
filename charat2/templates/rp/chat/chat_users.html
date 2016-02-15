@@ -5,7 +5,7 @@
     <h2><label class="user_edit_box_header"><span>Users in {{chat.title}}</span></label></h2>
     <div class="common_box_wrap">
         {{ pager() }}
-        <table class="chat_user_table">
+        <table class="chat_user_table {% if g.user.is_admin: %}admin_version{% endif %}">
             <thead>
                 <tr>
                     {% if g.user.is_admin: %}

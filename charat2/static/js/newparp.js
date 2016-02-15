@@ -555,7 +555,8 @@ var msparp = (function() {
 				body.addClass("chatting");
 				set_sidebar(null);
 				if (chat.type == "pm") { refresh_pm_chat_list(); }
-				$("#send_form input, #send_form button").prop("disabled", false);
+                refresh_my_chats_list();
+				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
 				status_bar.css("color", "").text((
@@ -572,7 +573,7 @@ var msparp = (function() {
 			function exit() {
 				status = "disconnected";
 				body.removeClass("chatting");
-				$("#send_form input, #send_form button:not(#abscond_button)").prop("disabled", true);
+				$("#send_form input, #send_form button:not(#abscond_button), #sidebar_tabs button").prop("disabled", true);
 				if (chat.type == "group") {
 					info_panel.hide();
 					edit_info_panel.hide();
@@ -652,8 +653,8 @@ var msparp = (function() {
 						flag_level.val(chat.level);
 						chat.autosilence ? flag_message_autosilence.show() : flag_message_autosilence.hide();
 						chat.publicity == "listed" || chat.publicity == "pinned" ? flag_message_publicity.show() : flag_message_publicity.hide();
-						flag_message_style.text(style_messages[chat.style]);
-						flag_message_level.text(level_names[chat.level]);
+						flag_message_style.html(style_messages[chat.style]);
+						flag_message_level.html(level_names[chat.level]);
 					}
 				}
 				if (typeof data.users != "undefined") {
@@ -696,6 +697,8 @@ var msparp = (function() {
 					} else {
 						user_list.html(user_list_template(data));
 						user_list.find("li").click(render_action_list);
+                        $("#conversation_wrap").off();
+                        $("#conversation_wrap").on("click", ".unum:not(.cnum_noclick)", render_action_list);
 						// Re-render the action list if necessary.
 						if (action_user != null) {
 							var action_user_number = action_user.meta.number;
@@ -730,11 +733,15 @@ var msparp = (function() {
 						if (previous_status_message) {
 							status_bar.text(previous_status_message);
 							previous_status_message = null;
+                            $("#activity_spinner").removeClass("active_sb");
+                            $("#activity_spinner").attr("title", "No activity");
 						}
 					} else {
 						if (!previous_status_message) { previous_status_message = status_bar.text(); }
 						var name = chat.type == "pm" ? chat.url.substr(3) : chat.type == "roulette" ? "▼" : "Someone";
 						status_bar.text(name + " is typing...");
+                        $("#activity_spinner").addClass("active_sb");
+                        $("#activity_spinner").attr("title", "Someone is typing...");
 					}
 				}
 				if (chat.type == "pm" && typeof data.pm != "undefined") {
@@ -776,7 +783,7 @@ var msparp = (function() {
 					div.attr("id", "message_" + message.id);
 				}
 				div.addClass("message_" + message.type + " unum_" + message.user_number);
-				$("<div>").addClass("unum").text("[" + (message.user_number ? message.user_number : "*") + "]").appendTo(div);
+				$("<div>").attr("tabindex", -1).addClass("unum cnum_" + (message.user_number ? message.user_number : "noclick")).html((message.user_number ? "<span class=\"unum_hash\">#</span>" + message.user_number : "<span class=\"unum_system\">*</span>") ).appendTo(div);
 				var p = $("<p>").css("color", "#" + message.color);
 				if (message.type == "me") {
 					var text = "* " + message.name + " " + message.text;
@@ -866,9 +873,9 @@ var msparp = (function() {
 
 			// Names and text
 			var style_messages = {
-				"script": "Please use script style.",
-				"paragraph": "Please use paragraph style.",
-				"either": "Script and paragraph style are allowed.",
+				"script": "Please use <span class=\"flag_label\">script style</span>.",
+				"paragraph": "Please use <span class=\"flag_label\">paragraph style</span>.",
+				"either": "<span class=\"flag_label\">Script</span> and <span class=\"flag_label\">paragraph style</span> are allowed.",
 			};
 			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
 			var group_descriptions = {
@@ -1149,13 +1156,14 @@ var msparp = (function() {
 				$("#topbar, #info_panel_link").click(function() {
 					if (status != "chatting") { return false; }
 					edit_info_panel.css("display") == "block" ? edit_info_panel.hide() : info_panel.toggle();
+                    $(".sidebar").removeClass("mobile_override");
 					return false;
 				});
 				// There are several places where we show the topic, so we use this to update them all.
 				var topic = $(".topic");
 				var info_panel = $("#info_panel");
-				var description = $("#description");
-				var rules = $("#rules");
+				var description = $(".description");
+				var rules = $(".rules");
 				var info_panel_controls = $("#info_panel_controls");
 				$("#edit_info_button").click(function() {
 					info_panel.hide();
@@ -1188,8 +1196,10 @@ var msparp = (function() {
 				$("#pm_chat_list_container .close").click(function() { pm_chat_list_container.css("display", ""); });
 				var pm_chat_list = $("#pm_chat_list");
 				var pm_chat_list_template = Handlebars.compile($("#pm_chat_list_template").html());
-				Handlebars.registerHelper("current_chat", function() { return this.url == chat.url; });
-				Handlebars.registerHelper("pm_username", function() { return this.url.substr(3); });
+				Handlebars.registerHelper("current_chat", function() {
+					return this.chat.url == chat.url;
+				});
+				Handlebars.registerHelper("pm_username", function() { return this.chat.url.substr(3); });
 				function refresh_pm_chat_list() {
 					$.get("/chats/pm.json", {}, function(data) {
 						pm_chat_list.html(pm_chat_list_template(data));
@@ -1208,26 +1218,83 @@ var msparp = (function() {
 				}
 			}
 
+            // My Chats
+            // currently saves filter preference to localStorage
+            var my_chats = $("#my_chats");
+			var my_chats_list = $("#my_chats_list");
+			var my_chats_template = Handlebars.compile($("#my_chats_template").html());
+			Handlebars.registerHelper("current_chat", function() {
+				return this.chat.url == chat.url;
+			});
+			if (localstorage) {
+                saved_type_filter = localStorage.getItem("type_filter_preference");
+                if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter)}
+            }
+            function refresh_my_chats_list() {
+				$.get("/chats.json", {}, function(data) {
+					my_chats_list.html(my_chats_template(data));
+				});
+                $("#my_chats_list").removeClass();
+                $("#my_chats_list").addClass("show_" + $("#type_filter").val());
+			}
+            
+            // refresh list on opening
+            $(".my_chats_button").click(function() { if (!$("#chat_wrapper").hasClass("my_chats_open")) { refresh_my_chats_list();} });
+                        
+            // Filter My Chats
+            $("#type_filter").change(function() {
+                $("#my_chats_list").removeClass();
+                $("#my_chats_list").addClass("show_" + $("#type_filter").val());
+                if (localstorage) {
+                    localStorage.setItem("type_filter_preference", $("#type_filter").val());
+                }
+                refresh_my_chats_list();
+            }); 
+            
 			// Sidebars
 			var sidebars = $(".sidebar");
-			var current_sidebar = null;
-			function set_sidebar(sidebar_id) {
-				sidebars.css("display", "none");
+            // Set sidebar css trigger defaults, along with a list of closeable sidebar options so buttons can eliminate other open bars
+			var sidebar_defaults = "";
+            var sidebars_right = "";
+            var sidebars_left = "";
+            var last_sidebar_state = "";
+			function set_sidebar(sidebar_defaults) {
 				if (
-					!sidebar_id && status == "chatting"
-					&& chat.type != "pm" && chat.type != "roulette"
-					&& window.innerWidth >= 500
-				) { sidebar_id = "user_list_container"; }
-				if (sidebar_id) {
-					$(body).addClass("with_sidebar");
-					$("#" + sidebar_id).css("display", "block");
-				} else {
-					$(body).removeClass("with_sidebar");
-				}
-				current_sidebar = sidebar_id;
+					!sidebar_defaults && status == "chatting"
+					&& chat.type == "group"
+				) { sidebar_defaults = "user_list_container_open side_info_open"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "my_chats_open";}
+                else if (
+					!sidebar_defaults && status == "chatting"
+					&& chat.type == "pm"
+				) { sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"}
+                if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
+                if (sidebars_right !== "") { $(body).addClass("has_right_tabs"); }
+                $("#chat_wrapper").removeClass();
+                $("#chat_wrapper").addClass(sidebar_defaults);
+                $(".sidebar").removeClass("mobile_override");
 			}
-			$(".sidebar .close").click(function() { set_sidebar(null); });
-
+            
+            // Use the lists to close down other open bars, then hook individual buttons to open the desired one, add buffer to allow click-to-close when length matches (order-agnostic)
+            $("#sidebar_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_right); });
+            $("#sidebar_left_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_left); });
+            
+			$(".switch_character_button").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
+			$(".settings_button").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
+            $(".my_chats_button").click(function() { $("#chat_wrapper").addClass("my_chats_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("my_chats_open")}});
+            
+            // Mobile side menu overrides
+                
+            $(".mobile_nav_button").click(function() {
+				panel_to_open = "#" + $(this).attr("id").replace("mobile_open_", "");
+                $(".sidebar").not(panel_to_open).removeClass("mobile_override");
+                $(panel_to_open).toggleClass("mobile_override");
+                $("#mobile_nav_toggle").prop("checked",false);
+			});
+            
+            $(".sidebar .close").click(function() { set_sidebar(null); $(this).parent().removeClass("mobile_override"); });
+            
+                
+            
 			// Mod tools
 			if (chat.type == "group") {
 				var mod_tools = $("#mod_tools");
@@ -1265,15 +1332,34 @@ var msparp = (function() {
 			var action_list = $("#action_list");
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
 			var ranks = { "admin": Infinity, "creator": Infinity, "mod3": 3, "mod2": 2, "mod1": 1, "user": 0, "silent": -1 };
-			function render_action_list() {
-				var action_user_number = parseInt(this.id.substr(5));
+			function render_action_list(event) {
+                var popup_pos = "top"
+                var popup_x = 0;
+                var popup_y = 0;
+                if (this.id) {
+                    var action_user_number = parseInt(this.id.substr(5));
+                } else {
+                    var action_user_number = parseInt(this.className.substr(10));
+                    if ((event.clientY / $( window ).height()) > .5) {popup_pos = "bottom"}
+                    popup_x = event.pageX;
+                    popup_y = event.pageY;
+                }
 				if (action_user && action_user_number == action_user.meta.number) {
+                    console.log(action_user.meta.number + " emptied");
 					action_user = null;
 					action_list.empty();
 				} else {
+                    if (!user_data[action_user_number]) { return false }
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
+                    action_list.removeClass().addClass(popup_pos);
+                    action_list.css("top", "");
+                    action_list.css("bottom", "");
+                    if (popup_pos == "top") {action_list.css("top", popup_y); }
+                    else {action_list.css("bottom", $( document ).height() - popup_y); }
+                    action_list.css("left", popup_x);
+                    console.log(popup_y + "/" + popup_x)
 					$("#action_block").click(function() { block(action_user.meta.number); });
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
@@ -1295,8 +1381,10 @@ var msparp = (function() {
 						}
 						$.post("/chat_api/save_variables", { "chat_id": chat.id, "ignored_numbers": user.meta.ignored_numbers.toString() });
 					});
-					$("#action_switch_character").click(function() { set_sidebar("switch_character"); });
-					$("#action_settings").click(function() { set_sidebar("settings"); });
+                    $("#action_mobile_switch_character").click(function() {$(".sidebar").not("#switch_character").removeClass("mobile_override"); $("#switch_character").toggleClass("mobile_override"); });
+                    $("#action_mobile_settings").click(function() {$(".sidebar").not("#settings").removeClass("mobile_override"); $("#settings").toggleClass("mobile_override"); });
+                    $("#action_switch_character").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
+                    $("#action_settings").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
 					$("#action_mod3, #action_mod2, #action_mod1, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
@@ -1370,6 +1458,7 @@ var msparp = (function() {
 			$("#desktop_notifications").prop("disabled", typeof Notification == "undefined");
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
+                user.meta.show_preview ? $("#send_form").removeClass("no_preview") : $("#send_form").addClass("no_preview") ;
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
 				resize_conversation();
 			}
@@ -1395,6 +1484,7 @@ var msparp = (function() {
 						theme_stylesheet.remove();
 					}
 				});
+                set_sidebar(null);
 				return false;
 			});
 
@@ -1418,7 +1508,7 @@ var msparp = (function() {
 			var typing_timeout;
 			var text_preview = $("#text_preview");
 			function set_text_preview(text) {
-				text_preview.text(text);
+				text_preview.html(bbencode(text));
 				resize_conversation();
 			}
 
@@ -1438,10 +1528,14 @@ var msparp = (function() {
 					if (!typing) {
 						typing = true;
 						ws.send("typing");
+                        $("#activity_spinner").addClass("active_self");
+                        $("#activity_spinner").attr("title", "You are typing...");
 					}
 					typing_timeout = window.setTimeout(function() {
 						typing = false;
 						ws.send("stopped_typing");
+                        $("#activity_spinner").removeClass("active_self");
+                        $("#activity_spinner").attr("title", "No activity");
 					}, 1000);
 				}
 			}).keyup(function() {
@@ -1613,12 +1707,6 @@ var msparp = (function() {
 				}
 			});
 
-			// Other buttons
-			$("#user_list_button").click(function() {
-				chat.type == "pm" ? $("#pm_chat_list_container").show() : set_sidebar("user_list_container");
-			});
-			$("#switch_character_button").click(function() { set_sidebar(current_sidebar != "switch_character" ? "switch_character" : null); });
-			$("#settings_button").click(function() { set_sidebar(current_sidebar != "settings" ? "settings" : null); });
 
 			// Global announcements
 			var announcement_template = Handlebars.compile($("#announce_template").html());
