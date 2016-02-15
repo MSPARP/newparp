@@ -141,20 +141,20 @@
             <h2 class="enable_anim"><label for="toggle_search_for"><span>Search for</span></label></h2>
             <div id="search_settings">
                 <div class="input_table">
-                <div>
-                    <span class="textlabel">Style: </span>
-                    {% for value in User.search_style.type.enums: %}
-                    <div class="input"><input type="radio" name="style" id="radio_{{value}}" value="{{value}}" {% if value == g.user.search_style %} checked{% endif %}><label for ="radio_{{value}}">{{value.capitalize()}}</label></div>
-                    {% endfor %}
-                </div>
-                <div>
-                    <span class="textlabel">Content:</span>
-                    <p>
-                        <div class="input"><input type="checkbox" id="content_sfw" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_sfw">SFW</label></div>
-                        <div class="input"><input type="checkbox" id="content_nsfw" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfw">NSFW</label></div>
-                        <div class="input"><input type="checkbox" id="content_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfwe">NSFW extreme</label></div>
-                    </p>
-                </div>
+                    <div>
+                        <span class="textlabel">Style: </span>
+                        {% for value in User.search_style.type.enums: %}
+                        <div class="input"><input type="radio" name="style" id="radio_{{value}}" value="{{value}}" {% if value == g.user.search_style %} checked{% endif %}><label for ="radio_{{value}}">{{value.capitalize()}}</label></div>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <span class="textlabel">Content:</span>
+                        <p class="content_boxes">
+                            <div class="input"><input type="checkbox" id="content_sfw" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_sfw">SFW</label></div>
+                            <div class="input"><input type="checkbox" id="content_nsfw" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfw">NSFW</label></div>
+                            <div class="input"><input type="checkbox" id="content_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfwe">NSFW extreme</label></div>
+                        </p>
+                    </div>
                 </div>
                 <h3>Filter out names containing...</h3>
                 <ul id="filter_list">

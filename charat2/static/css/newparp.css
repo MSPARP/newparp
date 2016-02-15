@@ -1055,6 +1055,9 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 .chartable tr td:nth-of-type(1), .chartable tr td:nth-of-type(2), .chat_user_table:not(.admin_version) tr td:nth-of-type(2), .chat_user_table:not(.admin_version) tr td:nth-of-type(3) {max-width:1px; }
 .admin_userlist th:nth-of-type(2) {width:77%}
 .admin_userlist tr td:nth-of-type(2) {max-width:1px;}
+.blocks_table th:nth-of-type(3), .blocks_table th:nth-of-type(5), .blocks_table th:nth-of-type(6) {width:20%}
+.blocks_table th:nth-of-type(7) {width:30%}
+.blocks_table tr td:nth-of-type(3), .blocks_table tr td:nth-of-type(5), .blocks_table tr td:nth-of-type(6), .blocks_table tr td:nth-of-type(7) {max-width:1px}
 
 @media (max-width: 913px) {
 #permissions_table td:not(:first-child) { text-align: left !important; }
@@ -1093,6 +1096,15 @@ body:not(.no_forms) .chat_user_table .input.select + button .full_label{display:
 @media (max-width: 682px) {
 .t_default_long {display:none}
 body:not(.no_forms) .chat_user_table .input.select select{width:150px}
+.blocks_table th, .blocks_table td {display:inline-block;width:100%;overflow:hidden;box-sizing:border-box;word-break:break-all; max-width:none !important;}
+.common_box .blocks_table td {padding-top:5px;padding-bottom:2px}
+.blocks_table th {display:none !important}
+.blocks_table tr td:nth-of-type(1) {font-size:80%}
+.blocks_table tr td:nth-of-type(1):before {content: "Date: "; color:#626262;font-size:90%}
+.blocks_table tr td:nth-of-type(2):before {content: "User #"; color:#626262;font-size:90%}
+.blocks_table tr td:nth-of-type(4):before {content: "Blocked User #"; color:#626262;font-size:90%}
+.blocks_table tr td:nth-of-type(6):before {content: "Log: "; color:#626262;font-size:90%}
+.blocks_table tr td:nth-of-type(7):before {content: "Reason: "; color:#626262;font-size:90%}
 }
 
 @media (max-width: 590px) {
@@ -1824,6 +1836,11 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 
 #disconnect_links { display: none; }
 #conversation #disconnect_links { display: block; }
+
+/* hide user numbers if disabled */
+
+#conversation.hide_user_numbers .unum{display:none !important}
+#conversation.hide_user_numbers #conversation_wrap {border-left:none;margin-left:0px;padding-left:3px}
 
 /* 4.5. Log pages */
 

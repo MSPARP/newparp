@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title: %}{{chat.computed_title()}} is full - {% endblock %}
 {% block content: %}
-    <h2>TOO MANY PEOPLE IN THE {{chat.computed_title().upper()}}-ROOM</h2>
-    <p>Sorry, this chat is full. Please try again later.</p>
+    <div class="common_box">
+        <h2><label><span>Unable to enter</span></label></h2>
+        <div class="common_box_wrap">
+            <p>TOO MANY PEOPLE IN THE {{chat.computed_title().upper()}}-ROOM <br> <br>(Sorry, this chat is full. Please try again later.)</p>
+        </div>
+    </div>
 {% endblock %}
 

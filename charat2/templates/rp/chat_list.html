@@ -30,7 +30,7 @@
             {% if chats: %}
             <ul id="group_chats">
                 {% for chat in chats: %}
-                <li{% if type != "unread" and chat.chat.unread: %} class="unread" title="Unread"{% endif %}>
+                <li{% if chat.chat.unread: %} class="unread" title="Unread"{% endif %}>
                     <h3>{% if chat.chat.type == "group" and chat.chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.chat.url)}}">{{chat.chat_user.title or chat.chat.title}}{% if chat.chat.type == "pm" and chat.chat.partner_online: %} (online){% endif %}</a></h3>
                     <p class="subtitle">
                         {% if type in (None, "unread"): %}

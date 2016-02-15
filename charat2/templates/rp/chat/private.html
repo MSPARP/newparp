@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block title: %}{{chat.computed_title()}} is private - {% endblock %}
 {% block content: %}
-    <h2>{{chat.computed_title()}} is private</h2>
-    <p>Sorry, you can't enter this chat because its owners have made it private.</p>
+    <div class="common_box">
+        <h2><label><span>Private chat</span></label></h2>
+        <div class="common_box_wrap">
+            <p>Sorry, you can't enter this chat because its owners have made it private.</p>
+        </div>
+    </div>
 {% endblock %}
 
