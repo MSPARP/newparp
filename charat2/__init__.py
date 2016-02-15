@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, abort, redirect, request, send_from_directory
+from werkzeug.routing import BaseConverter
 
 from charat2.helpers import check_csrf_token
 from charat2.model.connections import (
@@ -18,16 +19,11 @@ from charat2.views.rp import (
     search_characters,
 )
 
-from flask.ext.babel import Babel, gettext
-
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
 app.config['PROPAGATE_EXCEPTIONS'] = True
-
-babel = Babel(app)
-app.jinja_env.globals.update(gettext=gettext)
 
 app.before_request(redis_connect)
 
@@ -38,6 +34,14 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+app.url_map.converters['regex'] = RegexConverter
 
 
 def make_rules(subdomain, path, func, formats=False, paging=False):
@@ -150,7 +154,9 @@ make_rules("rp", "/<path:url>", chat.chat, formats=True)
 app.url_map._rules[-2].match_compare_key = lambda: (True, 2, [])
 app.url_map._rules[-1].match_compare_key = lambda: (True, 1, [])
 
-make_rules("rp", "/<path:url>/log", chat.log, formats=True, paging=True)
+make_rules("rp", "/<path:url>/log", chat.log, formats=True)
+make_rules("rp", "/<path:url>/log/<int:page>", chat.log_page, formats=True)
+make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
 make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
@@ -192,12 +198,14 @@ app.add_url_rule("/admin/announcements", "admin_announcements_post", admin.annou
 app.add_url_rule("/admin/broadcast", "admin_broadcast", admin.broadcast_get, methods=("GET",))
 app.add_url_rule("/admin/broadcast", "admin_broadcast_post", admin.broadcast_post, methods=("POST",))
 
-make_rules("admin", "/admin/users", admin.user_list, formats=True, paging=True)
+make_rules("admin", "/admin/users", admin.user_list, formats=True)
 make_rules("admin", "/admin/users/<username>", admin.user, formats=True)
 app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", admin.user_set_group, methods=("POST",))
 app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
 app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password", admin.user_reset_password_get, methods=("GET",))
 app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password_post", admin.user_reset_password_post, methods=("POST",))
+
+make_rules("admin", "/admin/blocks", admin.block_list, formats=True, paging=True)
 
 make_rules("admin", "/admin/permissions", admin.permissions, formats=True)
 app.add_url_rule("/admin/permissions/new", "admin_new_admin_tier", admin.new_admin_tier, methods=("POST",))
@@ -209,7 +217,7 @@ make_rules("admin", "/admin/groups", admin.groups, formats=True, paging=True)
 
 make_rules("admin", "/admin/log", admin.log, formats=True, paging=True)
 
-make_rules("spamless", "/admin/spamless", spamless.home, formats=True, paging=True)
+make_rules("spamless", "/admin/spamless", spamless.home, formats=True)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names", spamless.banned_names)
 app.add_url_rule("/admin/spamless/banned_names", "spamless_banned_names_post", spamless.banned_names_post, methods=("POST",))
 app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist", spamless.blacklist)
@@ -226,6 +234,7 @@ app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_sta
 # 11. Guides
 
 app.add_url_rule("/userguide", "guides_user_guide", guides.user_guide, methods=("GET",))
+app.add_url_rule("/bbcodeguide", "guides_bbcode_guide", guides.bbcode_guide, methods=("GET",))
 
 # 12. Error handlers
 

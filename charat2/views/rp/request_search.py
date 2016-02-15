@@ -433,15 +433,15 @@ def edit_request_post(request_id):
 
         character = character_query(request.form["character_id"], join_tags=True)
 
-        search_request.character=character
-        search_request.name=character.name
-        search_request.alias=character.alias
-        search_request.color=character.color
-        search_request.quirk_prefix=character.quirk_prefix
-        search_request.quirk_suffix=character.quirk_suffix
-        search_request.case=character.case
-        search_request.replacements=character.replacements
-        search_request.regexes=character.regexes
+        search_request.character = character
+        search_request.name = character.name
+        search_request.alias = character.alias
+        search_request.color = character.color
+        search_request.quirk_prefix = character.quirk_prefix
+        search_request.quirk_suffix = character.quirk_suffix
+        search_request.case = character.case
+        search_request.replacements = character.replacements
+        search_request.regexes = character.regexes
 
         search_request.tags += request_tags_from_character(character)
         search_request.tags += request_tags_from_form(request.form)

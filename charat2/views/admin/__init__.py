@@ -4,7 +4,7 @@ import time
 
 from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import and_, column, func, table
+from sqlalchemy import func
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
@@ -12,7 +12,7 @@ from uuid import uuid4
 
 from charat2.helpers import alt_formats
 from charat2.helpers.auth import admin_required, permission_required
-from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
 
@@ -98,7 +98,7 @@ def broadcast_post():
 
     next_index = 0
     while True:
-        next_index, keys = g.redis.scan(next_index,"chat:*:online")
+        next_index, keys = g.redis.scan(next_index, "chat:*:online")
         for key in keys:
             chat_id = key[5:-7]
             g.redis.publish("channel:%s" % chat_id, message_json)
@@ -141,7 +141,12 @@ user_orders = OrderedDict([
 @alt_formats({"json"})
 @use_db
 @permission_required("user_list")
-def user_list(fmt=None, page=1):
+def user_list(fmt=None):
+
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        abort(404)
 
     users = g.db.query(User).options(joinedload(User.admin_tier))
     users = _filter_users(users)
@@ -169,22 +174,21 @@ def user_list(fmt=None, page=1):
             "users": [_.to_dict() for _ in users],
         })
 
+    paginator_args = {k: v for k, v in request.args.items() if k != "page"}
     paginator = paginate.Page(
         [],
         page=page,
         items_per_page=50,
         item_count=user_count,
-        url_maker=lambda page: url_for("admin_user_list", page=page, **request.args),
+        url_maker=lambda page: url_for("admin_user_list", page=page, **paginator_args),
     )
-    group_link_args = request.args.copy()
-    if "group" in group_link_args:
-        del group_link_args["group"]
+
     return render_template(
         "admin/user_list.html",
         User=User,
         users=users,
         paginator=paginator,
-        group_link_args=group_link_args,
+        group_link_args={k: v for k, v in request.args.items() if k not in ("page", "group")},
         user_orders=user_orders,
     )
 
@@ -321,6 +325,47 @@ def user_reset_password_post(username):
     new_password = str(uuid4())
     user.set_password(new_password)
     return render_template("admin/user_reset_password_done.html", user=user, new_password=new_password)
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("user_list")
+def block_list(fmt=None, page=1):
+
+    blocks = g.db.query(Block).options(
+        joinedload(Block.blocking_user),
+        joinedload(Block.blocked_user),
+        joinedload(Block.chat),
+    ).order_by(
+        Block.blocking_user_id,
+        Block.blocked_user_id,
+    ).offset((page - 1) * 50).limit(50).all()
+
+    if len(blocks) == 0 and page != 1:
+        abort(404)
+
+    block_count = g.db.query(func.count('*')).select_from(Block).scalar()
+
+    if fmt == "json":
+        return jsonify({
+            "total": block_count,
+            "blocks": [_.to_dict(include_users=True) for _ in blocks],
+        })
+
+    paginator = paginate.Page(
+        [],
+        page=page,
+        items_per_page=50,
+        item_count=block_count,
+        url_maker=lambda page: url_for("admin_block_list", page=page, **request.args),
+    )
+
+    return render_template(
+        "admin/block_list.html",
+        blocks=blocks,
+        paginator=paginator,
+    )
+
 
 
 @alt_formats({"json"})
@@ -613,9 +658,9 @@ def new_ip_ban():
 
     try:
         g.db.add(IPBan(
-            address = full_address[:42],
-            creator_id = g.user.id,
-            reason = request.form["reason"][:255],
+            address=full_address[:42],
+            creator_id=g.user.id,
+            reason=request.form["reason"][:255],
         ))
         g.db.flush()
     except DataError:
@@ -651,32 +696,10 @@ def delete_ip_ban():
     return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
 
 
-pg_locks = table("pg_locks", column("locktype"), column("classid"), column("objid"), column("pid"), column("granted"))
-pg_stat_activity = table("pg_stat_activity", column("pid"), column("client_addr"), column("client_port"))
-
-
-def _lock_query(objid):
-    return (
-        g.db.query(pg_stat_activity.c.client_addr, pg_stat_activity.c.client_port, pg_locks.c.granted)
-        .select_from(pg_locks)
-        .join(pg_stat_activity, pg_locks.c.pid == pg_stat_activity.c.pid)
-        .filter(and_(
-            pg_locks.c.locktype == "advisory",
-            pg_locks.c.classid == 413,
-            pg_locks.c.objid == objid,
-        ))
-        .order_by(pg_locks.c.granted.desc(), pg_stat_activity.c.client_addr).all()
-    )
-
-
 @use_db
 @admin_required
 def worker_status():
     return render_template(
         "admin/worker_status.html",
-        reaper=_lock_query(1),
-        matchmaker=_lock_query(2),
-        roulette_matchmaker=_lock_query(3),
-        spamless=_lock_query(4),
     )
 

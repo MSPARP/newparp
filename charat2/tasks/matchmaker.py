@@ -1,16 +1,16 @@
-#!/usr/bin/python
-
-import time
+from celery.utils.log import get_task_logger
 
 from charat2.helpers.matchmaker import run_matchmaker
 from charat2.model import SearchedChat
+from charat2.tasks import celery, WorkerTask
 
+logger = get_task_logger(__name__)
 
 def get_searcher_info(redis, searcher_ids):
     searchers = []
     for searcher_id in searcher_ids:
         session_id = redis.get("searcher:%s:session_id" % searcher_id)
-        # This will fail they've logged out since sending the request.
+        # This will fail if they've logged out since sending the request.
         try:
             user_id = int(redis.get("session:%s" % session_id))
             search_character_id = int(redis.get("searcher:%s:search_character_id" % searcher_id))
@@ -21,7 +21,8 @@ def get_searcher_info(redis, searcher_ids):
             "user_id": user_id,
             "search_character_id": search_character_id,
             "character": redis.hgetall("searcher:%s:character" % searcher_id),
-            "options": redis.hgetall("searcher:%s:options" % searcher_id),
+            "style": redis.get("searcher:%s:style" % searcher_id),
+            "levels": redis.smembers("searcher:%s:levels" % searcher_id),
             "filters": redis.lrange("searcher:%s:filters" % searcher_id, 0, -1),
             "choices": {int(_) for _ in redis.smembers("searcher:%s:choices" % searcher_id)},
         })
@@ -43,36 +44,42 @@ def check_compatibility(redis, s1, s2):
 
     # Style options should be matched with themselves or "either".
     if (
-        s1["options"]["style"] != "either"
-        and s2["options"]["style"] != "either"
-        and s1["options"]["style"] != s2["options"]["style"]
+        s1["style"] != "either"
+        and s2["style"] != "either"
+        and s1["style"] != s2["style"]
     ):
         return False, None
-    if s1["options"]["style"] != "either":
-        options.append(s1["options"]["style"])
-    elif s2["options"]["style"] != "either":
-        options.append(s2["options"]["style"])
+    if s1["style"] != "either":
+        options.append(s1["style"])
+    elif s2["style"] != "either":
+        options.append(s2["style"])
 
-    # Level has to be the same.
-    if s1["options"]["level"] != s2["options"]["level"]:
-        return False, None
+    # Levels have to overlap.
+    levels_in_common = s1["levels"] & s2["levels"]
+    logger.debug("Levels in common: %s" % levels_in_common)
+    if levels_in_common:
+        options.append(
+            "nsfw-extreme" if "nsfw-extreme" in levels_in_common
+            else "nsfw" if "nsfw" in levels_in_common
+            else "sfw"
+        )
     else:
-        options.append(s1["options"]["level"])
+        return False, None
 
     # Check filters.
     s1_name = s1["character"]["name"].lower().encode("utf8")
     for search_filter in s2["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s1_name, search_filter))
+        logger.debug("comparing %s and %s" % (s1_name, search_filter))
         if search_filter in s1_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
     s2_name = s2["character"]["name"].lower().encode("utf8")
     for search_filter in s1["filters"]:
         search_filter = search_filter.encode("utf8")
-        print("comparing %s and %s" % (s2_name, search_filter))
+        logger.debug("comparing %s and %s" % (s2_name, search_filter))
         if search_filter in s2_name:
-            print("FILTER %s MATCHED" % search_filter)
+            logger.debug("FILTER %s MATCHED" % search_filter)
             return False, None
 
     if (
@@ -90,10 +97,13 @@ def check_compatibility(redis, s1, s2):
 def get_character_info(db, searcher):
     return searcher["character"]
 
+@celery.task(base=WorkerTask, queue="worker")
+def run():
+    db = run.db
+    redis = run.redis
 
-if __name__ == "__main__":
     run_matchmaker(
-        2, "searchers", "searcher", get_searcher_info,
+        db, redis, 2, "searchers", "searcher", get_searcher_info,
         check_compatibility, SearchedChat, get_character_info,
     )
 

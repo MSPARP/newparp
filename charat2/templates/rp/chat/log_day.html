@@ -1,0 +1,43 @@
+{% extends "rp/chat/base.html" %}
+{% macro day_navigation(): %}
+{% if previous_day or next_day: %}
+<p class="pager">
+{% if previous_day: %}
+  <span class="previous_day">&laquo; <a href="{{url_for("rp_log_day", url=url, year=previous_day.year, month=previous_day.strftime("%m"), day=previous_day.strftime("%d"))}}">{{previous_day.strftime("%Y-%m-%d")}}</a></span>
+{% endif %}
+{% if next_day: %}
+  <span class="next_day"><a href="{{url_for("rp_log_day", url=url, year=next_day.year, month=next_day.strftime("%m"), day=next_day.strftime("%d"))}}">{{next_day.strftime("%Y-%m-%d")}}</a> &raquo;</span>
+{% endif %}
+</p>
+{% endif %}
+{% endmacro %}
+{% block content: %}
+
+{{day_navigation()}}
+
+{% if own_chat_user: %}
+<form action="{{url_for("save_variables")}}" method="POST">
+    <input type="hidden" name="token" value="{{g.csrf_token}}">
+    <input type="hidden" name="chat_id" value="{{chat.id}}">
+    <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
+    <p><button>{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
+</form>
+{% endif %}
+
+<section id="archive_conversation">
+    {% if messages: %}
+    {{render_messages(messages)}}
+    {% else: %}
+    <p>No messages.</p>
+    {% endif %}
+    {% if next_day == None and own_chat_user: %}
+    <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
+    {% endif %}
+</section>
+
+{{day_navigation()}}
+
+{% endblock %}
+{% block scripts: %}
+<script>msparp.log({{"true" if own_chat_user == None or own_chat_user.show_bbcode else "false"}});</script>
+{% endblock %}

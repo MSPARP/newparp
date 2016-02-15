@@ -138,10 +138,7 @@ class User(Base):
         Enum(u"script", u"paragraph", u"either", name="user_search_style"),
         nullable=False, default=u"script",
     )
-    search_level = Column(
-        Enum(u"sfw", u"nsfw", u"nsfwe", name="user_search_level"),
-        nullable=False, default=u"sfw",
-    )
+    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=[u"sfw"])
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
@@ -151,6 +148,7 @@ class User(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_user_numbers = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
@@ -197,7 +195,7 @@ class User(Base):
             "acronym": self.acronym,
             "color": self.color,
             "search_style": self.search_style,
-            "search_level": self.search_level,
+            "search_levels": self.search_levels,
         }
         if include_options:
             ud["admin_tier"] = self.admin_tier.to_dict() if self.is_admin else None
@@ -224,8 +222,16 @@ class Block(Base):
     def __repr__(self):
         return "<Block: %s blocked %s>" % (self.blocking_user, self.blocked_user)
 
-    def to_dict(self):
-        return {"created": time.mktime(self.created.timetuple()), "reason": self.reason}
+    def to_dict(self, include_users=False):
+        bd = {
+            "chat": self.chat.to_dict(),
+            "created": time.mktime(self.created.timetuple()),
+            "reason": self.reason,
+        }
+        if include_users:
+            bd["blocking_user"] = self.blocking_user.to_dict()
+            bd["blocked_user"] = self.blocked_user.to_dict()
+        return bd
 
 
 class Character(Base):
@@ -391,11 +397,23 @@ class Chat(Base):
     # messages.
     last_message = Column(DateTime(), nullable=False, default=now)
 
-    def to_dict(self):
+    # PM chats: "/pm/(username)"
+    # Everything else: self.url
+    def computed_url(self, *args, **kwargs):
+        return self.url
+
+    # Group chats: self.title
+    # PM chats: "Messaging (username)"
+    # Searched and roulette chats: same as the URL
+    def computed_title(self, *args, **kwargs):
+        return self.url
+
+    def to_dict(self, *args, **kwargs):
         return {
             "id": self.id,
-            "url": self.url,
+            "url": self.computed_url(*args, **kwargs),
             "type": self.type,
+            "title": self.computed_title(*args, **kwargs),
         }
 
 
@@ -445,20 +463,19 @@ class GroupChat(Chat):
     def __repr__(self):
         return "<GroupChat #%s: %s>" % (self.id, self.url)
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "url": self.url,
-            "type": self.type,
-            "title": self.title,
-            "topic": self.topic,
-            "description": self.description,
-            "rules": self.rules,
-            "autosilence": self.autosilence,
-            "style": self.style,
-            "level": self.level,
-            "publicity": self.publicity,
-        }
+    def computed_title(self, *args, **kwargs):
+        return self.title
+
+    def to_dict(self, *args, **kwargs):
+        cd = super(GroupChat, self).to_dict(*args, **kwargs)
+        cd["topic"] = self.topic
+        cd["description"] = self.description
+        cd["rules"] = self.rules
+        cd["autosilence"] = self.autosilence
+        cd["style"] = self.style
+        cd["level"] = self.level
+        cd["publicity"] = self.publicity
+        return cd
 
 
 class PMChat(Chat):
@@ -467,11 +484,15 @@ class PMChat(Chat):
     def __repr__(self):
         return "<PMChat #%s: %s>" % (self.id, self.url)
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "type": self.type,
-        }
+    def computed_url(self, *args, **kwargs):
+        if "pm_user" in kwargs:
+            return "pm/" + kwargs["pm_user"].username
+        return super(PMChat, self).computed_title(*args, **kwargs)
+
+    def computed_title(self, *args, **kwargs):
+        if "pm_user" in kwargs:
+            return "Messaging " + kwargs["pm_user"].username
+        return super(PMChat, self).computed_title(*args, **kwargs)
 
 
 class RequestedChat(Chat):
@@ -539,6 +560,7 @@ class ChatUser(Base):
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
     show_system_messages = Column(Boolean, nullable=False, default=True)
+    show_user_numbers = Column(Boolean, nullable=False, default=True)
     show_bbcode = Column(Boolean, nullable=False, default=True)
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
@@ -572,6 +594,7 @@ class ChatUser(Base):
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
+            show_user_numbers=user.show_user_numbers,
             show_bbcode=user.show_bbcode,
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
@@ -600,6 +623,7 @@ class ChatUser(Base):
                 confirm_disconnect=user.confirm_disconnect,
                 desktop_notifications=user.desktop_notifications,
                 show_system_messages=user.show_system_messages,
+                show_user_numbers=user.show_user_numbers,
                 show_bbcode=user.show_bbcode,
                 show_timestamps=user.show_timestamps,
                 show_preview=user.show_preview,
@@ -612,6 +636,7 @@ class ChatUser(Base):
             confirm_disconnect=user.confirm_disconnect,
             desktop_notifications=user.desktop_notifications,
             show_system_messages=user.show_system_messages,
+            show_user_numbers=user.show_user_numbers,
             show_bbcode=user.show_bbcode,
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
@@ -687,6 +712,7 @@ class ChatUser(Base):
             ucd["meta"]["confirm_disconnect"] = self.confirm_disconnect
             ucd["meta"]["desktop_notifications"] = self.desktop_notifications
             ucd["meta"]["show_system_messages"] = self.show_system_messages
+            ucd["meta"]["show_user_numbers"] = self.show_user_numbers
             ucd["meta"]["show_bbcode"] = self.show_bbcode
             ucd["meta"]["show_timestamps"] = self.show_timestamps
             ucd["meta"]["show_preview"] = self.show_preview

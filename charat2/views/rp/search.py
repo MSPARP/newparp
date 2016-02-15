@@ -11,7 +11,7 @@ from uuid import uuid4
 from charat2.helpers import tags_to_set
 from charat2.helpers.auth import log_in_required
 from charat2.helpers.characters import validate_character_form
-from charat2.model import case_options, SearchCharacter, SearchCharacterChoice, User
+from charat2.model import case_options, GroupChat, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db, db_commit, db_disconnect
 from charat2.model.validators import color_validator
 
@@ -34,8 +34,13 @@ def search_save():
     if request.form["style"] in User.search_style.type.enums:
         g.user.search_style = request.form["style"]
 
-    if request.form["level"] in User.search_level.type.enums:
-        g.user.search_level = request.form["level"]
+    level_filter = set()
+    for level in GroupChat.level.type.enums:
+        if level in request.form:
+            level_filter.add(level)
+    if not level_filter:
+        level_filter.add("sfw")
+    g.user.search_levels = level_filter
 
     search_filters = set()
     for search_filter in request.form.getlist("search_filter"):
@@ -58,7 +63,7 @@ def search_save():
                 character_id = int(key[6:])
             except:
                 continue
-            if not character_id in all_character_ids:
+            if character_id not in all_character_ids:
                 continue
             g.db.add(SearchCharacterChoice(user_id=g.user.id, search_character_id=character_id))
 
@@ -94,14 +99,14 @@ def search_post():
     })
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
 
-    g.redis.hmset("searcher:%s:options" % searcher_id, {
-        "style": g.user.search_style,
-        "level": g.user.search_level,
-    })
-    g.redis.expire("searcher:%s:options" % searcher_id, 30)
+    g.redis.set("searcher:%s:style" % searcher_id, g.user.search_style)
+    g.redis.expire("searcher:%s:style" % searcher_id, 30)
+
+    g.redis.sadd("searcher:%s:levels" % searcher_id, *g.user.search_levels)
+    g.redis.expire("searcher:%s:levels" % searcher_id, 30)
 
     if g.user.search_filters:
-        g.redis.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters)
+        g.redis.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters) # XXX why is this a list and not a set?
     g.redis.expire("searcher:%s:filters" % searcher_id, 30)
 
     g.redis.delete("searcher:%s:choices" % searcher_id)
@@ -129,7 +134,8 @@ def search_continue():
     g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
     g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
     g.redis.expire("searcher:%s:character" % searcher_id, 30)
-    g.redis.expire("searcher:%s:options" % searcher_id, 30)
+    g.redis.expire("searcher:%s:style" % searcher_id, 30)
+    g.redis.expire("searcher:%s:levels" % searcher_id, 30)
     g.redis.expire("searcher:%s:filters" % searcher_id, 30)
     g.redis.expire("searcher:%s:choices" % searcher_id, 30)
 

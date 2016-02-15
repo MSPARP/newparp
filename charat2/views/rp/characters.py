@@ -110,7 +110,7 @@ def delete_character_post(character_id):
         g.user.default_character_id = None
         g.db.flush()
     g.db.query(CharacterTag).filter(CharacterTag.character_id == character_id).delete()
-    g.db.query(Request).filter(Request.character_id==character_id).update({ "character_id": None })
+    g.db.query(Request).filter(Request.character_id == character_id).update({ "character_id": None })
     # Don't use g.db.delete(character) because it does a load of extra queries
     # for foreign keys and stuff.
     g.db.query(Character).filter(Character.id == character_id).delete()

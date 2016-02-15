@@ -4,7 +4,10 @@
     {{ super() }}
     <div class="settings_box spamless_box admin_wide">
         <div class="settings_box_wrap">
-            <h2>Recent messages</h2>
+            <h2>Message log</h2>
+            {% if before_id: %}
+            <p><a href="{{url_for("spamless_home")}}">First page</a></p>
+            {% endif %}
             {% if messages: %}
             {{ pager() }}
             <table class="spam_table>
@@ -33,7 +36,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            {{ pager() }}
+            <p><a href="{{url_for("spamless_home", before_id=messages[-1].id)}}">Next page</a></p>
             {% else: %}
             <p>No messages.</p>
             {% endif %}

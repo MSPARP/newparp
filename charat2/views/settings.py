@@ -1,4 +1,4 @@
-from flask import g, redirect, render_template, request, url_for
+from flask import g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
@@ -22,6 +22,7 @@ def home_post():
     g.user.confirm_disconnect = "confirm_disconnect" in request.form
     g.user.desktop_notifications = "desktop_notifications" in request.form
     g.user.show_system_messages = "show_system_messages" in request.form
+    g.user.show_user_numbers = "show_user_numbers" in request.form
     g.user.show_bbcode = "show_bbcode" in request.form
     g.user.show_timestamps = "show_timestamps" in request.form
     g.user.show_preview = "show_preview" in request.form
@@ -56,8 +57,9 @@ timezones = {
 @use_db
 @log_in_required
 def timezone():
-    if request.form["timezone"] in timezones:
-        g.user.timezone = request.form["timezone"]
+    chosen_timezone = request.form.get("timezone", "").replace(" ", "_")
+    if chosen_timezone in timezones:
+        g.user.timezone = chosen_timezone
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return "", 204
     return redirect(url_for("settings"))
@@ -106,16 +108,16 @@ def change_password():
 
 @use_db
 @log_in_required
-def blocks():
-    return render_template(
-        "settings/blocks.html",
-        blocks=(
+def blocks(fmt=None):
+    blocks = (
             g.db.query(Block)
             .filter(Block.blocking_user_id == g.user.id)
             .options(joinedload(Block.chat), joinedload(Block.blocked_chat_user))
             .order_by(Block.created.desc()).all()
-        ),
-    )
+        )
+    if fmt == "json":
+        return jsonify({"blocks": [_.to_dict() for _ in blocks]})
+    return render_template("settings/blocks.html", blocks=blocks)
 
 
 @use_db

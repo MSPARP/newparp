@@ -197,10 +197,6 @@ def halt(signal=None, frame=None):
 
 if __name__ == "__main__":
 
-    print("Obtaining lock...")
-    db.query(func.pg_advisory_lock(413, 4)).scalar()
-    print("Lock obtained.")
-
     load_lists()
 
     signal.signal(signal.SIGTERM, halt)

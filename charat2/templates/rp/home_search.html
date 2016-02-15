@@ -149,9 +149,11 @@
                 </div>
                 <div>
                     <span class="textlabel">Content:</span>
-                    {% for value in User.search_level.type.enums: %}
-                    <div class="input"><input type="radio" name="level" id="radio_{{value}}" value="{{value}}" {% if value == g.user.search_level %} checked{% endif %}><label for ="radio_{{value}}">{{value.upper()}}</label></div>
-                    {% endfor %}
+                    <p>
+                        <div class="input"><input type="checkbox" id="content_sfw" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_sfw">SFW</label></div>
+                        <div class="input"><input type="checkbox" id="content_nsfw" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfw">NSFW</label></div>
+                        <div class="input"><input type="checkbox" id="content_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfwe">NSFW extreme</label></div>
+                    </p>
                 </div>
                 </div>
                 <h3>Filter out names containing...</h3>
@@ -177,7 +179,7 @@
             <input id="toggle_filter" type="checkbox">
             <h2 class="enable_anim"><label for="toggle_search_for_characters"><span>With filters</span></label></h2>
             <div id="filter_settings">
-        <span class="textlabel">click &#x25BE;/&#x25B4; to expand or collapse categories</span>
+            <span class="textlabel">click &#x25BE;/&#x25B4; to expand or collapse categories</span>
                 {% for group in search_character_groups: %}
                 <fieldset class="character_list">
                     <legend><div class='input'><input id="group_{{group.id}}" name="group_{{group.id}}" type="checkbox"><label for="group_{{group.id}}">{{group.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_group_{{group.id}}"><label for="toggle_group_{{group.id}}"><span class="groupcount"></span></label>

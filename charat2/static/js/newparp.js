@@ -1105,7 +1105,7 @@ var msparp = (function() {
 				},
 				{
 					"regex": /^lookup (\d+)$/,
-					"chat_types": "group",
+					"chat_types": "all",
 					"minimum_rank": Infinity,
 					"description": function(match) {
 						var set_user = user_data[parseInt(match[1])];
@@ -1460,6 +1460,7 @@ var msparp = (function() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
                 user.meta.show_preview ? $("#send_form").removeClass("no_preview") : $("#send_form").addClass("no_preview") ;
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
+				user.meta.show_user_numbers ? conversation.removeClass("hide_user_numbers") : conversation.addClass("hide_user_numbers");
 				resize_conversation();
 			}
 			$("#subscribed").click(function() {
