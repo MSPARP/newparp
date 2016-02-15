@@ -74,6 +74,13 @@ def broadcast_post():
         color = request.form["color"]
     if not color_validator.match(color):
         abort(400)
+        
+    if request.form["headercolor"][0] == "#":
+        headercolor = request.form["headercolor"][1:]
+    else:
+        headercolor = request.form["headercolor"]
+    if not color_validator.match(headercolor):
+        abort(400)
 
     g.db.add(AdminLogEntry(
         action_user=g.user,
@@ -88,6 +95,7 @@ def broadcast_post():
             "posted": time.time(),
             "type": "global",
             "color": color,
+            "headercolor": headercolor,
             "acronym": "",
             "name": "",
             "text": text,

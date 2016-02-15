@@ -829,7 +829,7 @@ var msparp = (function() {
 
 				// Post all global messages as a notification banner.
 				if (message.type.indexOf("global") !== -1 && message.important) {
-					announcement_banner(message.title, message.text);
+					announcement_banner(message.title, message.text, message.headercolor);
 				}
 
 				if (
@@ -1712,11 +1712,12 @@ var msparp = (function() {
 			// Global announcements
 			var announcement_template = Handlebars.compile($("#announce_template").html());
 
-			function announcement_banner(title, text) {
+			function announcement_banner(title, text, headercolor) {
 				$("#global_announcements").append(announcement_template({
 					announce: {
 						title: title,
-						text: text
+						text: text,
+                        headercolor: headercolor
 					}
 				}));
 				setTimeout(function(){ $(".announcement").addClass("show"); }, 100);
@@ -1724,7 +1725,6 @@ var msparp = (function() {
 
 			body.on("click", ".announcement", function() {
 				var announcement = $(this);
-
 				announcement.removeClass("show");
 				setTimeout(function() {
 					announcement.remove();
