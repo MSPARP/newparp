@@ -1311,6 +1311,8 @@ button.enter {margin:25px auto 0 auto !important; min-width:100% !important;widt
 .settings_box {border-right:none !important}
 }
 
+body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
+
 /* 3.2. Searching */
 
 #spinner { width: 140px; height: 140px; margin: 0 auto; }
