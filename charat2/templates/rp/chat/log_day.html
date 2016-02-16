@@ -13,29 +13,66 @@
 {% endmacro %}
 {% block content: %}
 
-{{day_navigation()}}
+<div id="chat_wrapper" class="log_wrapper">
+    <div id="chat_content">
+    
+        <nav id="global_navigation" class="in_chat_nav in_log_nav">
+            {% if g.user and g.unread_chats and g.unread_chats > 0: %}
+            <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}" target="_blank">{{g.unread_chats}}</a>
+            {% endif %}
+            <label for="nav_toggle" class="hide_nav"> Menu</label>
+            <input type="checkbox" id="nav_toggle" class="hide_nav">
+            <ul>
+                <li><a href="{{url_for("home", mode="search")}}" target="_blank"><span class="long">Character search</span><span class="short">Search</span></a></li>
+                <li><a href="{{url_for("home", mode="roulette")}}" target="_blank">Roulette</a></li>
+                <li><a href="{{url_for("rp_groups")}}" target="_blank"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
+                <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
+                {% if g.user: %}
+                {% if g.user.is_admin: %}
+                <li><a href="{{url_for("admin_home")}}" target="_blank">Admin</a></li>
+                {% endif %}
+                <li class="user">
+                    <a href="#">{{g.user.username}}</a>
+                    <ul>
+                        <li><a href="{{url_for("rp_chat_list")}}" target="_blank">Your chats</a></li>
+                        <li><a href="{{url_for("rp_character_list")}}" target="_blank">Character creator</a></li>
+                        <li><a href="{{url_for("settings")}}" target="_blank">Settings</a></li>
+                        <li><form action="{{url_for("log_out")}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Log out</button></form></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
 
-{% if own_chat_user: %}
-<form action="{{url_for("save_variables")}}" method="POST">
-    <input type="hidden" name="token" value="{{g.csrf_token}}">
-    <input type="hidden" name="chat_id" value="{{chat.id}}">
-    <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
-    <p><button>{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
-</form>
-{% endif %}
+        <div class="log_top_nav">{{day_navigation()}}</div>
 
-<section id="archive_conversation">
-    {% if messages: %}
-    {{render_messages(messages)}}
-    {% else: %}
-    <p>No messages.</p>
-    {% endif %}
-    {% if next_day == None and own_chat_user: %}
-    <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
-    {% endif %}
-</section>
+        <section id="archive_conversation">
+             {% if own_chat_user: %}
+            <form action="{{url_for("save_variables")}}" method="POST">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <input type="hidden" name="chat_id" value="{{chat.id}}">
+                <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
+                {% if own_chat_user.show_system_messages: %}
+                    <p class="hideshow_log_button"><button id="hideshow_system">{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
+                {% endif %}
+            </form>
+            {% endif %}
+            <div id="conversation_wrap">
+                {% if messages: %}
+                {{render_messages(messages)}}
+                {% else: %}
+                <p>No messages.</p>
+                {% endif %}
+                {% if next_day == None and own_chat_user: %}
+                <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
+                {% endif %}
+            </div>
+        </section>
 
-{{day_navigation()}}
+        <div class="log_bottom_nav">{{day_navigation()}}</div>
+    
+    </div>
+</div>
 
 {% endblock %}
 {% block scripts: %}

@@ -1502,6 +1502,8 @@ section > .close:first-child { float: right; margin: 5px; }
 #info_panel_link, #invites_link a{text-decoration:underline}
 #info_panel_link:hover, #info_panel_link:focus, #invites_link a:hover, #invites_link a:focus {text-decoration:none;outline:0}
 
+#global_navigation.in_chat_nav .hide_nav, #global_navigation.in_chat_nav .mobile_nav  {padding-left:35px}
+
 /* 4.1. Topbar and info panel */
 
 #global_navigation.in_chat_nav li {margin:0px;margin-left:10px}
@@ -1589,6 +1591,9 @@ body:not(.no_forms) .sidebar .input textarea + label {
 .chatting.has_right_tabs #chat_wrapper #sidebar_tabs, .chatting.has_left_tabs #chat_wrapper #sidebar_left_tabs {display:block}
 
 .pm_chat_list_container_open #pm_chat_list_container, .user_list_container_open #user_list_container, .settings_open #settings, .switch_character_open #switch_character,  .side_info_open #side_info, .my_chats_open #my_chats {display:block}
+
+.my_chats_only #my_chats {display:block;z-index:1}
+.my_chats_only.my_chats_open #my_chats, .my_chats_open #my_chats {display:block;z-index:2}
 
 .sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom: 17px; left: 5px; z-index: 1; background-color: #eee; -webkit-overflow-scrolling: touch; }
 .has_left_tabs .sidebar.left {bottom:37px}
@@ -1700,26 +1705,26 @@ body:not(.no_forms) .sidebar_submit button:active {padding-right:29px}
 
 /* 4.4. Conversation and send form */
 
-#conversation { position: absolute; top: 46px; right: 5px; bottom: 72px; left: 8px; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
+#conversation, #archive_conversation { position: absolute; top: 46px; right: 5px; bottom: 72px; left: 8px; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 #conversation_wrap {min-height:100%;box-sizing:border-box;}
 #conversation div, #archive_conversation div { clear: both; overflow: hidden; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #666; }
 
-.hide_system_messages > .message_join,
-.hide_system_messages > .message_disconnect,
-.hide_system_messages > .message_timeout,
-.hide_system_messages > .message_user_info,
-.hide_system_messages > .message_user_group,
-.hide_system_messages > .message_user_action,
-.hide_system_messages > .message_chat_meta { display: none; }
+.hide_system_messages .message_join,
+.hide_system_messages .message_disconnect,
+.hide_system_messages .message_timeout,
+.hide_system_messages .message_user_info,
+.hide_system_messages .message_user_group,
+.hide_system_messages .message_user_action,
+.hide_system_messages .message_chat_meta { display: none; }
 
-#conversation #conversation_wrap {margin-left:32px;border-left:3px solid #ccc;padding: 2px 0; overflow:visible}
-#conversation #conversation_wrap div[class*='message'] {overflow:visible}
+#conversation #conversation_wrap, #archive_conversation #conversation_wrap {margin-left:32px;border-left:3px solid #ccc;padding: 2px 0; overflow:visible}
+#conversation #conversation_wrap div[class*='message'], #archive_conversation #conversation_wrap div[class*='message'] {overflow:visible}
 
-#conversation h2 {color:#a0a0a0;border-bottom:3px double #e0e0e0; font-size:12px}
+#conversation h2, #archive_conversation h2 {color:#a0a0a0;border-bottom:3px double #e0e0e0; font-size:12px}
 
-#conversation .unum { float: left; position:relative;overflow:visible;display:block;width:32px;text-align:right; padding-top:3px;font-size:90%;color:#696969;white-space:nowrap;margin-left:-37px}
+#conversation .unum, #archive_conversation .unum { float: left; position:relative;overflow:visible;display:block;width:32px;text-align:right; padding-top:3px;font-size:90%;color:#696969;white-space:nowrap;margin-left:-37px}
 .unum .unum_hash {font-size:80%;color:#a0a0a0}
 .unum:hover, .unum:focus, .unum:hover + p, .unum:focus + p {background:#e0e0e0}
 .highlighted .unum:hover + p {background:#d5d5d5}
@@ -1792,7 +1797,7 @@ border-color:  transparent #f4f4f4;
 .timestamp { display: none; }
 p:hover > .timestamp { display: block; float: right; font-size:90%;color:#696969; }
 
-#conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
+#conversation hr, #archive_conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
 
 #send_form { position: absolute; right: 5px; bottom: 5px; left: 8px; padding: 0 2px; background: #eee}
 #button_wrap {float:right;position:absolute;bottom:6px;right:10px}
@@ -1826,6 +1831,8 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 #abscond_button { margin-left: -2px; }
 .log_button { display: inline-block; color: #000; text-decoration: none; margin:5px}
 
+#send_form_wrap.abscond_again {margin-right:168px}
+
 #chat_line_input {font-weight:normal}
 
 @media (max-width: 400px) {
@@ -1839,14 +1846,25 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 
 /* hide user numbers if disabled */
 
-#conversation.hide_user_numbers .unum{display:none !important}
-#conversation.hide_user_numbers #conversation_wrap {border-left:none;margin-left:0px;padding-left:3px}
+#conversation.hide_user_numbers .unum, #archive_conversation.hide_user_numbers .unum {display:none !important}
+#conversation.hide_user_numbers #conversation_wrap, #archive_conversation.hide_user_numbers #conversation_wrap {border-left:none;margin-left:0px;padding-left:3px}
 
 /* 4.5. Log pages */
 
-.chat .pager, #archive_conversation { margin: 5px; padding: 2px 0; background-color: #eee; }
+.chat .pager { margin:0;background-color: #eee; line-height:20px}
 .chat .pager { padding: 2px 5px; overflow: hidden; }
 .next_day { float: right; }
+
+.log_top_nav, .log_bottom_nav {position:absolute;left:8px;right:8px;}
+.log_top_nav {top:46px}
+.log_bottom_nav {bottom:6px}
+ #archive_conversation {bottom:33px;top:73px;right:8px}
+ .hideshow_log_button {position:absolute;top:2px;right:20px;z-index:1}
+ 
+ @media (max-width: 460px) {
+.hideshow_log_button {position:static;margin:0;}
+#hideshow_system {width:100%}
+ }
 
 /* 4.6. Global Announcements */
 
@@ -1864,15 +1882,17 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 
 #chat_wrapper {position:fixed;left:0px;right:0px;top:0px;bottom:0px}
 
-@media (min-width: 1000px) and (min-height: 550px) {#chat_wrapper {border-radius:10px; top:8px; bottom:8px}}
-@media (min-width: 1000px) {#chat_wrapper {left:10px;right:10px;} .unum #action_list ul {width:420px;} .unum #action_list .action_user_title {max-width:420px;}}
-@media (min-width: 1300px) {#chat_wrapper {left:10px;right:10px} .unum #action_list ul {width:500px;} .unum #action_list .action_user_title {max-width:500px;}}
-@media (min-width: 1460px) {#chat_wrapper {left:3%;right:3%}}
-@media (min-width: 1650px) {#chat_wrapper {left:6%;right:6%} .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px; left:260px} .sidebar {width:250px} #sidebar_tabs, #sidebar_left_tabs {width:246px} #chat_logo {top:10px; width:260px;height:60px;background-size: 260px 60px}}
-@media (min-width: 1750px) {#chat_wrapper {left:7%;right:7%}}
-@media (min-width: 1900px) {#chat_wrapper {left:8%;right:8%}}
-@media (min-width: 2000px) {#chat_wrapper {left:10%;right:10%}}
-@media (min-width: 2200px) {#chat_wrapper {left:13%;right:13%}}
+@media (min-width: 700px) { #chat_wrapper.log_wrapper {left:2%; right:2%}}
+@media (min-width: 900px) { #chat_wrapper.log_wrapper {left:3.5%; right:3.5%}}
+@media (min-width: 1000px) and (min-height: 550px) {#chat_wrapper {border-radius:10px; top:8px; bottom:8px}} 
+@media (min-width: 1000px) {#chat_wrapper {left:10px;right:10px;} #chat_wrapper.log_wrapper {left:5%; right:5%} .unum #action_list ul {width:420px;} .unum #action_list .action_user_title {max-width:420px;}}
+@media (min-width: 1300px) {#chat_wrapper {left:10px;right:10px} #chat_wrapper.log_wrapper {left:7%; right:7%} .unum #action_list ul {width:500px;} .unum #action_list .action_user_title {max-width:500px;}}
+@media (min-width: 1460px) {#chat_wrapper {left:3%;right:3%} #chat_wrapper.log_wrapper {left:10%; right:10%}}
+@media (min-width: 1650px) {#chat_wrapper {left:6%;right:6%} #chat_wrapper.log_wrapper {left:12%; right:12%} .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px; left:260px} .sidebar {width:250px} #sidebar_tabs, #sidebar_left_tabs {width:246px} #chat_logo {top:10px; width:260px;height:60px;background-size: 260px 60px}}
+@media (min-width: 1750px) {#chat_wrapper {left:7%;right:7%} #chat_wrapper.log_wrapper {left:14%; right:14%}}
+@media (min-width: 1900px) {#chat_wrapper {left:8%;right:8%} #chat_wrapper.log_wrapper {left:15%; right:15%}}
+@media (min-width: 2000px) {#chat_wrapper {left:10%;right:10%} #chat_wrapper.log_wrapper {left:17%; right:17%}}
+@media (min-width: 2200px) {#chat_wrapper {left:13%;right:13%} #chat_wrapper.log_wrapper {left:20%; right:20%}}
 
 
 @media (max-height: 600px) {
@@ -1881,6 +1901,7 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 	#topbar ~ #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 62px; }
 	#connection_method, #chat_logo {display:none}
 	#sidebar_tabs, #topbar {top:37px}
+	.log_top_nav {top:37px} #archive_conversation {top:64px}
 	}
 
 /* collapse left column */
@@ -1892,8 +1913,8 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 	.sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
 	.sidebar.left .sidebar_title{text-align:left}
 	.sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
-	.has_left_tabs .sidebar {bottom:37px}
-	#sidebar_left_tabs {position:absolute;width:226px;bottom:11px;left:auto;right:6px}
+	.sidebar {bottom:37px}
+	#chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
 	
 	/* collapse sidebar switching into single bar */
 	#side_info {display:none !important}
@@ -1954,6 +1975,7 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 36px; }
 	#connection_method, #chat_logo {display:none}
 	#sidebar_tabs {top:11px}
+	.log_top_nav {top:36px} #archive_conversation {top:63px}
 	
 }
 
@@ -1979,10 +2001,14 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 	.unum_hash {display:none}
 	.unum {width:28px;margin-left:-33px}
 	#conversation #conversation_wrap {margin-left:28px; border-left:2px solid #ccc;}
-	#global_navigation.in_chat_nav .hide_nav{display:none}
-	#global_navigation.in_chat_nav .mobile_nav{display:block}
-	.mobile_nav_wrap {display:block}
-	#global_navigation.in_chat_nav li { display: none}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .hide_nav{display:none}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .mobile_nav{display:block}
+	#chat_wrapper:not(.log_wrapper) .mobile_nav_wrap {display:block}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav li { display: none}
+	.log_top_nav {top:34px} #archive_conversation {top:61px}
+	.log_bottom_nav {bottom:0px}
+	#archive_conversation {bottom:27px}
+	#archive_conversation, .log_top_nav, .log_bottom_nav {left:0px;right:0px}
 	
 	.chatting > .sidebar.mobile_override, .sidebar.mobile_override {display:block !important;position:fixed !important;top:33px !important;left:0px !important;right:0px !important;bottom:0px !important;width:100% !important;z-index:1 !important}
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:-31px;float:right;margin-right:9px}

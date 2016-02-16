@@ -10,7 +10,7 @@
             {% if g.user and g.unread_chats and g.unread_chats > 0: %}
             <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}" target="_blank">{{g.unread_chats}}</a>
             {% endif %}
-            <label for="mobile_nav_toggle" class="mobile_nav"></label>
+            <label for="mobile_nav_toggle" class="mobile_nav">{% if chat.type in ("searched", "roulette", "pm"): %} Menu{% endif %}</label>
             <input type="checkbox" id="mobile_nav_toggle">
             <div class="mobile_nav_wrap">
                 {% if g.user: %}
@@ -46,7 +46,7 @@
                 {% endif %}
                 
             </div>
-            <label for="nav_toggle" class="hide_nav"></label>
+            <label for="nav_toggle" class="hide_nav">{% if chat.type in ("searched", "roulette", "pm"): %} Menu{% endif %}</label>
             <input type="checkbox" id="nav_toggle" class="hide_nav">
             <ul>
                 <li><a href="{{url_for("home", mode="search")}}" target="_blank"><span class="long">Character search</span><span class="short">Search</span></a></li>
@@ -393,17 +393,15 @@
         <section id="sidebar_tabs">
             {% if chat.type != "roulette": %}
                 <button type="button" disabled="disabled" class="user_list_button mobile_button">Users</button>
-            {% endif %}
             {% if chat.type != "pm": %}
                 <button type="button" disabled="disabled" class="switch_character_button">Characters</button>
+            {% endif %}
             {% endif %}
                 <button type="button" disabled="disabled" class="settings_button">Settings</button>
         </section>
         
         <section id="sidebar_left_tabs">
-            {% if chat.type in ("group", "pm"): %}
                 <button type="button" disabled="disabled" class="my_chats_button">My chats</button>
-            {% endif %}
         </section>
 
         <form id="send_form">

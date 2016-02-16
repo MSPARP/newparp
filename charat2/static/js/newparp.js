@@ -581,6 +581,8 @@ var msparp = (function() {
 				set_sidebar(null);
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
+                if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
+                $("#connection_method").css("display", "none");
 			}
 			function disconnect() {
 				exit();
@@ -1265,6 +1267,14 @@ var msparp = (function() {
 				) { sidebar_defaults = "user_list_container_open side_info_open"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "my_chats_open";}
                 else if (
 					!sidebar_defaults && status == "chatting"
+					&& chat.type == "searched"
+				) { sidebar_defaults = "user_list_container_open my_chats_only"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "";}
+                else if (
+					!sidebar_defaults && status == "chatting"
+					&& chat.type == "roulette"
+				) { sidebar_defaults = "switch_character_open my_chats_only"; sidebars_right = "settings_open"; sidebars_left = "";}
+                else if (
+					!sidebar_defaults && status == "chatting"
 					&& chat.type == "pm"
 				) { sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"}
                 if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
@@ -1776,6 +1786,11 @@ var msparp = (function() {
 		"log": function(show_bbcode) {
 			// Perform BBCode conversion
 			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
+            // Toggle system messages off/on, only if enabled otherwise
+            $("#hideshow_system").click(function() {
+            $("#archive_conversation").hasClass("hide_system_messages") ? $("#archive_conversation").removeClass("hide_system_messages") : $("#archive_conversation").addClass("hide_system_messages");
+            $("#archive_conversation").hasClass("hide_system_messages") ? $("#hideshow_system").text("Show system messages") : $("#hideshow_system").text("Hide system messages");
+            });
 		},
 		// Broadcast page
 		"broadcast": function() {
