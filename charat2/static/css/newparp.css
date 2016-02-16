@@ -1315,10 +1315,15 @@ button.enter {margin:25px auto 0 auto !important; min-width:100% !important;widt
 
 #spinner { width: 140px; height: 140px; margin: 0 auto; }
 
+#search_connecting, #search_error {font-family: 'VT323', monospace;font-weight:normal;text-transform:uppercase}
+
 #search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
+#search_connecting {font-size:22pt}
 #spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
 .searching #spinner, .search_error #search_error { display: block; }
 #search_error { color: #f00; }
+
+#spinner_image {background:url('/static/img/spinner-big.gif'); background-size:140px 140px;width:140px;height:140px}
 
 /* 3.3. Group chats */
 
@@ -2052,6 +2057,9 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 
 #activity_spinner {background-image:url('/static/img/activity_spinner_off@2x.png');}
 #activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/activity_spinner@2x.gif');}
+
+#spinner_image {background:url('/static/img/spinner-big@2x.gif'); background-size:140px 140px;}
+
 
 }
 
