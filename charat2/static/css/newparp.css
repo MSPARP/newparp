@@ -1433,6 +1433,9 @@ body:not(.no_forms) .remove_sl_item:active {background: #626262; padding-right:4
 .sl_points:before {content: "( "}
 .sl_points:after {content: " )"}
 
+.explanation_link {color:#026CB1;cursor:pointer}
+.explanation {color: #555;font-size:90%}
+
 @media (max-width: 400px) {
 body:not(.no_forms) .settings_box .input.select select {max-width:150px}
 }

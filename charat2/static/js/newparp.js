@@ -67,6 +67,8 @@ var msparp = (function() {
 	
 				
 	/* Enable per-device settings that don't require pre-render hooks */
+    var dev_user_safe_bbcode = "false";
+	
 	if (localstorage) {
 		$( document ).ready(function() {
 			material_feedback=localStorage.getItem("material_feedback");
@@ -78,6 +80,11 @@ var msparp = (function() {
 				$("body").addClass("no_moving");
 			}
 		});
+        // set default to safe bbcode
+        if (!localStorage.getItem("safe_bbcode")) { localStorage.setItem("safe_bbcode", "true"); }
+		if (localStorage.getItem("safe_bbcode") == "true") {
+			dev_user_safe_bbcode = "true";
+		}
 	} 
 	
 	// Live update when switching in settings
@@ -295,8 +302,12 @@ var msparp = (function() {
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
-		text = text.replace(/(\[br\])+/g, "<br>");
-		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
+		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
+        if (dev_user_safe_bbcode == "true") { 
+            // convert tags to lowercase so the opening and closing groups don't have to match in casing
+            text = text.replace(/(\[.+?\])(?:.+?)(\[\/.+?\])/g, function(a,x,y){ return a.replace(x,x.toLowerCase()).replace(y,y.toLowerCase()); }); 
+        }
+        return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
 			if (url) {
 				var suffix = "";
 				// Exclude a trailing closing bracket if there isn't an opening bracket.
@@ -342,7 +353,7 @@ var msparp = (function() {
 		});
 	}
 	function bbremove(text) {
-		text = text.replace(/(\[br\])+/g, "");
+		text = text.replace(/(\[[bB][rR]\])+/g, "");
 		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
 	}
 
@@ -1688,16 +1699,26 @@ var msparp = (function() {
 				// Ordinary replacements. Escape any regex control characters before replacing.
 				character.replacements.forEach(function(replacement) {
 					RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
-					var re = new RegExp(RegExp.quote(replacement[0]), "g");
+                    if (dev_user_safe_bbcode == "true") { 
+                        // if safe_bbcode is on, exclude quirking within [brackets]
+                        var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\\[\\]]*\\])", "g");
+                    } else {
+                        var re = new RegExp(RegExp.quote(replacement[0]), "g");
+                    }
 					text = text.replace(re, replacement[1]);
 				});
 				// Regex replacements
 				character.regexes.forEach(function(replacement) {
 					try {
-						re = new RegExp(replacement[0], "g");
+                        if (dev_user_safe_bbcode == "true") { 
+                            // if safe_bbcode is on, exclude quirking within [brackets]
+                            var re = new RegExp(replacement[0] + "(?![^\\[\\]]*\\])", "g");
+                        } else {
+                            var re = new RegExp(replacement[0], "g");
+                        }
 						text = text.replace(re, replacement[1]);
 					} catch (e) {
-						text = "Regex parsing error :(";
+						text = "A young person stands in their bedroom. They don't know Regexp.";
 						return;
 					}
 				});
