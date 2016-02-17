@@ -38,7 +38,7 @@ var msparp = (function() {
 			});
 			var localstorage = "yes";
 	
-	} catch (e) {}
+	} catch (e) {var localstorage = false;}
 	
 	// Apply toggle box state to filter & stem column, hide small toggle if open, wait for IE
 	$("#toggle_search_for_characters").ready(function() {
@@ -67,7 +67,10 @@ var msparp = (function() {
 	
 				
 	/* Enable per-device settings that don't require pre-render hooks */
-    var dev_user_safe_bbcode = "false";
+	var dev_user_safe_bbcode = "false";
+	var dev_user_smart_quirk = "false";
+	var dev_user_smart_action_delimiter = "*";
+	var dev_user_smart_dialogue_delimiter = '"';
 	
 	if (localstorage) {
 		$( document ).ready(function() {
@@ -80,12 +83,29 @@ var msparp = (function() {
 				$("body").addClass("no_moving");
 			}
 		});
-        // set default to safe bbcode
-        if (!localStorage.getItem("safe_bbcode")) { localStorage.setItem("safe_bbcode", "true"); }
+		// set default to safe bbcode
+		if (localStorage.getItem("safe_bbcode") === null) { localStorage.setItem("safe_bbcode", "true"); }
 		if (localStorage.getItem("safe_bbcode") == "true") {
 			dev_user_safe_bbcode = "true";
 		}
+		if (localStorage.getItem("smart_quirk") == "true") {
+			dev_user_smart_quirk = "true";
+		}
+		if (localStorage.getItem("smart_action_delimiter") !== null) { 
+			dev_user_smart_action_delimiter = localStorage.getItem("smart_action_delimiter"); 
+		}
+		 if (localStorage.getItem("smart_dialogue_delimiter") !== null) { 
+			dev_user_smart_dialogue_delimiter = localStorage.getItem("smart_dialogue_delimiter"); 
+		}
+		
+		// Update smart quirk delimiters
+		$("#smart_action_delimiter").change(function() { localStorage.setItem("smart_action_delimiter", $("#smart_action_delimiter").val() )});
+		$("#smart_dialogue_delimiter").change(function() { localStorage.setItem("smart_dialogue_delimiter", $("#smart_dialogue_delimiter").val() )});
 	} 
+	
+	// Populate smart quirk delimiters
+	$("#smart_action_delimiter").ready(function() { $("#smart_action_delimiter").val(dev_user_smart_action_delimiter) });
+	$("#smart_dialogue_delimiter").ready(function() { $("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter) });
 	
 	// Live update when switching in settings
 	$("#basic_forms").click(function() {
@@ -96,6 +116,10 @@ var msparp = (function() {
 	});
 	$("#disable_animations").click(function() {
 		$("body").toggleClass("no_moving");
+	});
+	$("#smart_quirk").click(function() {
+		if ($("#smart_quirk").is(':checked')) {dev_user_smart_quirk = "true";}
+		else { dev_user_smart_quirk = "false"; }
 	});
 				
 	// Character info
@@ -303,11 +327,11 @@ var msparp = (function() {
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
-        if (dev_user_safe_bbcode == "true") { 
-            // convert tags to lowercase so the opening and closing groups don't have to match in casing
-            text = text.replace(/(\[.+?\])(?:.+?)(\[\/.+?\])/g, function(a,x,y){ return a.replace(x,x.toLowerCase()).replace(y,y.toLowerCase()); }); 
-        }
-        return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
+		if (dev_user_safe_bbcode == "true") { 
+			// convert tags to lowercase so the opening and closing groups don't have to match in casing
+			text = text.replace(/(\[.+?\])(?:.+?)(\[\/.+?\])/g, function(a,x,y){ return a.replace(x,x.toLowerCase()).replace(y,y.toLowerCase()); }); 
+		}
+		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
 			if (url) {
 				var suffix = "";
 				// Exclude a trailing closing bracket if there isn't an opening bracket.
@@ -566,7 +590,7 @@ var msparp = (function() {
 				body.addClass("chatting");
 				set_sidebar(null);
 				if (chat.type == "pm") { refresh_pm_chat_list(); }
-                refresh_my_chats_list();
+				refresh_my_chats_list();
 				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
@@ -592,8 +616,8 @@ var msparp = (function() {
 				set_sidebar(null);
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
-                if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
-                $("#connection_method").css("display", "none");
+				if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
+				$("#connection_method").css("display", "none");
 			}
 			function disconnect() {
 				exit();
@@ -710,8 +734,8 @@ var msparp = (function() {
 					} else {
 						user_list.html(user_list_template(data));
 						user_list.find("li").click(render_action_list);
-                        $("#conversation_wrap").off();
-                        $("#conversation_wrap").on("click", ".unum:not(.cnum_noclick)", render_action_list);
+						$("#conversation_wrap").off();
+						$("#conversation_wrap").on("click", ".unum:not(.cnum_noclick)", render_action_list);
 						// Re-render the action list if necessary.
 						if (action_user != null) {
 							var action_user_number = action_user.meta.number;
@@ -746,15 +770,15 @@ var msparp = (function() {
 						if (previous_status_message) {
 							status_bar.text(previous_status_message);
 							previous_status_message = null;
-                            $("#activity_spinner").removeClass("active_sb");
-                            $("#activity_spinner").attr("title", "No activity");
+							$("#activity_spinner").removeClass("active_sb");
+							$("#activity_spinner").attr("title", "No activity");
 						}
 					} else {
 						if (!previous_status_message) { previous_status_message = status_bar.text(); }
 						var name = chat.type == "pm" ? chat.url.substr(3) : chat.type == "roulette" ? "▼" : "Someone";
 						status_bar.text(name + " is typing...");
-                        $("#activity_spinner").addClass("active_sb");
-                        $("#activity_spinner").attr("title", "Someone is typing...");
+						$("#activity_spinner").addClass("active_sb");
+						$("#activity_spinner").attr("title", "Someone is typing...");
 					}
 				}
 				if (chat.type == "pm" && typeof data.pm != "undefined") {
@@ -1169,7 +1193,7 @@ var msparp = (function() {
 				$("#topbar, #info_panel_link").click(function() {
 					if (status != "chatting") { return false; }
 					edit_info_panel.css("display") == "block" ? edit_info_panel.hide() : info_panel.toggle();
-                    $(".sidebar").removeClass("mobile_override");
+					$(".sidebar").removeClass("mobile_override");
 					return false;
 				});
 				// There are several places where we show the topic, so we use this to update them all.
@@ -1231,91 +1255,117 @@ var msparp = (function() {
 				}
 			}
 
-            // My Chats
-            // currently saves filter preference to localStorage
-            var my_chats = $("#my_chats");
+			// My Chats
+			// currently saves filter preference to localStorage
+			var my_chats = $("#my_chats");
 			var my_chats_list = $("#my_chats_list");
 			var my_chats_template = Handlebars.compile($("#my_chats_template").html());
 			Handlebars.registerHelper("current_chat", function() {
 				return this.chat.url == chat.url;
 			});
 			if (localstorage) {
-                saved_type_filter = localStorage.getItem("type_filter_preference");
-                if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter)}
-            }
-            function refresh_my_chats_list() {
+				saved_type_filter = localStorage.getItem("type_filter_preference");
+				if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter)}
+			}
+			function refresh_my_chats_list() {
 				$.get("/chats.json", {}, function(data) {
 					my_chats_list.html(my_chats_template(data));
 				});
-                $("#my_chats_list").removeClass();
-                $("#my_chats_list").addClass("show_" + $("#type_filter").val());
+				$("#my_chats_list").removeClass();
+				$("#my_chats_list").addClass("show_" + $("#type_filter").val());
 			}
-            
-            // refresh list on opening
-            $(".my_chats_button").click(function() { if (!$("#chat_wrapper").hasClass("my_chats_open")) { refresh_my_chats_list();} });
-                        
-            // Filter My Chats
-            $("#type_filter").change(function() {
-                $("#my_chats_list").removeClass();
-                $("#my_chats_list").addClass("show_" + $("#type_filter").val());
-                if (localstorage) {
-                    localStorage.setItem("type_filter_preference", $("#type_filter").val());
-                }
-                refresh_my_chats_list();
-            }); 
-            
+			
+			// refresh list on opening
+			$(".my_chats_button").click(function() { if (!$("#chat_wrapper").hasClass("my_chats_open")) { refresh_my_chats_list();} });
+						
+			// Filter My Chats
+			$("#type_filter").change(function() {
+				$("#my_chats_list").removeClass();
+				$("#my_chats_list").addClass("show_" + $("#type_filter").val());
+				if (localstorage) {
+					localStorage.setItem("type_filter_preference", $("#type_filter").val());
+				}
+				refresh_my_chats_list();
+			}); 
+			
 			// Sidebars
 			var sidebars = $(".sidebar");
-            // Set sidebar css trigger defaults, along with a list of closeable sidebar options so buttons can eliminate other open bars
+			// Set sidebar css trigger defaults, along with a list of closeable sidebar options so buttons can eliminate other open bars
 			var sidebar_defaults = "";
-            var sidebars_right = "";
-            var sidebars_left = "";
-            var last_sidebar_state = "";
+			var sidebars_right = "";
+			var sidebars_left = "";
+			var last_sidebar_state = "";
 			function set_sidebar(sidebar_defaults) {
 				if (
 					!sidebar_defaults && status == "chatting"
 					&& chat.type == "group"
 				) { sidebar_defaults = "user_list_container_open side_info_open"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "my_chats_open";}
-                else if (
+				else if (
 					!sidebar_defaults && status == "chatting"
 					&& chat.type == "searched"
 				) { sidebar_defaults = "user_list_container_open my_chats_only"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "";}
-                else if (
+				else if (
 					!sidebar_defaults && status == "chatting"
 					&& chat.type == "roulette"
 				) { sidebar_defaults = "switch_character_open my_chats_only"; sidebars_right = "settings_open"; sidebars_left = "";}
-                else if (
+				else if (
 					!sidebar_defaults && status == "chatting"
 					&& chat.type == "pm"
 				) { sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"}
-                if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
-                if (sidebars_right !== "") { $(body).addClass("has_right_tabs"); }
-                $("#chat_wrapper").removeClass();
-                $("#chat_wrapper").addClass(sidebar_defaults);
-                $(".sidebar").removeClass("mobile_override");
+				if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
+				if (sidebars_right !== "") { $(body).addClass("has_right_tabs"); }
+				$("#chat_wrapper").removeClass();
+				$("#chat_wrapper").addClass(sidebar_defaults);
+				$(".sidebar").removeClass("mobile_override");
 			}
-            
-            // Use the lists to close down other open bars, then hook individual buttons to open the desired one, add buffer to allow click-to-close when length matches (order-agnostic)
-            $("#sidebar_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_right); });
-            $("#sidebar_left_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_left); });
-            
+			
+			// Use the lists to close down other open bars, then hook individual buttons to open the desired one, add buffer to allow click-to-close when length matches (order-agnostic)
+			$("#sidebar_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_right); });
+			$("#sidebar_left_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_left); });
+			
 			$(".switch_character_button").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
 			$(".settings_button").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
-            $(".my_chats_button").click(function() { $("#chat_wrapper").addClass("my_chats_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("my_chats_open")}});
-            
-            // Mobile side menu overrides
-                
-            $(".mobile_nav_button").click(function() {
-				panel_to_open = "#" + $(this).attr("id").replace("mobile_open_", "");
-                $(".sidebar").not(panel_to_open).removeClass("mobile_override");
-                $(panel_to_open).toggleClass("mobile_override");
-                $("#mobile_nav_toggle").prop("checked",false);
+			$(".my_chats_button").click(function() { $("#chat_wrapper").addClass("my_chats_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("my_chats_open")}});
+			
+			// Attempt to load smart quirk mode for this chat from localstorage, otherwise fall back to default
+			var smart_quirk_mode = "";
+			if (localstorage) {
+				if (localStorage.getItem( chat.url + "_smart_quirk_mode") !== null) { smart_quirk_mode = localStorage.getItem( chat.url + "_smart_quirk_mode"); $("#smart_quirk_mode_" + smart_quirk_mode).prop('checked',true); }
+			}
+			// If unset, base this on chat style
+			if (smart_quirk_mode == "") {
+				if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
+				else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
+			}
+				
+			// Update smart quirk settings and save for individual chats
+				
+			$("#settings #smart_quirk").change(function() {
+				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
+				if ($("#smart_quirk_mode_paragraph").prop('checked')) {smart_quirk_mode = "paragraph"}; // unset defaults to script, so reset value here
 			});
-            
-            $(".sidebar .close").click(function() { set_sidebar(null); $(this).parent().removeClass("mobile_override"); });
-            
-                
-            
+			
+			$("#smart_quirk_select").change(function() {
+				smart_quirk_mode = $('input[name=smart_quirk_mode]:checked').val();
+				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
+				if (localstorage) {
+					localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+				}
+			}); 
+				
+			// Mobile side menu overrides
+				
+			$(".mobile_nav_button").click(function() {
+				panel_to_open = "#" + $(this).attr("id").replace("mobile_open_", "");
+				$(".sidebar").not(panel_to_open).removeClass("mobile_override");
+				$(panel_to_open).toggleClass("mobile_override");
+				$("#mobile_nav_toggle").prop("checked",false);
+			});
+			
+			$(".sidebar .close").click(function() { set_sidebar(null); $(this).parent().removeClass("mobile_override"); });
+			
+				
+			
 			// Mod tools
 			if (chat.type == "group") {
 				var mod_tools = $("#mod_tools");
@@ -1354,33 +1404,31 @@ var msparp = (function() {
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
 			var ranks = { "admin": Infinity, "creator": Infinity, "mod3": 3, "mod2": 2, "mod1": 1, "user": 0, "silent": -1 };
 			function render_action_list(event) {
-                var popup_pos = "top"
-                var popup_x = 0;
-                var popup_y = 0;
-                if (this.id) {
-                    var action_user_number = parseInt(this.id.substr(5));
-                } else {
-                    var action_user_number = parseInt(this.className.substr(10));
-                    if ((event.clientY / $( window ).height()) > .5) {popup_pos = "bottom"}
-                    popup_x = event.pageX;
-                    popup_y = event.pageY;
-                }
+				var popup_pos = "top"
+				var popup_x = 0;
+				var popup_y = 0;
+				if (this.id) {
+					var action_user_number = parseInt(this.id.substr(5));
+				} else {
+					var action_user_number = parseInt(this.className.substr(10));
+					if ((event.clientY / $( window ).height()) > .5) {popup_pos = "bottom"}
+					popup_x = event.pageX;
+					popup_y = event.pageY;
+				}
 				if (action_user && action_user_number == action_user.meta.number) {
-                    console.log(action_user.meta.number + " emptied");
 					action_user = null;
 					action_list.empty();
 				} else {
-                    if (!user_data[action_user_number]) { return false }
+					if (!user_data[action_user_number]) { return false }
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
-                    action_list.removeClass().addClass(popup_pos);
-                    action_list.css("top", "");
-                    action_list.css("bottom", "");
-                    if (popup_pos == "top") {action_list.css("top", popup_y); }
-                    else {action_list.css("bottom", $( document ).height() - popup_y); }
-                    action_list.css("left", popup_x);
-                    console.log(popup_y + "/" + popup_x)
+					action_list.removeClass().addClass(popup_pos);
+					action_list.css("top", "");
+					action_list.css("bottom", "");
+					if (popup_pos == "top") {action_list.css("top", popup_y); }
+					else {action_list.css("bottom", $( document ).height() - popup_y); }
+					action_list.css("left", popup_x);
 					$("#action_block").click(function() { block(action_user.meta.number); });
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
@@ -1402,10 +1450,10 @@ var msparp = (function() {
 						}
 						$.post("/chat_api/save_variables", { "chat_id": chat.id, "ignored_numbers": user.meta.ignored_numbers.toString() });
 					});
-                    $("#action_mobile_switch_character").click(function() {$(".sidebar").not("#switch_character").removeClass("mobile_override"); $("#switch_character").toggleClass("mobile_override"); });
-                    $("#action_mobile_settings").click(function() {$(".sidebar").not("#settings").removeClass("mobile_override"); $("#settings").toggleClass("mobile_override"); });
-                    $("#action_switch_character").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
-                    $("#action_settings").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
+					$("#action_mobile_switch_character").click(function() {$(".sidebar").not("#switch_character").removeClass("mobile_override"); $("#switch_character").toggleClass("mobile_override"); });
+					$("#action_mobile_settings").click(function() {$(".sidebar").not("#settings").removeClass("mobile_override"); $("#settings").toggleClass("mobile_override"); });
+					$("#action_switch_character").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
+					$("#action_settings").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
 					$("#action_mod3, #action_mod2, #action_mod1, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
@@ -1479,7 +1527,7 @@ var msparp = (function() {
 			$("#desktop_notifications").prop("disabled", typeof Notification == "undefined");
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
-                user.meta.show_preview ? $("#send_form").removeClass("no_preview") : $("#send_form").addClass("no_preview") ;
+				user.meta.show_preview ? $("#send_form").removeClass("no_preview") : $("#send_form").addClass("no_preview") ;
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
 				user.meta.show_user_numbers ? conversation.removeClass("hide_user_numbers") : conversation.addClass("hide_user_numbers");
 				resize_conversation();
@@ -1506,7 +1554,7 @@ var msparp = (function() {
 						theme_stylesheet.remove();
 					}
 				});
-                set_sidebar(null);
+				set_sidebar(null);
 				return false;
 			});
 
@@ -1550,14 +1598,14 @@ var msparp = (function() {
 					if (!typing) {
 						typing = true;
 						ws.send("typing");
-                        $("#activity_spinner").addClass("active_self");
-                        $("#activity_spinner").attr("title", "You are typing...");
+						$("#activity_spinner").addClass("active_self");
+						$("#activity_spinner").attr("title", "You are typing...");
 					}
 					typing_timeout = window.setTimeout(function() {
 						typing = false;
 						ws.send("stopped_typing");
-                        $("#activity_spinner").removeClass("active_self");
-                        $("#activity_spinner").attr("title", "No activity");
+						$("#activity_spinner").removeClass("active_self");
+						$("#activity_spinner").attr("title", "No activity");
 					}, 1000);
 				}
 			}).keyup(function() {
@@ -1653,77 +1701,104 @@ var msparp = (function() {
 
 			// Typing quirks
 			var last_alternating_line = false;
+
 			function apply_quirks(text) {
 				var character = (temporary_character || user.character);
-				// Case options.
-				// ["case"] instead of .case because .case breaks some phones and stuff.
-				switch (character["case"]) {
-					case "lower":
-						// Adaptive lower
-						// Part 1: convert words to lower case if they have at least one lower case letter in them.
-						text = text.replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
-						// Part 2: convert lone capital letters (eg. I) to lower case.
-						// Find single capital letters with adjacent lower case ones, potentially looping in case they overlap.
-						text = text.replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
-						break;
-					case "upper":
-						text = text.toUpperCase();
-						break;
-					case "title":
-						// Capitalise the first letter at the beginning, and after a word break if it's not a hyphen or an apostrophe.
-						text = text.toLowerCase().replace(/(^|[^'-]\b)\w/g, function(str) { return str.toUpperCase(); });
-						break;
-					case "inverted":
-						// Lower case the first letter at the beginning, the first letter of each sentence, and lone Is.
-						text = text.toUpperCase().replace(/^.|[,.?!]\s+\w|\bI\b/g, function(str){ return str.toLowerCase(); });
-						break;
-					case "alternating":
-						// Pick up pairs of letters (optionally with whitespace in between) and capitalise the first in each pair.
-						text = text.toLowerCase().replace(/(\w)\W*\w?/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
-						break;
-					case "alt-lines":
-						text = last_alternating_line ? text.toUpperCase() : text.toLowerCase();
-						break;
-					case "proper":
-						// Capitalise the first letter at the beginning, the first letter of each sentence, and lone Is.
-						text = text.replace(/^.|[.?!]\s+\w|\bi\b/g, function(str) { return str.toUpperCase() });
-						break;
-					case "first-letter":
-						// Part 1: same as adaptive lower.
-						text = text.replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
-						text = text.replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
-						// Part 2: capitalise the first letter at the beginning and the first letter of each sentence.
-						text = text.replace(/^.|[.?!]\s+\w/g, function(str) { return str.toUpperCase() });
-						break;
+				
+				// Break up text into chunks for smartquirking
+				var text_chunks = new Array();
+
+				if (dev_user_smart_quirk == "true") {
+					if (smart_quirk_mode == "paragraph") { text_chunks = text.split(dev_user_smart_dialogue_delimiter); }
+					if (smart_quirk_mode == "script") { text_chunks = text.split(dev_user_smart_action_delimiter); }
+				} else {
+					text_chunks[0] = text;
+					smart_quirk_mode = "script";
 				}
-				// Ordinary replacements. Escape any regex control characters before replacing.
-				character.replacements.forEach(function(replacement) {
-					RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
-                    if (dev_user_safe_bbcode == "true") { 
-                        // if safe_bbcode is on, exclude quirking within [brackets]
-                        var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\\[\\]]*\\])", "g");
-                    } else {
-                        var re = new RegExp(RegExp.quote(replacement[0]), "g");
-                    }
-					text = text.replace(re, replacement[1]);
-				});
-				// Regex replacements
-				character.regexes.forEach(function(replacement) {
-					try {
-                        if (dev_user_safe_bbcode == "true") { 
-                            // if safe_bbcode is on, exclude quirking within [brackets]
-                            var re = new RegExp(replacement[0] + "(?![^\\[\\]]*\\])", "g");
-                        } else {
-                            var re = new RegExp(replacement[0], "g");
-                        }
-						text = text.replace(re, replacement[1]);
-					} catch (e) {
-						text = "A young person stands in their bedroom. They don't know Regexp.";
-						return;
+				
+				var final_text = "";
+				var chunks_number = text_chunks.length;
+				for (var i = 0; i < chunks_number; i++) {
+					
+					// Apply case and quirk only between appropriate delimiters
+					if ((i % 2 == 0 &&  smart_quirk_mode == "script") || (i % 2 !== 0 &&  smart_quirk_mode == "paragraph")) {
+						// Case options.
+						// ["case"] instead of .case because .case breaks some phones and stuff.
+						switch (character["case"]) {
+							case "lower":
+								// Adaptive lower
+								// Part 1: convert words to lower case if they have at least one lower case letter in them.
+								text_chunks[i] = text_chunks[i].replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
+								// Part 2: convert lone capital letters (eg. I) to lower case.
+								// Find single capital letters with adjacent lower case ones, potentially looping in case they overlap.
+								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
+								break;
+							case "upper":
+								text_chunks[i] = text_chunks[i].toUpperCase();
+								break;
+							case "title":
+								// Capitalise the first letter at the beginning, and after a word break if it's not a hyphen or an apostrophe.
+								text_chunks[i] = text_chunks[i].toLowerCase().replace(/(^|[^'-]\b)\w/g, function(str) { return str.toUpperCase(); });
+								break;
+							case "inverted":
+								// Lower case the first letter at the beginning, the first letter of each sentence, and lone Is.
+								text_chunks[i] = text_chunks[i].toUpperCase().replace(/^.|[,.?!]\s+\w|\bI\b/g, function(str){ return str.toLowerCase(); });
+								break;
+							case "alternating":
+								// Pick up pairs of letters (optionally with whitespace in between) and capitalise the first in each pair.
+								text_chunks[i] = text_chunks[i].toLowerCase().replace(/(\w)\W*\w?/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
+								break;
+							case "alt-lines":
+								text_chunks[i] = last_alternating_line ? text_chunks[i].toUpperCase() : text_chunks[i].toLowerCase();
+								break;
+							case "proper":
+								// Capitalise the first letter at the beginning, the first letter of each sentence, and lone Is.
+								text_chunks[i] = text_chunks[i].replace(/^.|[.?!]\s+\w|\bi\b/g, function(str) { return str.toUpperCase() });
+								break;
+							case "first-letter":
+								// Part 1: same as adaptive lower.
+								text_chunks[i] = text_chunks[i].replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
+								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
+								// Part 2: capitalise the first letter at the beginning and the first letter of each sentence.
+								text_chunks[i] = text_chunks[i].replace(/^.|[.?!]\s+\w/g, function(str) { return str.toUpperCase() });
+								break;
+						}
+						// Ordinary replacements. Escape any regex control characters before replacing.
+						character.replacements.forEach(function(replacement) {
+							RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
+							if (dev_user_safe_bbcode == "true") { 
+								// if safe_bbcode is on, exclude quirking within [brackets]
+								var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\\[\\]]*\\])", "g");
+							} else {
+								var re = new RegExp(RegExp.quote(replacement[0]), "g");
+							}
+							text_chunks[i] = text_chunks[i].replace(re, replacement[1]);
+						});
+						// Regex replacements
+						character.regexes.forEach(function(replacement) {
+							try {
+								if (dev_user_safe_bbcode == "true") { 
+									// if safe_bbcode is on, exclude quirking within [brackets]
+									var re = new RegExp(replacement[0] + "(?![^\\[\\]]*\\])", "g");
+								} else {
+									var re = new RegExp(replacement[0], "g");
+								}
+								text_chunks[i] = text_chunks[i].replace(re, replacement[1]);
+							} catch (e) {
+								text_chunks[i] = "A young person stands in their bedroom. They don't know Regexp.";
+								return;
+							}
+						});
+						// Prefix and suffix, add in delimiter for quirked paragraph text
+						if (smart_quirk_mode == "paragraph" && text_chunks[i] != "") { final_text = final_text + dev_user_smart_dialogue_delimiter + character.quirk_prefix + text_chunks[i] + character.quirk_suffix + dev_user_smart_dialogue_delimiter; }
+						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text + character.quirk_prefix + text_chunks[i].replace(/^\s|\s$/,"") + character.quirk_suffix; } // strip whitespace if present to allow normal action delimiter spacing
+					} else {
+						// If quirking should not apply, add the plain text; add in delimiter for unquirked script text
+						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text +  " " + dev_user_smart_action_delimiter + text_chunks[i] + dev_user_smart_action_delimiter + " "; }
+						else { final_text = final_text + text_chunks[i]; }
 					}
-				});
-				// Prefix and suffix
-				return character.quirk_prefix + text + character.quirk_suffix;
+				}
+				return final_text;
 			}
 
 			// Abscond/reconnect button
@@ -1748,7 +1823,7 @@ var msparp = (function() {
 					announce: {
 						title: title,
 						text: text,
-                        headercolor: headercolor
+						headercolor: headercolor
 					}
 				}));
 				setTimeout(function(){ $(".announcement").addClass("show"); }, 100);
@@ -1807,11 +1882,11 @@ var msparp = (function() {
 		"log": function(show_bbcode) {
 			// Perform BBCode conversion
 			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
-            // Toggle system messages off/on, only if enabled otherwise
-            $("#hideshow_system").click(function() {
-            $("#archive_conversation").hasClass("hide_system_messages") ? $("#archive_conversation").removeClass("hide_system_messages") : $("#archive_conversation").addClass("hide_system_messages");
-            $("#archive_conversation").hasClass("hide_system_messages") ? $("#hideshow_system").text("Show system messages") : $("#hideshow_system").text("Hide system messages");
-            });
+			// Toggle system messages off/on, only if enabled otherwise
+			$("#hideshow_system").click(function() {
+			$("#archive_conversation").hasClass("hide_system_messages") ? $("#archive_conversation").removeClass("hide_system_messages") : $("#archive_conversation").addClass("hide_system_messages");
+			$("#archive_conversation").hasClass("hide_system_messages") ? $("#hideshow_system").text("Show system messages") : $("#hideshow_system").text("Hide system messages");
+			});
 		},
 		// Broadcast page
 		"broadcast": function() {

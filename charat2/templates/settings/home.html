@@ -22,6 +22,16 @@
             <div class="not_input"><p><input type="checkbox" id="basic_forms" class="device_settings" name="basic_form_elements"><label for="basic_forms"> Use basic form elements</label></p></div>
             <div class="input"><p><input type="checkbox" id="safe_bbcode" class="device_settings" name="safe_bbcode"><label for="safe_bbcode"> Prevent quirks from breaking BBCode</label> <a class="explanation_link" onclick="$('#safe_bbcode_explain').toggle()">(?)</a></p></div>
             <span id="safe_bbcode_explain" class="explanation" style="display:none">This option prevents quirks from triggering when enclosed in [square brackets], allowing you to use BBCode safely. Should this behavior be undesirable, you can disable this option.</span>
+            <div class="input"><p><input type="checkbox" id="smart_quirk" class="device_settings" name="smart_quirk"><label for="smart_quirk"> Enable smart quirking for actions and dialogue</label> <a class="explanation_link" onclick="$('#smart_quirk_explain').toggle()">(?)</a></p></div>
+            <span id="smart_quirk_explain" class="explanation" style="display:none">Smart quirking automatically disables quirking and case for actions within the specified delimiter for Script style chats, and enables them within the quotation delimiter for Paragraph style chats (a closing delimiter is automatically appended to the end of the line if not specified). You can toggle the current setting (Paragraph/Script) in the Settings side bar.<br><br>For example (with default settings):<br> <strong>Script mode =></strong> <em>This text is quirked</em> *With an unquirked action*<br><strong>Paragraph mode =></strong> This text is not quirked. "<em>This text is quirked.</em>", they rebutted.<br><br></span>
+            <div class="input smart_quirk_settings"><p>
+                <input type="text" id="smart_action_delimiter" name="smart_action_delimiter" size="20" maxlength="5">
+                <label for="smart_action_delimiter">Action delimiter</label>
+            </p></div>
+            <div class="input smart_quirk_settings"><p>
+                <input type="text" id="smart_dialogue_delimiter" name="smart_dialogue_delimiter" size="20" maxlength="5">
+                <label for="smart_dialogue_delimiter">Dialogue delimiter</label>
+            </p></div>
             <div class="input"><p><input type="checkbox" id="material_feedback" class="device_settings" name="material_feedback"><label for="material_feedback"> Enable visual feedback for touch/click events on buttons</label></p></div>
             <div class="input"><p><input type="checkbox" id="disable_animations" class="device_settings" name="disable_animations"><label for="disable_animations"> Disable all theme animations</label></p></div>
             <h2>Chat theme</h2>

@@ -1434,11 +1434,15 @@ body:not(.no_forms) .remove_sl_item:active {background: #626262; padding-right:4
 .sl_points:after {content: " )"}
 
 .explanation_link {color:#026CB1;cursor:pointer}
-.explanation {color: #555;font-size:90%}
+.explanation {color: #555;font-size:90%;display:block}
 
 @media (max-width: 400px) {
 body:not(.no_forms) .settings_box .input.select select {max-width:150px}
 }
+
+.smart_quirk_settings {display:inline-block}
+body:not(.no_forms) .smart_quirk_settings input[type="text"] {margin-top:3px}
+body:not(.no_forms) .smart_quirk_settings p {margin-bottom:0px}
 
 /* 3.7. Character creator */
 
@@ -1853,6 +1857,8 @@ body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-ra
 
 #disconnect_links { display: none; }
 #conversation #disconnect_links { display: block; }
+
+body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3px}
 
 /* hide user numbers if disabled */
 
