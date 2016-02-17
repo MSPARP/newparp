@@ -99,6 +99,20 @@ main > :last-child { margin-bottom: 0; }
 
 .enable_anim, .enable_anim * { -webkit-animation: none !important; animation: none !important; -webkit-transition: none !important; transition: none !important;}
 
+/* Style scrollbars */
+
+body:not(.no_forms) * { scrollbar-base-color: #b0b0b0; scrollbar-arrow-color: #b0b0b0; scrollbar-shadow-color: #e0e0e0; scrollbar-track-color: #e0e0e0; }
+body:not(.no_forms) *::-webkit-scrollbar-button { display:none; }
+body:not(.no_forms) *::-webkit-scrollbar { width:10px; }
+body:not(.no_forms) #conversation::-webkit-scrollbar, body:not(.no_forms) #archive_conversation::-webkit-scrollbar, body:not(.no_forms) #info_panel::-webkit-scrollbar, body:not(.no_forms) #edit_info_form::-webkit-scrollbar { width:13px; }
+body:not(.no_forms) *::-webkit-scrollbar-track, *::-webkit-scrollbar-corner { background: #e0e0e0; }
+body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #b0b0b0; border:1px solid #888;}
+
+@media (max-width: 650px) {
+body:not(.no_forms) *::-webkit-scrollbar { width:8px; }
+body:not(.no_forms) #conversation::-webkit-scrollbar, body:not(.no_forms) #archive_conversation::-webkit-scrollbar, body:not(.no_forms) #info_panel::-webkit-scrollbar, body:not(.no_forms) #edit_info_form::-webkit-scrollbar { width:8px; }	
+}
+
 /* 1.1. Header */
 
 #users_online { float: right; padding-top:17px;text-align: right; }
