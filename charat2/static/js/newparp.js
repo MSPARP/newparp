@@ -367,6 +367,8 @@ var msparp = (function() {
 					case "u":
 					case "s":
 						return "<" + tag + ">" + raw_bbencode(content, admin) + "</" + tag + ">";
+					case "alternian":
+						return "<span class=\"alternian\">" + raw_bbencode(content, admin) + "</span>";
 					case "spoiler":
 						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span> <span>" + raw_bbencode(content, admin) + "</span></label>";
 					case "raw":

@@ -1518,6 +1518,30 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #global_navigation.in_chat_nav .hide_nav, #global_navigation.in_chat_nav .mobile_nav  {padding-left:35px}
 
+
+@font-face
+{
+font-family: 'alternianFontOne';
+src: url("/static/font/AlternianCBB.otf"), url("/static/font/AlternianCBB.woff");
+}
+
+.alternian {
+    font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
+	direction: RTL;
+text-rendering: optimizeLegibility;
+unicode-bidi:bidi-override;
+display:inline-block;
+text-align:right;
+font-size:140%;
+line-height:105%;
+vertical-align:-2px;
+}
+
+.alternian * {
+    font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
+text-rendering: optimizeLegibility;
+}
+
 /* 4.1. Topbar and info panel */
 
 #global_navigation.in_chat_nav li {margin:0px;margin-left:10px}
