@@ -1895,7 +1895,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 .chat .pager { padding: 2px 5px; overflow: hidden; }
 .next_day { float: right; }
 
-.log_top_nav, .log_bottom_nav {position:absolute;left:8px;right:8px;}
+.log_top_nav, .log_bottom_nav {position:absolute;left:8px;right:8px;min-height:24px;background:#eee}
 .log_top_nav {top:46px}
 .log_bottom_nav {bottom:6px}
  #archive_conversation {bottom:33px;top:73px;right:8px}
