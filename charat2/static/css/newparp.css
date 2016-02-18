@@ -142,7 +142,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 #global_navigation .user {z-index:1;font-variant:normal;font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:14px;line-height:18px;}
 #global_navigation .user > a:before {content: '\22EE\00a0'; visibility:visible;}
 #global_navigation .user ul { margin: 0 0 0 -10px; font-variant:normal;}
-#global_navigation #unread_counter { float: right; padding: 7px 16px 7px 12px; background-color: #a10000; position: relative; border-left:1px solid #791700; }
+#global_navigation #unread_counter { float: right; box-sizing:border-box;height:33px;padding: 7px 16px 7px 12px; background-color: #a10000; position: relative; border-left:1px solid #791700; }
 #global_navigation:before {
 content: "";
   position: absolute;
@@ -839,6 +839,8 @@ body:not(.no_forms) #color_input, body:not(.no_forms) #color_header_set { -webki
   }
 body:not(.no_forms) #color_hex_input {margin:1px 0 0 10px}
 
+body:not(.no_forms) .select_button {overflow:hidden;position:relative;}
+
 /* fallback styles for basic forms setting */
 
 body.no_forms .input label {cursor:pointer}
@@ -1025,7 +1027,7 @@ body:not(.no_forms) .delete_regex:active, body:not(.no_forms) .delete_replacemen
 
 body:not(.no_forms) .enter {padding:17px 20px;}
 body:not(.no_forms) .r_enter {padding: 9px 20px;}
-body:not(.no_forms) .fit_select_button {padding: 8px 20px;}
+body:not(.no_forms) .fit_select_button {padding: 8px 20px}
 
 /* 2.4 Tables */
 
@@ -1304,6 +1306,7 @@ body.no_forms .robo_q {margin-top:10px;clear:both;display:block}
 #filter_column.open, #stem_column.open {max-width:40rem;}
 #filter_column + button {display:block;}
 #filter_column.open + button {margin:25px 0 0 0; min-width:0px;width:auto; padding: 17px 20px;}
+#filter_column.open + button:active {padding-right: 19px;}
 }
 
 /* increase buttons to make tapping easier, and adapt box flows*/
@@ -1544,7 +1547,6 @@ src: url("/static/font/AlternianCBB.otf"), url("/static/font/AlternianCBB.woff")
 	direction: RTL;
 text-rendering: optimizeLegibility;
 unicode-bidi:bidi-override;
-display:inline-block;
 text-align:right;
 font-size:140%;
 line-height:105%;
@@ -1568,7 +1570,7 @@ text-rendering: optimizeLegibility;
 #topbar h1 span {position:relative;top:-1px;padding-right:6px}
 #topbar h1 span:before {content:"> ";}
 #topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#topbar ~ #conversation, #topbar ~ .sidebar { top: 72px; }
+#topbar ~ #conversation, #topbar ~ .sidebar { top: 71px; }
 .has_left_tabs #topbar ~ .sidebar.left { bottom:37px; }
 #info_panel, #edit_info_panel { display: none; position: absolute; top: 71px; right: 5px; bottom: 5px; left: 8px; z-index: 1;overflow: auto; border-bottom:5px solid #999;background-color: #eee; -webkit-overflow-scrolling: touch; }
 .topic:empty:before { content: "(no topic)"; color: #333; font-style: italic; }
@@ -1877,6 +1879,7 @@ body.no_forms #send_form.no_preview #button_wrap button {height:22px !important;
 body.no_forms #send_form.no_preview #button_wrap {bottom:0px}
 
 .chat #text_preview { margin: 0 -2px 0 33px; padding: 2px; background-color: #eee; }
+body.no_forms.chat #text_preview {margin-right: 109px;margin-left:34px}
 .chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
 #send_form input[name=text] { display: block; width: 100%;} /* #applehatesyou */
 body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-radius: 0px; }

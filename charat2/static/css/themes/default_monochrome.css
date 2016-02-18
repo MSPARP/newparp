@@ -7,12 +7,15 @@
 	5. Log pages
 */
 
-a {color: #2c2c2c;}
+#spinner, #activity_spinner {filter: grayscale(100%);}
+
+#conversation a, #text_preview, #text_preview_acronym {color: #2c2c2c !important;}
+#conversation a:hover {color:#666 !important}
 
 /* 4. Chat window */
 
-.chat p, .chat span {color:#000!important;}
-.chat span {background:none!important;}
+.chat #conversation p, .chat #conversation span {color:#000!important;}
+.chat #conversation span {background:none!important;}
 
 /* 4.3. Sidebars */
 

@@ -236,9 +236,11 @@
                 <section id="action_list"></section>
                 <h2 {% if chat.type == "group": %}class="group_userlist"{% endif %}>Users</h2>
                 <ul id="user_list"></ul>
-                {% if chat.type == "group": %}
-                <p>&gt; <a href="{{url_for("rp_users", url=chat.url)}}" target="_blank">Full user list</a></p>
-                {% endif %}
+                <p>
+                    {% if chat.type == "group": %}
+                    &gt; <a href="{{url_for("rp_users", url=chat.url)}}" target="_blank">Full user list</a>
+                    {% endif %}
+                </p>
                 <div class="chatlinks_wrap">
                     <h2>Chat links</h2>
                     {{(g.redis.get("chat_links") or "")|safe}}

@@ -596,6 +596,9 @@ var msparp = (function() {
 				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
 				set_temporary_character(null);
 				parse_variables();
+				if (!user.meta.typing_notifications && chat.type !== "pm" && chat.type !== "roulette") {
+					status_bar.css("display", "none");
+				}
 				status_bar.css("color", "").text((
 					// Show status bar if typing notifications are available and switched on.
 					(messages_method == "websocket" && user.meta.typing_notifications)
@@ -767,7 +770,12 @@ var msparp = (function() {
 						}
 					});
 				}
-				if (user.meta.typing_notifications && typeof data.typing != "undefined") {
+				if (typeof data.typing != "undefined") {
+					if (!user.meta.typing_notifications && chat.type !== "pm" && chat.type !== "roulette") {
+						status_bar.css("display", "none");
+					} else {
+						status_bar.css("display", "block");
+					}
 					if (data.typing.length == 0 || (data.typing.length == 1 && data.typing.indexOf(user.meta.number) == 0)) {
 						if (previous_status_message) {
 							status_bar.text(previous_status_message);
@@ -1841,37 +1849,7 @@ var msparp = (function() {
 
 			// Theme specific code
 			function update_theme(theme) {
-				$(".sidebar").removeClass("omg kringle manorah geromy");
-				$(".sbigman").remove();
-
-				if (typeof theme === "string" && theme.match(/gristmas/)) {
-					if (theme.match(/noanimate/)) {
-						$('body').addClass('stopmoving');
-					} else {
-						$('body').removeClass('stopmoving');
-					}
-
-					userAgent = window.navigator.userAgent;
-					if(/iP(hone|od|ad)/.test(userAgent) == false) {
-						$( "body" ).append( '<div class="sbigman"></div>' );
-					}
-
-					if(/Android/i.test(userAgent) || /iP(hone|od|ad)/.test(userAgent)) {
-						$( "body" ).addClass("nodrift");
-					}
-
-					// randomised sidebar in here 8ecause them's the 8r8ks
-					var rnjesus = Math.floor((Math.random() * 100) + 1);
-					if (rnjesus < 2) {
-						$('.sidebar').addClass("omg");
-					} else if (rnjesus < 46) {
-						$('.sidebar').addClass("kringle");
-					} else if (rnjesus < 90) {
-						$('.sidebar').addClass("manorah");
-					} else {
-						$('.sidebar').addClass("geromy");
-					}
-				}
+				// empty placeholder here if we need js in future
 			}
 
 			// Run theme specific code.

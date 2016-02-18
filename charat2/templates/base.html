@@ -18,6 +18,9 @@
 <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="/static/css/normalize.css">
 <link rel="stylesheet" href="/static/css/newparp.css">
+{% if g.user and g.user.theme: %}
+<link id="theme_stylesheet" rel="stylesheet" href="/static/css/themes/{{g.user.theme}}.css">
+{% endif %}
 </head>
 <body>
 <script> // Enable form element fallback, avoid flashing
@@ -26,6 +29,7 @@ if (basic_forms == "true") {
 document.body.className += ' no_forms';
 }
 </script>
+<div id="fixed-bg"></div>
 <div id="wrapper">
     <div id="content">
         <header>
