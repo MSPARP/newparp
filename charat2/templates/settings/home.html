@@ -34,7 +34,7 @@
             </p></div>
             <div class="input"><p><input type="checkbox" id="material_feedback" class="device_settings" name="material_feedback"><label for="material_feedback"> Enable visual feedback for touch/click events on buttons</label></p></div>
             <div class="input"><p><input type="checkbox" id="disable_animations" class="device_settings" name="disable_animations"><label for="disable_animations"> Disable all theme animations</label></p></div>
-            <h2>Chat theme</h2>
+            <h2>Site theme</h2>
             <form action="{{url_for("settings_theme")}}" method="post">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
                 <div class="input select"><select name="theme">

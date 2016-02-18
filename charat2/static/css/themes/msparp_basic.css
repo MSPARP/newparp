@@ -1,0 +1,542 @@
+/*
+
+New MSPARP CSS
+
+Contents:
+
+1. Layout
+	1. Header
+	2. Navigation
+	3. Footer
+	4. Responsive widths
+	5. Announcements
+2. Content
+	1. Forms
+	2. Toggle box
+3. Pages
+	1. Front page
+	2. Searching
+	3. Group chats
+	4. Your chats
+	5. Admin
+4. Chat window
+	1. Topbar and info panel
+	2. PM chat list
+	3. Sidebars
+	4. Conversation and send form
+	5. Log pages
+	6. Global Announcements
+
+*/
+
+/* Break ALL THE THINGS, AAAAAAAALL OF THEEEEEEEEM!!! */
+
+/* 1. Layout */
+
+body { margin: 8px; background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
+
+html, body {-webkit-overflow-scrolling: touch;}
+
+/* Header has top corners, main has bottom corners. */
+header, main { background-color: #ccc; border: 1px solid #999999; }
+header { margin: 0 auto; padding: 20px; border-bottom: 0; padding-bottom:5px}
+main { margin: 0 auto; padding: 20px; border-top: 0; font-family: Helvetica, Arial, sans-serif; font-weight: normal; }
+
+main > * { max-width: 40rem; }
+#stem_column { max-width: 40rem; }
+
+/* Padding prevents border collapsing so remove first and last borders to compensate. */
+main > :first-child { margin-top: 0; }
+main > :last-child { margin-bottom: 0; }
+
+#wrapper { position:relative;margin: auto; background-color: transparent; min-height:none; box-sizing: padding-box; border-radius:0}
+#prompt {vertical-align:7px}
+
+@media (max-width: 1000px) {
+	#prompt {display:none;}
+}
+
+
+/* 1.1. Header */
+
+#logo {display:inline-block;background: transparent url('/static/img/logo-default.png') no-repeat scroll 0px bottom; background-size:contain; width:250px;height:47px;image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
+
+#users_online { float: right; text-align: right; margin-top:-15px; }
+#users_online p { margin: 0; font-size:10pt !important }
+
+@media (max-width: 715px) {
+	/* XXX Put this somewhere else rather than hiding it? */
+	#users_online { display: none; }
+}
+
+/* Align baseline of logo text with bottom padding. */
+h1 { margin: 0 0 -4px 0; }
+h1 img { display: block; max-width: 100%; }
+
+/* 1.2. Navigation */
+
+#global_navigation { margin: 0 auto; padding: 0 20px; background-color: #ccc;  border-left: 1px solid #999999; border-right: 1px solid #999999; font-size: 10pt; text-transform: uppercase; }
+#global_navigation, #global_navigation a { color: #eee; }
+#global_navigation label, #global_navigation input { display: none; }
+#global_navigation ul { margin: 0; padding: 0; list-style-type: none; background-color: #626262; }
+#global_navigation li { display: inline-block; margin-left: 10px; }
+/* Padding so the whole height of the navbar is clickable */
+#global_navigation a, #global_navigation button { display: block; padding: 7px 0; text-decoration: none; white-space: nowrap; }
+#global_navigation a:hover, #global_navigation button:hover { color: #fff; }
+#global_navigation li a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
+#global_navigation li a:hover:before, #global_navigation button:hover:before { visibility: visible; }
+#global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
+#global_navigation .user ul { margin: 0 0 0 -10px; }
+#global_navigation #unread_counter { float: right; padding: 7px 14px; background-color: #a10000; }
+
+@media (min-width: 686px) {
+	#global_navigation .user { float: right; position: relative; }
+	#global_navigation .user ul { display: none; }
+	#global_navigation .user:hover ul { display: block; position: absolute; right: 0; }
+	#global_navigation .user li { display: block; }
+	#global_navigation .user a { padding-right: 28px; }
+}
+
+@media (max-width: 685px) {
+	#global_navigation label { display: block; padding: 7px 10px; background-color: #626262; cursor: pointer; }
+	#global_navigation label:hover { color: #fff; }
+	#global_navigation input:not(:checked) + ul { display: none; }
+	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; }
+	#global_navigation a { display: block; }
+}
+
+#global_navigation:before {
+display:none
+}
+#global_navigation #unread_counter:before {
+display:none
+}
+
+/* 1.3. Footer */
+
+footer { margin: 10px auto; padding: 0 20px; text-align: right; text-transform: uppercase; font-size: 12pt; }
+footer, footer a { color: #ddd; }
+footer ul { margin: 0; padding: 0; list-style-type: none; }
+footer li { display: inline; margin-left: 20px; }
+footer a { text-decoration: none; white-space: nowrap; }
+footer a:hover { color: #fff; }
+
+@media (max-width: 715px) {
+	footer { margin: 10px 0; text-align: center; }
+	footer li { margin: 0 5px; }
+}
+
+/* 1.4. Responsive widths */
+
+header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
+@media (min-width: 1140px) { header, #global_navigation, main, footer { width: 95%; } }
+@media (min-width: 1250px) { header, #global_navigation, main, footer { width: 92%; } }
+@media (min-width: 1400px) { header, #global_navigation, main, footer { width: 88%; padding-left: 4%; padding-right: 4%; } }
+@media (min-width: 1600px) { header, #global_navigation, main, footer { width: 89%; padding-left: 7%; padding-right: 7%; } }
+@media (min-width: 1900px) { header, #global_navigation, main, footer { width: 90%; padding-left: 10%; padding-right: 10%; } }
+@media (max-width: 715px) {
+	header, #global_navigation, main, footer { width: 100%; padding-left: 10px; padding-right: 10px; border: none; }
+	header, main { padding-top: 10px; padding-bottom: 10px; }
+}
+@media (max-width: 543px) { body { margin: 0; } }
+
+
+/* 1.5. Announcements */
+
+#announcements { max-width: none; padding: 5px; background-color: #eee; }
+#announcements h2 { margin: 0; }
+#announcements p { margin: 0 0 0 8px; }
+
+/* 2. Content */
+
+a:hover { text-decoration: none; }
+
+h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #444; }
+h2 { font-size: 12pt; }
+h3 { font-size: 10pt; }
+
+ul { padding-left: 1rem; }
+
+table { display: block; max-width: 100%; overflow-x: auto; }
+th { text-align: left; }
+th, td { padding: 5px 8px; }
+tbody tr:nth-child(2n+1) { background-color: #ddd; }
+td a:only-child { display: block; }
+td form { display: inline; }
+td pre:only-child { margin: 0; }
+
+.error { color: #f00; }
+
+#subnav { margin: 10px 0; }
+
+/* 2.1. Forms */
+
+input, select, button { vertical-align: middle; }
+
+h2 select { font-size: 10pt; color: #000; }
+
+.input_table { display: table; }
+.input_table p { display: table-row; }
+.input_table p > label, .input_table p > input, .input_table p > select, .input_table p > span { display: table-cell; }
+.input_table p > input, .input_table p > select { margin: 2px 0; }
+.input_table p > label { padding-right: 5px; }
+
+input[type="number"] { max-width: 50px; }
+
+@media (max-width: 480px) { .input_table p > input[size="50"] { box-sizing: border-box; width: 100%; } }
+
+textarea { width: 100%; resize: vertical; }
+
+.pattern_error { display: none; }
+input:invalid + .pattern_error { display: inline; color: #f00; }
+
+.checkbox_list li { margin: 0.5rem 0; }
+
+body:not(.no_forms) .input input[type='checkbox'] + label:before {
+  border: 2px solid #999;
+  background: #cecece;
+}
+
+body:not(.no_forms) .input.select .tabbed_select {
+  border-top-right-radius: 2px;
+}
+
+/* 2.2. Toggle box */
+
+.toggle_box { padding-left: 0.75rem; }
+.toggle_box > input:first-child { display: none; }
+.toggle_box h2 {border:none !important}
+.toggle_box > input:first-child:not(:checked) + h2 ~ *, .toggle_box > input:first-child:not(:checked) + h3 ~ * { display: none }
+.toggle_box > h2:nth-child(2), .toggle_box > h3:nth-child(2) { text-indent: -0.75rem; }
+/* Make these look more clickable. */
+.toggle_box h2 label, .toggle_box h3 label { cursor: pointer; text-decoration: underline; }
+.toggle_box h2 label:hover, .toggle_box h3 label:hover { text-decoration: none; }
+
+.common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:transparent; padding: 5px 2px;border:none; transform: none !important}
+.toggle_box > input:first-child:checked + h2, .toggle_box > input:first-child:checked + h2 + #character_settings, .toggle_box > input:first-child:checked + h2 + #quirk_settings, .toggle_box > input:first-child:checked + h2 + #filter_settings, .toggle_box > input:first-child:checked + h2 + #search_settings { transform: none; -webkit-animation: none; animation: none;}
+
+.toggle_box > input:first-child:checked + h2 {margin-top:-8px}
+
+.common_box > h2, .roulette_head, .toggle_box > input:first-child:checked + h2 {height:auto;border:none;background:transparent}
+.common_box > h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {position:static;left:0px;top:0px;line-height:auto;}
+.common_box > h2 label span, .roulette_head span, .toggle_box > input:first-child:checked + h2 label span {padding-right:inherit}
+
+.common_box > h2 label span:after, .roulette_head span:after, .toggle_box > input:first-child:checked + h2 label:after { display:none }
+.common_box > h2 label span:after, .roulette_head span, .toggle_box > input:first-child:checked + h2 label, .common_box > h2 label span:after, .roulette_head span:before, .toggle_box > input:first-child:checked + h2 label:before {background:transparent}
+
+.common_box_wrap, .roulette_head + p, .toggle_box > input:first-child:checked + h2 + #character_settings, .toggle_box > input:first-child:checked + h2 + #quirk_settings, .toggle_box > input:first-child:checked + h2 + #filter_settings, .toggle_box > input:first-child:checked + h2 + #search_settings {background-color: transparent;border-right-color:transparent;}
+
+.toggle_box > input:first-child:checked + h2 {padding-bottom:0px}
+
+.toggle_box + .toggle_box {margin-top: 0px;}
+
+@media (max-width: 543px) {
+.common_box h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {display:block;width:100%; background: transparent}
+}
+
+.common_box > h2 label {background:transparent}
+
+.common_box, .roulette_head, .settings_box {max-width:100%; background:transparent;border:none!important}
+
+.settings_box h2, .common_box > h2 label {padding:0px; color: #2c2c2c}
+
+.settings_box h2, .common_box > h2 {text-indent:0px}
+
+.common_box_wrap, .settings_box_wrap {padding:0px;padding-top:5px}
+
+/* 3. Pages */
+
+#subnav { margin: 10px 0; padding-bottom:0px; border:none;}
+#subnav a, #subnav .tab_active {background:transparent;border:none;}
+#subnav a:hover {background:transparent;color:#000}
+#subnav .textlabel {display:inline !important}
+#subnav .tab_active {border:none !important; background:transparent}
+
+
+/* 3.1. Front page */
+
+#text_preview_container { background-color: #eee; padding: 3px 5px; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 12px; }
+
+.character_list { margin: 0; padding: 0; border: 0; }
+.character_list ul { margin: 10px 0; padding: 0 0 0 10px; list-style-type: none; line-height: 1.8rem; }
+.character_list li { display: inline-block; }
+
+.character_button { display: none; }
+
+#filter_column.open {padding:inherit;height:auto;margin-top:2px}
+#stem_column.open, #filter_column.open {display:inline-block;visibility:visible;max-width:100%;width:100%;}
+
+.groupcount {color:#555}
+
+/* 3.2. Searching */
+
+#spinner { width: 140px; height: 140px; margin: 0 auto; }
+
+#search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
+#spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
+.searching #spinner, .search_error #search_error { display: block; }
+#search_error { color: #f00; }
+
+/* 3.3. Group chats */
+
+#group_chats { max-width: none; padding: 0; list-style-type: none; }
+#group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
+#group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #eee; }
+/* overflow:hidden prevents column breaks in Firefox. */
+#group_chats li { overflow: hidden; -webkit-column-break-inside: avoid; border:none}
+#group_chats li:last-child { margin-bottom: 0; }
+#group_chats h3 { margin: 0; font-size: 12pt; }
+#group_chats p { margin: 5px 5px 0; }
+#group_chats .subtitle { color: #666; }
+
+#group_chats li:after {display:none}
+
+/* 3.4. Your chats */
+
+.unread { font-style: italic; }
+
+/* 3.5. Admin */
+
+#permissions_table td:not(:first-child) { text-align: center; }
+
+/* 4. Chat window */
+
+body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break-word; }
+
+body.chat #global_navigation {display:none}
+
+#info_panel { animation: none;}
+
+#info_panel, #edit_info_panel {border-bottom:none}
+
+.chat h2, .chat h3, .chat p { margin: 5px; }
+.chat h2 { font-size: 14pt; }
+.chat h3 { font-size: 12px; }
+.chat ul { margin: 5px 0; padding: 0 0 0 1.5rem; }
+.chat li { margin: 2px 0; }
+.chat input, .chat textarea, .chat button, .chat select { max-width: 100%; padding: 2px; border: 0; background-color: #fbfbfb; }
+.chat textarea { margin: 0 -2px; }
+.chat .textarea_wrapper { padding: 2px 7px; }
+
+section > .close:first-child { float: right; margin: 5px; }
+
+.chat h2 { font-size: 14pt; text-transform:none;}
+.chat h2:after {content: ""}
+
+#chat_wrapper {left:0px !important; right:0px !important;top:0px !important;bottom:0px !important}
+
+.sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list, #topbar, #topbar h1, #topbar .topic {font-family: "Courier", "Courier New", monospace; font-weight: bold;}
+
+.sidebar * {font-weight:bold !important}
+
+.sidebar {border:none !important}
+.sidebar > label:first-of-type {display:none}
+.sidebar_wrap {top:0px !important;bottom:23px !important}
+
+@media (max-height: 600px) {
+	.sidebar_wrap {bottom:0px !important}
+}
+
+@media (max-width: 780px), (max-height: 500px) {
+	.sidebar_wrap {bottom:0px !important}
+}
+
+ #connection_method {bottom:5px;top:auto;z-index:5;font-size:12px !important}
+
+#activity_spinner {display:none}
+#send_form_wrap {margin-left:2px}
+body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
+
+#archive_conversation #conversation_wrap, #conversation #conversation_wrap {border:none;margin-left:0px}
+#archive_conversation .unum, #conversation .unum {width:auto; display:inline-block; margin:0px;padding:2px 0px;padding-left:2px; font-size:12px;line-height:auto;}
+#archive_conversation .unum .unum_hash, #conversation .unum .unum_hash {display:none}
+#archive_conversation .unum:before, #conversation .unum:before {content:"[";margin-right:-.6em}
+#archive_conversation .unum:after, #conversation .unum:after {content:"]"}
+
+#chat_logo {display:none}
+.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:6px}
+.chatting > #chat_wrapper #chat_content .sidebar.left {right:6px;left:auto}
+.sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
+.sidebar.left .sidebar_title{text-align:left}
+.sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
+.sidebar {bottom:37px;top:35px}
+#chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
+	
+	/* collapse sidebar switching into single bar */
+#side_info {display:none !important}
+.my_chats_open #user_list_container {display:none}
+.my_chats_open #my_chats {display:block;}
+
+
+/* 4.1. Topbar and info panel */
+
+#topbar { position: fixed; top: 5px; right: 5px; left: 5px; height: 25px; padding-right: 8px; background-color: #eee; line-height: 25px; cursor: pointer; }
+#topbar h1 { float: left; max-width: 100%; margin: 0 8px 0 0; padding: 0 5px; background-color: #f8f8f8; color:#2c2c2c;font-size: 14pt; }
+#topbar .topic {color:#2c2c2c}
+#topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#topbar ~ #conversation, #topbar ~ .sidebar { top: 35px; }
+#info_panel, #edit_info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
+.topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
+#info_panel p { white-space: pre-line; }
+
+
+#pm_chat_list li, #my_chats_list li {border:none !important; border-bottom:1px solid #ccc !important; border-radius:0px;background:transparent !important;padding:0px}
+
+
+/* 4.3. Sidebars */
+
+.sidebar { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px !important; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
+.sidebar { left: auto; width: 230px; }
+#user_list_container .close { display: none; }
+
+
+#mod_tools, #flag_messages { display: none; }
+
+#mod_tools select { width: 100%; }
+
+#user_list_container a { color: #2c2c2c; }
+#user_list li, #action_list li { cursor: pointer; }
+#user_list .userid { display: block; font-size: 11px; }
+.group_admin { text-decoration: underline; }
+.group_creator, .group_mod1, .group_mod2, .group_mod3 { font-style: italic; }
+.group_silent { text-decoration: line-through; }
+#action_list { color: #000; text-decoration: none; font-style: normal; }
+
+#sidebar_tabs {top:5px;bottom:auto; right:5px;left:auto;text-align:right}
+#sidebar_left_tabs {top:5px;bottom:auto;width:70px !important;right:161px !important}
+
+#sidebar_left_tabs {display:none !important}
+
+.chatting #sidebar_left_tabs {display:block !important}
+
+#sidebar_tabs button, #sidebar_left_tabs button {background:#626262;border:1px solid #626262; border-top: 2px solid #626262; padding:2px 20px 2px 15px; border-top-right-radius: 9px 30px;height:26px;}
+#sidebar_left_tabs button {border-top: 2px solid #626262;}
+#sidebar_tabs button:active {padding-right:19px}
+body:not(.no_forms) #sidebar_left_tabs button, body:not(.no_forms) #sidebar_tabs button {padding-left:4px;padding-right:4px;border-radius:2px !important}
+body:not(.no_forms) #sidebar_left_tabs button:active, body:not(.no_forms) #sidebar_tabs button:active {padding-right:3px;}
+
+#sidebar_left_tabs button:active {padding-right:39px}
+
+body.no_forms #sidebar_tabs button, body.no_forms #sidebar_left_tabs button {color:#000;background:#fbfbfb;border:none !important}
+body.no_forms #sidebar_left_tabs button, body.no_forms #sidebar_tabs button {padding-left:4px;padding-right:4px;border-radius:0px !important}
+body.no_forms #sidebar_left_tabs button:active, body.no_forms #sidebar_tabs button:active {padding-right:4px;}
+
+body.no_forms .sidebar #quirk_suffix + label, body.no_forms .sidebar #quirk_prefix + label {padding:0px;margin-right:7px}
+
+@media (min-width: 1000px) {
+	#pm_chat_list_container { display: block !important; right: auto; left:6px !important; top:5px !important; width: 150px; }
+	#pm_chat_list_container ul li {border:none !important}
+	#pm_chat_list_container .sidebar_wrap:before {content:"PMs";display:block;font-size:14pt;font-weight:bold;color:#2c2c2c}
+	#pm_chat_list_container .close:first-child { display: none; }
+	#pm_chat_list_container ~ #conversation, #pm_chat_list_container ~ #send_form { left: 160px !important; }
+}
+
+/* 4.4. Conversation and send form */
+
+#conversation { position: fixed; top: 5px; right: 5px; bottom: 72px; left: 5px; overflow: auto; padding: 2px 0; background-color: #eee; -webkit-overflow-scrolling: touch; }
+#conversation div, #archive_conversation div { clear: both; overflow: hidden; }
+#conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
+#status_bar { color: #666; }
+
+.hide_system_messages > .message_join,
+.hide_system_messages > .message_disconnect,
+.hide_system_messages > .message_timeout,
+.hide_system_messages > .message_user_info,
+.hide_system_messages > .message_user_group,
+.hide_system_messages > .message_user_action,
+.hide_system_messages > .message_chat_meta { display: none; }
+
+.unum { float: left; padding: 2px 0 2px 5px; }
+.hide_user_numbers .unum { display: none; }
+.highlighted { background-color: #fff; }
+.ignored { display: none; }
+
+.spoiler { position: relative; padding: 0 2px; border: 1px dashed #ccc; cursor: pointer; }
+.spoiler input { display: none; }
+.spoiler input + span + span, .spoiler input:checked + span { display: none; }
+.spoiler input:checked + span + span { display: inline; }
+
+.message_action { margin-left: 0.5rem; }
+
+.timestamp { display: none; }
+p:hover > .timestamp { display: block; float: right; color: #666; }
+
+#conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
+
+#send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
+.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
+.chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
+#send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
+
+#button_wrap {margin-right:-5px}
+
+#abscond_button { margin-left: -2px; }
+#log_button { display: inline-block; padding: 2px 6px; background-color: #f8f8f8; color: #000; text-decoration: none; }
+
+#disconnect_links { display: none; }
+#conversation #disconnect_links { display: block; }
+
+/* 4.5. Log pages */
+
+.chat .pager, #archive_conversation { margin: 5px; padding: 2px 0; background-color: #eee; }
+.chat .pager { padding: 2px 5px; }
+
+.log_top_nav {top:6px}
+.log_bottom_nav {bottom:6px}
+ #archive_conversation {bottom:33px;top:33px;right:3px;left:3px}
+
+/* 4.6. Global Announcements */
+
+@keyframes animate-announce { from { background-position: 0 0; } to { background-position: -80px 0; } }
+@-webkit-keyframes animate-announce { from { background-position: 0 0; } to { background-position: -80px 0; } }
+#global_announcements { position: fixed; z-index: 10; width: 100%; }
+#global_announcements_preview { width: 100%; }
+.announcement { background-size: 40px 40px; background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%, transparent 75%, transparent); background-image: linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%, transparent 75%, transparent); border: 1px solid; animation: animate-announce 5s linear infinite; -webkit-animation: animate-announce 5s linear infinite; background-color: #535353; border-color: #CCC; transition: all 1s ease-in-out; transform: translateX(-100%); opacity: 0; cursor: pointer; }
+.announcement > h2, .announcement > p { margin: 10px; color: #FFF; }
+.announcement > img, .announcement > p { margin-left: 10px; vertical-align: top; }
+.announcement.show { transform: translateX(0%); opacity: 1; }
+
+
+
+@media (max-width:650px) {
+/* make nav reappear when we need mobile navigation */
+body.chat #global_navigation {display:block}
+ #archive_conversation {right:0px;left:0px;margin:0}
+.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
+	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
+	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
+	.sidebar:not(.mobile_override) {display:none !important}
+	#global_navigation.in_chat_nav {top:0px}
+	#topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2}
+	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
+	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
+	#conversation {margin-bottom:-8px}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .hide_nav{display:none}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .mobile_nav{display:block}
+	#chat_wrapper:not(.log_wrapper) .mobile_nav_wrap {display:block}
+	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav li { display: none}
+	.log_top_nav {top:34px} #archive_conversation {top:61px}
+	.log_bottom_nav {bottom:0px}
+	#archive_conversation {bottom:27px}
+	#archive_conversation, .log_top_nav, .log_bottom_nav {left:0px;right:0px}
+	#topbar h1 {background: transparent !important}
+	#topbar h1 span:before {display:none}
+	#topbar h1, #topbar .topic {color:#f4f4f4 !important}
+	.chatting > .sidebar.mobile_override, .sidebar.mobile_override {display:block !important;position:fixed !important;top:33px !important;left:0px !important;right:0px !important;bottom:0px !important;width:100% !important;z-index:1 !important}
+	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:5px;float:right;margin-right:20px;z-index:999}
+	.sidebar_title span {background:transparent}
+	.sidebar_title span:after {content:"";display:none}
+	.sidebar {border-right:none !important;border-left:none !important;border-top:15px solid #e0e0e0}
+	.sidebar_wrap .input, .sidebar_wrap .color-double {font-size:11pt}
+	.sidebar_wrap {padding-left:5%;top:27px !important}
+	.sidebar_wrap hr {margin-left:-5%}
+	body:not(.no_forms) #mod_tools select { width: 180px; padding:7px 25px 7px 15px;font-size:10pt}
+	body:not(.no_forms) .sidebar .slimdrop  {margin-bottom:6px;margin-top:1px}
+	#pm_chat_list_container .sidebar_wrap, #my_chats .sidebar_wrap {padding-left:4%;padding-right:4%}
+	#my_chats_list, #pm_chat_list {font-size:12px}
+	#action_mobile_switch_character, #action_mobile_settings {display:list-item}
+	.unum #action_list #action_mobile_switch_character, .unum #action_list #action_mobile_settings {display:inline-block}
+	.unum #action_list #action_switch_character, .unum #action_list #action_settings {display:none}
+	#action_switch_character, #action_settings {display:none}
+	#mod_tools, #mod_tools h3 {font-size:12px}
+	}

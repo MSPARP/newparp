@@ -104,8 +104,8 @@ var msparp = (function() {
 	} 
 	
 	// Populate smart quirk delimiters
-	$("#smart_action_delimiter").ready(function() { $("#smart_action_delimiter").val(dev_user_smart_action_delimiter) });
-	$("#smart_dialogue_delimiter").ready(function() { $("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter) });
+	$("#smart_action_delimiter").ready(function() { $("#smart_action_delimiter").val(dev_user_smart_action_delimiter); $("#smart_action_delimiter").attr("value", dev_user_smart_action_delimiter) });
+	$("#smart_dialogue_delimiter").ready(function() { $("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter); $("#smart_dialogue_delimiter").attr("value", dev_user_smart_dialogue_delimiter) });
 	
 	// Live update when switching in settings
 	$("#basic_forms").click(function() {

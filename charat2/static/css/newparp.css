@@ -1867,6 +1867,8 @@ body.no_forms #send_form_wrap {margin-right:115px}
 
 body.no_forms  #activity_spinner {height:34px}
 
+#send_form.no_preview {height:30px}
+
 #send_form.no_preview #activity_spinner {bottom:0px;height:35px}
 #send_form.no_preview #button_wrap {bottom:3px;}
 #send_form.no_preview #send_form_wrap {position:relative;top:3px}
@@ -1883,6 +1885,7 @@ body.no_forms.chat #text_preview {margin-right: 109px;margin-left:34px}
 .chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
 #send_form input[name=text] { display: block; width: 100%;} /* #applehatesyou */
 body:not(.no_forms) #send_form input[name=text] {  margin: 0 -2px 5px; border-radius: 0px; }
+
 #abscond_button { margin-left: -2px; }
 .log_button { display: inline-block; color: #000; text-decoration: none; margin:5px}
 
