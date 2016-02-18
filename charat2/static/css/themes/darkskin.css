@@ -804,7 +804,7 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:-31px;float:right;margin-right:9px}
 	.sidebar_title span {background:transparent}
 	.sidebar_title span:after {content:"";display:none}
-	.sidebar {border-right:none !important;border-left:none !important;border-top:15px solid #e0e0e0}
+	.sidebar {border-right:none !important;border-left:none !important;border-top:15px solid #104F03}
 	.sidebar_wrap .input, .sidebar_wrap .color-double {font-size:11pt}
 	.sidebar_wrap {padding-left:5%}
 	.sidebar_wrap hr {margin-left:-5%}
