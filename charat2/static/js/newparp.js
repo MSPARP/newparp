@@ -61,11 +61,10 @@ var msparp = (function() {
 	
 	// Enable animation on these elements only when interacted with
 	$(".enable_anim").click(function() {
-					$(this).addClass("init_anim");
-					$(this).removeClass("enable_anim");
-				});
-	
-				
+		$(this).addClass("init_anim");
+		$(this).removeClass("enable_anim");
+	});
+
 	/* Enable per-device settings that don't require pre-render hooks */
 	var dev_user_safe_bbcode = "false";
 	var dev_user_smart_quirk = "false";
@@ -83,7 +82,7 @@ var msparp = (function() {
 				$("body").addClass("no_moving");
 			}
 		});
-		// set default to safe bbcode
+		// Set default to safe bbcode, load delimiters if set
 		if (localStorage.getItem("safe_bbcode") === null) { localStorage.setItem("safe_bbcode", "true"); }
 		if (localStorage.getItem("safe_bbcode") == "true") {
 			dev_user_safe_bbcode = "true";
@@ -99,13 +98,21 @@ var msparp = (function() {
 		}
 		
 		// Update smart quirk delimiters
-		$("#smart_action_delimiter").change(function() { localStorage.setItem("smart_action_delimiter", $("#smart_action_delimiter").val() )});
-		$("#smart_dialogue_delimiter").change(function() { localStorage.setItem("smart_dialogue_delimiter", $("#smart_dialogue_delimiter").val() )});
+		$("#smart_action_delimiter").change(function() {
+			localStorage.setItem("smart_action_delimiter", $("#smart_action_delimiter").val());
+		});
+		$("#smart_dialogue_delimiter").change(function() {
+			localStorage.setItem("smart_dialogue_delimiter", $("#smart_dialogue_delimiter").val());
+		});
 	} 
 	
 	// Populate smart quirk delimiters
-	$("#smart_action_delimiter").ready(function() { $("#smart_action_delimiter").val(dev_user_smart_action_delimiter); $("#smart_action_delimiter").attr("value", dev_user_smart_action_delimiter) });
-	$("#smart_dialogue_delimiter").ready(function() { $("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter); $("#smart_dialogue_delimiter").attr("value", dev_user_smart_dialogue_delimiter) });
+	$("#smart_action_delimiter").ready(function() {
+		$("#smart_action_delimiter").val(dev_user_smart_action_delimiter).attr("value", dev_user_smart_action_delimiter); 
+	});
+	$("#smart_dialogue_delimiter").ready(function() {
+		$("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter).attr("value", dev_user_smart_dialogue_delimiter); 
+	});
 	
 	// Live update when switching in settings
 	$("#basic_forms").click(function() {
@@ -130,10 +137,8 @@ var msparp = (function() {
 			$("[name=search_character_id]").val(data["id"]);
 		}
 		$("#toggle_with_settings").prop("checked", true).change();
-		$("input[name=name]").val(data["name"]);
-		$("input[name=name]").attr("value", data["name"]); /* update attr as well for css targetting */
-		$("input[name=acronym]").val(data["acronym"]).keyup();
-		$("input[name=acronym]").attr("value", data["acronym"]);
+		$("input[name=name]").val(data["name"]).attr("value", data["name"]); /* update attr as well for css targetting */
+		$("input[name=acronym]").val(data["acronym"]).attr("value", data["acronym"]).keyup();
 		$("input[name=color]").val("#"+data["color"]).change();
 		if (!body.hasClass("chat")) {
 			if (typeof data["text_preview"]!= "undefined") {
@@ -327,11 +332,8 @@ var msparp = (function() {
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
-		if (dev_user_safe_bbcode == "true") { 
-			// convert tags to lowercase so the opening and closing groups don't have to match in casing
-			text = text.replace(/(\[.+?\])(?:.+?)(\[\/.+?\])/g, function(a,x,y){ return a.replace(x,x.toLowerCase()).replace(y,y.toLowerCase()); }); 
-		}
-		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/g, function(str, url, tag, attribute, content) {
+		// Just outright make this match case insensitive so we don't have to worry about tags matching in casing on the \2 callback
+		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/gi, function(str, url, tag, attribute, content) {
 			if (url) {
 				var suffix = "";
 				// Exclude a trailing closing bracket if there isn't an opening bracket.
@@ -380,7 +382,7 @@ var msparp = (function() {
 	}
 	function bbremove(text) {
 		text = text.replace(/(\[[bB][rR]\])+/g, "");
-		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
+		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\]([\s\S]*?)\[\/\1\]/gi, function(str, tag, content) { return bbremove(content); });
 	}
 
 	return {
@@ -780,9 +782,9 @@ var msparp = (function() {
 						if (previous_status_message) {
 							status_bar.text(previous_status_message);
 							previous_status_message = null;
-							$("#activity_spinner").removeClass("active_sb");
-							$("#activity_spinner").attr("title", "No activity");
 						}
+						$("#activity_spinner").removeClass("active_sb");
+						$("#activity_spinner").attr("title", "No activity");
 					} else {
 						if (!previous_status_message) { previous_status_message = status_bar.text(); }
 						var name = chat.type == "pm" ? chat.url.substr(3) : chat.type == "roulette" ? "▼" : "Someone";
@@ -1347,9 +1349,8 @@ var msparp = (function() {
 				if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
 				else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
 			}
-				
+			
 			// Update smart quirk settings and save for individual chats
-				
 			$("#settings #smart_quirk").change(function() {
 				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
 				if ($("#smart_quirk_mode_paragraph").prop('checked')) {smart_quirk_mode = "paragraph"}; // unset defaults to script, so reset value here
@@ -1362,9 +1363,8 @@ var msparp = (function() {
 					localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
 				}
 			}); 
-				
+			
 			// Mobile side menu overrides
-				
 			$(".mobile_nav_button").click(function() {
 				panel_to_open = "#" + $(this).attr("id").replace("mobile_open_", "");
 				$(".sidebar").not(panel_to_open).removeClass("mobile_override");
@@ -1373,8 +1373,6 @@ var msparp = (function() {
 			});
 			
 			$(".sidebar .close").click(function() { set_sidebar(null); $(this).parent().removeClass("mobile_override"); });
-			
-				
 			
 			// Mod tools
 			if (chat.type == "group") {
@@ -1507,6 +1505,7 @@ var msparp = (function() {
 					$.post("/chat_api/save", form_data, function(data) {
 						user = data;
 						set_temporary_character(null);
+						$("#chat_line_input input").trigger( "keyup" ); // refresh text line to apply new settings
 					});
 				}
 				set_sidebar(null);
@@ -1715,9 +1714,17 @@ var msparp = (function() {
 			function apply_quirks(text) {
 				var character = (temporary_character || user.character);
 				
+				if (dev_user_safe_bbcode == "true") {
+					// as they are case sensitive, save URLs to array to survive this step
+					var url_matches = text.match(/\[url=([^\]]+?)\]/gi);
+					// selectively replace [BBCode] tag wrapping with unicode placeholders to do negative lookaheads without e.g. Terezi's quirk breaking
+					// to be consistent, use same rules here that are used for BBCode removal
+					text = text.replace(/\[([A-Za-z]+)(=[^\]]+)?\]([\s\S]*?)\[(\/\1)\]/ig, "\ufe5d$1$2\ufe5e$3\ufe5d$4\ufe5e");
+				}
+				
 				// Break up text into chunks for smartquirking
 				var text_chunks = new Array();
-
+				
 				if (dev_user_smart_quirk == "true") {
 					if (smart_quirk_mode == "paragraph") { text_chunks = text.split(dev_user_smart_dialogue_delimiter); }
 					if (smart_quirk_mode == "script") { text_chunks = text.split(dev_user_smart_action_delimiter); }
@@ -1729,7 +1736,6 @@ var msparp = (function() {
 				var final_text = "";
 				var chunks_number = text_chunks.length;
 				for (var i = 0; i < chunks_number; i++) {
-					
 					// Apply case and quirk only between appropriate delimiters
 					if ((i % 2 == 0 &&  smart_quirk_mode == "script") || (i % 2 !== 0 &&  smart_quirk_mode == "paragraph")) {
 						// Case options.
@@ -1747,8 +1753,8 @@ var msparp = (function() {
 								text_chunks[i] = text_chunks[i].toUpperCase();
 								break;
 							case "title":
-								// Capitalise the first letter at the beginning, and after a word break if it's not a hyphen or an apostrophe.
-								text_chunks[i] = text_chunks[i].toLowerCase().replace(/(^|[^'-]\b)\w/g, function(str) { return str.toUpperCase(); });
+								// Capitalise the first letter at the beginning, and after a word break if it's not an apostrophe.
+								text_chunks[i] = text_chunks[i].toLowerCase().replace(/(^|[^']\b)\w/g, function(str) { return str.toUpperCase(); });
 								break;
 							case "inverted":
 								// Lower case the first letter at the beginning, the first letter of each sentence, and lone Is.
@@ -1777,8 +1783,8 @@ var msparp = (function() {
 						character.replacements.forEach(function(replacement) {
 							RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
 							if (dev_user_safe_bbcode == "true") { 
-								// if safe_bbcode is on, exclude quirking within [brackets]
-								var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\\[\\]]*\\])", "g");
+								// if safe_bbcode is on, exclude quirking within custom [brackets]
+								var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
 							} else {
 								var re = new RegExp(RegExp.quote(replacement[0]), "g");
 							}
@@ -1788,8 +1794,8 @@ var msparp = (function() {
 						character.regexes.forEach(function(replacement) {
 							try {
 								if (dev_user_safe_bbcode == "true") { 
-									// if safe_bbcode is on, exclude quirking within [brackets]
-									var re = new RegExp(replacement[0] + "(?![^\\[\\]]*\\])", "g");
+									// if safe_bbcode is on, exclude quirking within custom [brackets]
+									var re = new RegExp(replacement[0] + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
 								} else {
 									var re = new RegExp(replacement[0], "g");
 								}
@@ -1813,6 +1819,18 @@ var msparp = (function() {
 						// If quirking should not apply, add the plain text; add in delimiter for unquirked script text
 						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text +  " " + dev_user_smart_action_delimiter + text_chunks[i] + dev_user_smart_action_delimiter + " "; }
 						else { final_text = final_text + text_chunks[i]; }
+					}
+				}
+				if (dev_user_safe_bbcode == "true") {
+					// now that we are safe, replace temporary unicode brackets with coding ones again
+					final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
+					// this is also where we replace URLs with original casing
+					if (url_matches !== null) {
+						var urls_number = url_matches.length;
+						for (var u = 0; u < urls_number; u++) {
+							var re = new RegExp(RegExp.quote(url_matches[u]), "ig");
+							final_text = final_text.replace(re, url_matches[u]);
+						}
 					}
 				}
 				return final_text;
