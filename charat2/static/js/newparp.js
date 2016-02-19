@@ -1793,7 +1793,14 @@ var msparp = (function() {
 								} else {
 									var re = new RegExp(replacement[0], "g");
 								}
-								text_chunks[i] = text_chunks[i].replace(re, replacement[1]);
+								// allow regex quirks to case matched element via $U and $L
+								if (replacement[1] == "$U") {
+									text_chunks[i] = text_chunks[i].replace(re, function(str) { return str.toUpperCase(); });
+								} else if (replacement[1] == "$L") {
+									text_chunks[i] = text_chunks[i].replace(re, function(str) { return str.toLowerCase(); });
+								} else {
+									text_chunks[i] = text_chunks[i].replace(re, replacement[1]);
+								}
 							} catch (e) {
 								text_chunks[i] = "A young person stands in their bedroom. They don't know Regexp.";
 								return;
