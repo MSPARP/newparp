@@ -26,7 +26,7 @@ Contents:
 	4. Conversation and send form
 	5. Log pages
 	6. Global Announcements
-
+5. Notes on Changes by Nadia
 */
 
 /* 1. Layout */
@@ -42,7 +42,7 @@ main > * { max-width: 40rem; }
 
 /* Padding prevents border collapsing so remove first and last borders to compensate. */
 main > :first-child { margin-top: 0; }
-main > :last-child { margin-bottom: 0; }
+main > :last-child { margin-bottom: 0; padding:0 20px; }
 
 /* 1.1. Header */
 
@@ -121,8 +121,8 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 
 /* 1.5. Announcements */
 
-#announcements { max-width: none; padding: 5px; background-color: #eee; }
-#announcements h2 { margin: 0; }
+#announcements { max-width: none; padding: 10px; background-color: #eee; border-style:outset;}
+#announcements h2 { margin: 0; font-family:'courier';}
 #announcements p { margin: 0 0 0 8px; }
 
 /* 2. Content */
@@ -130,7 +130,7 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 a:hover { text-decoration: none; }
 
 h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #444; }
-h2 { font-size: 12pt; }
+h2 { font-size: 10pt; }
 h3 { font-size: 10pt; }
 
 ul { padding-left: 1rem; }
@@ -348,3 +348,11 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 .announcement > img, .announcement > p { margin-left: 10px; vertical-align: top; }
 .announcement.show { transform: translateX(0%); opacity: 1; }
 
+
+/* Notes on Changes by Nadia 
+
+-added border-style outset to #announcements
+-increased padding on #announcements to 10px from 5px
+-changed font on #announcements to courier (possibly use an image?)
+-changed h2 to 10pt from 12pt
+-changed padding on main > :last.child to 0, 20px
