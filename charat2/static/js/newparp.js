@@ -191,6 +191,12 @@ var msparp = (function() {
 		body.removeClass("searching");
 	}
 
+	// Markdown (Sanitized)
+	var markdown_converter = Markdown.getSanitizingConverter();
+	function markdownencode(text) {
+		return markdown_converter.makeHtml(text);
+	}
+
 	// BBCode
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
@@ -517,11 +523,11 @@ var msparp = (function() {
 					if (chat.type == "group") {
 						topic.text(chat.topic);
 						if (user.meta.show_bbcode) {
-							description.html(bbencode(chat.description, false));
-							rules.html(bbencode(chat.rules, false));
+							description.html(markdownencode(bbencode(chat.description, false)));
+							rules.html(markdownencode(bbencode(chat.rules, false)));
 						} else {
-							description.text(bbremove(chat.description));
-							rules.text(bbremove(chat.rules));
+							description.text(markdownencode(bbremove(chat.description)));
+							rules.text(markdownencode(bbremove(chat.rules)));
 						}
 						flag_autosilence.prop("checked", chat.autosilence);
 						if (chat.publicity == "pinned" && user.meta.group != "admin") {
