@@ -1806,7 +1806,7 @@ body:not(.no_forms) .sidebar_submit button:active {padding-right:29px}
 #conversation .unum, #archive_conversation .unum { float: left; position:relative;overflow:visible;display:block;width:32px;text-align:right; padding-top:3px;font-size:90%;color:#696969;white-space:nowrap;margin-left:-37px}
 .unum .unum_hash {font-size:80%;color:#a0a0a0}
 .unum:hover, .unum:focus, .unum:hover + p, .unum:focus + p {background:#e0e0e0}
-.highlighted .unum:hover + p {background:#d5d5d5}
+.highlighted .unum:hover + p {background:#f4f4f4}
 
 .action_user_title {display:none}
 
@@ -1864,7 +1864,7 @@ border-color:  transparent #f4f4f4;
 .unum #action_list:empty {display:none}
 .unum #action_list:empty:before, .unum #action_list:empty:after {content:""; display:none}
 
-.highlighted{ background-color: #e0e0e0; border-top:1px solid #c6c6c6; border-bottom:1px solid #c6c6c6;margin-top:-1px;margin-bottom:-1px }
+.highlighted{ background-color: #fbfbfb; border-top:1px solid #e0e0e0; border-bottom:1px solid #e0e0e0;margin-top:-1px;margin-bottom:-1px }
 .highlighted + .highlighted{border-top:none;margin-top:0px;}
 .ignored { display: none; }
 
