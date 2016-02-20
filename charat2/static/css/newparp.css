@@ -197,10 +197,11 @@ content: "";
   #global_navigation li a .long {display:inline}
   #global_navigation li:active {background-color:#767676}
   #global_navigation .user a {max-width:none} 
- #global_navigation {overflow:hidden}
+ #global_navigation:not(.in_chat_nav) {overflow:hidden}
 #global_navigation li a .short {display:none}
 #global_navigation label:before {content: '\22EE\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
-	#global_navigation label { display: block; user-select:none; position:relative; padding: 7px 10px; background-color: #626262; cursor: pointer; height:31px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;z-index:1}
+	#global_navigation label { display: block; user-select:none; position:relative; padding: 7px 10px; background-color: #626262; cursor: pointer; height:31px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;}
+	#global_navigation:not(.in_chat_nav) label {z-index:1;}
 	#global_navigation label:hover { color: #fff; }
 	#global_navigation input:not(:checked) + ul { max-height:0px;overflow:hidden;}
 	#global_navigation:not(.in_chat_nav) input:not(:checked) + ul{transition:transform .3s ease-in-out;-webkit-transform: translate(0,-100%);transform:translate(0,-100%);}
@@ -210,7 +211,8 @@ content: "";
 	#global_navigation .user > a:before {content: '';}
 	#global_navigation a { display: block; }
 	#global_navigation li {height:auto}
-	#global_navigation #unread_counter {height:31px;box-sizing:border-box;z-index:2}
+	#global_navigation #unread_counter {height:31px;box-sizing:border-box;}
+	#global_navigation:not(.in_chat_nav) #unread_counter {z-index:2}
 }
 
 /* 1.3. Footer */
@@ -1263,7 +1265,7 @@ ripple { to {
 }
 }
 
-button, .input *, h2 label, #global_navigation *, #filter_settings *  {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
+button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, .unum, .unum *, #chat_logo {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
 
 /* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance; also remove color input since currently unsupported */
 
