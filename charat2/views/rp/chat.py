@@ -293,7 +293,7 @@ def _log_page(chat, pm_user, url, fmt, page=None):
         page=page,
         items_per_page=messages_per_page,
         item_count=message_count,
-        url_maker=lambda page: url_for("rp_log", url=url, page=page),
+        url_maker=lambda page: url_for("rp_log_page", url=url, page=page),
     )
 
     return render_template(
