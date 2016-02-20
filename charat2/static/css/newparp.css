@@ -242,8 +242,12 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 	#prompt {display:block;margin-left:2px; white-space:normal;}
 	#global_navigation:before{right:10px}	
 }
+
+.collapse_padding #wrapper {margin:15px !important}
+
 @media (max-width: 650px) { body { margin: 0; background: #ccc; }
 #wrapper  {margin:0; background: transparent; min-height:auto}
+.collapse_padding #wrapper {margin:0px !important}
 footer {position:relative}
 footer a {color: #555}
 #prompt {font-size:5.8vw;}
@@ -1961,6 +1965,8 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 
 #chat_wrapper {position:fixed;left:0px;right:0px;top:0px;bottom:0px}
 
+.collapse_padding #chat_wrapper {left:8px !important;right:8px !important}
+
 @media (min-width: 700px) { #chat_wrapper.log_wrapper {left:2%; right:2%}}
 @media (min-width: 900px) { #chat_wrapper.log_wrapper {left:3.5%; right:3.5%}}
 @media (min-width: 1000px) and (min-height: 550px) {#chat_wrapper {border-radius:10px; top:8px; bottom:8px}} 
@@ -2044,7 +2050,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 #global_navigation.in_chat_nav li a .long {display:none}
 #global_navigation.in_chat_nav li a .short {display:inline}
 }
-@media(max-width:920px){#global_navigation.in_chat_nav .user a {max-width:150px}}
+@media(max-width:920px){#global_navigation.in_chat_nav .user a {max-width:150px} .collapse_padding #chat_wrapper {left:0px !important;right:0px !important}}
 
 @media (min-width: 781px) and (min-height: 501px) {
 	#global_navigation.in_chat_nav .user {display:block}
@@ -2099,6 +2105,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	body.disable_left_bar #chat_wrapper #chat_content #info_panel, body.disable_left_bar #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar #chat_wrapper #chat_content #conversation, body.disable_left_bar #chat_wrapper #chat_content #send_form, body.disable_left_bar #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
 	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
 	.sidebar:not(.mobile_override) {display:none !important}
+	.collapse_padding #chat_wrapper {left:0px !important;right:0px !important}
 	#global_navigation.in_chat_nav {top:0px}
 	body #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }

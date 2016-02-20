@@ -305,6 +305,9 @@ body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break
 
 body.chat #global_navigation {display:none}
 
+.collapse_padding #chat_wrapper {left:0px !important;right:0px !important}
+
+
 #info_panel { animation: none;}
 
 #info_panel, #edit_info_panel {border-bottom:none}
