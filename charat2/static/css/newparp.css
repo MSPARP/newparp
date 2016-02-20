@@ -315,6 +315,9 @@ h2 select { font-size: 10pt; }
 .quirk_creator .input.fromto {width:33%;}
 .quirk_creator .input.fromto input {width:100%}
 
+body.no_forms .quirk_creator .input.fromto {width:33%;box-sizing:border-box}
+body.no_forms .quirk_creator .input.fromto input {width:100%;box-sizing:border-box}
+
 #search_settings .input {display:inline-block; margin-right:10px;}
 #search_settings div .input:last-child {margin-right:0;}
 
@@ -822,6 +825,7 @@ body:not(.no_forms) .input.select .tabbed_select {
   -webkit-font-smoothing: antialiased;}
 
 .input.fromto, #filter_list .input {display:inline-block;margin-right:6px;}
+body.no_forms .input.fromto {margin-right:0px}
 body:not(.no_forms) .input.fromto input, #filter_list .input input {margin-top: 0px;}
   
 .input.nolabel_text textarea {margin-top:0px !important}
@@ -876,7 +880,9 @@ body.no_forms .input.select, body.no_forms .input.select select {max-width:99%}
 #color_hex_input {width:50px}
 .input_table p.color-double {margin:0}
 }
- 	 
+
+.register_login_box input[type=email], .register_login_box input[type=password], .register_login_box input[type=text] {min-width:190px}
+
 /* 2.2. Toggle box */
 
 .common_box h2, .toggle_box h2, .roulette_head {margin:0px; padding: 0px 2px 9px 0px; position:relative; text-indent:12px; border-top:15px solid transparent; border-right:4px solid transparent;}
@@ -981,7 +987,7 @@ width:0px; height:0px; opacity:0;	}
 @media (max-width: 543px) { 
 	#filter_settings {min-width:auto}
 	.character_list legend label {max-width:51vw !important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-	
+	.r_enter {display:block;margin-top:10px}
 	
 }
 
@@ -1029,6 +1035,9 @@ body:not(.no_forms) button:focus {background:#666;}
 
 body:not(.no_forms) .delete_regex, body:not(.no_forms) .delete_replacement, body:not(.no_forms) .delete_filter {padding: 2px 5px 3px 4px;margin-left:4px;}
 body:not(.no_forms) .delete_regex:active, body:not(.no_forms) .delete_replacement:active, body:not(.no_forms) .delete_filter:active  {text-indent:0px; padding-right:5px;}
+
+body.no_forms .delete_regex, body.no_forms .delete_replacement, body.no_forms .delete_filter {padding: 1px 6px 1px 6px;margin-left:4px;}
+
 
 body:not(.no_forms) .enter {padding:17px 20px;}
 body:not(.no_forms) .r_enter {padding: 9px 20px;}
@@ -1435,6 +1444,7 @@ body:not(.no_forms) .unsubscribe:active {text-indent:1px; padding-right: 6px;}
 .ban_box h2 label:after {content:none !important}
 .a_process_list {list-style-type:none}
 
+#toggle_new_ip_ban + h2 {-webkit-animation:none !important; animation: none !important}
 
 /* 3.6. Settings */
 
@@ -2035,7 +2045,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	#global_navigation.in_chat_nav #unread_counter {height:33px;box-sizing:border-box}
 	
 	#global_navigation.in_chat_nav {top:3px}
-	#topbar { top: 7px; left:34px; right: 95px; background-color: transparent; cursor: pointer;z-index:2}
+	#topbar { top: 7px; left:34px; right: 95px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar h1 {background:transparent}
 	#topbar, #topbar .topic {color: #f5f5f5}
 	.chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}
@@ -2061,7 +2071,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
 	.sidebar:not(.mobile_override) {display:none !important}
 	#global_navigation.in_chat_nav {top:0px}
-	#topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2}
+	#topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
 	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
 	#conversation {margin-bottom:-8px}

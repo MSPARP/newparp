@@ -350,7 +350,7 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 #archive_conversation #conversation_wrap, #conversation #conversation_wrap {border:none;margin-left:0px}
 #archive_conversation .unum, #conversation .unum {width:auto; display:inline-block; margin:0px;padding:2px 0px;padding-left:2px; font-size:12px;line-height:auto;}
 #archive_conversation .unum .unum_hash, #conversation .unum .unum_hash {display:none}
-#archive_conversation .unum:before, #conversation .unum:before {content:"[";margin-right:-.6em}
+#archive_conversation .unum:before, #conversation .unum:before {content:"[";}
 #archive_conversation .unum:after, #conversation .unum:after {content:"]"}
 
 #chat_logo {display:none}

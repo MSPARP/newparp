@@ -1,7 +1,7 @@
 {% macro register() %}
     <div class="common_box">
         <h2><label><span>Register</span></label></h2>
-        <div class="common_box_wrap">
+        <div class="common_box_wrap register_login_box">
             <form action="{{url_for("register")}}" method="post">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
                 {% if "register_error" in request.args: %}
@@ -46,7 +46,7 @@
     </div>
 {% endmacro %}
 {% macro log_in() %}
-    <div class="common_box">
+    <div class="common_box register_login_box">
         <h2><label><span>Log in</span></label></h2>
         <div class="common_box_wrap">
             <form action="{{url_for("log_in")}}" method="post">
