@@ -356,14 +356,14 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 #archive_conversation .unum:before, #conversation .unum:before {content:"[";}
 #archive_conversation .unum:after, #conversation .unum:after {content:"]"}
 
-#chat_logo, body.disable_left_bar #chat_logo {display:none}
+#chat_logo, body.disable_left_bar #chat_logo {display:none !important}
 body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav,
 .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:6px}
 .chatting > #chat_wrapper #chat_content .sidebar.left {right:6px;left:auto}
 .sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
 .sidebar.left .sidebar_title{text-align:left}
 .sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
-body .sidebar {bottom:37px;top:35px}
+body .sidebar {bottom:37px;top:35px !important}
 #chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
 	
 	/* collapse sidebar switching into single bar */
@@ -406,7 +406,7 @@ body .sidebar, body.disable_left_bar .sidebar { left: auto; width: 230px; }
 .group_silent { text-decoration: line-through; }
 #action_list { color: #000; text-decoration: none; font-style: normal; }
 
-#sidebar_tabs, body.disable_left_bar #sidebar_tabs  {top:5px;bottom:auto; right:5px;left:auto;text-align:right;width:226px}
+#sidebar_tabs, body.disable_left_bar #sidebar_tabs  {top:5px !important;bottom:auto; right:5px;left:auto;text-align:right;width:226px}
 #sidebar_left_tabs {top:5px;bottom:auto;width:70px !important;right:161px !important}
 
 #sidebar_left_tabs {display:none !important}
