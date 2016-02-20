@@ -1675,6 +1675,8 @@ body:not(.no_forms) .sidebar .input textarea + label {
 body .sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom: 17px; left: 5px; z-index: 1; background-color: #eee; -webkit-overflow-scrolling: touch; }
 body .has_left_tabs .sidebar.left {bottom:37px}
 
+body:not(.no_forms) .sidebar #replacement_list .input.fromto {margin-right:0px}
+
 .mobile_button { display: none; }
 body .sidebar { left: auto; width: 230px; }
 .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:240px}
