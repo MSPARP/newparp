@@ -202,8 +202,10 @@ content: "";
 #global_navigation label:before {content: '\22EE\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
 	#global_navigation label { display: block; user-select:none; position:relative; padding: 7px 10px; background-color: #626262; cursor: pointer; height:31px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;z-index:1}
 	#global_navigation label:hover { color: #fff; }
-	#global_navigation input:not(:checked) + ul { max-height:0px;overflow:hidden; transition:transform .3s ease-in-out;-webkit-transform: translate(0,-100%);transform:translate(0,-100%);}
-	#global_navigation input:checked + ul {max-height:400px;overflow:hidden;transition:transform .4s ease-in-out;-webkit-transform:translate(0,0);transform:translate(0,0);}
+	#global_navigation input:not(:checked) + ul { max-height:0px;overflow:hidden;}
+	#global_navigation:not(.in_chat_nav) input:not(:checked) + ul{transition:transform .3s ease-in-out;-webkit-transform: translate(0,-100%);transform:translate(0,-100%);}
+	#global_navigation input:checked + ul {max-height:400px;overflow:hidden;}
+	#global_navigation:not(.in_chat_nav) input:checked + ul {transition:transform .4s ease-in-out;-webkit-transform:translate(0,0);transform:translate(0,0);}
 	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; font-variant:normal; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;}
 	#global_navigation .user > a:before {content: '';}
 	#global_navigation a { display: block; }
@@ -1664,11 +1666,11 @@ body:not(.no_forms) .sidebar .input textarea + label {
 .my_chats_only #my_chats {display:block;z-index:1}
 .my_chats_only.my_chats_open #my_chats, .my_chats_open #my_chats {display:block;z-index:2}
 
-.sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom: 17px; left: 5px; z-index: 1; background-color: #eee; -webkit-overflow-scrolling: touch; }
-.has_left_tabs .sidebar.left {bottom:37px}
+body .sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom: 17px; left: 5px; z-index: 1; background-color: #eee; -webkit-overflow-scrolling: touch; }
+body .has_left_tabs .sidebar.left {bottom:37px}
 
 .mobile_button { display: none; }
-.sidebar { left: auto; width: 230px; }
+body .sidebar { left: auto; width: 230px; }
 .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:240px}
 
 #user_list_container .close { display: none; }
@@ -1965,7 +1967,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 @media (min-width: 1000px) {#chat_wrapper {left:10px;right:10px;} #chat_wrapper.log_wrapper {left:5%; right:5%} .unum #action_list ul {width:420px;} .unum #action_list .action_user_title {max-width:420px;}}
 @media (min-width: 1300px) {#chat_wrapper {left:10px;right:10px} #chat_wrapper.log_wrapper {left:7%; right:7%} .unum #action_list ul {width:500px;} .unum #action_list .action_user_title {max-width:500px;}}
 @media (min-width: 1460px) {#chat_wrapper {left:3%;right:3%} #chat_wrapper.log_wrapper {left:10%; right:10%}}
-@media (min-width: 1650px) {#chat_wrapper {left:6%;right:6%} #chat_wrapper.log_wrapper {left:12%; right:12%} .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px; left:260px} .sidebar {width:250px} #sidebar_tabs, #sidebar_left_tabs {width:246px} #chat_logo {top:10px; width:260px;height:60px;background-size: 260px 60px}}
+@media (min-width: 1650px) {#chat_wrapper {left:6%;right:6%} #chat_wrapper.log_wrapper {left:12%; right:12%} .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px; left:260px} body .sidebar {width:250px} #sidebar_tabs, #sidebar_left_tabs {width:246px} body #chat_logo {top:10px; width:260px;height:60px;background-size: 260px 60px}}
 @media (min-width: 1750px) {#chat_wrapper {left:7%;right:7%} #chat_wrapper.log_wrapper {left:14%; right:14%}}
 @media (min-width: 1900px) {#chat_wrapper {left:8%;right:8%} #chat_wrapper.log_wrapper {left:15%; right:15%}}
 @media (min-width: 2000px) {#chat_wrapper {left:10%;right:10%} #chat_wrapper.log_wrapper {left:17%; right:17%}}
@@ -1976,7 +1978,8 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	#global_navigation.in_chat_nav {top:4px}
 	#conversation {top:37px}
 	#topbar ~ #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 62px; }
-	#connection_method, #chat_logo {display:none}
+	body:not(.disable_left_bar) #chat_logo {top:5px}
+	#connection_method {top:-3px;right:0px; font-size:80%}
 	#sidebar_tabs, #topbar {top:37px}
 	.log_top_nav {top:37px} #archive_conversation {top:64px}
 	}
@@ -1990,7 +1993,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	.sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
 	.sidebar.left .sidebar_title{text-align:left}
 	.sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
-	.sidebar {bottom:37px}
+	body .sidebar {bottom:37px}
 	#chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
 	
 	/* collapse sidebar switching into single bar */
@@ -1999,10 +2002,36 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	.my_chats_open #my_chats {display:block;}
 }
 
+/* also collapse column if setting override is present */
+
+body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav { left:6px}
+body.disable_left_bar.chatting > #chat_wrapper #chat_content .sidebar.left {right:6px;left:auto}
+body.disable_left_bar .sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
+body.disable_left_bar .sidebar.left .sidebar_title{text-align:left}
+body.disable_left_bar .sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
+body.disable_left_bar .sidebar {bottom:37px}
+body.disable_left_bar #chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
+	
+/* collapse sidebar switching into single bar */
+body.disable_left_bar #side_info {display:none !important}
+body.disable_left_bar .my_chats_open #user_list_container {display:none}
+body.disable_left_bar .my_chats_open #my_chats {display:block;}
+body.disable_left_bar #chat_logo {display:block;left:auto;right:-5px}
+body.disable_left_bar #sidebar_tabs {top:67px}
+body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92px}
+
+/* fix wider right bar */
+@media (min-width: 1650px) { 
+	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px;}
+	body.disable_left_bar #connection_method {top:-3px;right:0px; font-size:80%}
+	body.disable_left_bar #chat_wrapper #sidebar_left_tabs {width:246px}
+}
+
+
 @media (max-width: 1270px) and (min-height: 650px){ 
-	#chat_logo {display:block;left:auto;right:-5px}
-	.sidebar, #topbar ~ .sidebar {top:92px}
-	#sidebar_tabs {top:67px}
+	body #chat_logo, body.disable_left_bar #chat_logo {display:block;left:auto;right:-5px}
+	body .sidebar, body #topbar ~ .sidebar {top:92px}
+	body #sidebar_tabs, body.disable_left_bar #sidebar_tabs {top:67px}
 	#connection_method {top:-3px;right:0px; font-size:80%}
 }
 
@@ -2027,13 +2056,12 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 }
 
 @media (max-width: 780px), (max-height: 500px) {
-  /* Long titles for full width menu */
-  #global_navigation.in_chat_nav li a .long {display:inline}
-  #global_navigation.in_chat_nav li:active {background-color:#767676}
-  #global_navigation.in_chat_nav .user a {max-width:none} 
- 
-#global_navigation.in_chat_nav li a .short {display:none}
-#global_navigation.in_chat_nav label:before {content: '\2630\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
+	/* Long titles for full width menu */
+	#global_navigation.in_chat_nav li a .long {display:inline}
+	#global_navigation.in_chat_nav li:active {background-color:#767676}
+	#global_navigation.in_chat_nav .user a {max-width:none} 
+ 	#global_navigation.in_chat_nav li a .short {display:none}
+	#global_navigation.in_chat_nav label:before {content: '\2630\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
 	#global_navigation.in_chat_nav label { display: block; padding: 7px 10px; background-color: #626262; cursor: pointer; height:33px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
 	#global_navigation.in_chat_nav input:not(:checked) + ul { max-height:0px;overflow:hidden; transition:all .3s ease-in-out;}
@@ -2043,21 +2071,20 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	#global_navigation.in_chat_nav a { display: block; }
 	#global_navigation.in_chat_nav li {height:auto}
 	#global_navigation.in_chat_nav #unread_counter {height:33px;box-sizing:border-box}
-	
 	#global_navigation.in_chat_nav {top:3px}
 	#topbar { top: 7px; left:34px; right: 95px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar h1 {background:transparent}
 	#topbar, #topbar .topic {color: #f5f5f5}
-	.chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}
-	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 36px; }
-	#connection_method, #chat_logo {display:none}
-	#sidebar_tabs {top:11px}
+	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}
+	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel, body.disable_left_bar #topbar ~ .sidebar, body.disable_left_bar .sidebar { top: 36px; }
+	#connection_method, #chat_logo, body.disable_left_bar #chat_logo {display:none}
+	#sidebar_tabs, body.disable_left_bar #sidebar_tabs {top:11px}
 	.log_top_nav {top:36px} #archive_conversation {top:63px}
 	
 }
 
-@media (min-width: 1270px) and (max-height:500px) { .chatting > #chat_wrapper #chat_content #topbar { left:274px; right: 320px;}}
-@media (min-width: 1650px) and (max-height:500px)  { .chatting > #chat_wrapper #chat_content #topbar { left:294px; right: 340px;}}
+@media (min-width: 1270px) and (max-height:500px) { .chatting > #chat_wrapper #chat_content #topbar { left:274px; right: 320px;} body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}}
+@media (min-width: 1650px) and (max-height:500px)  { .chatting > #chat_wrapper #chat_content #topbar { left:294px; right: 340px;} body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar { left:54px; right: 320px;}}
 
 @media (max-height:378px) {
 	#global_navigation.in_chat_nav li { display: inline-block; width:auto}
@@ -2067,11 +2094,13 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 
 @media (max-width:650px) {
 	.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
-	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
+	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px !important; left:0px !important}
+	body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav,
+	body.disable_left_bar #chat_wrapper #chat_content #info_panel, body.disable_left_bar #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar #chat_wrapper #chat_content #conversation, body.disable_left_bar #chat_wrapper #chat_content #send_form, body.disable_left_bar #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
 	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
 	.sidebar:not(.mobile_override) {display:none !important}
 	#global_navigation.in_chat_nav {top:0px}
-	#topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
+	body #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
 	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
 	#conversation {margin-bottom:-8px}
@@ -2119,6 +2148,13 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 @media (max-width:320px) {
 	#pm_chat_list_container .sidebar_wrap, #my_chats .sidebar_wrap {padding-left:3px;padding-right:3px}
 	#pm_chat_list, #my_chats {padding-left:0px}
+}
+
+@media (max-height:113px) and (min-width:650px) {
+	 #sidebar_tabs, #sidebar_left_tabs, .sidebar {display:none !important}
+	 #conversation:after {content: ":o)";color:#2b0057;position:fixed;right:80px;bottom:5%;font-size:80px}
+	 #conversation:before {content: "honk";color:#2b0057;position:fixed;right:60px;bottom:10px;}
+
 }
 
 

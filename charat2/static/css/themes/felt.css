@@ -585,7 +585,11 @@ body.chat { background-color: #000;}
 
 body:not(.no_forms) .chat input, body:not(.no_forms) .chat textarea, body:not(.no_forms) .chat button, body:not(.no_forms) .chat select { background-color: #1a8005; }
 
-#chat_logo {top:13px;left:20px; background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:cover; width:150px;height:54px; background-size:150px 54px;image-rendering: auto; -ms-interpolation-mode: auto;}
+body:not(.disable_left_bar) #chat_logo {top:13px;left:20px; background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:cover; width:150px;height:54px; background-size:150px 54px;image-rendering: auto; -ms-interpolation-mode: auto;}
+
+@media (max-height: 600px) {
+	body:not(.disable_left_bar) #chat_logo {top:5px;}
+}
 
 
 #global_navigation.in_chat_nav #mobile_nav_toggle:checked + .mobile_nav_wrap {background:#0e4603;border-right:2px solid #156704;color:#fff;box-shadow:4px 0px 10px rgba(0,0,0,.2)}
@@ -643,7 +647,7 @@ body:not(.no_forms) #my_chats .filter_button.input.select select option {color:#
 
 /* 4.3. Sidebars */
 
-.sidebar { background-color: #0e4603; }
+body .sidebar { background-color: #0e4603; }
 
 #sidebar_tabs button, #sidebar_left_tabs button {color:#2cff4b; background:#156704;border:1px solid #156704; border-top: 2px solid #177104;}
 #sidebar_left_tabs button {border-bottom: 2px solid #177104;border-top-color:#156704}
@@ -757,7 +761,7 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 
 
-@media (min-width: 1650px) {#chat_logo {top:5px; left:1px;width:180px;height:65px;background-size: 180px 65px}}
+@media (min-width: 1650px) {body:not(.disable_left_bar) #chat_logo {top:5px; left:1px;width:180px;height:65px;background-size: 180px 65px}}
 
 
 /* collapse left column */
@@ -768,7 +772,13 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 }
 
 @media (max-width: 1270px) and (min-height: 650px){ 
-	#chat_logo {display:block;left:auto;right:76px;top:10px}
+	body:not(.disable_left_bar) #chat_logo {display:block;left:auto;right:76px;top:10px}
+}
+
+body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:cover; width:150px;height:54px; background-size:150px 54px;image-rendering: auto; -ms-interpolation-mode: auto;}
+
+@media (max-width: 780px), (max-height: 500px) {
+	 #chat_logo, body.disable_left_bar #chat_logo {display:none}
 }
 
 @media (min-width: 781px) and (min-height: 501px) {

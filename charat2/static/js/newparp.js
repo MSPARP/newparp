@@ -81,6 +81,14 @@ var msparp = (function() {
 			if (disable_animations == "true") {
 				$("body").addClass("no_moving");
 			}
+            disable_left_bar=localStorage.getItem("disable_left_bar");
+			if (disable_left_bar == "true") {
+				$("body").addClass("disable_left_bar");
+			}
+            collapse_padding=localStorage.getItem("collapse_padding");
+			if (collapse_padding == "true") {
+				$("body").addClass("collapse_padding");
+			}
 		});
 		// Set default to safe bbcode, load delimiters if set
 		if (localStorage.getItem("safe_bbcode") === null) { localStorage.setItem("safe_bbcode", "true"); }

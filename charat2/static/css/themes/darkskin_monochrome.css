@@ -138,7 +138,7 @@ tbody tr:nth-child(2n+1) { background-color: #11131c; }
 #subnav { border-bottom:1px solid #26293a;}
 #subnav a, #subnav .tab_active {background:#11131c;border:1px solid #2A2C40; border-top: 2px solid #3a3d59; border-bottom-color:#26293a; }
 #subnav a:hover {background:#161823;color:#939eb7}
-#subnav .tab_active {border-bottom-color:#161823; background:#161823;color:#6a758f; font-weight:bold; border-top: 2px solid #1a8005;}
+#subnav .tab_active {border-bottom-color:#161823; background:#161823;color:#6a758f; font-weight:bold; border-top: 2px solid #3a3d59;}
 
 /* 2.1. Forms */
 
@@ -635,7 +635,7 @@ body:not(.no_forms) #my_chats .filter_button.input.select select option {color:#
 
 /* 4.3. Sidebars */
 
-.sidebar { background-color: #161823; }
+body .sidebar { background-color: #161823; }
 
 #sidebar_tabs button, #sidebar_left_tabs button {color:#798297; background:#3a3d59;border:1px solid #3a3d59; border-top: 2px solid #343750;}
 #sidebar_left_tabs button {border-bottom: 2px solid #343750;border-top-color:#3a3d59}

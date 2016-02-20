@@ -341,7 +341,7 @@ section > .close:first-child { float: right; margin: 5px; }
 	.sidebar_wrap {bottom:0px !important}
 }
 
- #connection_method {bottom:5px;top:auto;z-index:5;font-size:12px !important}
+ #connection_method,  body.disable_left_bar #connection_method {bottom:5px;top:auto;z-index:5;font-size:12px !important}
 
 #activity_spinner {display:none}
 #send_form_wrap {margin-left:2px}
@@ -353,13 +353,14 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 #archive_conversation .unum:before, #conversation .unum:before {content:"[";}
 #archive_conversation .unum:after, #conversation .unum:after {content:"]"}
 
-#chat_logo {display:none}
+#chat_logo, body.disable_left_bar #chat_logo {display:none}
+body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav,
 .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:6px}
 .chatting > #chat_wrapper #chat_content .sidebar.left {right:6px;left:auto}
 .sidebar.left {border-left:none;border-right:4px solid #b0b0b0;border-bottom:3px solid #999;}
 .sidebar.left .sidebar_title{text-align:left}
 .sidebar.left .sidebar_title span:after {left:auto; border-width: 37px 37px 0 0;margin-left:13px}
-.sidebar {bottom:37px;top:35px}
+body .sidebar {bottom:37px;top:35px}
 #chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
 	
 	/* collapse sidebar switching into single bar */
@@ -374,7 +375,7 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 #topbar h1 { float: left; max-width: 100%; margin: 0 8px 0 0; padding: 0 5px; background-color: #f8f8f8; color:#2c2c2c;font-size: 14pt; }
 #topbar .topic {color:#2c2c2c}
 #topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#topbar ~ #conversation, #topbar ~ .sidebar { top: 35px; }
+#topbar ~ #conversation, #topbar ~ .sidebar, body.disable_left_bar #topbar ~ .sidebar { top: 35px; }
 #info_panel, #edit_info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 .topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 #info_panel p { white-space: pre-line; }
@@ -385,8 +386,8 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 
 /* 4.3. Sidebars */
 
-.sidebar { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px !important; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
-.sidebar { left: auto; width: 230px; }
+body .sidebar, body.disable_left_bar .sidebar { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px !important; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
+body .sidebar, body.disable_left_bar .sidebar { left: auto; width: 230px; }
 #user_list_container .close { display: none; }
 
 
@@ -402,7 +403,7 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 .group_silent { text-decoration: line-through; }
 #action_list { color: #000; text-decoration: none; font-style: normal; }
 
-#sidebar_tabs {top:5px;bottom:auto; right:5px;left:auto;text-align:right}
+#sidebar_tabs, body.disable_left_bar #sidebar_tabs  {top:5px;bottom:auto; right:5px;left:auto;text-align:right;width:226px}
 #sidebar_left_tabs {top:5px;bottom:auto;width:70px !important;right:161px !important}
 
 #sidebar_left_tabs {display:none !important}
@@ -429,6 +430,12 @@ body.no_forms .sidebar #quirk_suffix + label, body.no_forms .sidebar #quirk_pref
 	#pm_chat_list_container .sidebar_wrap:before {content:"PMs";display:block;font-size:14pt;font-weight:bold;color:#2c2c2c}
 	#pm_chat_list_container .close:first-child { display: none; }
 	#pm_chat_list_container ~ #conversation, #pm_chat_list_container ~ #send_form { left: 160px !important; }
+}
+
+/* fix wider right bar */
+@media (min-width: 1650px) { 
+	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px;}
+	body.disable_left_bar #chat_wrapper #sidebar_left_tabs {width:226px}
 }
 
 /* 4.4. Conversation and send form */
@@ -507,7 +514,7 @@ body.chat #global_navigation {display:block}
 	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
 	.sidebar:not(.mobile_override) {display:none !important}
 	#global_navigation.in_chat_nav {top:0px}
-	#topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2}
+	#topbar, .chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2}
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
 	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
 	#conversation {margin-bottom:-8px}
