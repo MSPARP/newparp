@@ -1785,6 +1785,8 @@ body:not(.no_forms) .sidebar_submit button:active {padding-right:29px}
 
 .action_user_title {display:none}
 
+#conversation .unum {cursor:pointer}
+
 .unum #action_list {border:2px solid #c6c6c6;box-shadow:2px 2px 3px rgba(0,0,0,.1); z-index:999}
 .unum #action_list:empty {border:none;box-shadow:none}
 .unum:focus {outline:0}
