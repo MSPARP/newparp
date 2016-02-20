@@ -7,7 +7,7 @@
 	5. Log pages
 */
 
-#spinner, #activity_spinner {filter: grayscale(100%);}
+#spinner, #activity_spinner {-webkit-filter: grayscale(100%); filter: grayscale(100%);}
 
 #conversation a, #text_preview, #text_preview_acronym {color: #2c2c2c !important;}
 #conversation a:hover {color:#666 !important}
