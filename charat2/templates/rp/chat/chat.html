@@ -165,7 +165,7 @@
         {% endraw %}</script>
 
         <script id="action_list_template" type="text/x-handlebars-template">{% raw %}
-            <span class="action_user_title">#{{meta.number}} <span style="color:#{{character.color}}">{{character.name}}</span></span>
+            <span class="action_user_title">#{{meta.number}} <span style="color: #{{character.color}}">{{character.name}}</span></span>
             <ul>
                 {{#if (can_block)}}<li id="action_block">Block</li>{{/if}}
                 <li id="action_highlight">{{#if (is_highlighted)}}Clear highlight{{else}}Highlight{{/if}}</li>

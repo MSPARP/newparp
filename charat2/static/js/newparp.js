@@ -40,6 +40,13 @@ var msparp = (function() {
 	
 	} catch (e) {var localstorage = false;}
 	
+	// Detect touch devices because apple cannot handle focus highlighting
+	var touch_enabled = false;
+	if ('ontouchstart' in document.documentElement) {
+		$("body").addClass("touch");
+		touch_enabled = true;
+	}
+	
 	// Apply toggle box state to filter & stem column, hide small toggle if open, wait for IE
 	$("#toggle_search_for_characters").ready(function() {
 		if ($("#toggle_search_for_characters").is(':checked')) {
@@ -81,11 +88,11 @@ var msparp = (function() {
 			if (disable_animations == "true") {
 				$("body").addClass("no_moving");
 			}
-            disable_left_bar=localStorage.getItem("disable_left_bar");
+			disable_left_bar=localStorage.getItem("disable_left_bar");
 			if (disable_left_bar == "true") {
 				$("body").addClass("disable_left_bar");
 			}
-            collapse_padding=localStorage.getItem("collapse_padding");
+			collapse_padding=localStorage.getItem("collapse_padding");
 			if (collapse_padding == "true") {
 				$("body").addClass("collapse_padding");
 			}

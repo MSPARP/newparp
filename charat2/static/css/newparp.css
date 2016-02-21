@@ -1805,8 +1805,8 @@ body:not(.no_forms) .sidebar_submit button:active {padding-right:29px}
 
 #conversation .unum, #archive_conversation .unum { float: left; position:relative;overflow:visible;display:block;width:32px;text-align:right; padding-top:3px;font-size:90%;color:#696969;white-space:nowrap;margin-left:-37px}
 .unum .unum_hash {font-size:80%;color:#a0a0a0}
-.unum:hover, .unum:focus, .unum:hover + p, .unum:focus + p {background:#e0e0e0}
-.highlighted .unum:hover + p {background:#f4f4f4}
+body:not(.touch) .unum:hover, body:not(.touch) .unum:focus, body:not(.touch) .unum:hover + p, body:not(.touch) .unum:focus + p {background:#e0e0e0}
+body:not(.touch) .highlighted .unum:hover + p {background:#f4f4f4}
 
 .action_user_title {display:none}
 

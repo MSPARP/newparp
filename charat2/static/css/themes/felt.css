@@ -703,8 +703,8 @@ border-color: #197A05 transparent transparent;
 
 #conversation .unum, #archive_conversation .unum { color:#1a8005;}
 .unum .unum_hash {color:#082a00}
-.unum:hover, .unum:focus, .unum:hover + p, .unum:focus + p {background:#041700}
-.highlighted .unum:hover + p {background:#061d00}
+body:not(.touch) .unum:hover, body:not(.touch) .unum:focus, body:not(.touch) .unum:hover + p, body:not(.touch) .unum:focus + p {background:#041700}
+body:not(.touch) .highlighted .unum:hover + p {background:#061d00}
 
 .unum #action_list {border:2px solid #156704;}
 
