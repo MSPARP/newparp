@@ -335,20 +335,6 @@ body .sidebar {bottom:37px;top:35px !important}
 
 body .sidebar, body.disable_left_bar .sidebar { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px !important; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 body .sidebar, body.disable_left_bar .sidebar { left: auto; width: 230px; }
-#user_list_container .close { display: none; }
-
-
-#mod_tools, #flag_messages { display: none; }
-
-#mod_tools select { width: 100%; }
-
-#user_list_container a { color: #2c2c2c; }
-#user_list li, #action_list li { cursor: pointer; }
-#user_list .userid { display: block; font-size: 11px; }
-.group_admin { text-decoration: underline; }
-.group_creator, .group_mod1, .group_mod2, .group_mod3 { font-style: italic; }
-.group_silent { text-decoration: line-through; }
-#action_list { color: #000; text-decoration: none; font-style: normal; }
 
 #sidebar_tabs, body.disable_left_bar #sidebar_tabs  {top:5px !important;bottom:auto; right:5px;left:auto;text-align:right;width:226px}
 #sidebar_left_tabs {top:5px;bottom:auto;width:70px !important;right:161px !important}
@@ -430,18 +416,7 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 @media (max-width:650px) {
 	/* make nav reappear when we need mobile navigation */
 	body.chat #global_navigation {display:block}
-	 #archive_conversation {right:0px;left:0px;margin:0}
-	.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
-	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
-	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
-	.sidebar:not(.mobile_override) {display:none !important}
-	#global_navigation.in_chat_nav {top:0px}
-	#topbar, .chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px; background-color: transparent; cursor: pointer;z-index:2}
-	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
-	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
-	#conversation {margin-bottom:-8px}
-	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .mobile_nav{display:block}
-	#chat_wrapper:not(.log_wrapper) .mobile_nav_wrap {display:block}
+	#archive_conversation {right:0px;left:0px;margin:0}
 	#topbar h1 {background: transparent !important}
 	#topbar h1 span:before {display:none}
 	#topbar h1, #topbar .topic {color:#f4f4f4 !important}
