@@ -26,9 +26,11 @@ from charat2.model import (
     PMChat,
     SearchCharacterGroup,
     User,
+    LogPage,
 )
 from charat2.model.connections import use_db
 from charat2.model.validators import url_validator
+from charat2.tasks.background import generate_logpages
 
 
 def get_chat(f):
@@ -254,45 +256,48 @@ def _log_page(chat, pm_user, url, fmt, page=None):
     except:
         own_chat_user = None
 
-    message_count = g.db.query(func.count('*')).select_from(Message).filter(
-        Message.chat_id == chat.id,
-    )
-    if own_chat_user is not None and not own_chat_user.show_system_messages:
-        message_count = message_count.filter(Message.type.in_(("ic", "ooc", "me")))
-    message_count = message_count.scalar()
+    pagecount = g.db.query(func.count('*')).select_from(LogPage).filter(
+        LogPage.chat_id == chat.id,
+    ).scalar() or 1
 
     messages_per_page = 200
 
-    if page is None:
-        # Default to last page.
-        page = int(ceil(float(message_count) / messages_per_page))
-        # The previous calculation doesn't work if pages have no messages.
-        if page < 1:
-            page = 1
+    try:
+        logpage = g.db.query(LogPage).filter(LogPage.chat_id == chat.id).filter(LogPage.page == page).one()
+        offset = logpage.offset
+    except NoResultFound:
+        offset = 0
+        page = 1
 
     messages = g.db.query(Message).filter(
         Message.chat_id == chat.id,
-    ).order_by(Message.posted).options(
+    ).filter(Message.id > offset).order_by(Message.posted).options(
         joinedload(Message.chat_user),
     )
+
     if own_chat_user is not None and not own_chat_user.show_system_messages:
         messages = messages.filter(Message.type.in_(("ic", "ooc", "me")))
-    messages = messages.limit(messages_per_page).offset((page - 1) * messages_per_page).all()
+
+    messages = messages.limit(messages_per_page).all()
+
+    # Update the log pages when the last page has the maximum messages.
+    if (page == pagecount) and (len(messages) == messages_per_page):
+        generate_logpages.delay(chat.id)
+        pagecount += 1
 
     if len(messages) == 0 and page != 1:
         return redirect(url_for("rp_log", url=url, fmt=fmt))
 
     if fmt == "json":
         return jsonify({
-            "total": message_count,
             "messages": [_.to_dict() for _ in messages],
         })
 
     paginator = paginate.Page(
         [],
         page=page,
-        items_per_page=messages_per_page,
-        item_count=message_count,
+        items_per_page=1,
+        item_count=pagecount,
         url_maker=lambda page: url_for("rp_log_page", url=url, page=page),
     )
 
