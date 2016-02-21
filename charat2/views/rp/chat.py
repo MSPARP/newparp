@@ -415,8 +415,6 @@ def log(chat, pm_user, url, fmt):
 @use_db
 @get_chat
 def log_page(chat, pm_user, url, fmt, page):
-    if chat.type in ("group", "pm"):
-        abort(404)
     return _log_page(chat, pm_user, url, fmt, page)
 
 
