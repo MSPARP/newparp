@@ -44,6 +44,9 @@ body { margin: 0px; background-color: #535353; font-family: "Courier", "Courier 
 /* iOS changes this attribute randomly all over the page if you trigger a CSS transform, so force this here */
 body * {-webkit-font-smoothing: antialiased !important;}
 
+/* stop advanced font rendering/enable hardware on conversation to stop Chrome from messing up during transitions, only if enabled */
+body.material #conversation {-webkit-transform:translateZ(0px);}
+
 button, a, select, input, .input * {touch-action: manipulation;}
 
 html, body {-webkit-overflow-scrolling: touch;}
