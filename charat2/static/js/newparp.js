@@ -246,6 +246,49 @@ var msparp = (function() {
 		return text.replace(/\[([A-Za-z]+)(?:=[^\]]+)?\]([\s\S]*?)\[\/\1\]/g, function(str, tag, content) { return bbremove(content); });
 	}
 
+	// Workers
+	function init_notifications() {
+		Notification.requestPermission(function(state) {
+			if (state === "granted") {
+				init_push();
+			}
+		});
+	}
+
+	function init_push() {
+		if (!("serviceWorker" in navigator)) return;
+
+		navigator.serviceWorker.ready.then(function(registration) {
+			registration.pushManager.getSubscription().then(function(subscription) {
+				// Do nothing if we already are subscribed to pushs.
+				if (subscription) {
+					navigator.serviceWorker.controller.postMessage({
+						action: "subscription",
+						subscription: {endpoint: subscription.endpoint}
+					});
+					return;
+				}
+
+				registration.pushManager.subscribe({
+					userVisibleOnly: true
+				}).then(function(subscription) {
+					navigator.serviceWorker.controller.postMessage({
+						action: "subscription",
+						subscription: {endpoint: subscription.endpoint}
+					});
+				}).catch(function(e) {
+					console.error("Push Register:", e);
+				});
+			});
+		});
+	}
+
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.register("/service_worker.js", { scope: "/" }).catch(function(e) {
+			console.error("Error registering worker:", e);
+		});
+	}
+
 	return {
 		// Registration
 		"register": function() {
@@ -1239,8 +1282,8 @@ var msparp = (function() {
 				data[this.id] = this.checked ? "on" : "off";
 				$.post("/chat_api/save_variables", data);
 				user.meta[this.id] = this.checked;
-				if (this.id == "desktop_notifications" && this.checked && typeof Notification != "undefined" && Notification.permission != "granted") {
-					Notification.requestPermission();
+				if (this.id == "desktop_notifications" && this.checked && "Notification" in window && Notification.permission != "granted") {
+					init_notifications();
 				} else if (this.id == "typing_notifications") {
 					if (chat.type == "pm" || chat.type == "roulette") {
 						if (previous_status_message) {
@@ -1253,7 +1296,7 @@ var msparp = (function() {
 				}
 				parse_variables();
 			});
-			$("#desktop_notifications").prop("disabled", typeof Notification == "undefined");
+			$("#desktop_notifications").prop("disabled", !("Notification" in window));
 			function parse_variables() {
 				user.meta.show_preview ? text_preview.show() : text_preview.hide();
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
@@ -1566,6 +1609,11 @@ var msparp = (function() {
 
 			// Run theme specific code.
 			update_theme($("#theme_form select").val());
+
+			// Initalize push if notifications are enabled.
+			if (user.meta.desktop_notifications && typeof Notification != "undefined") {
+				init_push();
+			}
 
 			// Now all that's done, let's connect
 			connect();

@@ -10,6 +10,7 @@ celery = Celery("newparp", include=[
     "charat2.tasks.matchmaker",
     "charat2.tasks.reaper",
     "charat2.tasks.roulette_matchmaker",
+    "charat2.tasks.notifications",
 ])
 
 celery.config_from_object('charat2.tasks.config')

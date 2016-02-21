@@ -22,12 +22,25 @@ cookie_domain = "." + os.environ["BASE_DOMAIN"]
 
 def set_cookie(response):
     if "newparp" not in request.cookies:
+        # Set the cookie for both the cookie domain and the visiting domain.
+        response.set_cookie(
+            "newparp",
+            g.session_id,
+            max_age=365 * 24 * 60 * 60,
+        )
+
         response.set_cookie(
             "newparp",
             g.session_id,
             max_age=365 * 24 * 60 * 60,
             domain=cookie_domain,
         )
+    return response
+
+
+def set_headers(response):
+    response.headers["Service-Worker-Allowed"] = "/"
+
     return response
 
 
