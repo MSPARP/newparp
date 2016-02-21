@@ -110,20 +110,6 @@ display:none
 display:none
 }
 
-/* 1.3. Footer */
-
-footer { margin: 10px auto; padding: 0 20px; text-align: right; text-transform: uppercase; font-size: 12pt; }
-footer, footer a { color: #ddd; }
-footer ul { margin: 0; padding: 0; list-style-type: none; }
-footer li { display: inline; margin-left: 20px; }
-footer a { text-decoration: none; white-space: nowrap; }
-footer a:hover { color: #fff; }
-
-@media (max-width: 715px) {
-	footer { margin: 10px 0; text-align: center; }
-	footer li { margin: 0 5px; }
-}
-
 /* 1.4. Responsive widths */
 
 header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
@@ -143,29 +129,15 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 
 #announcements { max-width: none; padding: 5px; background-color: #eee; }
 #announcements h2 { margin: 0; }
-#announcements p { margin: 0 0 0 8px; }
+
 
 /* 2. Content */
 
-a:hover { text-decoration: none; }
+
 
 h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #444; }
-h2 { font-size: 12pt; }
-h3 { font-size: 10pt; }
 
-ul { padding-left: 1rem; }
-
-table { display: block; max-width: 100%; overflow-x: auto; }
-th { text-align: left; }
-th, td { padding: 5px 8px; }
 tbody tr:nth-child(2n+1) { background-color: #ddd; }
-td a:only-child { display: block; }
-td form { display: inline; }
-td pre:only-child { margin: 0; }
-
-.error { color: #f00; }
-
-#subnav { margin: 10px 0; }
 
 /* 2.1. Forms */
 
@@ -185,8 +157,7 @@ input[type="number"] { max-width: 50px; }
 
 textarea { width: 100%; resize: vertical; }
 
-.pattern_error { display: none; }
-input:invalid + .pattern_error { display: inline; color: #f00; }
+input:invalid + .pattern_error { display: inline; }
 
 .checkbox_list li { margin: 0.5rem 0; }
 
@@ -266,18 +237,8 @@ body:not(.no_forms) .input.select .tabbed_select {
 
 .groupcount {color:#555}
 
-/* 3.2. Searching */
-
-#spinner { width: 140px; height: 140px; margin: 0 auto; }
-
-#search_connecting, #spinner, #search_error { margin: 50px auto 30px; text-align: center; font-size: 16pt; }
-#spinner, #search_error, .searching #search_connecting, .search_error #search_connecting { display: none; }
-.searching #spinner, .search_error #search_error { display: block; }
-#search_error { color: #f00; }
-
 /* 3.3. Group chats */
 
-#group_chats { max-width: none; padding: 0; list-style-type: none; }
 #group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
 #group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #eee; }
 /* overflow:hidden prevents column breaks in Firefox. */
@@ -288,14 +249,6 @@ body:not(.no_forms) .input.select .tabbed_select {
 #group_chats .subtitle { color: #666; }
 
 #group_chats li:after {display:none}
-
-/* 3.4. Your chats */
-
-.unread { font-style: italic; }
-
-/* 3.5. Admin */
-
-#permissions_table td:not(:first-child) { text-align: center; }
 
 /* 4. Chat window */
 
@@ -312,14 +265,7 @@ body.chat #global_navigation {display:none}
 
 .chat h2, .chat h3, .chat p { margin: 5px; }
 .chat h2 { font-size: 14pt; }
-.chat h3 { font-size: 12px; }
-.chat ul { margin: 5px 0; padding: 0 0 0 1.5rem; }
-.chat li { margin: 2px 0; }
 .chat input, .chat textarea, .chat button, .chat select { max-width: 100%; padding: 2px; border: 0; background-color: #fbfbfb; }
-.chat textarea { margin: 0 -2px; }
-.chat .textarea_wrapper { padding: 2px 7px; }
-
-section > .close:first-child { float: right; margin: 5px; }
 
 .chat h2 { font-size: 14pt; text-transform:none;}
 .chat h2:after {content: ""}
@@ -499,32 +445,21 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
 	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
 	#conversation {margin-bottom:-8px}
-	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .hide_nav{display:none}
 	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav .mobile_nav{display:block}
 	#chat_wrapper:not(.log_wrapper) .mobile_nav_wrap {display:block}
-	#chat_wrapper:not(.log_wrapper) #global_navigation.in_chat_nav li { display: none}
-	.log_top_nav {top:34px} #archive_conversation {top:61px}
-	.log_bottom_nav {bottom:0px}
-	#archive_conversation {bottom:27px}
-	#archive_conversation, .log_top_nav, .log_bottom_nav {left:0px;right:0px}
 	#topbar h1 {background: transparent !important}
 	#topbar h1 span:before {display:none}
 	#topbar h1, #topbar .topic {color:#f4f4f4 !important}
-	.chatting > .sidebar.mobile_override, .sidebar.mobile_override {display:block !important;position:fixed !important;top:33px !important;left:0px !important;right:0px !important;bottom:0px !important;width:100% !important;z-index:1 !important}
+	
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:5px;float:right;margin-right:20px;z-index:999}
-	.sidebar_title span {background:transparent}
-	.sidebar_title span:after {content:"";display:none}
+
 	.sidebar {border-right:none !important;border-left:none !important;border-top:15px solid #e0e0e0}
-	.sidebar_wrap .input, .sidebar_wrap .color-double {font-size:11pt}
 	.sidebar_wrap {padding-left:5%;top:27px !important}
 	.sidebar_wrap hr {margin-left:-5%}
-	body:not(.no_forms) #mod_tools select { width: 180px; padding:7px 25px 7px 15px;font-size:10pt}
-	body:not(.no_forms) .sidebar .slimdrop  {margin-bottom:6px;margin-top:1px}
 	#pm_chat_list_container .sidebar_wrap, #my_chats .sidebar_wrap {padding-left:4%;padding-right:4%}
 	#my_chats_list, #pm_chat_list {font-size:12px}
 	#action_mobile_switch_character, #action_mobile_settings {display:list-item}
-	.unum #action_list #action_mobile_switch_character, .unum #action_list #action_mobile_settings {display:inline-block}
-	.unum #action_list #action_switch_character, .unum #action_list #action_settings {display:none}
-	#action_switch_character, #action_settings {display:none}
+
+	
 	#mod_tools, #mod_tools h3 {font-size:12px}
 	}

@@ -2197,7 +2197,6 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	 #sidebar_tabs, #sidebar_left_tabs, .sidebar {display:none !important}
 	 #conversation:after {content: ":o)";color:#2b0057;position:fixed;right:80px;bottom:5%;font-size:80px}
 	 #conversation:before {content: "honk";color:#2b0057;position:fixed;right:60px;bottom:10px;}
-
 }
 
 
