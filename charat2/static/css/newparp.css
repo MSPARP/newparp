@@ -899,14 +899,14 @@ body.no_forms .input.select, body.no_forms .input.select select {max-width:99%}
 
 #filter_column .toggle_box h2 {padding-bottom: 10px;}
 
-.common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:#ccc; padding: 10px 15px 10px 15px;border-bottom:3px solid #999; border-right:4px solid transparent; -webkit-transform: translate3d(0px, 0px, 0px); transform: translate3d(0px, 0px, 0px);}
+.common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:#ccc; padding: 10px 15px 10px 15px;border-bottom:3px solid #999; border-right:4px solid transparent; -webkit-transform: translate(0px, 0px); transform: translate(0px, 0px);}
 .common_box_wrap {transform: none}
 
 #filter_settings {padding-top:25px;}
 
 .toggle_box > input:first-child:checked + .enable_anim + #character_settings, .toggle_box > input:first-child:checked + .enable_anim + #quirk_settings, .toggle_box > input:first-child:checked + .enable_anim + #filter_settings, .toggle_box > input:first-child:checked + .enable_anim + #search_settings { -webkit-animation: none !important; animation: none !important; -webkit-transition: none !important; transition: none !important;} /* tie animation of boxes to headers*/
 
-.toggle_box > input:first-child:checked + h2, .toggle_box > input:first-child:checked + h2 + #character_settings, .toggle_box > input:first-child:checked + h2 + #quirk_settings, .toggle_box > input:first-child:checked + h2 + #filter_settings, .toggle_box > input:first-child:checked + h2 + #search_settings { -webkit-transform: translate3d(0px, -14px, 0px); transform: translate3d(0px, -14px, 0px); -webkit-animation: .3s ease-out lightUp; animation: .3s ease-out lightUp;}
+.toggle_box > input:first-child:checked + h2, .toggle_box > input:first-child:checked + h2 + #character_settings, .toggle_box > input:first-child:checked + h2 + #quirk_settings, .toggle_box > input:first-child:checked + h2 + #filter_settings, .toggle_box > input:first-child:checked + h2 + #search_settings { -webkit-transform: translate(0px, -14px); transform: translate(0px, -14px); -webkit-animation: .3s ease-out lightUp; animation: .3s ease-out lightUp;}
 
 /* prevent accidental triggering of animation init when already expanded */
 
@@ -947,13 +947,13 @@ border-color: #b0b0b0 transparent transparent;
 
 
 @-webkit-keyframes lightUp {
-    from { background:#ccc; margin-top:0px; border-color: transparent; -webkit-transform: translate3d(0px, 0px, 0px); transform: translate3d(0px, 0px, 0px);}
-      to {  -webkit-transform: translate3d(0px, -14px, 0px); transform: translate3d(0px, -14px, 0px); }
+    from { background:#ccc; margin-top:0px; border-color: transparent; -webkit-transform: translate(0px, 0px); transform: translate(0px, 0px);}
+      to {  -webkit-transform: translate(0px, -14px); transform: translate(0px, -14px); }
 }
 
 @keyframes lightUp {
-    from { background:#ccc; margin-top:0px; border-color: transparent; transform: translate3d(0px, 0px, 0px);}
-      to { transform: translate3d(0px, -14px, 0px); }
+    from { background:#ccc; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+      to { transform: translate(0px, -14px); }
 }
 
 /* hide toggle boxes while keeping them an active element to allow keyboard navigation */
