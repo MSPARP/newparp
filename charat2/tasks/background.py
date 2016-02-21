@@ -1,6 +1,7 @@
 import datetime
 
 from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound
 
 from charat2.model import Chat, ChatUser, Message, GroupChat, LogPage
 from charat2.tasks import celery, WorkerTask
@@ -48,11 +49,14 @@ def generate_logpages(chat_id):
     db = generate_logpages.db
     messages_per_page = 200
 
-    if len(db.query(LogPage).filter(LogPage.chat_id == chat_id).all()) > 0:
-        return
+    try:
+        logpages = db.query(LogPage).filter(LogPage.chat_id == chat_id).order_by(LogPage.id).all()
 
-    page = 1
-    lastid = 0
+        page = logpages[-1].page + 1
+        lastid = logpages[-1].offset
+    except (NoResultFound, IndexError):
+        page = 1
+        lastid = 0
 
     while True:
         messages = db.query(Message.id).filter(
