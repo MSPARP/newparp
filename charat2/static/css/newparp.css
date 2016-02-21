@@ -988,8 +988,21 @@ width:0px; height:0px; opacity:0;	}
 .group_toggle {display:inline-block;}
 .group_toggle + label {display:inline-block;white-space:nowrap;margin-left:8px; border-radius:4px; color: #a6a6a6; text-decoration:none; font-weight:bold; padding: 1px 6px 3px 6px; transition: all 0.2s}
 .group_toggle + label:hover, .group_toggle + label:active, .group_toggle:focus + label {background:#dedede;}
-.group_toggle:not(:checked) + label:after {content: '\25BE'}
-.group_toggle:checked + label:after {content: '\25B4'}
+.group_toggle:not(:checked) + label:after {content: '';
+	width: 0; 
+	height: 0; 
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 7px solid;
+	display:inline-block}
+.group_toggle:checked + label:after {content: '';
+	content: '';
+	width: 0; 
+	height: 0; 
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-bottom: 7px solid;
+	display:inline-block}
 .group_toggle + label + ul {clear:left}
 
 @media (max-width: 543px) { 
@@ -1369,7 +1382,6 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 /* 3.3. Group chats */
 
 #group_chats { max-width: none; padding: 0; list-style-type: none; }
-#group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
 #group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #e0e0e0; border-bottom:2px solid #a0a0a0}
 /* overflow:hidden prevents column breaks in Firefox. */
 #group_chats li { -webkit-column-break-inside: avoid; position:relative;}
@@ -1421,8 +1433,10 @@ border-color:  #d9d9d9 #eee;
 }
 
 /* enable multi column width/layout */
-@media (min-width: 1150px) {
-#filter_chats {max-width:100%}
+@media (min-width: 1165px) {
+	#filter_chats {max-width:100%}
+	/* disable this for smaller and mobile layouts, as it breaks old devices */
+	#group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
 }
 
 /* 3.4. Your chats */
@@ -1527,8 +1541,8 @@ section > .close:first-child { float: right; margin: 5px; }
 #chat_logo:focus {outline:0}
 
 /* mobile navigation menu */
-.mobile_nav_wrap {display:none;position:fixed;top:33px;bottom:0px;left:0px; width:0px;overflow:hidden; text-transform:none; font-variant:normal;padding:5px;box-sizing:border-box;}
-#global_navigation.in_chat_nav #mobile_nav_toggle:checked + .mobile_nav_wrap {background:#eee;border-right:2px solid #999;color:#535353;width:270px;overflow:auto;box-shadow:4px 0px 10px rgba(0,0,0,.2)}
+.mobile_nav_wrap {display:none;position:fixed;top:33px;bottom:0px;left:0px; width:0px;overflow:hidden; text-transform:none; font-variant:normal;padding:0px;box-sizing:border-box;}
+#global_navigation.in_chat_nav #mobile_nav_toggle:checked + .mobile_nav_wrap {background:#eee;border-right:2px solid #999;color:#535353;width:270px;padding:5px;overflow:auto;box-shadow:4px 0px 10px rgba(0,0,0,.2)}
 
 .mobile_nav:before, .hide_nav:before {content:"";display:block;width:35px;height:33px;background:transparent;position:fixed;top:0px;left:0px;padding:7px 10px;box-sizing:border-box; border-top-right-radius:10px;border-bottom-right-radius:10px; transition: background .2s ease-in-out}
 .hide_nav:before {position:absolute;border-radius:2px;margin:3px; padding: 4px 7px; width:27px;height:27px;}
@@ -1543,9 +1557,10 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #global_navigation .mobile_nav_button:active, #global_navigation .mobile_nav_link_button:active {padding-left:8px;padding-right:6px}
 
+
 @supports ( (transform: translateX(1px)) or (-webkit-transform:translateX(1px)) )  {
 	/* this is ugly, but the chat is otherwise unusable on severely antiquated browsers */
-	.mobile_nav_wrap {-webkit-transform:translateX(-100%);transform:translateX(-100%);transition: transform .3s ease-in-out; width:270px;overflow:auto; background:#eee;border-right:2px solid #999;color:#535353;}
+	.mobile_nav_wrap {-webkit-transform:translateX(-100%);transform:translateX(-100%);transition: transform .3s ease-in-out; width:270px;padding:5px;overflow:auto; background:#eee;border-right:2px solid #999;color:#535353;}
 	#global_navigation.in_chat_nav #mobile_nav_toggle:checked + .mobile_nav_wrap {-webkit-transform:translateX(0%);transform:translateX(0%);}
 
 }
@@ -2071,7 +2086,15 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#global_navigation.in_chat_nav li:active {background-color:#767676}
 	#global_navigation.in_chat_nav .user a {max-width:none} 
  	#global_navigation.in_chat_nav li a .short {display:none}
-	#global_navigation.in_chat_nav label:before {content: '\2630\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
+	#global_navigation.in_chat_nav label:before {
+	content: '\00a0';
+	background-image: url('/static/img/menu-default.png');
+	background-image: url('/static/img/menu-default.svg'), none;
+	background-position:center;
+	background-repeat:no-repeat;
+	background-size:11px 11px;
+	font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	}
 	#global_navigation.in_chat_nav label { display: block; padding: 7px 10px; background-color: #626262; cursor: pointer; height:33px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
 	#global_navigation.in_chat_nav input:not(:checked) + ul { max-height:0px;overflow:hidden; transition:all .3s ease-in-out;}
