@@ -209,7 +209,7 @@ body:not(.no_forms) .input.select .tabbed_select {
 .toggle_box > input:first-child:not(:checked) + h2 ~ *, .toggle_box > input:first-child:not(:checked) + h3 ~ * { display: none }
 .toggle_box > h2:nth-child(2), .toggle_box > h3:nth-child(2) { text-indent: -0.75rem; }
 /* Make these look more clickable. */
-.toggle_box h2 label, .toggle_box h3 label { cursor: pointer; text-decoration: underline; }
+.toggle_box h2 label, .toggle_box h3 label { cursor: pointer; }
 .toggle_box h2 label:hover, .toggle_box h3 label:hover { text-decoration: none; }
 
 .common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:transparent; padding: 5px 2px;border:none; transform: none !important}
