@@ -1573,6 +1573,9 @@ section > .close:first-child { float: right; margin: 5px; }
 
 #global_navigation.in_chat_nav .hide_nav, #global_navigation.in_chat_nav .mobile_nav  {padding-left:35px}
 
+.chat .loglink {margin-bottom:5px; }
+.chat .loglink a{text-decoration:underline}
+.chat .loglink a:hover {text-decoration:none}
 
 @font-face
 {
@@ -2002,7 +2005,7 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 @media (max-height: 600px) {
 	#global_navigation.in_chat_nav {top:4px}
 	#conversation {top:37px}
-	#topbar ~ #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 62px; }
+	#topbar ~ #conversation, #topbar ~ .sidebar, body .sidebar, #info_panel, #edit_info_panel { top: 62px; }
 	body:not(.disable_left_bar) #chat_logo {top:5px}
 	#connection_method {top:-3px;right:0px; font-size:80%}
 	#sidebar_tabs, #topbar {top:37px}
@@ -2109,7 +2112,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#topbar h1 {background:transparent}
 	#topbar, #topbar .topic {color: #f5f5f5}
 	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}
-	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel, body.disable_left_bar #topbar ~ .sidebar, body.disable_left_bar .sidebar { top: 36px; }
+	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, body .sidebar, #info_panel, #edit_info_panel, body.disable_left_bar #topbar ~ .sidebar, body.disable_left_bar .sidebar { top: 36px; }
 	#connection_method, #chat_logo, body.disable_left_bar #chat_logo {display:none}
 	#sidebar_tabs, body.disable_left_bar #sidebar_tabs {top:11px}
 	.log_top_nav {top:36px} #archive_conversation {top:63px}

@@ -234,6 +234,7 @@
                 </section>
                 {% endif %}
                 <section id="action_list"></section>
+                <p class="infolink loglink">&gt;<a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a></p>
                 <h2 {% if chat.type == "group": %}class="group_userlist"{% endif %}>Users</h2>
                 <ul id="user_list"></ul>
                 <p>
