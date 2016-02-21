@@ -1049,6 +1049,21 @@ class SpamlessFilter(Base):
     def __repr__(self):
         return "<SpamlessFilter: '%s'>" % (self.id, self.regex)
 
+
+class LogPage(Base):
+
+    __tablename__ = "log_pages"
+
+    id = Column(Integer, primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
+
+    page = Column(Integer, nullable=False)
+    offset = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<LogPage #%s: Page %s>" % (self.id, self.page)
+
+
 # 2. Indexes
 
 

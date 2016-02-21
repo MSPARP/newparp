@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import and_
 
-from charat2.model import Chat, ChatUser
+from charat2.model import Chat, ChatUser, Message, GroupChat, LogPage
 from charat2.tasks import celery, WorkerTask
 
 @celery.task(base=WorkerTask)
@@ -41,4 +41,41 @@ def unlist_chats():
         GroupChat.last_message < datetime.datetime.now() - datetime.timedelta(7)
     )).update({"publicity": "unlisted"})
     unlist_chats_db.commit()
+
+
+@celery.task(base=WorkerTask, ignore_result=True)
+def generate_logpages(chat_id):
+    db = generate_logpages.db
+    messages_per_page = 200
+
+    if len(db.query(LogPage).filter(LogPage.chat_id == chat_id).all()) > 0:
+        return
+
+    page = 1
+    lastid = 0
+
+    while True:
+        messages = db.query(Message.id).filter(
+            Message.chat_id == chat_id,
+        ).filter(
+            Message.id > lastid
+        ).order_by(
+            Message.posted
+        ).limit(
+            messages_per_page
+        ).all()
+
+        if len(messages) < messages_per_page:
+            break
+
+        db.add(LogPage(
+            chat_id=chat_id,
+            page=page,
+            offset=messages[-1][0]
+        ))
+
+        lastid = messages[-1][0]
+        page += 1
+
+    db.commit()
 
