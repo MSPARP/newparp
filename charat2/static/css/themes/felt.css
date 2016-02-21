@@ -733,8 +733,6 @@ p:hover > .timestamp {color:#0e4603; }
 .chat #text_preview {background:#000;border:1px solid #0e4603;margin-left:32px }
 .log_button { display: inline-block; color: #fff; text-decoration: none; margin:5px}
 
-#send_form_wrap.abscond_again {margin-right:168px}
-
 body:not(.no_forms) #button_wrap {bottom:4px}
 body:not(.no_forms) #chat_line_input {top:2px}
 body:not(.no_forms) .no_preview #chat_line_input {top:0px}
@@ -752,8 +750,6 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 /* 4.7 Responsive chat width & layout collapse */
 
-
-
 @media (min-width: 1650px) {body:not(.disable_left_bar) #chat_logo {top:5px; left:1px;width:180px;height:65px;background-size: 180px 65px}}
 
 
@@ -770,10 +766,6 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:cover; width:150px;height:54px; background-size:150px 54px;image-rendering: auto; -ms-interpolation-mode: auto;}
 
-@media (max-width: 780px), (max-height: 500px) {
-	 #chat_logo, body.disable_left_bar #chat_logo {display:none}
-}
-
 @media (min-width: 781px) and (min-height: 501px) {
 	#global_navigation.in_chat_nav .user:hover ul, #global_navigation.in_chat_nav .user a:hover + ul, #global_navigation.in_chat_nav .user a:focus + ul, #global_navigation.in_chat_nav .user a:active + ul { border-top:1px dashed #197905}
 }
@@ -782,10 +774,7 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 	#global_navigation.in_chat_nav li:active {background-color:#177204}
 	#global_navigation.in_chat_nav label { background-color: #156704;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
-	#topbar {background:transparent;}
-	#topbar h1 {background:transparent}
 	#topbar, #topbar .topic {color: #fff}
-	#connection_method, #chat_logo {display:none}
 }
 
 /* collapse last side bar and engage mobile navigation & menu */

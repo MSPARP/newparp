@@ -411,16 +411,11 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
 .chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
-.chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
 #send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
 
 #button_wrap {margin-right:-5px}
 
-#abscond_button { margin-left: -2px; }
 #log_button { display: inline-block; padding: 2px 6px; background-color: #f8f8f8; color: #000; text-decoration: none; }
-
-#disconnect_links { display: none; }
-#conversation #disconnect_links { display: block; }
 
 /* 4.5. Log pages */
 
@@ -453,13 +448,6 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 	
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:5px;float:right;margin-right:20px;z-index:999}
 
-	.sidebar {border-right:none !important;border-left:none !important;border-top:15px solid #e0e0e0}
 	.sidebar_wrap {padding-left:5%;top:27px !important}
-	.sidebar_wrap hr {margin-left:-5%}
-	#pm_chat_list_container .sidebar_wrap, #my_chats .sidebar_wrap {padding-left:4%;padding-right:4%}
-	#my_chats_list, #pm_chat_list {font-size:12px}
-	#action_mobile_switch_character, #action_mobile_settings {display:list-item}
+}
 
-	
-	#mod_tools, #mod_tools h3 {font-size:12px}
-	}

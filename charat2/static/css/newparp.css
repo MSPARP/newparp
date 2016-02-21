@@ -1268,19 +1268,12 @@ body:not(.no_forms) .chat_user_table .input.select select{width:175px}
   -webkit-animation: ripple .5s ease-out;
   animation: ripple .5s ease-out;
 }
-@-webkit-keyframes 
-ripple { to {
- -webkit-transform: scale(-1.5);
- transform: scale(-1.5);
- opacity: 0;
+
+@-webkit-keyframes ripple {
+	to { -webkit-transform: scale(-1.5); transform: scale(-1.5); opacity: 0; }
 }
-}
-@keyframes 
-ripple { to {
- -webkit-transform: scale(-1.5);
- transform: scale(-1.5);
- opacity: 0;
-}
+@keyframes ripple {
+	to { -webkit-transform: scale(-1.5); transform: scale(-1.5); opacity: 0; }
 }
 
 button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, .unum, .unum *, #chat_logo {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
@@ -1344,7 +1337,6 @@ body.no_forms .robo_q {margin-top:10px;clear:both;display:block}
 #filter_column.open {display:block;visibility:visible;max-width:none;min-width:245px;}
 #filter_column.open {padding:0px;height:auto;}
 #filter_column.open, #stem_column.open {max-width:40rem;}
-#filter_column + button {display:block;}
 #filter_column.open + button {margin:25px 0 0 0; min-width:0px;width:auto; padding: 17px 20px;}
 #filter_column.open + button:active {padding-right: 19px;}
 }
