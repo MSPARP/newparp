@@ -86,10 +86,10 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #222434; bord
 #global_navigation a:hover, #global_navigation button:hover { color: #939eb7; }
 #global_navigation #unread_counter { color: #161823; background-color: #798297; border-left:1px solid #2a2c40; }
 #global_navigation:before {
-  border-color: transparent #1d1f2c;
+	border-color: transparent #1d1f2c;
 }
 #global_navigation #unread_counter:before {
-  border-color: #6c7487 #1d1f2c;
+	border-color: #6c7487 #1d1f2c;
 }
 
 @media (min-width: 686px) {
@@ -98,7 +98,7 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #222434; bord
 }
 
 @media (max-width: 685px) {
-  #global_navigation li:active {background-color:#424565} 
+	#global_navigation li:active {background-color:#424565} 
 	#global_navigation label { background-color: #3a3d59;}
 	#global_navigation label:hover { color: #939eb7; }
 }
@@ -148,11 +148,11 @@ input:invalid + .pattern_error { color: #f00; }
 /* 2.1.b Forms override */
 
 .input label, .not_input label {
-  color: #60626e;
+	color: #60626e;
 }
 
 .input .help-block {
-  color: #6a758f;
+	color: #6a758f;
 }
 
 body:not(.no_forms) .input input[type='text'],
@@ -161,9 +161,9 @@ body:not(.no_forms) .input input[type='email'],
 body:not(.no_forms) .input input[type='password'],
 body:not(.no_forms) .input textarea,
 body:not(.no_forms) #color_hex_input {
-  border-bottom: 1px solid #11131c;
-  background: #2a2c40;
-  color: #60626e;
+	border-bottom: 1px solid #11131c;
+	background: #2a2c40;
+	color: #60626e;
 }
 
 body:not(.no_forms) .input input[type='text']::-webkit-input-placeholder,
@@ -171,35 +171,35 @@ body:not(.no_forms) .input input[type='email']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea::-webkit-input-placeholder {
-  color: #2a2c40;
+	color: #2a2c40;
 }
 body:not(.no_forms) .input input[type='text']:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:-moz-placeholder,
 body:not(.no_forms) .input textarea:-moz-placeholder {
-  color: #2a2c40;
+	color: #2a2c40;
 }
 body:not(.no_forms) .input input[type='text']::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']::-moz-placeholder,
 body:not(.no_forms) .input textarea::-moz-placeholder {
-  color: #2a2c40;
+	color: #2a2c40;
 }
 body:not(.no_forms) .input input[type='text']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:-ms-input-placeholder {
-  color: #2a2c40;
+	color: #2a2c40;
 }
 body:not(.no_forms) .input input[type='text']:-webkit-autofill,
 body:not(.no_forms) .input input[type='email']:-webkit-autofill,
 body:not(.no_forms) .input input[type='password']:-webkit-autofill,
 body:not(.no_forms) .input input[type='number']:-webkit-autofill,
 body:not(.no_forms) .input textarea:-webkit-autofill {
-  box-shadow: 0 0 0 1000px #2a2c40 inset;
+	box-shadow: 0 0 0 1000px #2a2c40 inset;
 }
 body:not(.no_forms) .input input[type='text']:focus,
 body:not(.no_forms) .input input[type='email']:focus,
@@ -207,37 +207,37 @@ body:not(.no_forms) .input input[type='number']:focus,
 body:not(.no_forms) .input input[type='password']:focus,
 body:not(.no_forms) .input textarea:focus,
 body:not(.no_forms) #color_hex_input:focus {
-  box-shadow: 0 1px 0 #798297;
-  border-color: #798297;
-  background: #2a2c40;
+	box-shadow: 0 1px 0 #798297;
+	border-color: #798297;
+	background: #2a2c40;
 }
 body:not(.no_forms) .input input[type='text']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea:focus::-webkit-input-placeholder {
-  color: #161823 !important;
+	color: #161823 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-moz-placeholder,
 body:not(.no_forms) .input textarea:focus:-moz-placeholder {
-  color: #161823 !important;
+	color: #161823 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-moz-placeholder,
 body:not(.no_forms) .input textarea:focus::-moz-placeholder {
-  color: #161823 !important;
+	color: #161823 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:focus:-ms-input-placeholder {
-  color: #161823 !important;
+	color: #161823 !important;
 }
 body:not(.no_forms) .input input[type='text'][disabled],
 body:not(.no_forms) .input input[type='email'][disabled],
@@ -245,15 +245,15 @@ body:not(.no_forms) .input input[type='number'][disabled],
 body:not(.no_forms) .input input[type='password'][disabled],
 body:not(.no_forms) .input textarea[disabled],
 body:not(.no_forms) #color_hex_input[disabled] {
-  color: #2a2c40;
-  background-color: #11131c;
+	color: #2a2c40;
+	background-color: #11131c;
 }
 body:not(.no_forms) .input input[type='text'][disabled] + label,
 body:not(.no_forms) .input input[type='email'][disabled] + label,
 body:not(.no_forms) .input input[type='number'][disabled] + label,
 body:not(.no_forms) .input input[type='password'][disabled] + label,
 body:not(.no_forms) .input textarea[disabled] + label {
-  color: #6a758f;
+	color: #6a758f;
 }
 body:not(.no_forms) .input input[type='text'].error,
 body:not(.no_forms) .input input[type='email'].error,
@@ -261,92 +261,92 @@ body:not(.no_forms) .input input[type='number'].error,
 body:not(.no_forms) .input input[type='password'].error,
 body:not(.no_forms) .input textarea.error,
 body:not(.no_forms) #color_hex_input.error {
-  border-color: #f66660;
-  box-shadow: 0 1px 0 #f66660;
+	border-color: #f66660;
+	box-shadow: 0 1px 0 #f66660;
 }
 body:not(.no_forms) .input input[type='text'].error ~ .help-block,
 body:not(.no_forms) .input input[type='email'].error ~ .help-block,
 body:not(.no_forms) .input input[type='number'].error ~ .help-block,
 body:not(.no_forms) .input input[type='password'].error ~ .help-block,
 body:not(.no_forms) .input textarea.error ~ .help-block {
-  color: #f66660;
+	color: #f66660;
 }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:before {
-  border: 2px solid #2a2c40;
-  background: #2a2c40;
+	border: 2px solid #2a2c40;
+	background: #2a2c40;
 }
 
 body:not(.no_forms) .input input[type='checkbox']:checked + label:before {
-  background: #3a3d59;
-  border-color: #3a3d59;
+	background: #3a3d59;
+	border-color: #3a3d59;
 }
 
 body:not(.no_forms) .input input[type='checkbox'].indeterminate + label:before {
-  background: #2a2c40;
-  border-color: #363851;
+	background: #2a2c40;
+	border-color: #363851;
 }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:after {
-  border-right: 2px solid #161823;
-  border-bottom: 2px solid #161823;
+	border-right: 2px solid #161823;
+	border-bottom: 2px solid #161823;
 }
 
 body:not(.no_forms) .input input[type='checkbox'].indeterminate + label:after {
-  border-right: 2px solid #798297;
-  border-bottom: 2px solid #798297;
+	border-right: 2px solid #798297;
+	border-bottom: 2px solid #798297;
 }
 
 body:not(.no_forms) .input input[type='checkbox']:checked + label:after {
-  border-right: 2px solid #a5b0c9;
-  border-bottom: 2px solid #a5b0c9;
+	border-right: 2px solid #a5b0c9;
+	border-bottom: 2px solid #a5b0c9;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled] + label {
-  color: #3a3d4a;
+	color: #3a3d4a;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled] + label:before {
-  border-color: #1d1f2c;
-  background: #1d1f2c;
+	border-color: #1d1f2c;
+	background: #1d1f2c;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled]:checked + label:before {
-  background: #11131c;
+	background: #11131c;
 }
 
 body:not(.no_forms) .input input[type='radio'] + label:before,
 body:not(.no_forms) .input input[type='radio'] + label:after {
-  border: 2px solid #2a2c40;
-  background: #11131c;}
+	border: 2px solid #2a2c40;
+	background: #11131c;}
 
 body:not(.no_forms) .input input[type='radio'] + label:after {
-  background: #a5b0ca;
-  border: 2px solid #11131c;
+	background: #a5b0ca;
+	border: 2px solid #11131c;
 }
 body:not(.no_forms) .input input[type='radio']:checked + label:before {
-  border-color: #414464;
+	border-color: #414464;
 }
 
 body:not(.no_forms) .input input[type='radio'][disabled] + label {
-  color: #3a3d4a;
+	color: #3a3d4a;
 }
 body:not(.no_forms) .input input[type='radio'][disabled] + label:before {
-  border-color: #2a2c40;
+	border-color: #2a2c40;
 }
 body:not(.no_forms) .input input[type='radio'][disabled]:checked + label:before,
 body:not(.no_forms) .input input[type='radio'][disabled]:checked + label:after {
-  background: #2a2c40;
+	background: #2a2c40;
 }
 
 
 body:not(.no_forms) .input.select:after {
-  border: solid transparent;
-  border-top-color: #939eb7;
+	border: solid transparent;
+	border-top-color: #939eb7;
 }
 
 
 body:not(.no_forms) .input.select select {
-  color: #939eb7;
-  border-bottom: 1px solid #3a3d59;
-  background-color: #3a3d59;
+	color: #939eb7;
+	border-bottom: 1px solid #3a3d59;
+	background-color: #3a3d59;
 }
 
 body:not(.no_forms) .input.select select:focus, body:not(.no_forms) .input.select *, body:not(.no_forms) .input.select select optgroup, body:not(.no_forms) .input.select select optgroup option {
@@ -356,29 +356,29 @@ color: #939eb7;
 body:not(.no_forms) .input.select select:focus { background:#3f4261;}
 
 body:not(.no_forms) .input.select select[disabled] {
-  color: #3a3d59;
-  background-color: #1D1F2C;
-  border-bottom: 1px dashed #11131c;
+	color: #3a3d59;
+	background-color: #1D1F2C;
+	border-bottom: 1px dashed #11131c;
 }
 body:not(.no_forms) .input.select select[disabled] + label {
-  color: #3a3d59;
+	color: #3a3d59;
 }
 body:not(.no_forms) .input.select select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #939eb7;
+		color: transparent;
+		text-shadow: 0 0 0 #939eb7;
 }
 
 .input_table p.color-double label {  color: #60626e;}
 
 body:not(.no_forms) #color_input, body:not(.no_forms) #color_header_set { -webkit-appearance: none;
-  background: #2a2c40;
-  border-bottom: 1px solid #11131c;
-  }
-  
+	background: #2a2c40;
+	border-bottom: 1px solid #11131c;
+	}
+	
 body.no_forms #color_hex_input, body.no_forms .input textarea, body.no_forms .input input[type="text"] , body.no_forms .input input[type="password"], body.no_forms .input input[type="email"] {background:#2a2c40;color:#60626e}
 body.no_forms .input.select select, body.no_forms button {color:#000}
 
- 	 
+	 
 /* 2.2. Toggle box */
 
 .common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:#161823; border-bottom:3px solid #3a3d59;}
@@ -405,8 +405,8 @@ border-color: #2a2c40 transparent transparent;
 /* 2.3 Button styles */
 
 body:not(.no_forms) button {
-  background: #3a3d59;
-  color: #939eb7;
+	background: #3a3d59;
+	color: #939eb7;
 }
 
 body:not(.no_forms) button:disabled {
@@ -424,61 +424,61 @@ body:not(.no_forms) button:focus {background:#3f4261;}
 .admin_user_info tr td:nth-of-type(1){color:#505375}
 
 @media (max-width: 750px) {
-.admin_userlist tr td:nth-of-type(1) {color:#505375;}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(5):before {color:#505375}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(6):before {color:#505375}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(7):before {color:#505375}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(8):before {color:#505375}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(3):before {color:#505375}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(4):before {color:#505375}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(5):before {color:#505375}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(6):before {color:#505375}
+	.admin_userlist tr td:nth-of-type(1) {color:#505375;}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(5):before {color:#505375}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(6):before {color:#505375}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(7):before {color:#505375}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(8):before {color:#505375}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(3):before {color:#505375}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(4):before {color:#505375}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(5):before {color:#505375}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(6):before {color:#505375}
 }
 
 @media (max-width: 682px) {
-.blocks_table tr td:nth-of-type(1):before {color:#505375;}
-.blocks_table tr td:nth-of-type(2):before {color:#505375;}
-.blocks_table tr td:nth-of-type(4):before {color:#505375;}
-.blocks_table tr td:nth-of-type(6):before {color:#505375;}
-.blocks_table tr td:nth-of-type(7):before {color:#505375;}
+	.blocks_table tr td:nth-of-type(1):before {color:#505375;}
+	.blocks_table tr td:nth-of-type(2):before {color:#505375;}
+	.blocks_table tr td:nth-of-type(4):before {color:#505375;}
+	.blocks_table tr td:nth-of-type(6):before {color:#505375;}
+	.blocks_table tr td:nth-of-type(7):before {color:#505375;}
 }
 
 @media (max-width: 540px) {
-.admin_chats_list tr td:nth-of-type(1) {color:#505375;}
-.admin_chats_list tr td:nth-of-type(3):before {color:#505375;}
-.admin_chats_list tr td:nth-of-type(4):before {color:#505375;}
-.admin_chats_list tr td:nth-of-type(5):before {color:#505375;}
-.spam_table tr td:nth-of-type(1) {color:#505375}
-.spam_table tr td:nth-of-type(2):before {color:#505375;}
-.spam_table tr td:nth-of-type(3):before {color:#505375;}
-.spam_table tr td:nth-of-type(4):before {color:#505375;}
-.spam_table tr td:nth-of-type(5):before {color:#505375;}
-.spam_table tr td:nth-of-type(6):before {color:#505375;}
-.spam_table tr td:nth-of-type(7):before {color:#505375;}
-.ban_table tr td:nth-of-type(1):before {color:#505375;}
-.ban_table tr td:nth-of-type(2):before {color:#505375;}
-.ban_table tr td:nth-of-type(3):before {color:#505375;}
-.ban_table tr td:nth-of-type(4):before {color:#505375;}
+	.admin_chats_list tr td:nth-of-type(1) {color:#505375;}
+	.admin_chats_list tr td:nth-of-type(3):before {color:#505375;}
+	.admin_chats_list tr td:nth-of-type(4):before {color:#505375;}
+	.admin_chats_list tr td:nth-of-type(5):before {color:#505375;}
+	.spam_table tr td:nth-of-type(1) {color:#505375}
+	.spam_table tr td:nth-of-type(2):before {color:#505375;}
+	.spam_table tr td:nth-of-type(3):before {color:#505375;}
+	.spam_table tr td:nth-of-type(4):before {color:#505375;}
+	.spam_table tr td:nth-of-type(5):before {color:#505375;}
+	.spam_table tr td:nth-of-type(6):before {color:#505375;}
+	.spam_table tr td:nth-of-type(7):before {color:#505375;}
+	.ban_table tr td:nth-of-type(1):before {color:#505375;}
+	.ban_table tr td:nth-of-type(2):before {color:#505375;}
+	.ban_table tr td:nth-of-type(3):before {color:#505375;}
+	.ban_table tr td:nth-of-type(4):before {color:#505375;}
 }
 
 @media (max-width: 500px) {
-admin_log tr td:nth-of-type(1) {color:#505375;}
-.admin_log tr td:nth-of-type(4):before {color:#505375;}
-.user_blocked tr td:nth-of-type(1):before {color:#505375;}
-.user_chartable thead {background-color:#11131c !important; border-bottom:20px solid #161823; border-top:2px solid #3a3d59}
-.user_chartable thead th {color:#505375;}
+	admin_log tr td:nth-of-type(1) {color:#505375;}
+	.admin_log tr td:nth-of-type(4):before {color:#505375;}
+	.user_blocked tr td:nth-of-type(1):before {color:#505375;}
+	.user_chartable thead {background-color:#11131c !important; border-bottom:20px solid #161823; border-top:2px solid #3a3d59}
+	.user_chartable thead th {color:#505375;}
 }
 
 @media (max-width: 400px) {
-.chat_user_table.admin_version tr td:nth-of-type(2):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(1):before {color:#505375;}
-.chat_user_table.admin_version tr td:nth-of-type(3):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(2):before {color:#505375;}
-.chat_invites_table tr td:nth-of-type(4):before {color:#505375;}
+	.chat_user_table.admin_version tr td:nth-of-type(2):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(1):before {color:#505375;}
+	.chat_user_table.admin_version tr td:nth-of-type(3):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(2):before {color:#505375;}
+	.chat_invites_table tr td:nth-of-type(4):before {color:#505375;}
 }
 
 /* 2.5 Material UI Feedback */
 
 .ripple {
-  background: rgba(0,0,0,.25);
+	background: rgba(0,0,0,.25);
 }
 
 
@@ -506,13 +506,13 @@ input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-ch
 }
 
 @-webkit-keyframes lightUp {
-    from { background:#1d1f2c; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-      to {  transform: translate(0px, -14px); }
+	from { background:#1d1f2c; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+	to {  transform: translate(0px, -14px); }
 }
 
 @keyframes lightUp {
-    from { background:#1d1f2c; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-      to { transform: translate(0px, -14px); }
+	from { background:#1d1f2c; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+	to { transform: translate(0px, -14px); }
 }
 
 /* 3.2. Searching */
@@ -540,9 +540,7 @@ input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-ch
 #group_chats li.unread a:hover {color:#798297}
 #group_chats li.unread h3:after {color:#6a758f}
 
-#group_chats li:after {
-border-color:  #0f1119 #161823;
-}
+#group_chats li:after { border-color: #0f1119 #161823; }
 
 /* 3.4. Your chats */
 
@@ -758,8 +756,8 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 }
 
 @media (max-width: 780px), (max-height: 500px) {
-  #global_navigation.in_chat_nav li:active {background-color:#424565}
- 	#global_navigation.in_chat_nav label { background-color: #3a3d59;}
+	#global_navigation.in_chat_nav li:active {background-color:#424565}
+	#global_navigation.in_chat_nav label { background-color: #3a3d59;}
 	#global_navigation.in_chat_nav label:hover { color: #939eb7; }
 	#topbar {background:transparent;}
 	#topbar h1 {background:transparent}
@@ -833,13 +831,6 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 
 }
-
-
-/* 6. Settings overrides */
-
-body.no_moving *, body.no_moving *:before, body.no_moving *:after {animation:none !important; -webkit-animation: none !important; transition:none !important; -webkit-transition:none !important}
-
-
 
 /* Color Overrides */
 

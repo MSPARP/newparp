@@ -89,10 +89,10 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #083000; bord
 #global_navigation a:hover, #global_navigation button:hover { color: #fff; }
 #global_navigation #unread_counter { color: #2cff4b; background-color: #20a107; border-left:1px solid #1c8c06; }
 #global_navigation:before {
-  border-color: transparent #082900;
+	border-color: transparent #082900;
 }
 #global_navigation #unread_counter:before {
-  border-color: #1e9607 #082900;
+	border-color: #1e9607 #082900;
 }
 
 @media (min-width: 686px) {
@@ -101,7 +101,7 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #083000; bord
 }
 
 @media (max-width: 685px) {
-  #global_navigation li:active {background-color:#177204} 
+	#global_navigation li:active {background-color:#177204} 
 	#global_navigation label { background-color: #156704;}
 	#global_navigation label:hover { color: #fff; }
 }
@@ -153,11 +153,11 @@ input:invalid + .pattern_error { color: #f00; }
 /* 2.1.b Forms override */
 
 .input label, .not_input label {
-  color: #fff;
+	color: #fff;
 }
 
 .input .help-block {
-  color: #20a107;
+	color: #20a107;
 }
 
 body:not(.no_forms) .input input[type='text'],
@@ -166,9 +166,9 @@ body:not(.no_forms) .input input[type='email'],
 body:not(.no_forms) .input input[type='password'],
 body:not(.no_forms) .input textarea,
 body:not(.no_forms) #color_hex_input {
-  border-bottom: 1px solid #156704;
-  background: #000;
-  color: #fff;
+	border-bottom: 1px solid #156704;
+	background: #000;
+	color: #fff;
 }
 
 body:not(.no_forms) .input input[type='text']::-webkit-input-placeholder,
@@ -176,35 +176,35 @@ body:not(.no_forms) .input input[type='email']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea::-webkit-input-placeholder {
-  color: #000;
+	color: #000;
 }
 body:not(.no_forms) .input input[type='text']:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:-moz-placeholder,
 body:not(.no_forms) .input textarea:-moz-placeholder {
-  color: #000;
+	color: #000;
 }
 body:not(.no_forms) .input input[type='text']::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']::-moz-placeholder,
 body:not(.no_forms) .input textarea::-moz-placeholder {
-  color: #000;
+	color: #000;
 }
 body:not(.no_forms) .input input[type='text']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:-ms-input-placeholder {
-  color: #000;
+	color: #000;
 }
 body:not(.no_forms) .input input[type='text']:-webkit-autofill,
 body:not(.no_forms) .input input[type='email']:-webkit-autofill,
 body:not(.no_forms) .input input[type='password']:-webkit-autofill,
 body:not(.no_forms) .input input[type='number']:-webkit-autofill,
 body:not(.no_forms) .input textarea:-webkit-autofill {
-  box-shadow: 0 0 0 1000px black inset;
+	box-shadow: 0 0 0 1000px black inset;
 }
 body:not(.no_forms) .input input[type='text']:focus,
 body:not(.no_forms) .input input[type='email']:focus,
@@ -212,37 +212,37 @@ body:not(.no_forms) .input input[type='number']:focus,
 body:not(.no_forms) .input input[type='password']:focus,
 body:not(.no_forms) .input textarea:focus,
 body:not(.no_forms) #color_hex_input:focus {
-  box-shadow: 0 1px 0 #2cff4b;
-  border-color: #2cff4b;
-  background: #000;
+	box-shadow: 0 1px 0 #2cff4b;
+	border-color: #2cff4b;
+	background: #000;
 }
 body:not(.no_forms) .input input[type='text']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea:focus::-webkit-input-placeholder {
-  color: #0e4603 !important;
+	color: #0e4603 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-moz-placeholder,
 body:not(.no_forms) .input textarea:focus:-moz-placeholder {
-  color: #0e4603 !important;
+	color: #0e4603 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-moz-placeholder,
 body:not(.no_forms) .input textarea:focus::-moz-placeholder {
-  color: #0e4603 !important;
+	color: #0e4603 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:focus:-ms-input-placeholder {
-  color: #0e4603 !important;
+	color: #0e4603 !important;
 }
 body:not(.no_forms) .input input[type='text'][disabled],
 body:not(.no_forms) .input input[type='email'][disabled],
@@ -250,15 +250,15 @@ body:not(.no_forms) .input input[type='number'][disabled],
 body:not(.no_forms) .input input[type='password'][disabled],
 body:not(.no_forms) .input textarea[disabled],
 body:not(.no_forms) #color_hex_input[disabled] {
-  color: #104f03;
-  background-color: #082a00;
+	color: #104f03;
+	background-color: #082a00;
 }
 body:not(.no_forms) .input input[type='text'][disabled] + label,
 body:not(.no_forms) .input input[type='email'][disabled] + label,
 body:not(.no_forms) .input input[type='number'][disabled] + label,
 body:not(.no_forms) .input input[type='password'][disabled] + label,
 body:not(.no_forms) .input textarea[disabled] + label {
-  color: #20a107;
+	color: #20a107;
 }
 body:not(.no_forms) .input input[type='text'].error,
 body:not(.no_forms) .input input[type='email'].error,
@@ -266,92 +266,92 @@ body:not(.no_forms) .input input[type='number'].error,
 body:not(.no_forms) .input input[type='password'].error,
 body:not(.no_forms) .input textarea.error,
 body:not(.no_forms) #color_hex_input.error {
-  border-color: #f6f660;
-  box-shadow: 0 1px 0 #f6f660;
+	border-color: #f6f660;
+	box-shadow: 0 1px 0 #f6f660;
 }
 body:not(.no_forms) .input input[type='text'].error ~ .help-block,
 body:not(.no_forms) .input input[type='email'].error ~ .help-block,
 body:not(.no_forms) .input input[type='number'].error ~ .help-block,
 body:not(.no_forms) .input input[type='password'].error ~ .help-block,
 body:not(.no_forms) .input textarea.error ~ .help-block {
-  color: #f6f660;
+	color: #f6f660;
 }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:before {
-  border: 2px solid #0b3902;
-  background: #082a00;
+	border: 2px solid #0b3902;
+	background: #082a00;
 }
 
 body:not(.no_forms) .input input[type='checkbox']:checked + label:before {
-  background: #1e9607;
-  border-color: #1e9607;
+	background: #1e9607;
+	border-color: #1e9607;
 }
 
 body:not(.no_forms) .input input[type='checkbox'].indeterminate + label:before {
-  background: #1a8005;
-  border-color: #1a8005;
+	background: #1a8005;
+	border-color: #1a8005;
 }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:after {
-  border-right: 2px solid #1a8005;
-  border-bottom: 2px solid #1a8005;
+	border-right: 2px solid #1a8005;
+	border-bottom: 2px solid #1a8005;
 }
 
 body:not(.no_forms) .input input[type='checkbox'].indeterminate + label:after {
-  border-right: 2px solid #104f03;
-  border-bottom: 2px solid #104f03;
+	border-right: 2px solid #104f03;
+	border-bottom: 2px solid #104f03;
 }
 
 body:not(.no_forms) .input input[type='checkbox']:checked + label:after {
-  border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
+	border-right: 2px solid #ffffff;
+	border-bottom: 2px solid #ffffff;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled] + label {
-  color: #1e9607;
+	color: #1e9607;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled] + label:before {
-  border-color: #1e9607;
+	border-color: #1e9607;
 }
 body:not(.no_forms) .input input[type='checkbox'][disabled]:checked + label:before {
-  background: #1e9607;
+	background: #1e9607;
 }
 
 
 body:not(.no_forms) .input input[type='radio'] + label:before,
 body:not(.no_forms) .input input[type='radio'] + label:after {
-  border: 2px solid #104f03;
-  background: #082a00;}
+	border: 2px solid #104f03;
+	background: #082a00;}
 
 body:not(.no_forms) .input input[type='radio'] + label:after {
-  background: #1e9607;
-  border: 2px solid #082a00;
+	background: #1e9607;
+	border: 2px solid #082a00;
 }
 body:not(.no_forms) .input input[type='radio']:checked + label:before {
-  border-color: #1a8005;
+	border-color: #1a8005;
 }
 
 body:not(.no_forms) .input input[type='radio'][disabled] + label {
-  color: #1e9607;
+	color: #1e9607;
 }
 body:not(.no_forms) .input input[type='radio'][disabled] + label:before {
-  border-color: #1e9607;
+	border-color: #1e9607;
 }
 body:not(.no_forms) .input input[type='radio'][disabled]:checked + label:before,
 body:not(.no_forms) .input input[type='radio'][disabled]:checked + label:after {
-  background: #1e9607;
+	background: #1e9607;
 }
 
 
 body:not(.no_forms) .input.select:after {
-  border: solid transparent;
-  border-top-color: #fff;
+	border: solid transparent;
+	border-top-color: #fff;
 }
 
 
 body:not(.no_forms) .input.select select {
-  color: #fff;
-  border-bottom: 1px solid #156704;
-  background-color: #156704;
+	color: #fff;
+	border-bottom: 1px solid #156704;
+	background-color: #156704;
 }
 
 body:not(.no_forms) .input.select select:focus, body:not(.no_forms) .input.select *, body:not(.no_forms) .input.select select optgroup, body:not(.no_forms) .input.select select optgroup option {
@@ -361,29 +361,29 @@ color: #fff;
 body:not(.no_forms) .input.select select:focus { background:#166c04;}
 
 body:not(.no_forms) .input.select select[disabled] {
-  color: #156704;
-  background-color: #1e9607;
-  border-bottom: 1px dashed #1e9607;
+	color: #156704;
+	background-color: #1e9607;
+	border-bottom: 1px dashed #1e9607;
 }
 body:not(.no_forms) .input.select select[disabled] + label {
-  color: #156704;
+	color: #156704;
 }
 body:not(.no_forms) .input.select select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #fff;
+		color: transparent;
+		text-shadow: 0 0 0 #fff;
 }
 
 .input_table p.color-double label {  color: #fff;}
 
 body:not(.no_forms) #color_input, body:not(.no_forms) #color_header_set { -webkit-appearance: none;
-  background: #000;
-  border-bottom: 1px solid #156704;
-  }
-  
+	background: #000;
+	border-bottom: 1px solid #156704;
+	}
+	
 body.no_forms #color_hex_input, body.no_forms .input textarea, body.no_forms .input input[type="text"] , body.no_forms .input input[type="password"], body.no_forms .input input[type="email"] {background:#000}
 body.no_forms .input.select select, body.no_forms button {color:#000}
 
- 	 
+	 
 /* 2.2. Toggle box */
 
 .common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:#0e4603; border-bottom:3px solid #156704;}
@@ -410,8 +410,8 @@ border-color: #197a05 transparent transparent;
 /* 2.3 Button styles */
 
 body:not(.no_forms) button {
-  background: #156704;
-  color: #fff;
+	background: #156704;
+	color: #fff;
 }
 
 body:not(.no_forms) button:disabled {
@@ -483,7 +483,7 @@ admin_log tr td:nth-of-type(1) {color:#1e9607;}
 /* 2.5 Material UI Feedback */
 
 .ripple {
-  background: rgba(0,5,0,.25);
+	background: rgba(0,5,0,.25);
 }
 
 
@@ -511,13 +511,13 @@ input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-ch
 }
 
 @-webkit-keyframes lightUp {
-    from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-      to {  transform: translate(0px, -14px); }
+		from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+			to {  transform: translate(0px, -14px); }
 }
 
 @keyframes lightUp {
-    from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-      to { transform: translate(0px, -14px); }
+		from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+			to { transform: translate(0px, -14px); }
 }
 
 /* 3.2. Searching */
@@ -786,8 +786,8 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 }
 
 @media (max-width: 780px), (max-height: 500px) {
-  #global_navigation.in_chat_nav li:active {background-color:#177204}
- 	#global_navigation.in_chat_nav label { background-color: #156704;}
+	#global_navigation.in_chat_nav li:active {background-color:#177204}
+	#global_navigation.in_chat_nav label { background-color: #156704;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
 	#topbar {background:transparent;}
 	#topbar h1 {background:transparent}
@@ -847,28 +847,16 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 
 /* 5. HDPI assets  */
 
-@media (-webkit-min-device-pixel-ratio: 1.1), (min-device-pixel-ratio: 1.1),  
-(min-resolution: 100dpi) {
+@media (-webkit-min-device-pixel-ratio: 1.1), (min-device-pixel-ratio: 1.1), (min-resolution: 100dpi) {
+	#activity_spinner {background-image:url('/static/img/8_ball_off.gif');}
+	#activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
 
-#activity_spinner {background-image:url('/static/img/8_ball_off.gif');}
-#activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
-
-#spinner_image {background:url('/static/img/8_ball_big.gif'); background-size:140px 140px;}
-
-
+	#spinner_image {background:url('/static/img/8_ball_big.gif'); background-size:140px 140px;}
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.1) and (max-width:600px), (min-device-pixel-ratio: 1.1) and (max-width:600px),  
-(min-resolution: 100dpi) and (max-width:600px) {
+@media (-webkit-min-device-pixel-ratio: 1.1) and (max-width:600px), (min-device-pixel-ratio: 1.1) and (max-width:600px), (min-resolution: 100dpi) and (max-width:600px) {
 	#spinner_image {background-size:100px 100px;background-position: center center;background-repeat:no-repeat}
 }
-
-
-/* 6. Settings overrides */
-
-body.no_moving *, body.no_moving *:before, body.no_moving *:after {animation:none !important; -webkit-animation: none !important; transition:none !important; -webkit-transition:none !important}
-
-
 
 /* Color Overrides */
 

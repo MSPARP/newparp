@@ -35,8 +35,6 @@ Contents:
 
 body { margin: 8px; background-color: #535353; font-family: "Courier", "Courier New", monospace; font-weight: bold; font-size: 10pt; }
 
-html, body {-webkit-overflow-scrolling: touch;}
-
 /* Header has top corners, main has bottom corners. */
 header, main { background-color: #ccc; border: 1px solid #999999; }
 header { margin: 0 auto; padding: 20px; border-bottom: 0; padding-bottom:5px}
@@ -366,7 +364,7 @@ body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disab
 body .sidebar {bottom:37px;top:35px !important}
 #chat_wrapper #sidebar_left_tabs {display:block;position:absolute;width:226px;bottom:11px;left:auto;right:6px}
 	
-	/* collapse sidebar switching into single bar */
+/* collapse sidebar switching into single bar */
 #side_info {display:none !important}
 .my_chats_open #user_list_container {display:none}
 .my_chats_open #my_chats {display:block;}
@@ -448,14 +446,6 @@ body.no_forms .sidebar #quirk_suffix + label, body.no_forms .sidebar #quirk_pref
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #666; }
 
-.hide_system_messages > .message_join,
-.hide_system_messages > .message_disconnect,
-.hide_system_messages > .message_timeout,
-.hide_system_messages > .message_user_info,
-.hide_system_messages > .message_user_group,
-.hide_system_messages > .message_user_action,
-.hide_system_messages > .message_chat_meta { display: none; }
-
 .unum { float: left; padding: 2px 0 2px 5px; }
 .hide_user_numbers .unum { display: none; }
 .highlighted { background-color: #fff; }
@@ -495,24 +485,12 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 .log_bottom_nav {bottom:6px}
  #archive_conversation {bottom:33px;top:33px;right:3px;left:3px}
 
-/* 4.6. Global Announcements */
-
-@keyframes animate-announce { from { background-position: 0 0; } to { background-position: -80px 0; } }
-@-webkit-keyframes animate-announce { from { background-position: 0 0; } to { background-position: -80px 0; } }
-#global_announcements { position: fixed; z-index: 10; width: 100%; }
-#global_announcements_preview { width: 100%; }
-.announcement { background-size: 40px 40px; background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%, transparent 75%, transparent); background-image: linear-gradient(135deg, rgba(255, 255, 255, .05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .05) 50%, rgba(255, 255, 255, .05) 75%, transparent 75%, transparent); border: 1px solid; animation: animate-announce 5s linear infinite; -webkit-animation: animate-announce 5s linear infinite; background-color: #535353; border-color: #CCC; transition: all 1s ease-in-out; transform: translateX(-100%); opacity: 0; cursor: pointer; }
-.announcement > h2, .announcement > p { margin: 10px; color: #FFF; }
-.announcement > img, .announcement > p { margin-left: 10px; vertical-align: top; }
-.announcement.show { transform: translateX(0%); opacity: 1; }
-
-
 
 @media (max-width:650px) {
-/* make nav reappear when we need mobile navigation */
-body.chat #global_navigation {display:block}
- #archive_conversation {right:0px;left:0px;margin:0}
-.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
+	/* make nav reappear when we need mobile navigation */
+	body.chat #global_navigation {display:block}
+	 #archive_conversation {right:0px;left:0px;margin:0}
+	.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
 	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px; left:0px}
 	#sidebar_tabs, #sidebar_left_tabs {display:none !important}
 	.sidebar:not(.mobile_override) {display:none !important}

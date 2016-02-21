@@ -84,15 +84,15 @@ main { margin: 0 auto; padding: 20px; border-top: 0; font-family: Ricty, Inconso
 #prompt-cursor {display:inline-block;width:14px; height:24px;background: transparent url('/static/img/cursor-default.png') no-repeat scroll 0px bottom;-webkit-animation: cursor steps(1) 1.4s infinite; animation: cursor steps(1) 1.4s infinite; vertical-align:-5px; image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
 
 @-webkit-keyframes cursor {  
-    0% { opacity: 1.0; }
-    50% { opacity: 0.0; }
-    100% { opacity: 1.0; }
+	0% { opacity: 1.0; }
+	50% { opacity: 0.0; }
+	100% { opacity: 1.0; }
 }
 
 @keyframes cursor {  
-    0% { opacity: 1.0; }
-    50% { opacity: 0.0; }
-    100% { opacity: 1.0; }
+	0% { opacity: 1.0; }
+	50% { opacity: 0.0; }
+	100% { opacity: 1.0; }
 }
 
 /* Wrapper fills at least window height, provides background, will likely break iOS7x (NEED TESTER) */
@@ -152,26 +152,26 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 #global_navigation .user ul { margin: 0 0 0 -10px; font-variant:normal;}
 #global_navigation #unread_counter { float: right; box-sizing:border-box;height:33px;padding: 7px 16px 7px 12px; background-color: #a10000; position: relative; border-left:1px solid #791700; }
 #global_navigation:before {
-content: "";
-  position: absolute;
-  top: 0;
-  right: 17px;
-  border-width: 0 13px 13px 0;
-  border-style: solid;
-  border-color: transparent #ccc;
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 17px;
+	border-width: 0 13px 13px 0;
+	border-style: solid;
+	border-color: transparent #ccc;
 }
 #global_navigation #unread_counter:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  border-width: 0 13px 13px 0;
-  border-style: solid;
-  border-color: #791700 #ccc;
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-width: 0 13px 13px 0;
+	border-style: solid;
+	border-color: #791700 #ccc;
 }
 
 @media(min-width:900px){
-#global_navigation .user a {max-width:300px} 
+	#global_navigation .user a {max-width:300px} 
 }
 
 @media (max-width: 950px) {
@@ -179,9 +179,9 @@ content: "";
 }
 
 @media (max-width: 800px) {
-/* Swap in short titles */
-#global_navigation li a .long {display:none}
-#global_navigation li a .short {display:inline}
+	/* Swap in short titles */
+	#global_navigation li a .long {display:none}
+	#global_navigation li a .short {display:inline}
 }
 
 @media (min-width: 686px) {
@@ -196,13 +196,13 @@ content: "";
 }
 
 @media (max-width: 685px) {
-  /* Long titles for full width menu */
-  #global_navigation li a .long {display:inline}
-  #global_navigation li:active {background-color:#767676}
-  #global_navigation .user a {max-width:none} 
- #global_navigation:not(.in_chat_nav) {overflow:hidden}
-#global_navigation li a .short {display:none}
-#global_navigation label:before {content: '\22EE\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
+	/* Long titles for full width menu */
+	#global_navigation li a .long {display:inline}
+	#global_navigation li:active {background-color:#767676}
+	#global_navigation .user a {max-width:none} 
+	#global_navigation:not(.in_chat_nav) {overflow:hidden}
+	#global_navigation li a .short {display:none}
+	#global_navigation label:before {content: '\22EE\00a0'; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
 	#global_navigation label { display: block; user-select:none; position:relative; padding: 7px 10px; background-color: #626262; cursor: pointer; height:31px;box-sizing:border-box; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;font-variant:normal;}
 	#global_navigation:not(.in_chat_nav) label {z-index:1;}
 	#global_navigation label:hover { color: #fff; }
@@ -265,7 +265,7 @@ header {padding-top:0px}
 }
 
 @media (max-height: 585px) {
-#users_online { font-size:70%;padding-top:15px }
+	#users_online { font-size:70%;padding-top:15px }
 }
 
 
@@ -350,22 +350,24 @@ input:invalid + .pattern_error { display: inline-block;margin-left:30px;max-widt
 
 /* 2.1.b Forms override */
 
-body:not(.no_forms) .input * {-moz-appearance:none;
-  -webkit-appearance:none;}
+body:not(.no_forms) .input * {
+	-moz-appearance:none;
+	-webkit-appearance:none;
+}
 
 body:not(.no_forms) .input,
 body:not(.no_forms) #color_hex_input {
-  position: relative;
-  margin-bottom: 3px;
+	position: relative;
+	margin-bottom: 3px;
 }
 .input label, .not_input label {
-  color: #555555;
-  font-weight: 400;
-  cursor: text;
-  -webkit-transform: translate(0, 0);
-      -ms-transform: translate(0, 0);
-          transform: translate(0, 0);
-  -webkit-font-smoothing: antialiased;
+	color: #555555;
+	font-weight: 400;
+	cursor: text;
+	-webkit-transform: translate(0, 0);
+	-ms-transform: translate(0, 0);
+	transform: translate(0, 0);
+	-webkit-font-smoothing: antialiased;
 }
 
 body.no_forms .not_input label {padding-left:10px}
@@ -374,10 +376,10 @@ body:not(.no_forms) .not_input label {padding-left:7px}
 
 
 .input .help-block {
-  font-size: 75%;
-  margin-top: 3px;
-  color: #999999;
-  -webkit-font-smoothing: antialiased;
+	font-size: 75%;
+	margin-top: 3px;
+	color: #999999;
+	-webkit-font-smoothing: antialiased;
 }
 body:not(.no_forms) .input input[type='text'],
 body:not(.no_forms) .input input[type='number'],
@@ -385,54 +387,54 @@ body:not(.no_forms) .input input[type='email'],
 body:not(.no_forms) .input input[type='password'],
 body:not(.no_forms) .input textarea,
 body:not(.no_forms) #color_hex_input {
-  border: 0;
-  border-bottom: 1px solid #cccccc;
-  background: #ffffff;
-  margin: 1.25em 0 0 0;
-  border-radius: 2px;
-  padding: 4px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  resize: none;
-  color: #555555;
+	border: 0;
+	border-bottom: 1px solid #cccccc;
+	background: #ffffff;
+	margin: 1.25em 0 0 0;
+	border-radius: 2px;
+	padding: 4px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	resize: none;
+	color: #555555;
 }
 body:not(.no_forms) .input input[type='text']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='email']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea::-webkit-input-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #ffffff;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #ffffff;
 }
 body:not(.no_forms) .input input[type='text']:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:-moz-placeholder,
 body:not(.no_forms) .input textarea:-moz-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #ffffff;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #ffffff;
 }
 body:not(.no_forms) .input input[type='text']::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']::-moz-placeholder,
 body:not(.no_forms) .input textarea::-moz-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #ffffff;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #ffffff;
 }
 body:not(.no_forms) .input input[type='text']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:-ms-input-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #ffffff;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #ffffff;
 }
 body:not(.no_forms) .input input[type='text']:-webkit-autofill,
 body:not(.no_forms) .input input[type='email']:-webkit-autofill,
 body:not(.no_forms) .input input[type='password']:-webkit-autofill,
 body:not(.no_forms) .input input[type='number']:-webkit-autofill,
 body:not(.no_forms) .input textarea:-webkit-autofill {
-  box-shadow: 0 0 0 1000px white inset;
+	box-shadow: 0 0 0 1000px white inset;
 }
 body:not(.no_forms) .input input[type='text']:focus,
 body:not(.no_forms) .input input[type='email']:focus,
@@ -440,42 +442,42 @@ body:not(.no_forms) .input input[type='number']:focus,
 body:not(.no_forms) .input input[type='password']:focus,
 body:not(.no_forms) .input textarea:focus,
 body:not(.no_forms) #color_hex_input:focus {
-  outline: none;
-  box-shadow: 0 1px 0 #66afe9;
-  border-color: #66afe9;
-  background: #ffffff;
+	outline: none;
+	box-shadow: 0 1px 0 #66afe9;
+	border-color: #66afe9;
+	background: #ffffff;
 }
 body:not(.no_forms) .input input[type='text']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-webkit-input-placeholder,
 body:not(.no_forms) .input textarea:focus::-webkit-input-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  color: #999999 !important;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	color: #999999 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-moz-placeholder,
 body:not(.no_forms) .input textarea:focus:-moz-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  color: #999999 !important;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	color: #999999 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='email']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='number']:focus::-moz-placeholder,
 body:not(.no_forms) .input input[type='password']:focus::-moz-placeholder,
 body:not(.no_forms) .input textarea:focus::-moz-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  color: #999999 !important;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	color: #999999 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='email']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='number']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input input[type='password']:focus:-ms-input-placeholder,
 body:not(.no_forms) .input textarea:focus:-ms-input-placeholder {
-  font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  color: #999999 !important;
+	font: normal 300 100% "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	color: #999999 !important;
 }
 body:not(.no_forms) .input input[type='text']:focus + label,
 body:not(.no_forms) .input input[type='email']:focus + label,
@@ -487,17 +489,17 @@ body:not(.no_forms) .input input[type='email'][value] + label,
 body:not(.no_forms) .input input[type='number'][value] + label,
 body:not(.no_forms) .input input[type='password'][value] + label,
 body:not(.no_forms) .input textarea[value] + label {
-  -webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
-      -ms-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
-          transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	-webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	-ms-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
 }
 body:not(.no_forms) .input input[type='text']:-webkit-autofill + label,
 body:not(.no_forms) .input input[type='email']:-webkit-autofill + label,
 body:not(.no_forms) .input input[type='number']:-webkit-autofill + label,
 body:not(.no_forms) .input input[type='password']:-webkit-autofill + label,
 body:not(.no_forms) .input textarea:-webkit-autofill + label {
-    -webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
-          transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	-webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+		  transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
 }
 body:not(.no_forms) .input input[type='text'][disabled],
 body:not(.no_forms) .input input[type='email'][disabled],
@@ -514,21 +516,21 @@ body:not(.no_forms) .input input[type='email'][disabled] + label,
 body:not(.no_forms) .input input[type='number'][disabled] + label,
 body:not(.no_forms) .input input[type='password'][disabled] + label,
 body:not(.no_forms) .input textarea[disabled] + label {
-  color: #cccccc;
+	color: #cccccc;
 }
 body:not(.no_forms) .input input[type='text'] + label,
 body:not(.no_forms) .input input[type='email'] + label,
 body:not(.no_forms) .input input[type='number'] + label,
 body:not(.no_forms) .input input[type='password'] + label,
 body:not(.no_forms) .input textarea + label {
-  width: 100%;
-  position: absolute;
-  left: 0;
-  top: 1.25em;
-  padding:4px;
-  margin-bottom: 2px;
-  -webkit-transition: all 0.3s ease;
-          transition: all 0.3s ease;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 1.25em;
+	padding:4px;
+	margin-bottom: 2px;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 body:not(.no_forms) .input input[type='text'].error,
 body:not(.no_forms) .input input[type='email'].error,
@@ -552,14 +554,14 @@ body:not(.no_forms) .input textarea[value] + label {
 }
 body:not(.no_forms) .input textarea + label {
   margin-bottom: 5px;
-    -webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
-      -ms-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
-          transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	-webkit-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+	  -ms-transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
+		  transform: translate(-10.5%, -1.55em) scale(0.8, 0.8) !important;
 }
 body:not(.no_forms) .input textarea:empty + label {
   -webkit-transform: translate(0, 0) scale(1, 1);
-      -ms-transform: translate(0, 0) scale(1, 1);
-          transform: translate(0, 0) scale(1, 1);
+	  -ms-transform: translate(0, 0) scale(1, 1);
+		  transform: translate(0, 0) scale(1, 1);
 }
 
 input[type=checkbox],input[type=radio]{
@@ -593,9 +595,9 @@ body:not(.no_forms) .input input[type='checkbox'] {
 
 body:not(.no_forms) .input input[type='checkbox'] + label {
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+	 -moz-user-select: none;
+	  -ms-user-select: none;
+		  user-select: none;
   cursor: pointer;
   padding-left: 30px;
   line-height:20px;
@@ -613,11 +615,11 @@ body:not(.no_forms) .input input[type='checkbox'] + label:before {
   border-radius: 2px;
   background: #cecece;
   -webkit-transition: all 0.3s ease;
-          transition: all 0.3s ease;
+		  transition: all 0.3s ease;
   box-sizing: border-box;
    -webkit-transform:scale(0.9);
-      -ms-transform:scale(0.9);
-    transform:scale(0.9);
+	  -ms-transform:scale(0.9);
+	transform:scale(0.9);
 }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:after {
@@ -629,13 +631,13 @@ body:not(.no_forms) .input input[type='checkbox'] + label:after {
   width: 6px;
   height: 13px;
   -webkit-transform: rotate(45deg) scale(0.5);
-      -ms-transform: rotate(45deg) scale(0.5);
-          transform: rotate(45deg) scale(0.5);
+	  -ms-transform: rotate(45deg) scale(0.5);
+		  transform: rotate(45deg) scale(0.5);
   opacity: 0;
   -webkit-transition: all 0.2s ease;
-          transition: all 0.2s ease;
+		  transition: all 0.2s ease;
   -webkit-transition-delay: 0.1s;
-          transition-delay: 0.1s;
+		  transition-delay: 0.1s;
   box-sizing: border-box;
 }
 body:not(.no_forms) .input input[type='checkbox']:focus + label:before {
@@ -684,9 +686,9 @@ body:not(.no_forms) .input input[type='radio'] {
 }
 body:not(.no_forms) .input input[type='radio'] + label {
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+	 -moz-user-select: none;
+	  -ms-user-select: none;
+		  user-select: none;
   cursor: pointer;
   padding-left: 30px;
   display:inline-block;
@@ -705,20 +707,20 @@ body:not(.no_forms) .input input[type='radio'] + label:after {
   border-radius: 50%;
   background: #f4f4f4;
   -webkit-transition: all 0.3s ease;
-          transition: all 0.3s ease;
+		  transition: all 0.3s ease;
   background-clip: padding-box;
 }
 body:not(.no_forms) .input input[type='radio'] + label:after {
   background: #626262;
   border: 2px solid #f4f4f4;
   -webkit-transform: scale(0);
-      -ms-transform: scale(0);
-          transform: scale(0);
+	  -ms-transform: scale(0);
+		  transform: scale(0);
   -webkit-transition: all 0.3s ease;
-          transition: all 0.3s ease;
+		  transition: all 0.3s ease;
 }
 body:not(.no_forms) .input input[type='radio']:focus + label:before {
-    /*use box shadow for keyboard focus*/
+	/*use box shadow for keyboard focus*/
   box-shadow: 1px 2px 2px rgba(0,0,0,.3);
 }
 body:not(.no_forms) .input input[type='radio']:checked + label:before {
@@ -726,8 +728,8 @@ body:not(.no_forms) .input input[type='radio']:checked + label:before {
 }
 body:not(.no_forms) .input input[type='radio']:checked + label:after {
   -webkit-transform: scale(0.8, 0.8);
-      -ms-transform: scale(0.8, 0.8);
-          transform: scale(0.8, 0.8);
+	  -ms-transform: scale(0.8, 0.8);
+		  transform: scale(0.8, 0.8);
 }
 body:not(.no_forms) .input input[type='radio'][disabled] + label {
   color: #cccccc;
@@ -791,7 +793,7 @@ body:not(.no_forms) .input.select select {
 
 body:not(.no_forms) .input.select select::-ms-expand
 {
-    display: none;
+	display: none;
 }
 
 body:not(.no_forms) .input.select select:focus, body:not(.no_forms) .input.select *, body:not(.no_forms) .input.select select optgroup, body:not(.no_forms) .input.select select optgroup option {
@@ -819,8 +821,8 @@ body:not(.no_forms) .input.select select[disabled] + label {
   color: #cccccc;
 }
 body:not(.no_forms) .input.select select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #f4f4f4;
+	color: transparent;
+	text-shadow: 0 0 0 #f4f4f4;
 }
 
 body:not(.no_forms) .input.select .tabbed_select {
@@ -879,10 +881,10 @@ body.no_forms .input.select, body.no_forms .input.select select {max-width:99%}
 /* IE doesn't support this anyway so let's break it */
 
 @media all and (-ms-high-contrast:none)
-     {
-     #color_input, #color_header_set {display:none}
+	 {
+	 #color_input, #color_header_set {display:none}
 	 body:not(.no_forms) #color_hex_input {margin:5px 0 0 0}
-     }
+	 }
 
 /* shorten acronym box on mobile */
 @media (max-width: 440px) {
@@ -950,21 +952,21 @@ border-color: #b0b0b0 transparent transparent;
 
 
 @-webkit-keyframes lightUp {
-    from { background:#ccc; margin-top:0px; border-color: transparent; -webkit-transform: translate(0px, 0px); transform: translate(0px, 0px);}
-      to {  -webkit-transform: translate(0px, -14px); transform: translate(0px, -14px); }
+	from { background:#ccc; margin-top:0px; border-color: transparent; -webkit-transform: translate(0px, 0px); transform: translate(0px, 0px);}
+	  to {  -webkit-transform: translate(0px, -14px); transform: translate(0px, -14px); }
 }
 
 @keyframes lightUp {
-    from { background:#ccc; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-      to { transform: translate(0px, -14px); }
+	from { background:#ccc; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+	  to { transform: translate(0px, -14px); }
 }
 
 /* hide toggle boxes while keeping them an active element to allow keyboard navigation */
 .toggle_box > input:first-child, .group_toggle { position:absolute;-moz-appearance:none;
-    -webkit-appearance: none;
-    appearance: none;
-    border:none;
-    outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+	border:none;
+	outline: none;
 background:transparent;
 width:0px; height:0px; opacity:0;	}
 
@@ -1019,9 +1021,9 @@ width:0px; height:0px; opacity:0;	}
 .group_toggle:not(:checked) + label + ul {display:none}
 
 .groupcount {color:#b9b9b9;font-size:80%;padding-bottom:2px;  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+	 -moz-user-select: none;
+	  -ms-user-select: none;
+		  user-select: none;
 		  white-space:nowrap}
 
 
@@ -1587,7 +1589,7 @@ src: url("/static/font/AlternianCBB.otf"), url("/static/font/AlternianCBB.woff")
 }
 
 .alternian {
-    font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
+	font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
 	direction: RTL;
 text-rendering: optimizeLegibility;
 unicode-bidi:bidi-override;
@@ -1598,7 +1600,7 @@ vertical-align:-2px;
 }
 
 .alternian * {
-    font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
+	font-family: 'Alternian CBB', 'alternianFontOne', TrollType, mono !important;
 text-rendering: optimizeLegibility;
 }
 
@@ -1629,8 +1631,8 @@ body.has_left_tabs #topbar ~ .sidebar.left { bottom:37px; }
 #info_panel h2, #info_panel p, #info_panel .log_button {padding-left:1.5%;padding-right:1.5%}
 
 @keyframes curtains {
-    from {bottom:100%;}
-    to {bottom:5px;}
+	from {bottom:100%;}
+	to {bottom:5px;}
 }
 
 /* 4.2. PM & My Chats lists */
@@ -2091,7 +2093,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#global_navigation.in_chat_nav li a .long {display:inline}
 	#global_navigation.in_chat_nav li:active {background-color:#767676}
 	#global_navigation.in_chat_nav .user a {max-width:none} 
- 	#global_navigation.in_chat_nav li a .short {display:none}
+	#global_navigation.in_chat_nav li a .short {display:none}
 	#global_navigation.in_chat_nav label:before {
 	content: '\00a0';
 	background-image: url('/static/img/menu-default.png');
