@@ -1612,7 +1612,7 @@ text-rendering: optimizeLegibility;
 #topbar h1 span:before {content:"> ";}
 #topbar, #topbar h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #topbar ~ #conversation, #topbar ~ .sidebar { top: 71px; }
-.has_left_tabs #topbar ~ .sidebar.left { bottom:37px; }
+body.has_left_tabs #topbar ~ .sidebar.left { bottom:37px; }
 #info_panel, #edit_info_panel { display: none; position: absolute; top: 71px; right: 5px; bottom: 5px; left: 8px; z-index: 1;overflow: auto; border-bottom:5px solid #999;background-color: #eee; -webkit-overflow-scrolling: touch; }
 .topic:empty:before { content: "(no topic)"; color: #333; font-style: italic; }
 .description:empty:before { content: "(no description)"; color: #333; font-style: italic; }
@@ -1691,7 +1691,7 @@ body:not(.no_forms) .sidebar .input textarea + label {
 .my_chats_only.my_chats_open #my_chats, .my_chats_open #my_chats {display:block;z-index:2}
 
 body .sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom: 17px; left: 5px; z-index: 1; background-color: #eee; -webkit-overflow-scrolling: touch; }
-body .has_left_tabs .sidebar.left {bottom:37px}
+body.has_left_tabs .sidebar.left {bottom:37px}
 
 body:not(.no_forms) .sidebar #regex_list .input.fromto, body:not(.no_forms) .sidebar #replacement_list .input.fromto {margin-right:0px}
 
