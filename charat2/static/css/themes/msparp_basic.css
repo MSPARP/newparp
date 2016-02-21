@@ -103,12 +103,8 @@ h1 img { display: block; max-width: 100%; }
 	#global_navigation a { display: block; }
 }
 
-#global_navigation:before {
-display:none
-}
-#global_navigation #unread_counter:before {
-display:none
-}
+#global_navigation:before {display:none}
+#global_navigation #unread_counter:before {display:none}
 
 /* 1.4. Responsive widths */
 
@@ -124,16 +120,12 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 }
 @media (max-width: 543px) { body { margin: 0; } }
 
-
 /* 1.5. Announcements */
 
 #announcements { max-width: none; padding: 5px; background-color: #eee; }
 #announcements h2 { margin: 0; }
 
-
 /* 2. Content */
-
-
 
 h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #444; }
 
@@ -162,12 +154,12 @@ input:invalid + .pattern_error { display: inline; }
 .checkbox_list li { margin: 0.5rem 0; }
 
 body:not(.no_forms) .input input[type='checkbox'] + label:before {
-  border: 2px solid #999;
-  background: #cecece;
+	border: 2px solid #999;
+	background: #cecece;
 }
 
 body:not(.no_forms) .input.select .tabbed_select {
-  border-top-right-radius: 2px;
+	border-top-right-radius: 2px;
 }
 
 /* 2.2. Toggle box */
@@ -200,7 +192,7 @@ body:not(.no_forms) .input.select .tabbed_select {
 .toggle_box + .toggle_box {margin-top: 0px;}
 
 @media (max-width: 543px) {
-.common_box h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {display:block;width:100%; background: transparent}
+	.common_box h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {display:block;width:100%; background: transparent}
 }
 
 .common_box > h2 label {background:transparent}
@@ -257,7 +249,6 @@ body.chat { margin: 0; background-color: #ccc; font-size: 12px; word-wrap: break
 body.chat #global_navigation {display:none}
 
 .collapse_padding #chat_wrapper {left:0px !important;right:0px !important}
-
 
 #info_panel { animation: none;}
 

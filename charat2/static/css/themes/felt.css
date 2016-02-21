@@ -57,8 +57,9 @@ a:hover, a:active {
 /* Header and main spacing. */
 
 #logo {background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:contain; max-width:100%;image-rendering: auto; -ms-interpolation-mode: auto;}
+
 @media (min-width: 1000px) {
-#logo img {max-width:208px; height:77px}
+	#logo img {max-width:208px; height:77px}
 }
 
 /* Style dynamic header prompt */
@@ -75,7 +76,6 @@ a:hover, a:active {
 body:not(.no_forms) * { scrollbar-base-color: #197A05; scrollbar-arrow-color: #197A05; scrollbar-shadow-color: #104f03; scrollbar-track-color: #104f03; }
 body:not(.no_forms) *::-webkit-scrollbar-track, *::-webkit-scrollbar-corner { background: #104f03; }
 body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #083000; border:1px solid #197A05;}
-
 
 /* 1.1. Header */
 
@@ -115,11 +115,11 @@ footer a:hover { color: #20a107; }
 
 
 @media (max-width: 650px) { 
-body { margin: 0; min-height:100vh; background:#082900;} 
-/* do not use fixed background on small/mobile screens as this causes redraws and is prone to stutter */
-#fixed-bg {position:fixed;top:0px;bottom:0px;right:0px;left:0px;background: #082900 url('/static/img/felt_manor_background.png') no-repeat bottom center; background-size:900px;transform: translateZ(0);will-change:scroll-position;pointer-events: none;}
-#wrapper {background:transparent }
-footer a {color: #2cff4b}
+	body { margin: 0; min-height:100vh; background:#082900;} 
+	/* do not use fixed background on small/mobile screens as this causes redraws and is prone to stutter */
+	#fixed-bg {position:fixed;top:0px;bottom:0px;right:0px;left:0px;background: #082900 url('/static/img/felt_manor_background.png') no-repeat bottom center; background-size:900px;transform: translateZ(0);will-change:scroll-position;pointer-events: none;}
+	#wrapper {background:transparent }
+	footer a {color: #2cff4b}
 }
 
 
@@ -133,12 +133,8 @@ footer a {color: #2cff4b}
 
 body {color:#fff}
 
-
-
 h2, h3, h4, h5, h6, h2 a, h3 a, h4 a, h5 a, h6 a { color: #fff; }
 tbody tr:nth-child(2n+1) { background-color: #104f03; }
-
-
 
 #subnav { border-bottom:1px solid #135f04;}
 #subnav a, #subnav .tab_active {background:#104f03;border:1px solid #0f4b03; border-top: 2px solid #156704; border-bottom-color:#135f04; }
@@ -316,7 +312,6 @@ body:not(.no_forms) .input input[type='checkbox'][disabled]:checked + label:befo
 	background: #1e9607;
 }
 
-
 body:not(.no_forms) .input input[type='radio'] + label:before,
 body:not(.no_forms) .input input[type='radio'] + label:after {
 	border: 2px solid #104f03;
@@ -341,12 +336,10 @@ body:not(.no_forms) .input input[type='radio'][disabled]:checked + label:after {
 	background: #1e9607;
 }
 
-
 body:not(.no_forms) .input.select:after {
 	border: solid transparent;
 	border-top-color: #fff;
 }
-
 
 body:not(.no_forms) .input.select select {
 	color: #fff;
@@ -369,8 +362,8 @@ body:not(.no_forms) .input.select select[disabled] + label {
 	color: #156704;
 }
 body:not(.no_forms) .input.select select:-moz-focusring {
-		color: transparent;
-		text-shadow: 0 0 0 #fff;
+	color: transparent;
+	text-shadow: 0 0 0 #fff;
 }
 
 .input_table p.color-double label {  color: #fff;}
@@ -378,21 +371,18 @@ body:not(.no_forms) .input.select select:-moz-focusring {
 body:not(.no_forms) #color_input, body:not(.no_forms) #color_header_set { -webkit-appearance: none;
 	background: #000;
 	border-bottom: 1px solid #156704;
-	}
+}
 	
 body.no_forms #color_hex_input, body.no_forms .input textarea, body.no_forms .input input[type="text"] , body.no_forms .input input[type="password"], body.no_forms .input input[type="email"] {background:#000}
 body.no_forms .input.select select, body.no_forms button {color:#000}
 
-	 
 /* 2.2. Toggle box */
 
 .common_box_wrap, .roulette_head + p, #search_settings, #filter_settings, #character_settings, #quirk_settings, .common_box_wrap {background:#0e4603; border-bottom:3px solid #156704;}
 
 .common_box > h2, .roulette_head, .toggle_box > input:first-child:checked + h2 {background-color: #104f03;border-color: #197a05;}
 
-.common_box > h2 label span:after, .roulette_head span:after, .toggle_box > input:first-child:checked + h2 label:after {
-border-color: #197a05 transparent transparent;
-}
+.common_box > h2 label span:after, .roulette_head span:after, .toggle_box > input:first-child:checked + h2 label:after {border-color: #197a05 transparent transparent;}
 
 .common_box > h2 label, .common_box > h2 label:active, .roulette_head span, .toggle_box > input:first-child:checked + h2 label, .toggle_box > input:first-child:checked + h2 label:before  {background-color:#197a05;} 
 
@@ -403,9 +393,7 @@ border-color: #197a05 transparent transparent;
 .group_toggle + label {color: #1e9607;}
 .group_toggle + label:hover, .group_toggle + label:active, .group_toggle:focus + label {background:#104f03;}
 
-
 .groupcount {color:#b9b9b9}
-
 
 /* 2.3 Button styles */
 
@@ -415,9 +403,9 @@ body:not(.no_forms) button {
 }
 
 body:not(.no_forms) button:disabled {
-background: #104f03;
-color:#082a00;
-cursor:not-allowed;
+	background: #104f03;
+	color:#082a00;
+	cursor:not-allowed;
 }
 
 body:not(.no_forms) button:focus {background:#166c04;}
@@ -429,55 +417,55 @@ body:not(.no_forms) button:focus {background:#166c04;}
 .admin_user_info tr td:nth-of-type(1){color:#1e9607}
 
 @media (max-width: 750px) {
-.admin_userlist tr td:nth-of-type(1) {color:#1e9607;}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(5):before {color:#1e9607}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(6):before {color:#1e9607}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(7):before {color:#1e9607}
-.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(8):before {color:#1e9607}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(3):before {color:#1e9607}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(4):before {color:#1e9607}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(5):before {color:#1e9607}
-.admin_userlist.admin_userlist_permissions tr td:nth-of-type(6):before {color:#1e9607}
+	.admin_userlist tr td:nth-of-type(1) {color:#1e9607;}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(5):before {color:#1e9607}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(6):before {color:#1e9607}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(7):before {color:#1e9607}
+	.admin_userlist:not(.admin_userlist_permissions) tr td:nth-of-type(8):before {color:#1e9607}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(3):before {color:#1e9607}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(4):before {color:#1e9607}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(5):before {color:#1e9607}
+	.admin_userlist.admin_userlist_permissions tr td:nth-of-type(6):before {color:#1e9607}
 }
 
 @media (max-width: 682px) {
-.blocks_table tr td:nth-of-type(1):before {color:#1e9607;}
-.blocks_table tr td:nth-of-type(2):before {color:#1e9607;}
-.blocks_table tr td:nth-of-type(4):before {color:#1e9607;}
-.blocks_table tr td:nth-of-type(6):before {color:#1e9607;}
-.blocks_table tr td:nth-of-type(7):before {color:#1e9607;}
+	.blocks_table tr td:nth-of-type(1):before {color:#1e9607;}
+	.blocks_table tr td:nth-of-type(2):before {color:#1e9607;}
+	.blocks_table tr td:nth-of-type(4):before {color:#1e9607;}
+	.blocks_table tr td:nth-of-type(6):before {color:#1e9607;}
+	.blocks_table tr td:nth-of-type(7):before {color:#1e9607;}
 }
 
 @media (max-width: 540px) {
-.admin_chats_list tr td:nth-of-type(1) {color:#1e9607;}
-.admin_chats_list tr td:nth-of-type(3):before {color:#1e9607;}
-.admin_chats_list tr td:nth-of-type(4):before {color:#1e9607;}
-.admin_chats_list tr td:nth-of-type(5):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(1) {color:#1e9607}
-.spam_table tr td:nth-of-type(2):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(3):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(4):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(5):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(6):before {color:#1e9607;}
-.spam_table tr td:nth-of-type(7):before {color:#1e9607;}
-.ban_table tr td:nth-of-type(1):before {color:#1e9607;}
-.ban_table tr td:nth-of-type(2):before {color:#1e9607;}
-.ban_table tr td:nth-of-type(3):before {color:#1e9607;}
-.ban_table tr td:nth-of-type(4):before {color:#1e9607;}
+	.admin_chats_list tr td:nth-of-type(1) {color:#1e9607;}
+	.admin_chats_list tr td:nth-of-type(3):before {color:#1e9607;}
+	.admin_chats_list tr td:nth-of-type(4):before {color:#1e9607;}
+	.admin_chats_list tr td:nth-of-type(5):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(1) {color:#1e9607}
+	.spam_table tr td:nth-of-type(2):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(3):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(4):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(5):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(6):before {color:#1e9607;}
+	.spam_table tr td:nth-of-type(7):before {color:#1e9607;}
+	.ban_table tr td:nth-of-type(1):before {color:#1e9607;}
+	.ban_table tr td:nth-of-type(2):before {color:#1e9607;}
+	.ban_table tr td:nth-of-type(3):before {color:#1e9607;}
+	.ban_table tr td:nth-of-type(4):before {color:#1e9607;}
 }
 
 @media (max-width: 500px) {
-admin_log tr td:nth-of-type(1) {color:#1e9607;}
-.admin_log tr td:nth-of-type(4):before {color:#1e9607;}
-.user_blocked tr td:nth-of-type(1):before {color:#1e9607;}
-.user_chartable thead {background-color:#104f03 !important; border-bottom:20px solid #0e4603; border-top:2px solid #156704}
-.user_chartable thead th {color:#1e9607;}
+	.admin_log tr td:nth-of-type(1) {color:#1e9607;}
+	.admin_log tr td:nth-of-type(4):before {color:#1e9607;}
+	.user_blocked tr td:nth-of-type(1):before {color:#1e9607;}
+	.user_chartable thead {background-color:#104f03 !important; border-bottom:20px solid #0e4603; border-top:2px solid #156704}
+	.user_chartable thead th {color:#1e9607;}
 }
 
 @media (max-width: 400px) {
-.chat_user_table.admin_version tr td:nth-of-type(2):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(1):before {color:#1e9607;}
-.chat_user_table.admin_version tr td:nth-of-type(3):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(2):before {color:#1e9607;}
-.chat_invites_table tr td:nth-of-type(4):before {color:#1e9607;}
+	.chat_user_table.admin_version tr td:nth-of-type(2):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(1):before {color:#1e9607;}
+	.chat_user_table.admin_version tr td:nth-of-type(3):before, .chat_user_table:not(.admin_version) tr td:nth-of-type(2):before {color:#1e9607;}
+	.chat_invites_table tr td:nth-of-type(4):before {color:#1e9607;}
 }
 
 /* 2.5 Material UI Feedback */
@@ -502,22 +490,21 @@ body.no_forms .robo_q {margin-top:10px;clear:both;display:block}
 /* increase buttons to make tapping easier, and adapt box flows*/
 
 @media (max-width: 543px) {
-#subnav .tab_active {border-bottom:1px solid #0F4B03}
-.common_box h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {background: #156704}
-.toggle_box > input:first-child:checked + h2 label:before {background:#156704}
+	#subnav .tab_active {border-bottom:1px solid #0F4B03}
+	.common_box h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {background: #156704}
+	.toggle_box > input:first-child:checked + h2 label:before {background:#156704}
 
-input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-child:checked + h2 label[for="toggle_with_settings"]:before {background:#1a8005}
-
+	input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-child:checked + h2 label[for="toggle_with_settings"]:before {background:#1a8005}
 }
 
 @-webkit-keyframes lightUp {
-		from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-			to {  transform: translate(0px, -14px); }
+	from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+	   to {  transform: translate(0px, -14px); }
 }
 
 @keyframes lightUp {
-		from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
-			to { transform: translate(0px, -14px); }
+	from { background:#082900; margin-top:0px; border-color: transparent; transform: translate(0px, 0px);}
+	   to { transform: translate(0px, -14px); }
 }
 
 /* 3.2. Searching */
@@ -545,12 +532,8 @@ input:first-child:checked + h2 label[for="toggle_with_settings"], input:first-ch
 #group_chats li.unread a:hover {color:#2cff4b}
 #group_chats li.unread h3:after {color:#20a107}
 
-#group_chats li:after {
-border-color:  #0f4c03 #0e4603;
-}
-#group_chats li.unread:after {
-border-color:  #125309 #0e4603;
-}
+#group_chats li:after {border-color:  #0f4c03 #0e4603;}
+#group_chats li.unread:after {border-color:  #125309 #0e4603;}
 
 /* 3.4. Your chats */
 
@@ -569,7 +552,6 @@ body:not(.no_forms) .remove_sl_item:active {background: #156704;}
 .explanation_link {color:#2cff4b;}
 .explanation_link:hover {color:#24cf38}
 .explanation {color: #25ba08;}
-
 
 /* 4. Chat window */
 
@@ -591,7 +573,6 @@ body:not(.disable_left_bar) #chat_logo {top:13px;left:20px; background: transpar
 	body:not(.disable_left_bar) #chat_logo {top:5px;}
 }
 
-
 #global_navigation.in_chat_nav #mobile_nav_toggle:checked + .mobile_nav_wrap {background:#0e4603;border-right:2px solid #156704;color:#fff;box-shadow:4px 0px 10px rgba(0,0,0,.2)}
 
 .mobile_nav:hover:before, .hide_nav:hover:before {background: #197b05;}
@@ -606,7 +587,6 @@ body:not(.disable_left_bar) #chat_logo {top:13px;left:20px; background: transpar
 @supports ( (transform: translateX(1px)) or (-webkit-transform:translateX(1px)) )  {
 	/* this is ugly, but the chat is otherwise unusable on severely antiquated browsers */
 	.mobile_nav_wrap {background:#0e4603;border-right:2px solid #156704;color:#fff;}
-
 }
 
 .flag_label {color:#20a107}
@@ -631,7 +611,6 @@ body:not(.no_forms) #my_chats .filter_button.input.select select:-moz-focusring 
 body:not(.no_forms) #my_chats .filter_button .ripple {background: rgba(32,161,7,.2);}
 body:not(.no_forms) #my_chats .filter_button.input.select:after {border-top-color:#20a107}
 body:not(.no_forms) #my_chats .filter_button.input.select select option {color:#20a107}
-
 
 #pm_chat_list li, #my_chats_list li {border:1px solid #104f03; border-bottom:1px solid #0b3a02; background:#104e03;}
 #pm_chat_list li.active, #my_chats_list li.active {background:#135b04; border-left:2px solid #20a107; border-right:2px solid #20a107}
@@ -661,9 +640,7 @@ body.no_forms #sidebar_tabs button, body.no_forms #sidebar_left_tabs button {col
 .sidebar {border-top:15px solid #197A05;border-right:4px solid #197A05;border-bottom:3px solid #156704;}
 .sidebar_title {background:#104f03;color:#fff;}
 .sidebar_title span {background:#197A05;}
-.sidebar_title span:after {
-border-color: #197A05 transparent transparent;
-}
+.sidebar_title span:after {border-color: #197A05 transparent transparent;}
 
 .sidebar.left {border-right:none;border-left:4px solid #197A05;}
 
@@ -678,7 +655,6 @@ border-color: #197A05 transparent transparent;
 #user_list + p {margin:0; padding:5px;padding-bottom:9px;border-bottom:1px solid #104f03; border-right:1px solid #104f03; border-bottom-left-radius:5px;border-bottom-right-radius:5px}
 #user_list + p a, #user_list + p {color:#156704}
 
-
 #action_list { color: #20a107;}
 
 /* 4.4. Conversation and send form */
@@ -688,7 +664,6 @@ border-color: #197A05 transparent transparent;
 #conversation div, #archive_conversation div { clear: both; overflow: hidden; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #156704; }
-
 
 #conversation #conversation_wrap, #archive_conversation #conversation_wrap {border-left:3px solid #061e00;}
 
@@ -707,13 +682,9 @@ body:not(.touch) .highlighted .unum:hover + p {background:#061d00}
 
 .unum #action_list {background:#0b3a02;}
 
-.unum #action_list:before {
-border-color:  transparent #156704;
-}
+.unum #action_list:before {border-color:  transparent #156704;}
 
-.unum #action_list:after {
-border-color:  transparent #0b3a02;
-}
+.unum #action_list:after {border-color:  transparent #0b3a02;}
 
 .highlighted{ background-color: #041700; border-top:1px solid #061d00; border-bottom:1px solid #061d00}
 
@@ -778,7 +749,6 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 }
 
 /* collapse last side bar and engage mobile navigation & menu */
-
 @media (max-width:650px) {
 	#chat_wrapper { background: #082900; }
 	#topbar, .chatting > #chat_wrapper #chat_content #topbar { background-color: transparent; }
@@ -786,13 +756,11 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 	.sidebar { border-right:none !important;border-left:none !important;border-top:15px solid #104F03; }
 }
 
-
 /* 5. HDPI assets  */
 
 @media (-webkit-min-device-pixel-ratio: 1.1), (min-device-pixel-ratio: 1.1), (min-resolution: 100dpi) {
 	#activity_spinner {background-image:url('/static/img/8_ball_off.gif');}
 	#activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
-
 	#spinner_image {background:url('/static/img/8_ball_big.gif'); background-size:140px 140px;}
 }
 
