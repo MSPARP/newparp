@@ -254,7 +254,7 @@ def _log_page(chat, pm_user, url, fmt, page=None):
     except:
         own_chat_user = None
 
-    message_count = g.db.query(func.count(Message.id)).select_from(Message).filter(
+    message_count = g.db.query(func.count('*')).select_from(Message).filter(
         Message.chat_id == chat.id,
     )
     if own_chat_user is not None and not own_chat_user.show_system_messages:
