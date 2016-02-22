@@ -7,6 +7,8 @@ $( document ).ready(function() {
 	});
 }); 
 
+var hide_timer = null;
+
 var addRippleEffect = function (e) {
 	if ($( "body" ).hasClass( "no_forms" ) || !$( "body" ).hasClass( "material" ) ){
 		return false;
@@ -21,10 +23,10 @@ var addRippleEffect = function (e) {
 				$(target).addClass('init');
 			}
 			if (! $(target).next('.ripple').length) {
-			ripple = document.createElement('span');
-			ripple.className = 'ripple';
-			ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-			$(target).parent().append(ripple);
+				ripple = document.createElement('span');
+				ripple.className = 'ripple';
+				ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+				$(target).parent().append(ripple);
 			}
 			var ripple = $(target).next('.ripple')[0];
 		} else { 
@@ -35,15 +37,17 @@ var addRippleEffect = function (e) {
 				ripple.className = 'ripple';
 				ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
 				target.appendChild(ripple);
-				}
+			}
 		}
 		$(ripple).removeClass("show");
+		if (hide_timer) {clearTimeout(hide_timer);}
 		var targetOffset = $(target).offset(); 
 		var top = e.pageY - targetOffset.top - ripple.offsetHeight / 2;
 		var left = e.pageX - targetOffset.left - ripple.offsetWidth / 2;
 		$(ripple).css("top", top + "px");
 		$(ripple).css("left", left + "px");
 		$(ripple).addClass("show");
+		hide_timer = setTimeout(function(){$(ripple).removeClass("show");}, 500);
 		return false;
 	}
 }
