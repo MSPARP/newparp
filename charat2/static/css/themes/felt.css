@@ -746,7 +746,7 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 	#global_navigation.in_chat_nav label { background-color: #156704;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
 	#topbar, #topbar .topic {color: #fff}
-	#topbar h1 {background:transparent}
+	#topbar h1, #topbar {background:transparent}
 }
 
 /* collapse last side bar and engage mobile navigation & menu */
@@ -755,6 +755,10 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 	#topbar, .chatting > #chat_wrapper #chat_content #topbar { background-color: transparent; }
 	#conversation #conversation_wrap { margin-left:28px; border-left:2px solid #082900; }
 	.sidebar { border-right:none !important;border-left:none !important;border-top:15px solid #104F03; }
+	body #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px;}
+	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
+	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
+	.sidebar_title span {background:transparent}
 }
 
 /* 5. HDPI assets  */
