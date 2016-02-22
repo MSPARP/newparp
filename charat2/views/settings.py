@@ -27,6 +27,7 @@ def home_post():
     g.user.show_timestamps = "show_timestamps" in request.form
     g.user.show_preview = "show_preview" in request.form
     g.user.typing_notifications = "typing_notifications" in request.form
+    g.user.disable_activity_indicator = "disable_activity_indicator" in request.form
     return redirect(url_for("settings"))
 
 

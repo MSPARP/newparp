@@ -153,6 +153,7 @@ class User(Base):
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
+    disable_activity_indicator = Column(Boolean, nullable=False, default=False)
 
     timezone = Column(Unicode(255))
     theme = Column(Unicode(255))
@@ -565,6 +566,7 @@ class ChatUser(Base):
     show_timestamps = Column(Boolean, nullable=False, default=False)
     show_preview = Column(Boolean, nullable=False, default=True)
     typing_notifications = Column(Boolean, nullable=False, default=True)
+    disable_activity_indicator = Column(Boolean, nullable=False, default=False)
 
     theme = Column(Unicode(255))
 
@@ -599,6 +601,7 @@ class ChatUser(Base):
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
+            disable_activity_indicator=user.disable_activity_indicator,
             theme=user.theme,
             **kwargs
         )
@@ -628,6 +631,7 @@ class ChatUser(Base):
                 show_timestamps=user.show_timestamps,
                 show_preview=user.show_preview,
                 typing_notifications=user.typing_notifications,
+                disable_activity_indicator=user.disable_activity_indicator,
                 theme=user.theme,
                 **kwargs
             )
@@ -641,6 +645,7 @@ class ChatUser(Base):
             show_timestamps=user.show_timestamps,
             show_preview=user.show_preview,
             typing_notifications=user.typing_notifications,
+            disable_activity_indicator=user.disable_activity_indicator,
             theme=user.theme,
             **kwargs
         )
@@ -717,6 +722,7 @@ class ChatUser(Base):
             ucd["meta"]["show_timestamps"] = self.show_timestamps
             ucd["meta"]["show_preview"] = self.show_preview
             ucd["meta"]["typing_notifications"] = self.typing_notifications
+            ucd["meta"]["disable_activity_indicator"] = self.disable_activity_indicator
             ucd["meta"]["theme"] = self.theme
             ucd["meta"]["highlighted_numbers"] = self.highlighted_numbers
             ucd["meta"]["ignored_numbers"] = self.ignored_numbers

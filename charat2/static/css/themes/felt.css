@@ -697,7 +697,7 @@ p:hover > .timestamp {color:#0e4603; }
 #send_form {background: #0e4603; }
 
 #activity_spinner {width:35px;height:40px;float:left;background-image:url('/static/img/8_ball_off.gif'); background-repeat:no-repeat; background-position:0px 5px; background-size:30px 30px;position:absolute;bottom:7px}
-#activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
+#send_form:not(.disable_activity_indicator) #activity_spinner.active_self, #send_form:not(.disable_activity_indicator) #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
 
 /* adjust preview zone for black text box */
 
@@ -760,7 +760,7 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 
 @media (-webkit-min-device-pixel-ratio: 1.1), (min-device-pixel-ratio: 1.1), (min-resolution: 100dpi) {
 	#activity_spinner {background-image:url('/static/img/8_ball_off.gif');}
-	#activity_spinner.active_self, #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
+	#send_form:not(.disable_activity_indicator) #activity_spinner.active_self, #send_form:not(.disable_activity_indicator) #activity_spinner.active_sb {background-image:url('/static/img/8_ball.gif');}
 	#spinner_image {background:url('/static/img/8_ball_big.gif'); background-size:140px 140px;}
 }
 
