@@ -40,9 +40,7 @@
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
                 <input type="hidden" name="chat_id" value="{{chat.id}}">
                 <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
-                {% if own_chat_user.show_system_messages: %}
-                    <p class="hideshow_log_button"><button id="hideshow_system">{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
-                {% endif %}
+                    <p class="hideshow_log_button"><button id="hideshow_system" type="submit">{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
             </form>
             {% endif %}
             <div id="conversation_wrap" tabindex="1">

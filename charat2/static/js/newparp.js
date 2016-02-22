@@ -1903,11 +1903,6 @@ var msparp = (function() {
 		"log": function(show_bbcode) {
 			// Perform BBCode conversion
 			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
-			// Toggle system messages off/on, only if enabled otherwise
-			$("#hideshow_system").click(function() {
-			$("#archive_conversation").hasClass("hide_system_messages") ? $("#archive_conversation").removeClass("hide_system_messages") : $("#archive_conversation").addClass("hide_system_messages");
-			$("#archive_conversation").hasClass("hide_system_messages") ? $("#hideshow_system").text("Show system messages") : $("#hideshow_system").text("Hide system messages");
-			});
 		},
 		// Broadcast page
 		"broadcast": function() {
