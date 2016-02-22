@@ -1844,7 +1844,7 @@ var msparp = (function() {
 					if (url_matches !== null) {
 						var urls_number = url_matches.length;
 						for (var u = 0; u < urls_number; u++) {
-							var re = new RegExp(RegExp.quote(url_matches[u]), "ig");
+							var re = new RegExp(url_matches[u].replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"), "ig");
 							final_text = final_text.replace(re, url_matches[u]);
 						}
 					}
