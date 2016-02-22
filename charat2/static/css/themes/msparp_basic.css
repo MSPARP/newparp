@@ -413,6 +413,7 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 	#topbar h1, #topbar .topic {color:#f4f4f4 !important}
 	body #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { top: 4px; left:34px; right: 61px;}
 	#send_form, #info_panel, #edit_info_panel { bottom: 0px;}
+	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, .sidebar, #info_panel, #edit_info_panel { top: 33px; }
 	
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:5px;float:right;margin-right:20px;z-index:999}
 

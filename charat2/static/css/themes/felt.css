@@ -746,6 +746,7 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 	#global_navigation.in_chat_nav label { background-color: #156704;}
 	#global_navigation.in_chat_nav label:hover { color: #fff; }
 	#topbar, #topbar .topic {color: #fff}
+	#topbar h1 {background:transparent}
 }
 
 /* collapse last side bar and engage mobile navigation & menu */
