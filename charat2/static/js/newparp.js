@@ -1554,8 +1554,7 @@ var msparp = (function() {
 				user.meta.show_preview ? $("#send_form").removeClass("no_preview") : $("#send_form").addClass("no_preview") ;
 				user.meta.show_system_messages ? conversation.removeClass("hide_system_messages") : conversation.addClass("hide_system_messages");
 				user.meta.show_user_numbers ? conversation.removeClass("hide_user_numbers") : conversation.addClass("hide_user_numbers");
-				user.meta.disable_activity_indicator ? $("#send_form").addClass("disable_activity_indicator") : $("#send_form").removeClass("disable_activity_indicator");
-				console.log(user.meta.disable_activity_indicator );
+				user.meta.enable_activity_indicator ? $("#send_form").removeClass("disable_activity_indicator") : $("#send_form").addClass("disable_activity_indicator");
 				resize_conversation();
 			}
 			$("#subscribed").click(function() {

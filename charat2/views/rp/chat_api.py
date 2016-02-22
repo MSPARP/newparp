@@ -620,7 +620,7 @@ def save_variables():
         "show_timestamps",
         "show_preview",
         "typing_notifications",
-        "disable_activity_indicator",
+        "enable_activity_indicator",
     ]:
         if variable not in request.form:
             continue

@@ -1801,7 +1801,7 @@ body:not(.no_forms) .sidebar_submit button:active {padding-right:29px}
 /* 4.4. Conversation and send form */
 
 #conversation, #archive_conversation { position: absolute; top: 46px; right: 5px; bottom: 72px; left: 8px; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
-#conversation_wrap {min-height:100%;box-sizing:border-box;}
+#conversation_wrap {min-height:100%;box-sizing:border-box;outline:0}
 #conversation div, #archive_conversation div { clear: both; overflow: hidden; }
 #conversation p, #archive_conversation p { margin: 0; padding: 2px 5px; overflow: hidden; }
 #status_bar { color: #666; }
