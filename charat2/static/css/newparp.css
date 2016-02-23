@@ -1673,6 +1673,11 @@ body:not(.no_forms) .sp-input.sp-validation-error {
 	color: #333;
 	vertical-align: middle;
 }
+body.no_forms .sp-replacer {
+	margin-top:0px;
+	border-radius:0px;
+	border:1px solid #000 !important;
+}
 .sp-replacer:hover, .sp-replacer.sp-active {
 	color: #111;
 }
@@ -1691,6 +1696,9 @@ body:not(.no_forms) .sp-input.sp-validation-error {
 	border: solid 1px #222;
 	float:left;
 	z-index: 0;
+}
+body.no_forms .sp-preview {
+	height:1.2em;
 }
 
 .sp-palette {
