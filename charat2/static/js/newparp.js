@@ -537,8 +537,6 @@ var msparp = (function() {
 			var user_data = {};
 			var latest_date = user.meta.show_timestamps ? new Date(latest_time * 1000) : null;
 			var new_messages = [];
-				
-				console.log(user);
 
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
