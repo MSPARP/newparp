@@ -72,7 +72,7 @@ var msparp = (function() {
 		$(this).removeClass("enable_anim");
 	});
 
-	/* Enable per-device settings that don't require pre-render hooks */
+	// Enable per-device settings that don't require pre-render hooks
 	var dev_user_safe_bbcode = "false";
 	var dev_user_smart_quirk = "false";
 	var dev_user_smart_action_delimiter = "*";
@@ -147,7 +147,7 @@ var msparp = (function() {
 	// Auto refresh unread counter in nav bar
 	setInterval(function(){ 
 		$('#unread_update').load('/unread');  
-	}, 10413);
+	}, 5102);
 	
 	// Character info
 	function update_character(data) {
