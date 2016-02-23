@@ -143,7 +143,12 @@ var msparp = (function() {
 		if ($("#smart_quirk").is(':checked')) {dev_user_smart_quirk = "true";}
 		else { dev_user_smart_quirk = "false"; }
 	});
-				
+	
+	// Auto refresh unread counter in nav bar
+	setInterval(function(){ 
+		$('#unread_update').load('/unread');  
+	}, 10413);
+	
 	// Character info
 	function update_character(data) {
 		if (typeof data["search_character"]!= "undefined") {
@@ -532,6 +537,8 @@ var msparp = (function() {
 			var user_data = {};
 			var latest_date = user.meta.show_timestamps ? new Date(latest_time * 1000) : null;
 			var new_messages = [];
+				
+				console.log(user);
 
 			// Websockets
 			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";

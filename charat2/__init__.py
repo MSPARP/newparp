@@ -62,6 +62,8 @@ app.add_url_rule("/health", "health", views.health, methods=("GET",))
 
 app.add_url_rule("/", "home", rp.home, methods=("GET",))
 
+app.add_url_rule("/unread", "unread", rp.unread, methods=("GET",))
+
 app.add_url_rule("/search_characters", "rp_search_character_list", search_characters.search_character_list, methods=("GET",))
 app.add_url_rule("/search_characters/new_group", "rp_new_search_character_group_post", search_characters.new_search_character_group_post, methods=("POST",))
 app.add_url_rule("/search_characters/new", "rp_new_search_character_get", search_characters.new_search_character_get, methods=("GET",))

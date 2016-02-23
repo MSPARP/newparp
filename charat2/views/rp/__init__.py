@@ -53,6 +53,16 @@ def home():
     abort(404)
 
 
+@use_db
+def unread():
+
+    if g.user is None:
+        return ""
+
+    return render_template(
+        "account/unread.html",
+    )
+
 @alt_formats({"json"})
 @use_db
 def groups(fmt=None):

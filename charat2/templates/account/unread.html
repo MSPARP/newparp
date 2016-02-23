@@ -1,0 +1,3 @@
+{% if g.user and g.unread_chats and g.unread_chats > 0: %}
+<a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}">{{g.unread_chats}}</a>
+{% endif %}
