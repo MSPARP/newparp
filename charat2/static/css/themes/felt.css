@@ -16,6 +16,7 @@ Contents:
 	3. Button styles
 	4. Tables
 	5. Material UI Feedback
+	6. Spectrum colour picker fallback
 3. Pages
 	1. Front page
 	2. Searching
@@ -474,6 +475,68 @@ body:not(.no_forms) button:focus {background:#166c04;}
 	background: rgba(0,5,0,.25);
 }
 
+/* 2.6 Spectrum colour picker fallback */
+
+/* Spectrum Theme options */
+
+.sp-container {
+	background-color: #104f03;
+	border: solid 1px #156704;
+}
+.sp-color, .sp-hue, .sp-clear {
+	border: solid 1px #156704;
+}
+
+body:not(.no_forms) .sp-input {
+	background-color:#000000;
+	border-bottom:1px solid #156704;
+	color: #fff;
+}
+body:not(.no_forms) .sp-input:focus {
+	border-bottom:2px solid #2cff4b;
+}
+body:not(.no_forms) .sp-input.sp-validation-error {
+	box-shadow: 0 1px 0 #a94442;
+}
+
+/* Palettes */
+.sp-palette-container {
+	border-right: solid 1px #0e4603;
+}
+
+.sp-palette .sp-thumb-el:hover, .sp-palette .sp-thumb-el.sp-thumb-active {
+	border-color: #20a107;
+}
+
+/* Initial */
+.sp-initial {
+	border: solid 1px #2cff4b;
+}
+
+/* Replacer (the little preview div that shows up instead of the <input>) */
+.sp-replacer {
+	border-bottom: solid 1px #156704;
+	background: #000;
+	color: #fff;
+}
+.sp-replacer:hover, .sp-replacer.sp-active {
+	color: #2cff4b;
+}
+.sp-replacer.sp-disabled {
+	border-color: #104f03;
+	color: #146504;
+}
+.sp-preview {
+	border: solid 1px #808080;
+}
+
+.sp-palette .sp-thumb-el {
+	border: solid 1px #197a05;
+}
+
+.sp-palette span:hover, .sp-palette span.sp-thumb-active {
+	border-color: #23ab07;
+}
 
 /* 3. Pages */
 
