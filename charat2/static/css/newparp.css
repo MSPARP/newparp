@@ -296,6 +296,8 @@ td pre:only-child { margin: 0; }
 
 .error { color: #f00; }
 
+.pager {padding:5px;}
+
 #subnav { margin: 10px 0; padding-bottom:0px; border-bottom:1px solid #b9b9b9;}
 #subnav a, #subnav .tab_active {background:#e0e0e0;border:1px solid #d0d0d0; border-top: 2px solid #c6c6c6; border-bottom-color:#b6b6b6; padding:2px 10px 2px 5px; border-top-right-radius: 5px 20px;height:17px;display:inline-block;margin-bottom:-1px}
 #subnav a:hover {background:#e6e6e6;color:#888}
@@ -1277,7 +1279,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 	to { -webkit-transform: scale(-1.5); transform: scale(-1.5); opacity: 0; }
 }
 
-button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, .unum, .unum *, #chat_logo {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
+button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list * {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
 
 /* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance; also remove color input since currently unsupported */
 
