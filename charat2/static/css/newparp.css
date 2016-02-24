@@ -2616,7 +2616,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#archive_conversation {bottom:27px}
 	#archive_conversation, .log_top_nav, .log_bottom_nav {left:0px;right:0px}
 	#topbar h1 {position:relative !important;width:auto;}
-	#topbar .topic {display:inline}
+	#topbar .topic {display:inline; position:relative !important;top:0px}
 	.chatting > .sidebar.mobile_override, .sidebar.mobile_override {display:block !important;position:fixed !important;top:33px !important;left:0px !important;right:0px !important;bottom:0px !important;width:100% !important;z-index:1 !important}
 	.sidebar.mobile_override .close:first-of-type {display:block !important;margin-top:-31px;float:right;margin-right:9px}
 	.sidebar_title span {background:transparent}
