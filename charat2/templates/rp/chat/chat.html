@@ -354,7 +354,12 @@
                     </ul>
                     <p><button type="button" id="add_regex">Add</button> <button type="button" id="clear_regexes">Clear</button></p>
                     <hr>
-                    <p class="sidebar_submit"><button type="submit">Save</button> <button type="button" class="close">Close</button></p>
+                    <p class="sidebar_submit"><button type="submit">Save</button> 
+                    {% if chat.type != "pm": %}
+                    {% if chat.type != "roulette": %}
+                    <button type="button" class="close">Close</button></p>
+                    {% endif %}
+                    {% endif %}
                 </form>
             </div>
         </section>

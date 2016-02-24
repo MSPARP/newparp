@@ -55,15 +55,6 @@ var msparp = (function() {
 			$("#toggle_filter").prop("checked", true);
 			$("#small_search_toggle").hide();
 		}
-	});	
-	
-	// Keep "be" tab appearance updated
-	$(".toggle_box > #toggle_with_settings").change(function() {
-		if ($("#toggle_with_settings").is(':checked')) {
-			$("#player_select").addClass('tabbed_select');
-		} else {
-			$("#player_select").removeClass('tabbed_select');
-		}
 	});
 	
 	// Enable animation on these elements only when interacted with
@@ -430,6 +421,15 @@ var msparp = (function() {
 
 			initialize_character_form();
 
+			// Keep "be" tab appearance updated
+			$(".toggle_box > #toggle_with_settings").change(function() {
+				if ($("#toggle_with_settings").is(':checked')) {
+					$("#player_select").addClass('tabbed_select');
+				} else {
+					$("#player_select").removeClass('tabbed_select');
+				}
+			});
+
 			// Filter list
 			function delete_filter(e) {
 				if (this.parentNode.parentNode.childElementCount == 1) {
@@ -612,7 +612,7 @@ var msparp = (function() {
 				window.setTimeout(ping, 10000);
 				$("#disconnect_links").appendTo(document.body);
 				body.addClass("chatting");
-				set_sidebar(null);
+				reset_sidebar();
 				if (chat.type == "pm") { refresh_pm_chat_list(); }
 				refresh_my_chats_list();
 				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
@@ -640,7 +640,7 @@ var msparp = (function() {
 					info_panel.hide();
 					edit_info_panel.hide();
 				}
-				set_sidebar(null);
+				reset_sidebar();
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 				if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
@@ -1327,23 +1327,20 @@ var msparp = (function() {
 			var sidebars_right = "";
 			var sidebars_left = "";
 			var last_sidebar_state = "";
-			function set_sidebar(sidebar_defaults) {
-				if (
-					!sidebar_defaults && status == "chatting"
-					&& chat.type == "group"
-				) { sidebar_defaults = "user_list_container_open side_info_open"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "my_chats_open";}
-				else if (
-					!sidebar_defaults && status == "chatting"
-					&& chat.type == "searched"
-				) { sidebar_defaults = "user_list_container_open my_chats_only"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "";}
-				else if (
-					!sidebar_defaults && status == "chatting"
-					&& chat.type == "roulette"
-				) { sidebar_defaults = "switch_character_open my_chats_only"; sidebars_right = "settings_open"; sidebars_left = "";}
-				else if (
-					!sidebar_defaults && status == "chatting"
-					&& chat.type == "pm"
-				) { sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"}
+			function reset_sidebar() {
+				sidebar_defaults = "";
+				sidebars_right = "";
+				sidebars_left = "";
+				if (status == "chatting" && chat.type == "group") {
+					sidebar_defaults = "user_list_container_open side_info_open"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "my_chats_open";
+				} else if (status == "chatting" && chat.type == "searched") {
+					sidebar_defaults = "user_list_container_open my_chats_only"; sidebars_right = "switch_character_open settings_open"; sidebars_left = "";
+				} else if (status == "chatting" && chat.type == "roulette") {
+					sidebar_defaults = "switch_character_open my_chats_only"; sidebars_right = "settings_open"; sidebars_left = "";
+				} else if (status == "chatting" && chat.type == "pm") {
+					sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"
+				}
+				$(body).removeClass("has_left_tabs").removeClass("has_right_tabs");
 				if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
 				if (sidebars_right !== "") { $(body).addClass("has_right_tabs"); }
 				$("#chat_wrapper").removeClass();
@@ -1351,13 +1348,42 @@ var msparp = (function() {
 				$(".sidebar").removeClass("mobile_override");
 			}
 			
-			// Use the lists to close down other open bars, then hook individual buttons to open the desired one, add buffer to allow click-to-close when length matches (order-agnostic)
-			$("#sidebar_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_right); });
-			$("#sidebar_left_tabs button").click(function() { last_sidebar_state = $("#chat_wrapper").attr("class"); $("#chat_wrapper").removeClass(sidebars_left); });
+			// Use the lists to close down other open bars, then hook individual buttons to open the desired one; add buffer to allow click-to-close (order-agnostic)
+			// Also close opposing bars if left sidebars are disabled or on msparp classic, or width is small enough to collapse left bars
+			function open_sidebar(to_open) {
+				last_sidebar_state = $("#chat_wrapper").attr("class").split(" ").sort().join(" ");
+				if (sidebars_right.indexOf(to_open) !=-1) {
+					$("#chat_wrapper").removeClass(sidebars_right); 
+					if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+						$("#chat_wrapper").removeClass(sidebars_left);
+					}
+				} else if (sidebars_left.indexOf(to_open) !=-1) {
+					$("#chat_wrapper").removeClass(sidebars_left); 
+					if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+						$("#chat_wrapper").removeClass(sidebars_right);
+					}
+				}
+				$("#chat_wrapper").addClass(to_open + "_open"); 
+				if (last_sidebar_state == $("#chat_wrapper").attr("class").split(" ").sort().join(" ")) {
+					$("#chat_wrapper").removeClass(to_open + "_open")
+				}
+			}
 			
-			$(".switch_character_button").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
-			$(".settings_button").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
-			$(".my_chats_button").click(function() { $("#chat_wrapper").addClass("my_chats_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("my_chats_open")}});
+			$(".switch_character_button").click(function() { open_sidebar("switch_character") });
+			$(".settings_button").click(function() { open_sidebar("settings") });
+			$(".my_chats_button").click(function() { open_sidebar("my_chats") });
+			
+			// Mobile side menu overrides
+			 function mobile_sidebar(to_open) {
+				$(".sidebar").not("#" + to_open).removeClass("mobile_override");
+				$("#" + to_open).toggleClass("mobile_override");
+				$("#mobile_nav_toggle").prop("checked",false);
+			}
+			
+			$(".mobile_nav_button").click(function() { mobile_sidebar($(this).attr("id").replace("mobile_open_", "")) });
+			
+			// only close on non mobile if it isn't a default sidebar
+			$(".sidebar .close").click(function() {if (sidebar_defaults.indexOf($(this).parents(".sidebar").attr("id")) == -1) {$("#chat_wrapper").removeClass($(this).parents(".sidebar").attr("id") + "_open") }; $(this).parents(".sidebar").removeClass("mobile_override"); });
 			
 			// Attempt to load smart quirk mode for this chat from localstorage, otherwise fall back to default
 			var smart_quirk_mode = "";
@@ -1383,17 +1409,7 @@ var msparp = (function() {
 					localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
 				}
 			}); 
-			
-			// Mobile side menu overrides
-			$(".mobile_nav_button").click(function() {
-				panel_to_open = "#" + $(this).attr("id").replace("mobile_open_", "");
-				$(".sidebar").not(panel_to_open).removeClass("mobile_override");
-				$(panel_to_open).toggleClass("mobile_override");
-				$("#mobile_nav_toggle").prop("checked",false);
-			});
-			
-			$(".sidebar .close").click(function() { set_sidebar(null); $(this).parent().removeClass("mobile_override"); });
-			
+
 			// Mod tools
 			if (chat.type == "group") {
 				var mod_tools = $("#mod_tools");
@@ -1478,10 +1494,10 @@ var msparp = (function() {
 						}
 						$.post("/chat_api/save_variables", { "chat_id": chat.id, "ignored_numbers": user.meta.ignored_numbers.toString() });
 					});
-					$("#action_mobile_switch_character").click(function() {$(".sidebar").not("#switch_character").removeClass("mobile_override"); $("#switch_character").toggleClass("mobile_override"); });
-					$("#action_mobile_settings").click(function() {$(".sidebar").not("#settings").removeClass("mobile_override"); $("#settings").toggleClass("mobile_override"); });
-					$("#action_switch_character").click(function() { $("#chat_wrapper").addClass("switch_character_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("switch_character_open")}});
-					$("#action_settings").click(function() { $("#chat_wrapper").addClass("settings_open"); if (last_sidebar_state.length == $("#chat_wrapper").attr("class").length) {$("#chat_wrapper").removeClass("settings_open")}});
+					$("#action_mobile_switch_character").click(function() {mobile_sidebar("switch_character") });
+					$("#action_mobile_settings").click(function() {mobile_sidebar("settings") });
+					$("#action_switch_character").click(function() { open_sidebar("switch_character") });
+					$("#action_settings").click(function() { open_sidebar("settings") });
 					$("#action_mod3, #action_mod2, #action_mod1, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
@@ -1528,7 +1544,7 @@ var msparp = (function() {
 						$("#chat_line_input input").trigger( "keyup" ); // refresh text line to apply new settings
 					});
 				}
-				set_sidebar(null);
+				reset_sidebar();
 				return false;
 			});
 
@@ -1584,7 +1600,7 @@ var msparp = (function() {
 						theme_stylesheet.remove();
 					}
 				});
-				set_sidebar(null);
+				reset_sidebar();
 				return false;
 			});
 

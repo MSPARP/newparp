@@ -273,6 +273,7 @@ body.chat #global_navigation {display:none}
 
 @media (max-height: 600px) {
 	.sidebar_wrap {bottom:0px !important}
+	#connection_method {display:none}
 }
 
 @media (max-width: 780px), (max-height: 500px) {
