@@ -215,7 +215,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 	#global_navigation a { display: block; }
 	#global_navigation li {height:auto}
 	#global_navigation #unread_counter {height:31px;box-sizing:border-box;}
-	#global_navigation:not(.in_chat_nav) #unread_counter {z-index:2}
+	#global_navigation #unread_counter {z-index:2}
 }
 
 /* 1.3. Footer */
