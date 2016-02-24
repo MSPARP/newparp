@@ -110,7 +110,8 @@ footer a:hover { color: #46496b; }
 /* 1.4. Responsive widths / main */
 
 
-@media (max-width: 650px) { 
+@media (max-width: 650px) {
+	#prompt-cursor {height:5.8vw; background-size:contain;}
 	body { margin: 0; min-height:100vh; background:#1d1f2c;} 
 	#wrapper {background:transparent }
 	footer a {color: #2a2c40}
