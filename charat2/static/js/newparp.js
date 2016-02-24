@@ -1754,8 +1754,11 @@ var msparp = (function() {
 					// as they are case sensitive, save URLs to array to survive this step
 					var url_matches = text.match(/\[url=([^\]]+?)\]/gi);
 					// selectively replace [BBCode] tag wrapping with unicode placeholders to do negative lookaheads without e.g. Terezi's quirk breaking
-					// to be consistent, use same rules here that are used for BBCode removal
-					text = text.replace(/\[([A-Za-z]+)(=[^\]]+)?\]([\s\S]*?)\[(\/\1)\]/ig, "\ufe5d$1$2\ufe5e$3\ufe5d$4\ufe5e");
+					// to be consistent, use same rules here that are used for BBCode removal, except recursive to catch stacked tags
+					var re = /\[([A-Za-z]+)(=[^\]]+)?\]([\s\S]*?)\[(\/\1)\]/ig;
+					while (re.exec(text)) {
+						text = text.replace(re, "\ufe5d$1$2\ufe5e$3\ufe5d$4\ufe5e");
+					}
 				}
 				
 				// Break up text into chunks for smartquirking
