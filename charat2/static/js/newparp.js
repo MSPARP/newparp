@@ -1326,7 +1326,6 @@ var msparp = (function() {
 			var sidebar_defaults = "";
 			var sidebars_right = "";
 			var sidebars_left = "";
-			var last_sidebar_state = "";
 			function reset_sidebar() {
 				sidebar_defaults = "";
 				sidebars_right = "";
@@ -1348,24 +1347,24 @@ var msparp = (function() {
 				$(".sidebar").removeClass("mobile_override");
 			}
 			
-			// Use the lists to close down other open bars, then hook individual buttons to open the desired one; add buffer to allow click-to-close (order-agnostic)
+			// Use the lists to close down other open bars, then hook individual buttons to open the desired one
 			// Also close opposing bars if left sidebars are disabled or on msparp classic, or width is small enough to collapse left bars
 			function open_sidebar(to_open) {
-				last_sidebar_state = $("#chat_wrapper").attr("class").split(" ").sort().join(" ");
-				if (sidebars_right.indexOf(to_open) !=-1) {
-					$("#chat_wrapper").removeClass(sidebars_right); 
-					if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
-						$("#chat_wrapper").removeClass(sidebars_left);
+				if ($("#chat_wrapper").hasClass(to_open + "_open")) {
+					$("#chat_wrapper").removeClass(to_open + "_open");
+				} else {
+					if (sidebars_right.indexOf(to_open) !=-1) {
+						$("#chat_wrapper").removeClass(sidebars_right); 
+						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+							$("#chat_wrapper").removeClass(sidebars_left);
+						}
+					} else if (sidebars_left.indexOf(to_open) !=-1) {
+						$("#chat_wrapper").removeClass(sidebars_left); 
+						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+							$("#chat_wrapper").removeClass(sidebars_right);
+						}
 					}
-				} else if (sidebars_left.indexOf(to_open) !=-1) {
-					$("#chat_wrapper").removeClass(sidebars_left); 
-					if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
-						$("#chat_wrapper").removeClass(sidebars_right);
-					}
-				}
-				$("#chat_wrapper").addClass(to_open + "_open"); 
-				if (last_sidebar_state == $("#chat_wrapper").attr("class").split(" ").sort().join(" ")) {
-					$("#chat_wrapper").removeClass(to_open + "_open")
+					$("#chat_wrapper").addClass(to_open + "_open"); 
 				}
 			}
 			
