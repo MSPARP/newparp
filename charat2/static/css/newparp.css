@@ -316,6 +316,11 @@ h2 select { font-size: 10pt; }
 .input_table p > input, .input_table p > select { margin: 2px 0; }
 .input_table p > label { padding-right: 5px; }
 
+@media screen and (min-width:0\0) and (min-resolution: .001dpcm) { 
+	/* target IE9 - make input table look less broken */
+	.input_table p > label, .input_table p > input, .input_table p > select, .input_table p > span { display: inline; }
+}
+
 #small_search_toggle {padding:2px 5px 5px 5px;}
 
 .quirk_creator .input.short p {display:table-cell;}
@@ -1849,7 +1854,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 #group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #e0e0e0; border-bottom:2px solid #a0a0a0}
 /* overflow:hidden prevents column breaks in Firefox. */
 /* use transform to fix :after positioning, as relative positioning is broken on old devices/browsers in column layouts, making links unclickable*/
-#group_chats li { -webkit-column-break-inside: avoid; page-break-inside:avoid;break-inside:avoid;-webkit-transform:translateZ(0px);transform:translateZ(0px);}
+#group_chats li { -webkit-column-break-inside: avoid; page-break-inside:avoid;break-inside:avoid;-ms-transform:translate(0px,0px);-webkit-transform:translateZ(0px);transform:translateZ(0px);}
 #group_chats li form > p {text-align:right}
 #group_chats li:last-child { margin-bottom: 0; }
 #group_chats h3 { margin: 0; font-size: 12pt; }
@@ -1894,7 +1899,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 
 /* prevent this from parsing in Chrome for now as Chrome 45+ does not fully render secondary columns with it applied */
 @-moz-document url-prefix() { 
-	#group_chats li  {overflow:hidden;}
+	#group_chats li {overflow:hidden;}
 }
 
 /* enable multi column width/layout */
