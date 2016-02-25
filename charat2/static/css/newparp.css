@@ -1848,7 +1848,8 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 #group_chats { max-width: none; padding: 0; list-style-type: none; }
 #group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #e0e0e0; border-bottom:2px solid #a0a0a0}
 /* overflow:hidden prevents column breaks in Firefox. */
-#group_chats li { -webkit-column-break-inside: avoid; position:relative;}
+/* use transform to fix :after positioning, as relative positioning is broken on old devices/browsers in column layouts, making links unclickable*/
+#group_chats li { -webkit-column-break-inside: avoid; page-break-inside:avoid;break-inside:avoid;-webkit-transform:translateZ(0px);transform:translateZ(0px);}
 #group_chats li form > p {text-align:right}
 #group_chats li:last-child { margin-bottom: 0; }
 #group_chats h3 { margin: 0; font-size: 12pt; }
