@@ -26,7 +26,13 @@
 <head>
 <title>{% if chat.title: %}{{chat.title}}{% else: %}Chat{% endif %} - MSPARP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+{% if g.user and g.user.theme == "felt": %}
+<meta name="theme-color" content="#0e4603">
+{% elif g.user and g.user.theme in ("darkskin", "darkskin_monochrome"): %}
+<meta name="theme-color" content="#161823">
+{% else: %}
 <meta name="theme-color" content="#626262">
+{% endif %}
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <script type="text/javascript"> // Make Apple webapp navigable without opening in Safari
