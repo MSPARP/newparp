@@ -380,6 +380,10 @@ var msparp = (function() {
 					case "u":
 					case "s":
 						return "<" + tag + ">" + raw_bbencode(content, admin) + "</" + tag + ">";
+					case "c":
+						return "<span style=\"text-transform: uppercase\">" + raw_bbencode(content, admin) + "</span>";
+					case "w":
+						return "<span style=\"text-transform: lowercase\">" + raw_bbencode(content, admin) + "</span>";
 					case "alternian":
 						return "<span class=\"alternian\">" + raw_bbencode(content, admin) + "</span>";
 					case "spoiler":
