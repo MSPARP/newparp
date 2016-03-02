@@ -2,6 +2,14 @@
 {% block title: %}Worker status - {% endblock %}
 {% block content: %}
     <h2>Worker status</h2>
-    <p>TODO celery status</p>
+    {% if celery_workers: %}
+    <ul>
+        {% for worker, tasks in celery_workers.items(): %}
+        <li>{{ worker }}: {{ tasks if tasks else "idle" }}</li>
+        {% endfor %}
+    </ul>
+    {% else: %}
+    <p>No workers.</p>
+    {% endif %}
 {% endblock %}
 

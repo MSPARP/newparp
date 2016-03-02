@@ -15,6 +15,7 @@ from charat2.helpers.auth import admin_required, permission_required
 from charat2.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
 from charat2.model.connections import use_db
 from charat2.model.validators import color_validator
+from charat2.tasks import celery
 
 
 @use_db
@@ -701,5 +702,6 @@ def delete_ip_ban():
 def worker_status():
     return render_template(
         "admin/worker_status.html",
+        celery_workers=celery.control.inspect().active(),
     )
 
