@@ -702,6 +702,7 @@ def delete_ip_ban():
 def worker_status():
     return render_template(
         "admin/worker_status.html",
+        worker_queue_length=celery.backend.client.llen("worker"),
         celery_workers=celery.control.inspect().active(),
     )
 

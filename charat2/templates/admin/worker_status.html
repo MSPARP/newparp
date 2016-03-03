@@ -2,10 +2,18 @@
 {% block title: %}Worker status - {% endblock %}
 {% block content: %}
     <h2>Worker status</h2>
+    <p>Worker queue length: <strong>{{ worker_queue_length }}</strong></p>
     {% if celery_workers: %}
     <ul>
         {% for worker, tasks in celery_workers.items(): %}
-        <li>{{ worker }}: {{ tasks if tasks else "idle" }}</li>
+        <li>
+            {{ worker }}:
+            {% if tasks: %}
+            working on {% for task in tasks: %}{{ task["name"] }}{{ "" if loop.last else ", " }}{% endfor %}
+            {% else %}
+            idle
+            {% endif %}
+        </li>
         {% endfor %}
     </ul>
     {% else: %}
