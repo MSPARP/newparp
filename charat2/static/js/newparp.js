@@ -40,9 +40,9 @@ var msparp = (function() {
 	
 	} catch (e) {var localstorage = false;}
 	
-	// Detect touch devices because apple cannot handle focus highlighting
+	// Detect touch devices because apple/some browsers cannot handle focus highlighting
 	var touch_enabled = false;
-	if ('ontouchstart' in document.documentElement) {
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 		$("body").addClass("touch");
 		touch_enabled = true;
 	}
