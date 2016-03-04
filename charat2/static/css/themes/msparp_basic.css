@@ -396,7 +396,7 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 #conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
-.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
+.chat #text_preview, body.no_forms.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
 #send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
 
 #button_wrap {margin-right:-5px}
