@@ -271,8 +271,15 @@ body.chat #global_navigation {display:none}
 .sidebar > label:first-of-type {display:none}
 .sidebar_wrap {top:0px !important;bottom:23px !important}
 
+body:not(.no_forms) .sidebar .fromto input {width:50px;}
+
+/* revert sidebar wrap positioning with forms fallback to cover broken scrolling on ICS android vanilla browser */
+body.no_forms .sidebar_wrap {position:static;padding-bottom:23px}
+body.no_forms #connection_method {background:#eee;width:230px;}
+
 @media (max-height: 600px) {
 	.sidebar_wrap {bottom:0px !important}
+	body.no_forms .sidebar_wrap {padding-bottom:0px}
 	#connection_method {display:none}
 }
 
