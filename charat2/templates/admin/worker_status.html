@@ -4,23 +4,23 @@
     <div class="common_box">
         <h2><label><span>Worker status</span></label></h2>
         <div class="common_box_wrap">
-<p>Worker queue length: <strong>{{ worker_queue_length }}</strong></p>
-    {% if celery_workers: %}
-    <ul>
-        {% for worker, tasks in celery_workers.items(): %}
-        <li>
-            {{ worker }}:
-            {% if tasks: %}
-            working on {% for task in tasks: %}{{ task["name"] }}{{ "" if loop.last else ", " }}{% endfor %}
-            {% else %}
-            idle
+            <p>Worker queue length: <strong>{{ worker_queue_length }}</strong></p>
+            {% if celery_workers: %}
+            <ul>
+                {% for worker, tasks in celery_workers.items(): %}
+                <li>
+                    {{ worker }}:
+                    {% if tasks: %}
+                    working on {% for task in tasks: %}{{ task["name"] }}{{ "" if loop.last else ", " }}{% endfor %}
+                    {% else %}
+                    idle
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else: %}
+            <p>No workers.</p>
             {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-    {% else: %}
-    <p>No workers.</p>
-    {% endif %}
         </div>
     </div>
 {% endblock %}
