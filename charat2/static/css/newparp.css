@@ -245,6 +245,8 @@ section > .close:first-child { float: right; margin: 5px; }
 #info_panel, #edit_info_panel { display: none; position: fixed; top: 35px; right: 5px; bottom: 5px; left: 5px; z-index: 1; overflow: auto; background-color: #eee; -webkit-overflow-scrolling: touch; }
 .topic:empty:before { content: "(no topic)"; color: #999; font-style: italic; }
 #info_panel p { white-space: pre-line; }
+/* info on the log in screen */
+.chat_info { white-space: pre-line; }
 
 /* 4.2. PM chat list */
 

@@ -162,14 +162,19 @@ def create_chat():
     return redirect(url_for("rp_chat", url=lower_url))
 
 
-# XXX CUSTOM LOG IN/REGISTER PAGE WITH CHAT INFO
 @alt_formats({"json"})
 @use_db
-@log_in_required
 @get_chat
 def chat(chat, pm_user, url, fmt=None):
 
     chat_dict = chat.to_dict(pm_user=pm_user)
+
+    if g.user is None:
+        if fmt == "json":
+            return jsonify({"chat": chat_dict})
+        if chat.type != "group":
+            return render_template("account/log_in_required.html")
+        return render_template("rp/chat/log_in_required.html", chat=chat)
 
     # Get or create ChatUser.
     try:
