@@ -1,20 +1,24 @@
 {% extends "base.html" %}
 {% import "account/forms.html" as forms %}
 {% block content: %}
-    <h2>{{ chat.computed_title() }}</h2>
-    <p>You need to register or log in before you can join this chat.</p>
-    {% if chat.topic: %}
-    <h3>Current topic</h3>
-    <p>{{ chat.topic }}</p>
-    {% endif %}
-    {% if chat.description: %}
-    <h3>Description</h3>
-    <p class="chat_info">{{ chat.description }}</p>
-    {% endif %}
-    {% if chat.rules: %}
-    <h3>Rules</h3>
-    <p class="chat_info">{{ chat.rules }}</p>
-    {% endif %}
+    <div class="common_box chat_info_box">
+        <h2><label class="user_edit_box_header"><span>{{ chat.computed_title() }}</span></label></h2>
+        <div class="common_box_wrap">
+            <p class="error">You need to register or log in before you can join this chat.</p>
+            {% if chat.topic: %}
+            <h3>Current topic</h3>
+            <p class="textlabel">{{ chat.topic }}</p>
+            {% endif %}
+            {% if chat.description: %}
+            <h3>Description</h3>
+            <p class="chat_info textlabel">{{ chat.description }}</p>
+            {% endif %}
+            {% if chat.rules: %}
+            <h3>Rules</h3>
+            <p class="chat_info textlabel">{{ chat.rules }}</p>
+            {% endif %}
+        </div>
+    </div>
     <section>
         {{forms.register()}}
         {{forms.log_in()}}

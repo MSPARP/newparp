@@ -2098,6 +2098,7 @@ body.has_left_tabs #topbar ~ .sidebar.left { bottom:37px; }
 #info_panel p { white-space: pre-line; }
 /* info on the log in screen */
 .chat_info { white-space: pre-line; }
+.chat_info_box .textlabel {font-size:11pt}
 
 #info_panel { animation: curtains .3s ease-in-out alternate;}
 

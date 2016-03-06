@@ -3,19 +3,19 @@
 {% block content: %}
     <div id="create_chat" class="common_box">
         <h2><label><span>&gt; Create a group chat</span></label></h2>
-    <div class="common_box_wrap" id="group_chat_creator">
-        {% if "create_chat_error" in request.args: %}
-        {% if request.args["create_chat_error"] == "url_invalid": %}
-        <p class="error">That URL isn't valid. Chat URLs can only contain letters, numbers, hyphens and underscores.</p>
-        {% elif request.args["create_chat_error"] == "url_taken": %}
-        <p class="error">That URL has already been taken.</p>
-        {% endif %}
-        {% endif %}
-        <form action="{{url_for("rp_create_chat")}}" method="post">
-            <input type="hidden" name="token" value="{{g.csrf_token}}">
-            <p><div class="input"><input type="text" id="c_chat_name" name="url" maxlength="50" required><label for="c_chat_name">Chat URL</label></div> <button type="submit" class="labelled_button">Create</button></p>
-        </form>
-    </div>
+        <div class="common_box_wrap" id="group_chat_creator">
+            {% if "create_chat_error" in request.args: %}
+            {% if request.args["create_chat_error"] == "url_invalid": %}
+            <p class="error">That URL isn't valid. Chat URLs can only contain letters, numbers, hyphens and underscores.</p>
+            {% elif request.args["create_chat_error"] == "url_taken": %}
+            <p class="error">That URL has already been taken.</p>
+            {% endif %}
+            {% endif %}
+            <form action="{{url_for("rp_create_chat")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <p><div class="input"><input type="text" id="c_chat_name" name="url" maxlength="50" required><label for="c_chat_name">Chat URL</label></div> <button type="submit" class="labelled_button">Create</button></p>
+            </form>
+        </div>
     </div>
     <div id="filter_chats" class="common_box">
         <h2><label><span>Existing group chats</span></label></h2>
