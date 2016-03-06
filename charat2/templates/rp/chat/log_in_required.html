@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import "account/forms.html" as forms %}
+{% block content: %}
+    <h2>{{ chat.computed_title() }}</h2>
+    <p>You need to register or log in before you can join this chat.</p>
+    {% if chat.topic: %}
+    <h3>Current topic</h3>
+    <p>{{ chat.topic }}</p>
+    {% endif %}
+    {% if chat.description: %}
+    <h3>Description</h3>
+    <p class="chat_info">{{ chat.description }}</p>
+    {% endif %}
+    {% if chat.rules: %}
+    <h3>Rules</h3>
+    <p class="chat_info">{{ chat.rules }}</p>
+    {% endif %}
+    <section>
+        {{forms.register()}}
+        {{forms.log_in()}}
+    </section>
+{% endblock %}
+{% block scripts: %}
+<script>msparp.register();msparp.log_in();</script>
+{% endblock %}
