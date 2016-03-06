@@ -10,6 +10,7 @@ themes = OrderedDict([
     ("darkskin_monochrome", "Dark skin (monochrome)"),
     ("felt", "The Felt (alternate dark)"),
     ("msparp_basic", "MSPARP classic"),
+    ("msparp_basic_dark", "MSPARP classic (dark)"),
 ])
 
 

@@ -541,8 +541,8 @@ body:not(.no_forms) .input textarea + label {
 	top: 1.25em;
 	padding:4px;
 	margin-bottom: 2px;
-	-webkit-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.25s ease;
+	transition: all 0.25s ease;
 }
 body:not(.no_forms) .input input[type='text'].error,
 body:not(.no_forms) .input input[type='email'].error,
@@ -625,8 +625,8 @@ body:not(.no_forms) .input input[type='checkbox'] + label:before {
 	width: 20px;
 	border-radius: 2px;
 	background: #cecece;
-	-webkit-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
 	box-sizing: border-box;
 	-webkit-transform:scale(0.9);
 	-ms-transform:scale(0.9);
@@ -716,8 +716,8 @@ body:not(.no_forms) .input input[type='radio'] + label:after {
 	width: 16px;
 	border-radius: 50%;
 	background: #f4f4f4;
-	-webkit-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
 	background-clip: padding-box;
 }
 body:not(.no_forms) .input input[type='radio'] + label:after {
@@ -726,8 +726,8 @@ body:not(.no_forms) .input input[type='radio'] + label:after {
 	-webkit-transform: scale(0);
 	-ms-transform: scale(0);
 	transform: scale(0);
-	-webkit-transition: all 0.3s ease;
-	transition: all 0.3s ease;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
 }
 body:not(.no_forms) .input input[type='radio']:focus + label:before {
 	/*use box shadow for keyboard focus*/

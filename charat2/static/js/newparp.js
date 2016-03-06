@@ -1359,12 +1359,12 @@ var msparp = (function() {
 				} else {
 					if (sidebars_right.indexOf(to_open) !=-1) {
 						$("#chat_wrapper").removeClass(sidebars_right); 
-						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $('head link[href="/static/css/themes/msparp_basic_dark.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
 							$("#chat_wrapper").removeClass(sidebars_left);
 						}
 					} else if (sidebars_left.indexOf(to_open) !=-1) {
 						$("#chat_wrapper").removeClass(sidebars_left); 
-						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
+						if ($('head link[href="/static/css/themes/msparp_basic.css"]').length || $('head link[href="/static/css/themes/msparp_basic_dark.css"]').length || $(body).hasClass("disable_left_bar") || window.innerWidth < 1270) {
 							$("#chat_wrapper").removeClass(sidebars_right);
 						}
 					}
