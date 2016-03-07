@@ -96,10 +96,10 @@ var msparp = (function() {
 		if (localStorage.getItem("smart_quirk") == "true") {
 			dev_user_smart_quirk = "true";
 		}
-		if (localStorage.getItem("smart_action_delimiter") !== null) { 
+		if (localStorage.getItem("smart_action_delimiter") !== null && localStorage.getItem("smart_action_delimiter") !== "") { 
 			dev_user_smart_action_delimiter = localStorage.getItem("smart_action_delimiter"); 
 		}
-		 if (localStorage.getItem("smart_dialogue_delimiter") !== null) { 
+		 if (localStorage.getItem("smart_dialogue_delimiter") !== null && localStorage.getItem("smart_dialogue_delimiter") !== "") { 
 			dev_user_smart_dialogue_delimiter = localStorage.getItem("smart_dialogue_delimiter"); 
 		}
 		

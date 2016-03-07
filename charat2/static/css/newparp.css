@@ -901,6 +901,10 @@ body.no_forms .input.select, body.no_forms .input.select select {max-width:99%}
 
 .register_login_box input[type=email], .register_login_box input[type=password], .register_login_box input[type=text] {min-width:190px}
 
+body:not(.no_forms) .register_login_box .input.tags_box input + label {top:1.2em}
+
+body:not(.no_forms) .shortname_box #invite_name + label {top:1.05em}
+
 /* 2.2. Toggle box */
 
 .common_box h2, .toggle_box h2, .roulette_head {margin:0px; padding: 0px 2px 9px 0px; position:relative; text-indent:12px; border-top:5px solid transparent; border-right:4px solid transparent;}
@@ -1293,7 +1297,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 
 button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list * {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
 
-/* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance; also remove color input since currently unsupported */
+/* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance */
 
 .input label:active, h2 label:active {background:transparent;}
 
@@ -1304,8 +1308,6 @@ button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *,
 
 	.toggle_box > input:first-child:checked + h2, .toggle_box > input:first-child:checked + h2 + #character_settings, .toggle_box > input:first-child:checked + h2 + #quirk_settings, .toggle_box > input:first-child:checked + h2 + #filter_settings, .toggle_box > input:first-child:checked + h2 + #search_settings {animation:none;}
 
-	#color_input, #color_header_set {display:none}
-	#color_hex_input {margin:5px 0 0 0}
 }
 
 /* 2.6. Spectrum colour picker fallback */
