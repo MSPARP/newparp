@@ -101,6 +101,8 @@ h1 img { display: block; max-width: 100%; }
 	#global_navigation input:not(:checked) + ul { display: none; }
 	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; }
 	#global_navigation a { display: block; }
+	#global_navigation li a, #global_navigation .user a, #global_navigation .user ul li a, #global_navigation button {padding-left: 0px;}
+	#global_navigation .user li a:before {content: '> ';}
 }
 
 #global_navigation:before {display:none}

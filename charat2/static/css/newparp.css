@@ -175,7 +175,8 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 }
 
 @media (max-width: 950px) {
-	#global_navigation li a:before, #global_navigation button { content: ""; }
+	#global_navigation li a:before { content: ""; }
+	#global_navigation .user li a:before{ content: "> "; }
 }
 
 @media (max-width: 800px) {
@@ -210,8 +211,11 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 	#global_navigation:not(.in_chat_nav) input:not(:checked) + ul{transition:transform .3s ease-in-out;-webkit-transform: translate(0,-100%);transform:translate(0,-100%);}
 	#global_navigation input:checked + ul {max-height:400px;overflow:hidden;}
 	#global_navigation:not(.in_chat_nav) input:checked + ul {transition:transform .4s ease-in-out;-webkit-transform:translate(0,0);transform:translate(0,0);}
-	#global_navigation li { display: block; margin-left: 0; padding-left: 10px; font-variant:normal; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;}
-	#global_navigation .user > a:before {content: '';}
+	#global_navigation li { display: block; margin-left: 0px; padding-left:10px;font-variant:normal; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;}
+	#global_navigation li a {padding-left: 15px;}
+	#global_navigation .user > a:before, #global_navigation button:before, #global_navigation .user li a:before {content: '';}
+	#global_navigation .user a {padding-left:4px;}
+	#global_navigation .user ul li a, #global_navigation button {padding-left:15px}
 	#global_navigation a { display: block; }
 	#global_navigation li {height:auto}
 	#global_navigation #unread_counter {height:31px;box-sizing:border-box;}
@@ -2566,6 +2570,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#global_navigation.in_chat_nav li a .long {display:inline}
 	#global_navigation.in_chat_nav li:active {background-color:#767676}
 	#global_navigation.in_chat_nav .user a {max-width:none} 
+	#global_navigation.in_chat_nav .user {width:100%;}
 	#global_navigation.in_chat_nav li a .short {display:none}
 	#global_navigation.in_chat_nav label:before {
 		content: '\00a0';
@@ -2581,11 +2586,14 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#global_navigation.in_chat_nav input:not(:checked) + ul { max-height:0px;overflow:hidden; transition:all .3s ease-in-out;}
 	#global_navigation.in_chat_nav input:checked + ul {max-height:400px;overflow:hidden;transition:all .4s ease-in-out;}
 	#global_navigation.in_chat_nav li { display: block;margin-left: 0; padding-left: 10px; font-variant:normal; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:14px;line-height:20px;}
-	#global_navigation.in_chat_nav .user > a:before {content: '';}
+	#global_navigation.in_chat_nav .user > a:before, #global_navigation.in_chat_nav .user li a:before,#global_navigation.in_chat_nav li a:before, #global_navigation.in_chat_nav .user button:before {content: '';}
 	#global_navigation.in_chat_nav a { display: block; }
 	#global_navigation.in_chat_nav li {height:auto}
 	#global_navigation.in_chat_nav #unread_counter {height:33px;box-sizing:border-box}
 	#global_navigation.in_chat_nav {top:3px}
+	#global_navigation.in_chat_nav li a {padding-left: 15px;}
+	#global_navigation.in_chat_nav .user a {padding-left:4px;}
+	#global_navigation.in_chat_nav .user ul li a, #global_navigation.in_chat_nav button {padding-left:15px}
 	#topbar { top: 7px; left:34px; right: 95px; background-color: transparent; cursor: pointer;z-index:2;vertical-align:middle}
 	#topbar h1 {background:transparent;font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:11pt;font-weight:bold;width:auto;}
 	#topbar, #topbar .topic {color: #f5f5f5}
