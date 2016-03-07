@@ -275,7 +275,7 @@ body:not(.no_forms) .sidebar .fromto input {width:50px;}
 
 /* revert sidebar wrap positioning with forms fallback to cover broken scrolling on ICS android vanilla browser */
 body.no_forms .sidebar_wrap {position:static;padding-bottom:23px}
-body.no_forms #connection_method {background:#eee;width:230px;}
+body.no_forms #connection_method {background:#000;width:230px;}
 
 @media (max-height: 600px) {
 	.sidebar_wrap {bottom:0px !important}
@@ -351,7 +351,7 @@ body:not(.no_forms) #sidebar_left_tabs button:active, body:not(.no_forms) #sideb
 
 #sidebar_left_tabs button:active {padding-right:39px}
 
-body.no_forms #sidebar_tabs button, body.no_forms #sidebar_left_tabs button {color:#000;background:#fbfbfb;border:none !important}
+body.no_forms #sidebar_tabs button, body.no_forms #sidebar_left_tabs button {color:#fafafa;background:#626262;border:none !important}
 body.no_forms #sidebar_left_tabs button, body.no_forms #sidebar_tabs button {padding-left:4px;padding-right:4px;border-radius:0px !important}
 body.no_forms #sidebar_left_tabs button:active, body.no_forms #sidebar_tabs button:active {padding-right:4px;}
 
@@ -396,7 +396,7 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 #conversation hr { margin: 2px 0; border-width: 5px 0 0; border-style: solid; border-color: #ccc; }
 
 #send_form { position: fixed; right: 5px; bottom: 5px; left: 5px; padding: 0 2px; }
-.chat #text_preview, body.no_forms.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #eee; }
+.chat #text_preview, body.no_forms.chat #text_preview { margin: 0 -2px; padding: 2px; background-color: #000; }
 #send_form input[name=text] { display: block; width: 100%; margin: 0 -2px 5px; border-radius: 0px; } /* #applehatesyou */
 
 #button_wrap {margin-right:-5px}
