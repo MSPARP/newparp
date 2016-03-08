@@ -41,7 +41,19 @@ CELERY_QUEUES = (
 # Beats config
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
-        "task": "charat2.tasks.reaper.generate_counters",
+        "task": "charat2.tasks.background.generate_counters",
+        "schedule": timedelta(seconds=10),
+    },
+    "update_lastonline": {
+        "task": "charat2.tasks.background.update_lastonline",
+        "schedule": timedelta(seconds=5),
+    },
+    "matchmaker": {
+        "task": "charat2.tasks.matchmaker.run",
+        "schedule": timedelta(seconds=10),
+    },
+    "roulette_matchmaker": {
+        "task": "charat2.tasks.roulette_matchmaker.run",
         "schedule": timedelta(seconds=10),
     },
     "ping_longpolls": {
@@ -52,16 +64,4 @@ CELERYBEAT_SCHEDULE = {
         "task": "charat2.tasks.reaper.reap",
         "schedule": timedelta(seconds=1),
     },
-    "matchmaker": {
-        "task": "charat2.tasks.matchmaker.run",
-        "schedule": timedelta(seconds=10),
-    },
-    "roulette_matchmaker": {
-        "task": "charat2.tasks.roulette_matchmaker.run",
-        "schedule": timedelta(seconds=10),
-    },
-    "update_lastonline": {
-        "task": "charat2.tasks.background.update_lastonline",
-        "schedule": timedelta(seconds=5),
-    }
 }

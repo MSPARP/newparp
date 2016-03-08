@@ -12,41 +12,6 @@ from charat2.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
 
-@celery.task(base=WorkerTask, queue="worker")
-def generate_counters():
-    redis = generate_counters.redis
-
-    logger.info("Generating user counters.")
-
-    # Online user counter
-    connected_users = set()
-    next_index = 0
-    while True:
-        next_index, keys = redis.scan(next_index, "chat:*:online")
-        for key in keys:
-            for user_id in redis.hvals(key):
-                connected_users.add(user_id)
-        if int(next_index) == 0:
-            break
-    redis.set("connected_users", len(connected_users))
-
-    # Searching counter
-    searching_users = set()
-    for searcher_id in redis.smembers("searchers"):
-        session_id = redis.get("searcher:%s:session_id" % searcher_id)
-        user_id = redis.get("session:%s" % session_id)
-        if user_id is not None:
-            searching_users.add(user_id)
-    redis.set("searching_users", len(searching_users))
-
-    # Roulette counter
-    rouletting_users = set()
-    for searcher_id in redis.smembers("roulette_searchers"):
-        session_id = redis.get("roulette:%s:session_id" % searcher_id)
-        user_id = redis.get("session:%s" % session_id)
-        if user_id is not None:
-            rouletting_users.add(user_id)
-    redis.set("rouletting_users", len(rouletting_users))
 
 # Make sure a message is sent every 25 seconds so the long poll requests
 # don't time out.
@@ -63,6 +28,7 @@ def ping_longpolls():
             redis.zadd("longpoll_timeout", time.time() + 25, chat_id)
         else:
             redis.zrem("longpoll_timeout", chat_id)
+
 
 @celery.task(base=WorkerTask, queue="worker")
 def reap():
@@ -128,3 +94,4 @@ def reap():
         logger.info("Sent timeout message for ChatUser (chat %s, user %s)." % (chat_id, user_id))
 
     db.commit()
+
