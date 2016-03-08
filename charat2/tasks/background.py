@@ -3,7 +3,7 @@ import datetime
 from celery.utils.log import get_task_logger
 from sqlalchemy import and_
 
-from charat2.model import Chat, ChatUser
+from charat2.model import Chat, ChatUser, GroupChat
 from charat2.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)

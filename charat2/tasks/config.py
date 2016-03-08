@@ -44,6 +44,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "charat2.tasks.background.generate_counters",
         "schedule": timedelta(seconds=10),
     },
+    "unlist_chats": {
+        "task": "charat2.tasks.background.unlist_chats",
+        "schedule": timedelta(seconds=10),
+    },
     "update_lastonline": {
         "task": "charat2.tasks.background.update_lastonline",
         "schedule": timedelta(seconds=5),
