@@ -2625,6 +2625,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 /* collapse last side bar and engage mobile navigation & menu */
 
 @media (max-width:650px) {
+	#global_navigation.in_chat_nav button {padding:7px}
 	.chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav,
 	#chat_wrapper #chat_content #info_panel, #chat_wrapper #chat_content #edit_info_panel, #chat_wrapper #chat_content #conversation, #chat_wrapper #chat_content #send_form, #chat_wrapper #global_navigation.in_chat_nav { right: 0px !important; left:0px !important}
 	body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav,
