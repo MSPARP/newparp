@@ -43,7 +43,7 @@ Contents:
 body { margin: 0px; background-color: #535353; font-family: "Courier", "Courier New", Ricty, Inconsolata, monospace; font-weight: bold; font-size: 11pt; }
 
 /* iOS changes this attribute randomly all over the page if you trigger a CSS transform, so force this here */
-body * {-webkit-font-smoothing: antialiased !important;}
+body * {-webkit-font-smoothing: antialiased !important; -moz-osx-font-smoothing: grayscale;}
 
 /* stop advanced font rendering/enable hardware on conversation to stop Chrome from messing up during transitions, only if enabled */
 body.material #conversation .unum + p  {-webkit-transform:translateZ(0px);}
