@@ -519,6 +519,18 @@ class SearchedChat(Chat):
 AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, RouletteChat, SearchedChat])
 
 
+class LogMarker(Base):
+    __tablename__ = "log_markers"
+    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    type = Column(Enum(
+        u"page_with_system_messages",
+        u"page_without_system_messages",
+        name=u"log_markers_type",
+    ), primary_key=True, default=u"page_with_system_messages")
+    number = Column(Integer, primary_key=True, autoincrement=False)
+    message_id = Column(Integer, ForeignKey("messages.id"), nullable=False)
+
+
 class ChatUser(Base):
 
     __tablename__ = "chat_users"
@@ -1131,6 +1143,9 @@ GroupChat.parent = relation(
     backref="children",
     primaryjoin=GroupChat.parent_id == Chat.id,
 )
+
+LogMarker.chat = relation(Chat, backref="log_markers")
+LogMarker.message = relation(Message, backref="log_marker")
 
 ChatUser.user = relation(User, backref="chats")
 ChatUser.chat = relation(Chat, backref="users")
