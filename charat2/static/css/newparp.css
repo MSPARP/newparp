@@ -1970,6 +1970,12 @@ body:not(.no_forms) .remove_sl_item:active {background: #626262; padding-right:4
 .sl_points {color: #626262}
 .sl_points:before {content: "( "}
 .sl_points:after {content: " )"}
+.short_settings_names {display:none}
+
+@media (max-width: 530px) {
+	.short_settings_names {display:inline}
+	.long_settings_names {display:none}
+}
 
 .explanation_link {color:#026CB1;cursor:pointer}
 .explanation {color: #555;font-size:90%;display:block}
