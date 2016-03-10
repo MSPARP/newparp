@@ -13,7 +13,7 @@
 {% endif %}
 
 <section id="archive_conversation">
-    {{render_messages(messages)}}
+    {{render_messages(messages, bbcode_tags=request.args.get("mode") == "bbcode")}}
     {% if paginator.page == paginator.last_page and (chat.type != "roulette" or own_chat_user): %}
     <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
     {% endif %}
@@ -23,5 +23,7 @@
 
 {% endblock %}
 {% block scripts: %}
+{% if request.args.get("mode") != "bbcode" %}
 <script>msparp.log({{"true" if own_chat_user == None or own_chat_user.show_bbcode else "false"}});</script>
+{% endif %}
 {% endblock %}
