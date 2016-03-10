@@ -2416,7 +2416,7 @@ body.no_forms #send_form.no_preview #activity_spinner {width:30px;height:22px;ba
 body.no_forms #send_form.no_preview #button_wrap button {height:22px !important; padding-top:0px !important;padding-bottom:0px !important}
 body.no_forms #send_form.no_preview #button_wrap {bottom:0px}
 
-.chat #text_preview { margin: 0 -2px 0 33px; padding: 2px; background-color: #eee; }
+.chat #text_preview { margin: 0 -2px 0 33px; padding: 2px; background-color: #eee; min-height:15px;}
 body.no_forms.chat #text_preview {margin-right: 109px;margin-left:34px}
 .chat #text_preview:empty:before { content: " "; } /* No-break space to stop it from collapsing. */
 #send_form input[name=text] { display: block; width: 100%;} /* #applehatesyou */
