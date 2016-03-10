@@ -828,13 +828,13 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 #conversation a, #text_preview, #text_preview_acronym {color: #666 !important;}
 #conversation a:hover {color:#999 !important}
 
-.message_ic p, .message_ooc p {color:#666!important;}
+.message_ic p, .message_ooc p, .message_ic p span, .message_ooc p span {color:#666!important;}
 .chat #conversation span {background:none!important;}
 
 #conversation .unum, #archive_conversation .unum { color:#666;}
 .unum .unum_hash {color:#444}
 
-#user_list li {color: #666 !important;}
+#user_list li {color: #60626e !important;}
 
 #conversation h2, #archive_conversation h2 {color:#a0a0a0;border-bottom:3px double #333;}
 
