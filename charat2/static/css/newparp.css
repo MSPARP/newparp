@@ -2670,7 +2670,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	.unum #action_list #action_mobile_switch_character, .unum #action_list #action_mobile_settings {display:inline-block}
 	.unum #action_list #action_switch_character, .unum #action_list #action_settings {display:none}
 	#action_switch_character, #action_settings {display:none}
-	#mod_tools, #mod_tools h3 {font-size:11pt}
+	#mod_tools, #mod_tools h3 label{font-size:11pt}
 }
 
 @media (max-width:480px) {
