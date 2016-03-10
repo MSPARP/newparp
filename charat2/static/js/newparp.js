@@ -1237,8 +1237,8 @@ var msparp = (function() {
 				var info_panel = $("#info_panel");
 				var description = $(".description");
 				var rules = $(".rules");
-				var info_panel_controls = $("#info_panel_controls");
-				$("#edit_info_button").click(function() {
+				var info_panel_controls = $(".info_panel_controls");
+				$("#edit_info_button, #edit_info_link").click(function() {
 					info_panel.hide();
 					// Only set these when we need them.
 					$("#edit_info_description").val(chat.description);

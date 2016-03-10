@@ -699,6 +699,8 @@ border-color: #2a2c40 transparent transparent;
 
 .sidebar.left {border-right:none;border-left:4px solid #2a2c40;}
 
+#mod_tools_toggle + h3:before {color:#60626e}
+
 #user_list_container a, #mod_tools h3 label { color: #798297; }
 #user_list_container a:hover, #mod_tools h3 label:hover {color: #939eb7}
 

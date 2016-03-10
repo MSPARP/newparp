@@ -2247,6 +2247,9 @@ body:not(.no_forms) #mod_tools select { width: 180px; padding:5px 10px;font-size
 body:not(.no_forms) .sidebar .slimdrop  {height:auto;text-overflow:ellipsis;overflow:hidden;margin-left:5px;margin-bottom:5px}
 body:not(.no_forms) .sidebar .slimdrop p {margin:0}
 
+#mod_tools_toggle + h3:before {content:"> ";}
+#mod_tools_toggle:checked + h3:before {content:"- ";}
+
 #mod_tools_toggle:checked + h3 label {text-decoration:none}
 
 #user_list_container a { color: #2c2c2c; }

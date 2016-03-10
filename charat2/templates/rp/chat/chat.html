@@ -87,7 +87,7 @@
             <button type="button" class="close">Close</button>
             <h2>{{chat.title}}</h2>
             <p class="topic">{{chat.topic}}</p>
-            <p id="info_panel_controls"><button class="set_topic_button">Set topic</button> <button id="edit_info_button">Edit info</button></p>
+            <p class="info_panel_controls"><button class="set_topic_button">Set topic</button> <button id="edit_info_button">Edit info</button></p>
             <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a>
             <h2>Description</h2>
             <p class="description">{{chat.description}}</p>
@@ -100,7 +100,7 @@
             <label class="sidebar_title"><span>&gt; CHAT_DESCRIPTION</span></label>
             <div class="sidebar_wrap">
                 <p class="description">{{chat.description}}</p>
-                <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a>
+                <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a> <span class="info_panel_controls" style="display:none">| <a href="#" id="edit_info_link">Edit info</a></span>
                 <h2>Rules</h2>
                 <p class="rules">{{chat.rules}}</p>
                 <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=22">MSPARP site rules apply.</a></p>
@@ -204,7 +204,7 @@
                 <p class="infolink">&gt; <a href="#" id="info_panel_link">Description and rules</a></p>
                 <section class="toggle_box" id="mod_tools">
                     <input type="checkbox" id="mod_tools_toggle">
-                    <h3>&gt; <label for="mod_tools_toggle">Mod tools</label></h3>
+                    <h3><label for="mod_tools_toggle">Mod tools</label></h3>
                     <p><button class="set_topic_button">Set topic</button></p>
                     <div class="input"><p><input type="checkbox" id="flag_autosilence"><label for="flag_autosilence">Auto-silence new users</label></p></div>
                     <div class="input select slimdrop"><p><select id="flag_publicity">
