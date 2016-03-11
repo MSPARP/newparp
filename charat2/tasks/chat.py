@@ -6,17 +6,25 @@ from charat2.tasks import celery, WorkerTask
 
 
 @celery.task(base=WorkerTask)
-def update_log_marker(chat_id):
+def update_log_marker(chat_id, log_marker_type="page_with_system_messages"):
     db = update_log_marker.db
     redis = update_log_marker.redis
     chat_id = int(chat_id)
+
+    if log_marker_type == "page_without_system_messages":
+        message_filter = and_(
+            Message.chat_id == chat_id,
+            Message.type.in_(("ic", "ooc", "me")),
+        )
+    else:
+        message_filter = Message.chat_id == chat_id
 
     # Fetch the last log marker.
     last_log_marker = (
         db.query(LogMarker)
         .filter(and_(
             LogMarker.chat_id == chat_id,
-            LogMarker.type == "page_with_system_messages",
+            LogMarker.type == log_marker_type,
         ))
         .options(joinedload(LogMarker.message))
         .order_by(LogMarker.number.desc()).first()
@@ -27,20 +35,19 @@ def update_log_marker(chat_id):
         messages_since_last_marker = (
             db.query(func.count("*")).select_from(Message)
             .filter(and_(
-                Message.chat_id == chat_id,
+                message_filter,
                 Message.posted >= last_log_marker.message.posted,
             )).scalar()
         )
-        print messages_since_last_marker
         # And create a new one if necessary.
         if messages_since_last_marker > 200:
             db.add(LogMarker(
                 chat_id=chat_id,
-                type="page_with_system_messages",
+                type=log_marker_type,
                 number=last_log_marker.number + 1,
                 message_id=(
                     db.query(Message.id)
-                    .filter(Message.chat_id == chat_id)
+                    .filter(message_filter)
                     .order_by(Message.posted.desc()).limit(1).scalar()
                 ),
             ))
@@ -49,13 +56,13 @@ def update_log_marker(chat_id):
     else:
         first_message = (
             db.query(Message)
-            .filter(Message.chat_id == chat_id)
+            .filter(message_filter)
             .order_by(Message.posted).first()
         )
         if first_message:
             db.add(LogMarker(
                 chat_id=chat_id,
-                type="page_with_system_messages",
+                type=log_marker_type,
                 number=1,
                 message_id=first_message.id,
             ))
