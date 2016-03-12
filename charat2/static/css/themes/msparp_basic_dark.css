@@ -498,7 +498,7 @@ body.chat {background-color:#1d1f2c;color: #626262}
 
 /* 4.3. Sidebars */
 
-body .sidebar {background-color: #000;}
+body .sidebar, body.disable_left_bar .sidebar {background-color: #000;}
 
 .sidebar h3, #invites_link, .chat .infolink {color:#626262}
 
