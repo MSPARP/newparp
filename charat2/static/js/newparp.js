@@ -1417,7 +1417,13 @@ var msparp = (function() {
 			// Update smart quirk settings and save for individual chats
 			$("#settings #smart_quirk").change(function() {
 				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
-				if ($("#smart_quirk_mode_paragraph").prop('checked')) {smart_quirk_mode = "paragraph"}; // unset defaults to script, so reset value here
+				if ($("#smart_quirk_mode_paragraph").prop('checked')) {
+					// unset defaults to script, so reset value here
+					smart_quirk_mode = "paragraph"
+					if (localstorage) {
+						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+					}
+				}
 			});
 			
 			$("#smart_quirk_select").change(function() {
