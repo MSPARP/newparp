@@ -630,12 +630,10 @@ var msparp = (function() {
 				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
 				// Auto focus chat line on non-touch devices
 				if (!touch_enabled) {
-					$(chat_line_input).ready(function() {
-						// multiply by two because Opera is weird about counting length
-						var input_length = chat_line_input.val().length * 2;
-						chat_line_input.focus();
-						chat_line_input[0].setSelectionRange(input_length, input_length);
-					});
+					// multiply by two because Opera is weird about counting length
+					var input_length = chat_line_input.val().length * 2;
+					chat_line_input.focus();
+					chat_line_input[0].setSelectionRange(input_length, input_length);
 				}
 				set_temporary_character(null);
 				parse_variables();
