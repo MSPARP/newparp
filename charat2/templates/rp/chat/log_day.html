@@ -57,7 +57,7 @@
             {% endif %}
             <div id="conversation_wrap" tabindex="1">
                 {% if messages: %}
-                {{render_messages(messages)}}
+                {{render_messages(messages, bbcode_tags=request.args.get("mode") == "bbcode")}}
                 {% else: %}
                 <p>No messages.</p>
                 {% endif %}
@@ -74,5 +74,7 @@
 
 {% endblock %}
 {% block scripts: %}
+{% if request.args.get("mode") != "bbcode" %}
 <script>msparp.log({{"true" if own_chat_user == None or own_chat_user.show_bbcode else "false"}});</script>
+{% endif %}
 {% endblock %}
