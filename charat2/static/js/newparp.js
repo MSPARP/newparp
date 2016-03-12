@@ -47,6 +47,13 @@ var msparp = (function() {
 		touch_enabled = true;
 	}
 	
+	// Auto focus log pages to make them scrollable on desktop
+	if (!touch_enabled) {
+		$("#archive_conversation #conversation_wrap").ready(function() {
+			$("#archive_conversation #conversation_wrap").focus();
+		});
+	}
+	
 	// Apply toggle box state to filter & stem column, hide small toggle if open, wait for IE
 	$("#toggle_search_for_characters").ready(function() {
 		if ($("#toggle_search_for_characters").is(':checked')) {
@@ -536,6 +543,7 @@ var msparp = (function() {
 			$.ajaxSetup({data: {"token": token}});
 
 			var conversation = $("#conversation");
+			var chat_line_input = $("#chat_line_input input");
 			var status;
 			var next_chat_url;
 			var user_data = {};
@@ -620,6 +628,15 @@ var msparp = (function() {
 				if (chat.type == "pm") { refresh_pm_chat_list(); }
 				refresh_my_chats_list();
 				$("#send_form input, #send_form button, #sidebar_tabs button, #sidebar_left_tabs button").prop("disabled", false);
+				// Auto focus chat line on non-touch devices
+				if (!touch_enabled) {
+					$(chat_line_input).ready(function() {
+						// multiply by two because Opera is weird about counting length
+						var input_length = chat_line_input.val().length * 2;
+						chat_line_input.focus();
+						chat_line_input[0].setSelectionRange(input_length, input_length);
+					});
+				}
 				set_temporary_character(null);
 				parse_variables();
 				if (!user.meta.typing_notifications && chat.type !== "pm" && chat.type !== "roulette") {
