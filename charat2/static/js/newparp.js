@@ -64,6 +64,44 @@ var msparp = (function() {
 		}
 	});
 	
+	// Allow users to collapse read announcements while showing new ones
+	if (localstorage && $("#announcement_text").length) {
+		var current_announcement = $("#announcement_text").html();
+		var read_announcement = localStorage.getItem("read_announcement"); 
+		var hide_announcement = localStorage.getItem("hide_announcement");
+		// only allow announcement to start out hidden if it matches
+		if (read_announcement == current_announcement && hide_announcement == "yes") {
+			$("#toggle_announcement").text("(reread)");
+			$("#announcement_text").hide();
+		}
+		// if it doesn't match, reset hidden status
+		if (read_announcement !== current_announcement) {
+			hide_announcement = "no";
+			localStorage.setItem("hide_announcement", hide_announcement);
+		}
+		// update read status
+		localStorage.setItem("read_announcement", current_announcement);
+		
+		// toggle announcement display
+		$(".announcements_link").click(function() {
+			if (hide_announcement == "yes") {
+				$("#toggle_announcement").text("(hide)");
+				$("#announcement_text").show();
+				hide_announcement = "no";
+				localStorage.setItem("hide_announcement", hide_announcement);
+			} else {
+				$("#toggle_announcement").text("(reread)");
+				$("#announcement_text").hide();
+				hide_announcement = "yes";
+				localStorage.setItem("hide_announcement", hide_announcement);
+			}
+		});
+	} else {
+		// if there is no localstorage, don't leave this looking clickable
+		$("#announcements h2").css("cursor", "default");
+		$("#toggle_announcement").css("display", "none");
+	}
+	
 	// Enable animation on these elements only when interacted with
 	$(".enable_anim").click(function() {
 		$(this).addClass("init_anim");

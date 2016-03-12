@@ -276,9 +276,11 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 
 /* 1.5. Announcements */
 
-#announcements { max-width: none; padding: 5px; background-color: #eee; }
-#announcements h2 { margin: 0; color:#555;}
+#announcements { max-width: none; padding: 5px; background-color: #eee;}
+#announcements h2 { margin: 0; color:#555;cursor:pointer}
 #announcements p { margin: 0 0 0 8px; }
+#toggle_announcement {opacity:0;transition:0.2s ease;}
+#announcements h2:hover #toggle_announcement {opacity:0.3}
 
 /* 2. Content */
 
@@ -1295,7 +1297,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 	to { -webkit-transform: scale(-1.5); transform: scale(-1.5); opacity: 0; }
 }
 
-button, .input *, h2 label, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list * {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
+button, .input *, h2 label, .announcements_link, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list *, #mod_tools *  {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
 
 /* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance */
 
