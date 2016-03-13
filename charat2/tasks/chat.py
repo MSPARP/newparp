@@ -47,8 +47,11 @@ def update_log_marker(chat_id, log_marker_type="page_with_system_messages"):
                 number=last_log_marker.number + 1,
                 message_id=(
                     db.query(Message.id)
-                    .filter(message_filter)
-                    .order_by(Message.posted.desc()).limit(1).scalar()
+                    .filter(and_(
+                        message_filter,
+                        Message.posted >= last_log_marker.message.posted,
+                    )).order_by(Message.posted)
+                    .offset(200).limit(1).scalar()
                 ),
             ))
 
