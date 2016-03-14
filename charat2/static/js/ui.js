@@ -74,6 +74,10 @@ $('button[type!=submit][type!=hidden], .input.select select, .add_ripple').click
 	$(document).on('change', ".input input[type='text'], .input input[type='email'], .input input[type='password']", setInputValue);
 	$(document).on('change', ".input textarea", setTextareaValue);
 
+	$(document).ready(function() {
+		 $(".input input[type='text'][value=''], .input input[type='email'][value=''], .input input[type='password'][value='']").removeAttr('value');
+	});
+
 	$.fn.refresh = setInputValue;
 
 	$(window).on('load', function() {

@@ -913,7 +913,7 @@ body:not(.no_forms) .shortname_box #invite_name + label {top:1.05em}
 
 .common_box h2, .toggle_box h2, .roulette_head {margin:0px; padding: 0px 2px 9px 0px; position:relative; text-indent:12px; border-top:5px solid transparent; border-right:4px solid transparent;}
 
-.common_box h2, .toggle_box > input:first-child:checked + h2, .roulette_head {border-top:15px solid}
+.common_box h2, .toggle_box > input:first-child:checked + h2, .roulette_head {border-top:15px solid transparent}
 
 
 .toggle_box > input:first-child:not(:checked) + h2 {padding-bottom:0px;margin-bottom:30px;}
