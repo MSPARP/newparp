@@ -606,6 +606,7 @@ def ip_bans(fmt=None, page=1):
 
     ip_bans = (
         g.db.query(IPBan)
+        .filter(IPBan.hidden == False)
         .options(joinedload(IPBan.creator))
         .order_by(IPBan.address)
         .offset((page - 1) * 50).limit(50).all()
