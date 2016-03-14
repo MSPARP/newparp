@@ -132,6 +132,9 @@ def _filter_users(query):
         # XXX VALIDATE THIS
         query = query.filter(User.last_ip.op("<<=")(request.args["ip"]))
 
+    if request.args.get("email"):
+        query = query.filter(func.lower(User.email_address).like("%" + request.args["email"].strip().lower() + "%"))
+
     return query
 
 
@@ -611,6 +614,7 @@ def ip_bans(fmt=None, page=1):
 
     ip_bans = (
         g.db.query(IPBan)
+        .filter(IPBan.hidden == False)
         .options(joinedload(IPBan.creator))
         .order_by(IPBan.address)
         .offset((page - 1) * 50).limit(50).all()

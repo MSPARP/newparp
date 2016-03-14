@@ -1003,6 +1003,7 @@ class IPBan(Base):
     date = Column(DateTime(), nullable=False, default=now)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     reason = Column(Unicode(255), nullable=False)
+    hidden = Column(Boolean, nullable=False, default=False, server_default="false")
 
     def __repr__(self):
         return "<IPBan: %s>" % self.address
