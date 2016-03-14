@@ -124,6 +124,9 @@ def _filter_users(query):
         # XXX VALIDATE THIS
         query = query.filter(User.last_ip.op("<<=")(request.args["ip"]))
 
+    if request.args.get("email"):
+        query = query.filter(func.lower(User.email_address) == request.args["email"].lower())
+
     return query
 
 
