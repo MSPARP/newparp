@@ -2019,6 +2019,20 @@ body:not(.no_forms) .tags_box label {padding-top:2px !important}
 
 body.chat { margin: 0; background-color: #535353; font-size: 12px; word-wrap: break-word; }
 
+#conversation a:link, .rules a:link, .description a:link, #text_preview a:link {
+	text-decoration: underline;
+}
+
+#conversation a:visited, .rules a:visited, .description a:visited, #text_preview a:visited {
+	color: #333;
+	text-decoration: underline;
+}
+
+#conversation a:hover, .rules a:hover, .description a:hover, #text_preview a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
 .sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list {font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
 
 .sidebar, #info_panel, #edit_info_panel {font-weight:normal;color:#555;}

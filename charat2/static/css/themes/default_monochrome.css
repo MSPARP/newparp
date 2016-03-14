@@ -9,8 +9,16 @@
 
 #spinner, #activity_spinner {-webkit-filter: grayscale(100%); filter: grayscale(100%);}
 
-#conversation a, #text_preview, #text_preview_acronym {color: #2c2c2c !important;}
+#conversation a, .rules a, .description a, #text_preview a, #text_preview, #text_preview_acronym {color: #444 !important;}
 #conversation a:hover {color:#666 !important}
+
+#conversation a:visited, .rules a:visited, .description a:visited, #text_preview a:visited {
+	color: #000 !important;
+}
+
+#conversation a:hover, .rules a:hover, .description a:hover, #text_preview a:hover {
+	color: #666 !important;
+}
 
 /* 4. Chat window */
 

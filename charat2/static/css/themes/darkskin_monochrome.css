@@ -828,8 +828,26 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 /* override character colours */
 
-#conversation a, #text_preview, #text_preview_acronym {color: #666 !important;}
+#conversation a, #text_preview a {color: #888 !important}
+
+#text_preview, #text_preview_acronym {color: #666 !important;}
 #conversation a:hover {color:#999 !important}
+
+#conversation a:visited, #text_preview a:visited {
+	color: #666 !important;
+}
+
+#conversation a:hover, #text_preview a:hover {
+	color: #999 !important;
+}
+
+.rules a:visited, .description a:visited {
+	color: #60626e !important;
+}
+
+.rules a:hover, .description a:hover {
+	color: #939eb7 !important;
+}
 
 .message_ic p, .message_ooc p, .message_ic p span, .message_ooc p span {color:#666!important;}
 .chat #conversation span {background:none!important;}

@@ -616,6 +616,14 @@ body:not(.no_forms) .remove_sl_item:active {background: #3a3d59;}
 
 body.chat { background-color: #000;}
 
+#conversation a:visited, .rules a:visited, .description a:visited, #text_preview a:visited {
+	color: #60626e;
+}
+
+#conversation a:hover, .rules a:hover, .description a:hover, #text_preview a:hover {
+	color: #939eb7;
+}
+
 .chat h2 { color: #6a758f}
 
 .sidebar, #info_panel, #edit_info_panel {color:#60626e;}
