@@ -104,7 +104,7 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #222434; bord
 
 /* 1.3. Footer */
 
-footer, footer a { color: #3a3d59; }
+footer, footer a, footer a:link, footer a:visited  { color: #3a3d59; }
 footer a:hover { color: #46496b; }
 
 /* 1.4. Responsive widths / main */
@@ -114,7 +114,8 @@ footer a:hover { color: #46496b; }
 	#prompt-cursor {height:5.8vw; background-size:contain;}
 	body { margin: 0; min-height:100vh; background:#1d1f2c;} 
 	#wrapper {background:transparent }
-	footer a {color: #2a2c40}
+	footer, footer a, footer a:link, footer a:visited {color: #3a3c50}
+	footer a:hover {color: #4a4c60}
 }
 
 

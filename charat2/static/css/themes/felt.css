@@ -109,7 +109,7 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #083000; bord
 
 /* 1.3. Footer */
 
-footer, footer a { color: #156704; }
+footer, footer a, footer a:link, footer a:visited { color: #156704; }
 footer a:hover { color: #20a107; }
 
 /* 1.4. Responsive widths / main */
@@ -121,7 +121,8 @@ footer a:hover { color: #20a107; }
 	/* do not use fixed background on small/mobile screens as this causes redraws and is prone to stutter */
 	#fixed-bg {position:fixed;top:0px;bottom:0px;right:0px;left:0px;background: #082900 url('/static/img/felt_manor_background.png') no-repeat bottom center; background-size:900px;transform: translateZ(0);will-change:scroll-position;pointer-events: none;}
 	#wrapper {background:transparent }
-	footer a {color: #2cff4b}
+	footer, footer a, footer a:link, footer a:visited {color: #2cff4b}
+	footer a:hover {color:#fff}
 }
 
 

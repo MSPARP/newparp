@@ -96,7 +96,7 @@ main { margin: 0 auto; padding: 20px; border-top: 0; font-family: Ricty, Inconso
 }
 
 /* Wrapper fills at least window height, provides background, will likely break iOS7x (NEED TESTER) */
-#wrapper { position:relative;margin: 3vh 3vh 7vh 3vh; background-color: #ccc; min-height:90vh; box-sizing: padding-box; border-radius:10px}
+#wrapper { position:relative;margin: 3vh 3vh 5vh 3vh; background-color: #ccc; min-height:92vh; box-sizing: padding-box; border-radius:10px}
 footer { position:absolute; right:0px;bottom:-34px;}
 
 /* Padding prevents border collapsing so remove first and last borders to compensate. */
@@ -225,7 +225,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 /* 1.3. Footer */
 
 footer { margin: 10px auto; padding: 0 20px; text-align: right; text-transform: uppercase; font-size: 11pt; }
-footer, footer a { color: #ddd; }
+footer, footer a, footer a:link, footer a:visited { color: #ddd; }
 footer ul { margin: 0; padding: 0; list-style-type: none; }
 footer li { display: inline; margin-left: 20px; }
 footer a { text-decoration: none; white-space: nowrap; }
@@ -258,8 +258,10 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 	body { margin: 0; background: #ccc; }
 	#wrapper  {margin:0; background: transparent; min-height:auto}
 	.collapse_padding #wrapper {margin:0px !important}
-	footer {position:relative}
-	footer a {color: #555}
+	footer {position:relative;padding-bottom:10px;}
+	footer li {line-height:150%}
+	footer, footer a, footer a:link, footer a:visited  {color: #555}
+	footer a:hover {color:#666}
 	#prompt {font-size:5.8vw;}
 	#prompt-cursor {height:5.8vw; background-size:contain;}
 	#users_online { font-size:70%;padding-top:15px }
