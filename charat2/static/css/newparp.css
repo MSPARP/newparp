@@ -2203,6 +2203,7 @@ body .sidebar { display: none; position: absolute; top: 72px; right: 6px; bottom
 body.has_left_tabs .sidebar.left {bottom:37px}
 
 body:not(.no_forms) .sidebar #regex_list .input.fromto, body:not(.no_forms) .sidebar #replacement_list .input.fromto {margin-right:0px}
+body:not(.no_forms) .sidebar .fromto input {width:55px;}
 
 .mobile_button { display: none; }
 body .sidebar { left: auto; width: 230px; }
