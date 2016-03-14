@@ -32,10 +32,10 @@
                 {% endif %}
                 <button type="button" class="mobile_nav_button" id="mobile_open_my_chats">My chats</button>
                 <hr>
-                <a href="{{url_for("home")}}" target="_blank" class="mobile_nav_link_button">MSPARP Home</a>
-                <a href="{{url_for("home", mode="search")}}" target="_blank" class="mobile_nav_link_button">Character search</a>
-                <a href="{{url_for("home", mode="roulette")}}" target="_blank" class="mobile_nav_link_button">Roulette</a>
-                <a href="{{url_for("rp_groups")}}" target="_blank" class="mobile_nav_link_button">Group chats</a>
+                <a href="{{url_for("home")}}" class="mobile_nav_link_button">MSPARP Home</a>
+                <a href="{{url_for("home", mode="search")}}" class="mobile_nav_link_button">Character search</a>
+                <a href="{{url_for("home", mode="roulette")}}" class="mobile_nav_link_button">Roulette</a>
+                <a href="{{url_for("rp_groups")}}" class="mobile_nav_link_button">Group chats</a>
                 <a href="http://forums.msparp.com/" target="_blank" class="mobile_nav_link_button">Forums</a>
                 {% if g.user: %}
                 {% if g.user.is_admin: %}
@@ -51,9 +51,9 @@
             <label for="nav_toggle" class="hide_nav">{% if chat.type in ("searched", "roulette", "pm"): %} Menu{% endif %}</label>
             <input type="checkbox" id="nav_toggle" class="hide_nav">
             <ul>
-                <li><a href="{{url_for("home", mode="search")}}" target="_blank"><span class="long">Character search</span><span class="short">Search</span></a></li>
-                <li><a href="{{url_for("home", mode="roulette")}}" target="_blank">Roulette</a></li>
-                <li><a href="{{url_for("rp_groups")}}" target="_blank"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
+                <li><a href="{{url_for("home", mode="search")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
+                <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
+                <li><a href="{{url_for("rp_groups")}}"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
                 <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
                 {% if g.user: %}
                 {% if g.user.is_admin: %}
