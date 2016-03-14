@@ -935,8 +935,12 @@ body:not(.no_forms) .shortname_box #invite_name + label {top:1.05em}
 
 /* prevent accidental triggering of animation init when already expanded */
 
-.toggle_box > input:first-child:checked + .enable_anim {pointer-events:none} 
+.toggle_box > input:first-child:checked + .enable_anim {pointer-events:none}
 .toggle_box > input:first-child:checked + .enable_anim span {pointer-events:auto}
+
+/* do not do this on IE or Edge because it does not stack properly */
+@media screen\0 { .toggle_box > input:first-child:checked + .enable_anim {pointer-events:auto} }
+@supports (-ms-accelerator:true) { .toggle_box > input:first-child:checked + .enable_anim {pointer-events:auto} }
 
 .common_box > h2, .roulette_head, .toggle_box > input:first-child:checked + h2 {height:13px;background-color: #e0e0e0;border-color: #b0b0b0;}
 .common_box > h2 label, .roulette_head span, .toggle_box > input:first-child:checked + h2 label {position:absolute;left:0px;top:-15px;line-height:37px;}
