@@ -189,10 +189,10 @@ var msparp = (function() {
 		else { dev_user_smart_quirk = "false"; }
 	});
 	
-	// Auto refresh unread counter in nav bar
-	setInterval(function(){ 
-		$('#unread_update').load('/unread');  
-	}, 5102);
+	// Auto refresh unread counter in nav bar - PLS DO NOT KILL SERVER
+	// setInterval(function(){ 
+	// 	$('#unread_update').load('/unread');  
+	// }, 5102);
 	
 	// Character info
 	function update_character(data) {
