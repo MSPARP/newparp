@@ -278,10 +278,16 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 
 /* 1.5. Announcements */
 
-#announcements { max-width: none; padding: 5px; background-color: #eee;}
+#announcements { max-width: none; padding: 5px; background-color: #eee; }
+/* add this via js so it doesn't trigger on loading */
+#announcements.init {-webkit-transition:background .15s ease; transition:background .15s ease;}
+#announcements.hide_announcement {background-color:transparent; }
 #announcements h2 { margin: 0; color:#555;cursor:pointer}
+#announcements h2:hover .announce_label {text-decoration:underline}
+#announcements h2:before {content:"- "}
+#announcements.hide_announcement h2:before {content:"> "}
 #announcements p { margin: 0 0 0 8px; }
-#toggle_announcement {opacity:0;transition:0.2s ease;}
+#toggle_announcement {opacity:0;-webkit-transition:0.2s ease;transition:0.2s ease;}
 #announcements h2:hover #toggle_announcement {opacity:0.3}
 
 /* 2. Content */

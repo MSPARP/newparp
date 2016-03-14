@@ -73,12 +73,18 @@ var msparp = (function() {
 		if (read_announcement == current_announcement && hide_announcement == "yes") {
 			$("#toggle_announcement").text("(reread)");
 			$("#announcement_text").hide();
+			$("#announcements").addClass("hide_announcement");
 		}
-		// if it doesn't match, reset hidden status
+		// if it doesn't match, reset hidden status and mark as new
 		if (read_announcement !== current_announcement) {
 			hide_announcement = "no";
+			$(".announce_label").text("Announcements (new)");
 			localStorage.setItem("hide_announcement", hide_announcement);
 		}
+		// initialise fadein/out
+		setTimeout(function () {
+			$("#announcements").addClass("init");
+		}, 500);
 		// update read status
 		localStorage.setItem("read_announcement", current_announcement);
 		
@@ -87,11 +93,13 @@ var msparp = (function() {
 			if (hide_announcement == "yes") {
 				$("#toggle_announcement").text("(hide)");
 				$("#announcement_text").show();
+				$("#announcements").removeClass("hide_announcement");
 				hide_announcement = "no";
 				localStorage.setItem("hide_announcement", hide_announcement);
 			} else {
 				$("#toggle_announcement").text("(reread)");
 				$("#announcement_text").hide();
+				$("#announcements").addClass("hide_announcement");
 				hide_announcement = "yes";
 				localStorage.setItem("hide_announcement", hide_announcement);
 			}
@@ -99,6 +107,7 @@ var msparp = (function() {
 	} else {
 		// if there is no localstorage, don't leave this looking clickable
 		$("#announcements h2").css("cursor", "default");
+		$("#announcements h2 span").css("text-decoration", "none");
 		$("#toggle_announcement").css("display", "none");
 	}
 	

@@ -88,7 +88,7 @@ document.body.className += ' no_forms';
         <main>
             {% if g.user and g.ip_banned %}<p><strong>LOL UR IP BANNED</strong></p>{% endif %}
             <section id="announcements">
-                <h2 class="announcements_link">Announcements <span id="toggle_announcement">(hide)</span></h2>
+                <h2 class="announcements_link"><span class="announce_label">Announcements</span> <span id="toggle_announcement">(hide)</span></h2>
                 <div id="announcement_text">
                     {{(g.redis.get("announcements") or "<p>No announcements.</p>")|safe}}
                 </div> 
