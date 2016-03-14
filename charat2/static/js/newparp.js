@@ -106,8 +106,8 @@ var msparp = (function() {
 		});
 	} else {
 		// if there is no localstorage, don't leave this looking clickable
-		$("#announcements h2").css("cursor", "default");
-		$("#announcements h2 span").css("text-decoration", "none");
+		$("#announcements .announcements_link").css("cursor", "default");
+		$("#announcements .announcements_link span").css("text-decoration", "none");
 		$("#toggle_announcement").css("display", "none");
 	}
 	
