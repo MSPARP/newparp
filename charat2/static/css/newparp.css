@@ -1299,7 +1299,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 	to { -webkit-transform: scale(-1.5); transform: scale(-1.5); opacity: 0; }
 }
 
-button, .input *, h2 label, .announcements_link, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list *, #mod_tools *  {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
+button, .input *, h2 label, footer *, .announcements_link, #global_navigation *, #filter_settings *, #subnav *, #logo, #logo *, #group_chats *,  #my_chats_list *, #topbar *, #topbar, .unum, .unum *, #chat_logo, #user_list, #user_list *, #mod_tools * {-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); -moz-tap-highlight-color:  rgba(255, 255, 255, 0); }
 
 /* fix label highlights on Firefox OS and disable most transitions on the mobile layout for mozilla due to bad performance */
 
