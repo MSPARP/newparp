@@ -2302,7 +2302,7 @@ body:not(.no_forms) .sidebar .slimdrop p {margin:0}
 #user_list .userlist_entry {min-height:27px}
 
 .sidebar .character_icon {height:24px; display:inline-block; margin-right:7px; vertical-align:middle}
-.userlist_name {display:inline-block;vertical-align:middle;max-width:170px}
+.userlist_name {display:inline-block;vertical-align:middle;max-width:155px}
 .character_icon .col_circle {width:24px;height:24px;display:inline-block;border-radius:50%;}
 .character_icon .col_circle_inner {width:18px; height:18px; margin:3px;margin-left:-21px; display:inline-block; border-radius:50%}
 
@@ -2587,6 +2587,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px;}
 	body.disable_left_bar #connection_method {top:-3px;right:0px; font-size:80%}
 	body.disable_left_bar #chat_wrapper #sidebar_left_tabs {width:246px}
+	.userlist_name {max-width:170px}
 }
 
 @media(max-width:1600px){#global_navigation.in_chat_nav .user a {max-width:300px}}
