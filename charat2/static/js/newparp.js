@@ -922,7 +922,7 @@ var msparp = (function() {
 					div.attr("id", "message_" + message.id);
 				}
 				div.addClass("message_" + message.type + " unum_" + message.user_number);
-				$("<div>").attr("tabindex", -1).addClass("unum cnum_" + (message.user_number ? message.user_number : "noclick") + (message.user_number >= 1000 ? " four_digit" : "") + (message.user_number >= 10000 ? " five_digit" : "")).html((message.user_number ? "<span class=\"unum_hash\">#</span>" + message.user_number : "<span class=\"unum_system\">*</span>") ).appendTo(div);
+				$("<div>").attr("tabindex", -1).addClass("unum cnum_" + (message.user_number ? message.user_number + (message.user_number >= 1000 ? " four_digit" : "") + (message.user_number >= 10000 ? " five_digit" : "") : "noclick")).html((message.user_number ? "<span class=\"unum_hash\">#</span>" + message.user_number : "<span class=\"unum_system\">*</span>") ).appendTo(div);
 				var p = $("<p>").css("color", "#" + message.color);
 				if (message.type == "me") {
 					var text = "* " + message.name + " " + message.text;
