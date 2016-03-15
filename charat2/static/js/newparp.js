@@ -120,6 +120,7 @@ var msparp = (function() {
 	// Enable per-device settings that don't require pre-render hooks
 	var dev_user_safe_bbcode = "false";
 	var dev_user_smart_quirk = "false";
+	var dev_user_wrap_smart_quirks = "false";
 	var dev_user_smart_action_delimiter = "*";
 	var dev_user_smart_dialogue_delimiter = '"';
 	
@@ -149,6 +150,9 @@ var msparp = (function() {
 		}
 		if (localStorage.getItem("smart_quirk") == "true") {
 			dev_user_smart_quirk = "true";
+		}
+		if (localStorage.getItem("wrap_smart_quirks") == "true") {
+			dev_user_wrap_smart_quirks = "true";
 		}
 		if (localStorage.getItem("smart_action_delimiter") !== null && localStorage.getItem("smart_action_delimiter") !== "") { 
 			dev_user_smart_action_delimiter = localStorage.getItem("smart_action_delimiter"); 
@@ -1923,12 +1927,25 @@ var msparp = (function() {
 								return;
 							}
 						});
-						// Prefix and suffix, add in delimiter for quirked paragraph text
-						if (smart_quirk_mode == "paragraph" && text_chunks[i] != "") { final_text = final_text + dev_user_smart_dialogue_delimiter + character.quirk_prefix + text_chunks[i] + character.quirk_suffix + dev_user_smart_dialogue_delimiter; }
-						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text + character.quirk_prefix + text_chunks[i].replace(/^\s|\s$/,"") + character.quirk_suffix; } // strip whitespace if present to allow normal action delimiter spacing
+						// Prefix and suffix, add in delimiter for quirked paragraph text, respect smart quirk wrap setting
+						if (smart_quirk_mode == "paragraph" && text_chunks[i] != "") {
+							if (dev_user_wrap_smart_quirks == "true") {
+								final_text = final_text + dev_user_smart_dialogue_delimiter + character.quirk_prefix + text_chunks[i] + character.quirk_suffix + dev_user_smart_dialogue_delimiter;
+							} else {
+								final_text = final_text + dev_user_smart_dialogue_delimiter + text_chunks[i] + dev_user_smart_dialogue_delimiter;
+							}
+						}
+						if (smart_quirk_mode == "script" && text_chunks[i] != "") {
+							// strip whitespace if present to allow normal action delimiter spacing
+							if (dev_user_wrap_smart_quirks == "true") {
+								final_text = final_text + character.quirk_prefix + text_chunks[i].replace(/^\s|\s$/,"") + character.quirk_suffix;
+							} else {
+								final_text = final_text + text_chunks[i].replace(/^\s|\s$/,"");
+							}
+						}
 					} else {
 						// If quirking should not apply, add the plain text; add in delimiter for unquirked script text
-						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text +  " " + dev_user_smart_action_delimiter + text_chunks[i] + dev_user_smart_action_delimiter + " "; }
+						if (smart_quirk_mode == "script" && text_chunks[i] != "") { final_text = final_text + " " + dev_user_smart_action_delimiter + text_chunks[i] + dev_user_smart_action_delimiter + " "; }
 						else { final_text = final_text + text_chunks[i]; }
 					}
 				}
@@ -1944,6 +1961,8 @@ var msparp = (function() {
 						}
 					}
 				}
+				// add in prefix and suffix if it should be global
+				if (dev_user_wrap_smart_quirks !=="true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
 				return final_text;
 			}
 
