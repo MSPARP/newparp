@@ -1899,7 +1899,7 @@ var msparp = (function() {
 							RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
 							if (dev_user_safe_bbcode == "true") { 
 								// if safe_bbcode is on, exclude quirking within custom [brackets]
-								var re = new RegExp(RegExp.quote(replacement[0]) + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
+								var re = new RegExp("(?![^\ufe5d\ufe5e]*\ufe5e)" + RegExp.quote(replacement[0]) + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
 							} else {
 								var re = new RegExp(RegExp.quote(replacement[0]), "g");
 							}
@@ -1910,7 +1910,7 @@ var msparp = (function() {
 							try {
 								if (dev_user_safe_bbcode == "true") { 
 									// if safe_bbcode is on, exclude quirking within custom [brackets]
-									var re = new RegExp(replacement[0] + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
+									var re = new RegExp("(?![^\ufe5d\ufe5e]*\ufe5e)" + replacement[0] + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
 								} else {
 									var re = new RegExp(replacement[0], "g");
 								}
@@ -1952,6 +1952,23 @@ var msparp = (function() {
 				if (dev_user_safe_bbcode == "true") {
 					// now that we are safe, replace temporary unicode brackets with coding ones again
 					final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
+					
+					// only get involved if we actually have colour tags
+					if (final_text.indexOf("[color=#") !=-1) {
+						// attempt to catch improperly stacked colour tags  
+						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[^\]]+\])([\s\S]*?)(\[\/color\])/ig;
+						var re2 = /\[color=[^\]]+\]\[\/color\]/ig;
+						while (re.exec(final_text)) {
+							// strip empty colour tags
+							final_text = final_text.replace(re2, "");
+							// close and reopen tags
+							final_text = final_text.replace(re, "$1$3\[\/color\]$5$6$7\[color=$2\]");
+						}
+						// and where they intersect with fonts
+						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font])([\s\S]*?)(\[\/color\])/ig
+						final_text = final_text.replace(re, "$1$3\[\/color\]$5\[color=$2\]$6$7"); 
+					}
+					
 					// this is also where we replace URLs with original casing
 					if (url_matches !== null) {
 						var urls_number = url_matches.length;
