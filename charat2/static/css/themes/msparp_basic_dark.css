@@ -313,6 +313,8 @@ body.no_forms #send_form.no_preview input[name="text"] {margin-top:2px}
 #archive_conversation .unum:before, #conversation .unum:before {content:"[";}
 #archive_conversation .unum:after, #conversation .unum:after {content:"]"}
 
+#conversation .unum.four_digit, #archive_conversation .unum.four_digit {font-size:12px;padding:2px 0px}
+
 #chat_logo, body.disable_left_bar #chat_logo {display:none !important}
 body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav,
 .chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #info_panel, .chatting > #chat_wrapper #chat_content #edit_info_panel, .chatting > #chat_wrapper #chat_content #conversation, .chatting > #chat_wrapper #chat_content #send_form, .chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 240px; left:6px}
