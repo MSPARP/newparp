@@ -1965,7 +1965,7 @@ var msparp = (function() {
 							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
 						// and where they intersect with fonts
-						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font\])([\s\S]*?)(\[\/color\])/ig
+						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font\])([\s\S]*?)(\[\/color\])/ig;
 						final_text = final_text.replace(re, "$1$3[/color]$5[color=$2]$6$7"); 
 					}
 					
