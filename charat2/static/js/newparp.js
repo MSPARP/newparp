@@ -1962,11 +1962,11 @@ var msparp = (function() {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
 							// close and reopen tags
-							final_text = final_text.replace(re, "$1$3\[\/color\]$5$6$7\[color=$2\]");
+							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
 						// and where they intersect with fonts
-						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font])([\s\S]*?)(\[\/color\])/ig
-						final_text = final_text.replace(re, "$1$3\[\/color\]$5\[color=$2\]$6$7"); 
+						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font\])([\s\S]*?)(\[\/color\])/ig
+						final_text = final_text.replace(re, "$1$3[/color]$5[color=$2]$6$7"); 
 					}
 					
 					// this is also where we replace URLs with original casing
