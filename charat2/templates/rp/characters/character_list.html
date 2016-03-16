@@ -24,7 +24,7 @@
                         <td>{% if character.shortcut: %}/{{character.shortcut}}{% endif %}</td>
                         <td>
                             {% if character != g.user.default_character: %}
-                            <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Set<span class="t_default_long"> as default</span></button></form>
+                            <form action="{{url_for("rp_set_default_character", character_id=character.id)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit" title="Make this character your default">Set<span class="t_default_long"> as default</span></button></form>
                             {% else: %}
                             Default character
                             {% endif %}

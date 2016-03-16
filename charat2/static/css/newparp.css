@@ -1128,6 +1128,9 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 
 .common_box .chat_user_table {display:table;table-layout:auto}
 
+.user_chartable button {white-space:nowrap;} 
+.user_chartable button .t_default_long {display:none}
+
 /* hack to make potentially overlong titles and names without spaces wrap properly without break-all */
 .spam_table th:nth-of-type(2), .spam_table th:nth-of-type(4), .spam_table th:nth-of-type(6), .user_blocked th:nth-of-type(2), .user_blocked th:nth-of-type(3){width:20%}
 .admin_log th:nth-of-type(3), .ban_table th:nth-of-type(2),  .chat_user_table.admin_version th:nth-of-type(1) {width:20%}
@@ -1253,6 +1256,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 	.user_chartable .t_default_long {display:inline}
 	.user_chartable thead {background-color:#e0e0e0 !important; border-bottom:20px solid #eee; border-top:2px solid #a6a6a6}
 	.user_chartable thead th {color:#626262;}
+	.user_chartable button .t_default_long {display:inline}
 }
 
 @media (max-width: 400px) {
