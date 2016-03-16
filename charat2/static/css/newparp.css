@@ -2736,8 +2736,8 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 
 @media (max-height:113px) and (min-width:650px) {
 	#sidebar_tabs, #sidebar_left_tabs, .sidebar {display:none !important}
-	.chatting #conversation:after {content: ":o)";color:#2b0057;position:fixed;right:80px;bottom:5%;font-size:80px}
-	.chatting #conversation:before {content: "honk";color:#2b0057;position:fixed;right:60px;bottom:10px;}
+	.chatting:not(.touch) #conversation:after {content: ":o)";color:#2b0057;position:fixed;right:80px;bottom:5%;font-size:80px}
+	.chatting:not(.touch) #conversation:before {content: "honk";color:#2b0057;position:fixed;right:60px;bottom:10px;}
 }
 
 
