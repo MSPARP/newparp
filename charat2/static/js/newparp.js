@@ -1954,12 +1954,15 @@ var msparp = (function() {
 						else { final_text = final_text + text_chunks[i]; }
 					}
 				}
+				// add in prefix and suffix if it should be global
+				if (dev_user_wrap_smart_quirks !=="true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
+				
 				if (dev_user_safe_bbcode == "true") {
 					// now that we are safe, replace temporary unicode brackets with coding ones again
 					final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					
 					// only get involved if we actually have colour tags
-					if (final_text.indexOf("[color=#") !=-1) {
+					if (final_text.indexOf("[color=") !=-1) {
 						// attempt to catch improperly stacked colour tags  
 						var re = /(\[color=([^\]]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[^\]]+\])([\s\S]*?)(\[\/color\])/ig;
 						var re2 = /\[color=[^\]]+\]\[\/color\]/ig;
@@ -1983,8 +1986,6 @@ var msparp = (function() {
 						}
 					}
 				}
-				// add in prefix and suffix if it should be global
-				if (dev_user_wrap_smart_quirks !=="true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
 				return final_text;
 			}
 
