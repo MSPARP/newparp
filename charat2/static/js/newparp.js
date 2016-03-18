@@ -1975,11 +1975,11 @@ var msparp = (function() {
 						// and where they intersect with fonts
 						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
 						while (re.exec(final_text)) {
-                            // strip empty colour tags
+							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
-                            // close and reopen tags
-                            final_text = final_text.replace(re, "$1$3[/color]$5[color=$2]$6$7"); 
-                        }
+							// close and reopen tags
+							final_text = final_text.replace(re, "$1$3[/color]$5[color=$2]$6$7"); 
+						}
 					}
 					
 					// this is also where we replace URLs with original casing
