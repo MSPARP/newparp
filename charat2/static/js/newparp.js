@@ -47,6 +47,11 @@ var msparp = (function() {
 		touch_enabled = true;
 	}
 	
+	// Handle expanding/collapsing descriptions on touch devices here because iOS
+	$(".touch").on("click",  "#group_chats .subtitle + p, #my_chats_list .chatlist_topic, .spam_table .abridged_message", function() {
+		$(this).toggleClass("expanded");
+	});
+	
 	// Auto focus log pages to make them scrollable on desktop
 	if (!touch_enabled) {
 		$("#archive_conversation #conversation_wrap").ready(function() {

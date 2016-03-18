@@ -1124,6 +1124,10 @@ body:not(.no_forms) .fit_select_button {padding: 8px 20px}
 .admin_log pre {font-size:9pt}
 .spam_table .abridged_message {max-height:5em;display:inline-block;overflow:hidden;word-break:break-all;cursor:pointer}
 .spam_table .abridged_message:focus, .spam_table .abridged_message:active {max-height:none;outline:0}
+/* fix behaviour via js on iOS because Apple */
+.touch .spam_table .abridged_message:focus, .touch .spam_table .abridged_message:active {max-height:5em;outline:0}
+.touch .spam_table .abridged_message.expanded {max-height:none;outline:0}
+
 body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;padding-bottom:5px;}
 
 .common_box .chat_user_table {display:table;table-layout:auto}
@@ -1880,7 +1884,6 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 
 #group_chats { max-width: none; padding: 0; list-style-type: none; }
 #group_chats li { margin:  0 auto 20px; padding: 10px; background-color: #e0e0e0; border-bottom:2px solid #a0a0a0}
-/* overflow:hidden prevents column breaks in Firefox. */
 /* use transform to fix :after positioning, as relative positioning is broken on old devices/browsers in column layouts, making links unclickable*/
 #group_chats li { -webkit-column-break-inside: avoid; page-break-inside:avoid;break-inside:avoid;-ms-transform:translate(0px,0px);-webkit-transform:translateZ(0px);transform:translateZ(0px);}
 /* undo this hack for recent Chrome/Opera/Firefox to aid Chrome rendering */
@@ -1896,7 +1899,10 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 /* make chat cards line up */
 #group_chats .subtitle + p {height:1.2em;overflow: hidden}
 #group_chats .subtitle + p span {cursor:pointer}
-#group_chats .subtitle + p:active, #group_chats .subtitle + p:focus {min-height: 1.2em; height:auto; outline:0}
+#group_chats .subtitle + p:active, #group_chats .subtitle + p:focus {outline:0; min-height: 1.2em; height:auto;}
+/* once again, say hello to iOS */
+.touch #group_chats .subtitle + p:active, .touch #group_chats .subtitle + p:focus {outline:0; height:1.2em;}
+.touch #group_chats .subtitle + p.expanded {min-height: 1.2em; height:auto;}
 
 #group_chat_creator {padding-top:1px;}
 #group_chat_creator .input, #filter_chats .input {display:inline-block}
@@ -1930,6 +1936,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 	-webkit-transform: rotate(360deg);
 }
 
+/* overflow:hidden prevents column breaks in Firefox. */
 /* prevent this from parsing in Chrome for now as Chrome 45+ does not fully render secondary columns with it applied */
 @-moz-document url-prefix() { 
 	#group_chats li {overflow:hidden;}
@@ -2197,6 +2204,10 @@ body:not(.no_forms) #my_chats .filter_button.input.select select option {color:#
 
 #my_chats_list .chatlist_topic {display:inline-block;max-height:2.2em;overflow:hidden;cursor:pointer;color:#000}
 #my_chats_list .chatlist_topic:focus {max-height:none;outline:0;}
+/* also undo this here to fix on iOS */
+.touch #my_chats_list .chatlist_topic:focus {max-height:2.2em;outline:0;}
+.touch #my_chats_list .chatlist_topic.expanded {max-height:none;outline:0;}
+
 #my_chats_list .chatlist_info, #my_chats_list .chatlist_topic {padding-left:5px}
 #my_chats_list .chatlist_info .format_type {text-transform:capitalize}
 #my_chats_list .chatlist_info .format_level, #my_chats_list li.pm .chatlist_info .format_type {text-transform:uppercase}
