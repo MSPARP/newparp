@@ -63,6 +63,19 @@ def unread():
         "account/unread.html",
     )
 
+def redirect():
+
+    if "url" in request.args:
+        url = request.args["url"]
+
+    else:
+        url = "http://www.mspaintadventures.com/ACT6ACT6.php?s=6&p=009309"
+
+    return render_template(
+        "rp/chat/redirect.html",
+        url=url,
+    )
+
 @alt_formats({"json"})
 @use_db
 def groups(fmt=None):
