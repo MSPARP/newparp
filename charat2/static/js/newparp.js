@@ -401,15 +401,6 @@ var msparp = (function() {
 		body.removeClass("searching");
 	}
 
-	// Encode URLs for query string
-	function url_encode(url) {
-		var url_escapes = {"?":"%3F", "<":"%3C", ">":"%3E", "#":"%23", "%":"%25", "{":"%7B", "}":"%7D", "|":"%7C","\\":"%5C", "^":"%5E", "~":"%7E", "[":"%5B", "]":"%5D", "`":"%60", ";":"%3B", "/":"%2F", "?":"%3F", ":":"%3A", "@":"%40", "=":"%3D", "&":"%26", "$":"%24", "+":"%2B", '"':"%22", " ":"%20"};
-		for (var val in url_escapes) {
-			url = url.split(val).join(url_escapes[val]);
-		}
-		return url;
-	}
-
 	// BBCode
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
@@ -424,7 +415,7 @@ var msparp = (function() {
 					url = url.substr(0, url.length-1);
 					suffix = ")";
 				}
-				return $("<a>").attr({href: ("/redirect?url=" + url_encode(url)), target: "_blank"}).text(url)[0].outerHTML + suffix;
+				return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(url)), target: "_blank"}).text(url)[0].outerHTML + suffix;
 			}
 			tag = tag.toLowerCase();
 			if (attribute) {
@@ -438,7 +429,7 @@ var msparp = (function() {
 						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
 					case "url":
 						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
-							return $("<a>").attr({href: ("/redirect?url=" + url_encode(attribute)), target: "_blank"}).html(raw_bbencode(content, admin))[0].outerHTML;
+							return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(attribute)), target: "_blank"}).html(raw_bbencode(content, admin))[0].outerHTML;
 						}
 						break;
 				}

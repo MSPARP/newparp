@@ -4,11 +4,11 @@
         <title>Redirecting...</title>
         <script>
             window.opener = null;
-            window.location.replace("{{url|safe}}");
+            window.location.replace({{url|tojson|safe}});
         </script>
     </head>
     <body>
-    Redirecting to {{url|safe}}...
+    Redirecting to {{url}}...
     </body>
 </html>
 
