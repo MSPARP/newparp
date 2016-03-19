@@ -1893,7 +1893,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 
 #group_chats li form > p {text-align:right}
 #group_chats li:last-child { margin-bottom: 0; }
-#group_chats h3 { margin: 0; font-size: 12pt; }
+#group_chats h3 { margin: 0; font-size: 12pt; overflow:hidden}
 #group_chats p { margin: 5px 5px 0; padding-left:10px}
 #group_chats .subtitle { color: #666; }
 /* make chat cards line up */
