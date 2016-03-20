@@ -450,7 +450,7 @@ var msparp = (function() {
 					case "alternian":
 						return "<span class=\"alternian\">" + raw_bbencode(content, admin) + "</span>";
 					case "spoiler":
-						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span> <span>" + raw_bbencode(content, admin) + "</span></label>";
+						return "<label class=\"spoiler\"><input type=\"checkbox\"><span>SPOILER</span><span>" + raw_bbencode(content, admin) + "</span></label>";
 					case "raw":
 						return content;
 				}
@@ -1955,14 +1955,14 @@ var msparp = (function() {
 					}
 				}
 				// add in prefix and suffix if it should be global
-				if (dev_user_wrap_smart_quirks !=="true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
+				if (dev_user_wrap_smart_quirks !== "true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
 				
 				if (dev_user_safe_bbcode == "true") {
 					// now that we are safe, replace temporary unicode brackets with coding ones again
 					final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					
 					// only get involved if we actually have colour tags
-					if (final_text.toLowerCase().indexOf("[color=") !=-1) {
+					if (final_text.toLowerCase().indexOf("[color=") != -1) {
 						// attempt to catch improperly stacked colour tags  
 						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[#\w\d]+\])([\s\S]*?)(\[\/color\])/i;
 						var re2 = /\[color=[#\w\d]+\]\[\/color\]/ig;
@@ -1973,7 +1973,7 @@ var msparp = (function() {
 							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
 						// and where they intersect with fonts
-						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
+						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
 						while (re.exec(final_text)) {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
