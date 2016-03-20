@@ -907,6 +907,13 @@ var msparp = (function() {
 						next_chat_url = null;
 					} else {
 						$("#disconnect_links").appendTo(conversation);
+						if (user.meta.subscribed) {
+							$(".disconnect_subscribe").css("display", "none");
+							$(".disconnect_subscribed").css("display", "inline");
+						} else {
+							$(".disconnect_subscribe").css("display", "inline");
+							$(".disconnect_subscribed").css("display", "none");
+						}
 						scroll_to_bottom();
 					}
 				}
@@ -1661,6 +1668,13 @@ var msparp = (function() {
 			$("#subscribed").click(function() {
 				$.post("/" + chat.url + "/" + (this.checked ? "subscribe" : "unsubscribe"));
 				user.meta.subscribed = this.checked;
+			});
+			$(".disconnect_subscribe").click(function() {
+				$.post("/" + chat.url + "/" + ("subscribe"));
+				user.meta.subscribed = true;
+				$(".disconnect_subscribe").css("display", "none");
+				$(".disconnect_subscribed").css("display", "inline");
+				$('#subscribed').prop('checked', true);
 			});
 			$("#theme_form").submit(function() {
 				var form_data = $(this).serializeArray();
