@@ -568,13 +568,13 @@ body:not(.touch) .highlighted .unum:hover + p {background:#161823}
 
 /* Color Overrides */
 
-#conversation a, .rules a, .description a, #text_preview a {color: #888 !important}
+#archive_conversation a, #conversation a, .rules a, .description a, #text_preview a {color: #888 !important}
 
-.rules a:visited, .description a:visited, #conversation a:visited, #text_preview a:visited {
+#archive_conversation a:visited, .rules a:visited, .description a:visited, #conversation a:visited, #text_preview a:visited {
 	color: #666 !important;
 }
 
-#conversation a:hover, #text_preview a:hover, .rules a:hover, .description a:hover {
+#archive_conversation a:hover, #conversation a:hover, #text_preview a:hover, .rules a:hover, .description a:hover {
 	color: #999 !important;
 }
 

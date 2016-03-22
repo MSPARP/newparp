@@ -622,11 +622,11 @@ body:not(.no_forms) .remove_sl_item:active {background: #156704;}
 
 body.chat { background-color: #000;}
 
-#conversation a:visited, .rules a:visited, .description a:visited, #text_preview a:visited {
+#archive_conversation a:visited, #conversation a:visited, .rules a:visited, .description a:visited, #text_preview a:visited {
 	color: #20a107;
 }
 
-#conversation a:hover, .rules a:hover, .description a:hover, #text_preview a:hover {
+#archive_conversation a:hover, #conversation a:hover, .rules a:hover, .description a:hover, #text_preview a:hover {
 	color: #24cf38;
 }
 
