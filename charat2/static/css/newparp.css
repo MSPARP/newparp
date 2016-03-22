@@ -883,7 +883,7 @@ body:not(.no_forms) #color_input, body:not(.no_forms) #color_header_set {
 	display:inline-block;
 }
 
-body:not(.no_forms) #color_hex_input {margin:1px 0 0 10px}
+body:not(.no_forms) #color_hex_input {margin:2px 0 0 10px}
 
 body:not(.no_forms) .select_button {overflow:hidden;position:relative;}
 
@@ -1707,7 +1707,7 @@ body:not(.no_forms) .sp-input.sp-validation-error {
 	*display: inline;
 	border-bottom: solid 1px #b0b0b0;
 	background: #fff;
-	margin-top:4px;
+	margin-top:3px;
 	border-radius:2px;
 	color: #333;
 	vertical-align: middle;
@@ -1731,11 +1731,15 @@ body.no_forms .sp-replacer {
 .sp-preview {
 	position:relative;
 	width:42px;
-	height: 23px;
-	border: solid 1px #222;
+	height: 25px;
+	border: solid 1px #808080;
 	float:left;
 	z-index: 0;
 }
+
+.sidebar .sp-replacer {margin-top:2px;}
+.sidebar .sp-preview {height:22px}
+
 body.no_forms .sp-preview {
 	height:1.2em;
 }

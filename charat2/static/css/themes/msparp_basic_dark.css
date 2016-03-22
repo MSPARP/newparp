@@ -242,6 +242,12 @@ body:not(.no_forms) .input.select .tabbed_select {
 
 .groupcount {color:#555}
 
+.input_table p.color-double {padding-top:0px}
+.sp-replacer {margin-top:0px}
+body.no_forms .sp-preview, body.no_forms .sp-replacer {
+	height:1.5em;
+}
+
 /* 3.3. Group chats */
 
 #group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }

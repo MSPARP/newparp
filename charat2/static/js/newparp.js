@@ -52,6 +52,9 @@ var msparp = (function() {
 		$(this).toggleClass("expanded");
 	});
 	
+	// Force spectrum colour picker for consistency (sigh)
+	$("#color_input").spectrum();
+	
 	// Auto focus log pages to make them scrollable on desktop
 	if (!touch_enabled) {
 		$("#archive_conversation #conversation_wrap").ready(function() {
