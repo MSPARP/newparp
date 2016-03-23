@@ -320,7 +320,7 @@
                         <option value="#DCDCDC"/>
                         <option value="#FFFFFF"/>
                         </datalist>
-                    <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{chat_user.color}}"></p>
+                    <input type="text" pattern="[A-Fa-f\d]{6}" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{chat_user.color}}"></p>
                     <div class="input"><input type="text" name="quirk_prefix" id="quirk_prefix" maxlength="2000" {% if chat_user.quirk_prefix != "": %} value="{{chat_user.quirk_prefix}}" {% endif %}><label for="quirk_prefix">Prefix</label></div>
                     <div class="input"><input type="text" name="quirk_suffix" id="quirk_suffix" maxlength="2000" {% if chat_user.quirk_suffix != "": %} value="{{chat_user.quirk_suffix}}" {% endif %}><label for="quirk_suffix">Suffix</label></div>
                     <label class="textlabel">Case:</label>

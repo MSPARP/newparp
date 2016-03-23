@@ -82,7 +82,7 @@
                         <option value="#DCDCDC"/>
                         <option value="#FFFFFF"/>
                         </datalist>
-                    <input type="text" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
+                    <input type="text" pattern="[A-Fa-f\d]{6}" id="color_hex_input" name="color_hex" size="6" maxlength="6" required value="{{character.color}}">
                     </p>
                 </div>
                 <p id="text_preview_container" style="color: #{{character.color}};">
