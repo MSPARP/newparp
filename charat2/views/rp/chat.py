@@ -455,7 +455,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
         joinedload(ChatUser.user),
         joinedload_all("invite.creator_chat_user"),
         joinedload_all("ban.creator_chat_user"),
-    ).order_by(ChatUser.number).limit(20).offset((page - 1) * 20).all()
+    ).order_by(ChatUser.number).limit(50).offset((page - 1) * 50).all()
 
     if len(users) == 0:
         abort(404)
@@ -469,7 +469,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
     paginator = paginate.Page(
         [],
         page=page,
-        items_per_page=20,
+        items_per_page=50,
         item_count=user_count,
         url_maker=lambda page: url_for("rp_users", url=url, page=page),
     )
@@ -512,7 +512,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
     ).join(Invite.user).options(
         joinedload(Invite.chat_user),
         joinedload(Invite.creator_chat_user),
-    ).order_by(User.username).limit(20).offset((page - 1) * 20).all()
+    ).order_by(User.username).limit(50).offset((page - 1) * 50).all()
 
     if len(invites) == 0 and page != 1:
         abort(404)
@@ -526,7 +526,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
     paginator = paginate.Page(
         [],
         page=page,
-        items_per_page=20,
+        items_per_page=50,
         item_count=invite_count,
         url_maker=lambda page: url_for("rp_invites", url=url, page=page),
     )
