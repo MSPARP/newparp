@@ -1247,6 +1247,7 @@ body:not(.no_forms) .chat_user_table .input.select select{padding-top:5px;paddin
 	.admin_log tr td:nth-of-type(1) {color:#626262;font-size:80%;padding-top:10px;padding-bottom:1px}
 	.admin_log tr td:nth-of-type(1):before {content:"Log #"}
 	.admin_log tr td:nth-of-type(4):before {content: "Type: "; color:#626262;font-size:90%}
+	.admin_log pre {white-space:normal !important;overflow:visible;word-break:break-all !important;}
 	.user_blocked tr td:nth-of-type(1):before {content:"Date: "; color:#626262;font-size:90%}
 	.user_chartable tr td:nth-of-type(1), .admin_log tr td:nth-of-type(3) {font-weight:bold;max-width:none}
 	.user_chartable tr td:nth-of-type(2), .user_chartable th:nth-of-type(2) {font-style:italic;max-width:none}
