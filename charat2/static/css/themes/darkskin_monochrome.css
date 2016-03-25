@@ -746,7 +746,7 @@ body:not(.touch) .highlighted .unum:hover + p {background:#161823}
 
 .spoiler { border: 1px dashed #2a2c40; background: #161823;}
 
-p:hover > .timestamp {color:#161823; }
+p:hover > .timestamp {color:#3a3d59; }
 
 #conversation hr, #archive_conversation hr { border-color: #161823; }
 
