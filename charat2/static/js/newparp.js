@@ -217,7 +217,7 @@ var msparp = (function() {
 		$("input[name=name]").val(data["name"]).attr("value", data["name"]); /* update attr as well for css targetting */
 		$("input[name=acronym]").val(data["acronym"]).attr("value", data["acronym"]).keyup();
 		$("input[name=color]").val("#"+data["color"]).change();
-        $("#color_input").spectrum("set", "#" + data["color"]);
+		$("#color_input").spectrum("set", "#" + data["color"]);
 		if (!body.hasClass("chat")) {
 			if (typeof data["text_preview"]!= "undefined") {
 				$("#text_preview").text(data["text_preview"]);
@@ -335,7 +335,7 @@ var msparp = (function() {
 		var color_hex_input = $("#color_hex_input").keyup(function() {
 			if (this.value.length == 6) {
 				color_input.val("#" + this.value);
-                color_input.spectrum("set", "#" + this.value);
+				color_input.spectrum("set", "#" + this.value);
 				text_preview_container.css("color", "#" + this.value);
 			}
 		});
@@ -1859,6 +1859,8 @@ var msparp = (function() {
 					while (re.exec(text)) {
 						text = text.replace(re, "\ufe5d$1$2\ufe5e$3\ufe5d$4\ufe5e");
 					}
+					// also wrap [br] tags
+					text = text.replace(/\[([bB][rR])\]/g, "\ufe5d$1\ufe5e");
 				}
 				
 				// Break up text into chunks for smartquirking
