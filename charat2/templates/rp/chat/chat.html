@@ -267,7 +267,7 @@
                         {% for group in search_character_groups: %}
                         <optgroup label="{{group.name}}">
                             {% for character in group.characters: %}
-                            <option value="s_{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                            <option value="s_{{character.id}}"{% if character.id == chat_user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
                             {% endfor %}
                         </optgroup>
                         {% endfor %}
