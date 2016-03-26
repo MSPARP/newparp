@@ -539,7 +539,7 @@ class ChatUser(Base):
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     number = Column(Integer, nullable=False)
-    search_character_id = Column(Integer, nullable=False, default=1)
+    search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
 
     subscribed = Column(Boolean, nullable=False, default=False)
     title = Column(Unicode(50))
