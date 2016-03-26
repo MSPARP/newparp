@@ -1159,6 +1159,7 @@ LogMarker.message = relation(Message, backref="log_marker")
 
 ChatUser.user = relation(User, backref="chats")
 ChatUser.chat = relation(Chat, backref="users")
+ChatUser.search_character = relation(SearchCharacter, backref="chat_users")
 
 Message.chat = relation(Chat)
 Message.user = relation(User)
