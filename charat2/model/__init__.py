@@ -599,6 +599,7 @@ class ChatUser(Base):
         return cls(
             user_id=character.user.id,
             name=character.name,
+            search_character_id=character.search_character_id,
             acronym=character.acronym,
             color=character.color,
             quirk_prefix=character.quirk_prefix,
@@ -629,6 +630,7 @@ class ChatUser(Base):
             return cls(
                 user_id=user.id,
                 name=dc.name,
+                search_character_id=dc.search_character_id,
                 acronym=dc.acronym,
                 color=dc.color,
                 quirk_prefix=dc.quirk_prefix,
