@@ -1985,8 +1985,8 @@ var msparp = (function() {
 					// only get involved if we actually have colour tags
 					if (final_text.toLowerCase().indexOf("[color=") != -1) {
 						// attempt to catch improperly stacked colour tags  
-						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[#\w\d]+\])([\s\S]*?)(\[\/color\])/i;
-						var re2 = /\[color=[#\w\d]+\]\[\/color\]/ig;
+						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[#\w\d.,()]+\])([\s\S]*?)(\[\/color\])/i;
+						var re2 = /\[color=[#\w\d.,()]+\]\[\/color\]/ig;
 						while (re.exec(final_text)) {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
@@ -1994,7 +1994,7 @@ var msparp = (function() {
 							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
 						// and where they intersect with fonts
-						var re = /(\[color=([#\w\d]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
+						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
 						while (re.exec(final_text)) {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
