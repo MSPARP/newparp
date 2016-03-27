@@ -15,7 +15,7 @@ depends_on = None
 from alembic import op
 import sqlalchemy as sa
 
-from charat2.model import AdminTier, AdminTierPermission
+from newparp.model import AdminTier, AdminTierPermission
 
 
 def upgrade():

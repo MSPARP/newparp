@@ -9,7 +9,7 @@ with open(os.path.join(here, 'README.md')) as f:
 CHANGES = ""
 
 setup(
-    name="charat2",
+    name="newparp",
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
@@ -19,7 +19,7 @@ setup(
     ],
     entry_points="""\
     [console_scripts]
-    charat2_init_db = charat2.model:init_db
+    newparp_init_db = newparp.model:init_db
     """,
 )
 
