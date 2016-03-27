@@ -93,8 +93,8 @@ def run_matchmaker(
 
             s1_user = db.query(User).filter(User.id == s1["user_id"]).one()
             s2_user = db.query(User).filter(User.id == s2["user_id"]).one()
-            db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, **get_character_info(db, s1)))
-            db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, **get_character_info(db, s2)))
+            db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, search_character_id=s1["search_character_id"], **get_character_info(db, s1)))
+            db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, search_character_id=s2["search_character_id"], **get_character_info(db, s2)))
 
             if options:
                 db.add(Message(
