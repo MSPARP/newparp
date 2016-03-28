@@ -12,12 +12,12 @@ from newparp.model.connections import (
     set_cookie,
 )
 from newparp import views
-from newparp.views import account, admin, errors, guides, rp, settings
-from newparp.views.admin import spamless
-from newparp.views.rp import (
-    chat, chat_api, chat_list, characters, request_search, roulette, search,
-    search_characters,
+from newparp.views import (
+    account, admin, characters, chat, chat_api, chat_list, errors, guides,
+    request_search, roulette, search, search_characters, settings,
 )
+from newparp.views.admin import spamless
+
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -61,19 +61,9 @@ def make_rules(subdomain, path, func, formats=False, paging=False):
 
 app.add_url_rule("/health", "health", views.health, methods=("GET",))
 
-app.add_url_rule("/", "home", rp.home, methods=("GET",))
+app.add_url_rule("/", "home", views.home, methods=("GET",))
 
-app.add_url_rule("/unread", "unread", rp.unread, methods=("GET",))
-
-app.add_url_rule("/search_characters", "rp_search_character_list", search_characters.search_character_list, methods=("GET",))
-app.add_url_rule("/search_characters/new_group", "rp_new_search_character_group_post", search_characters.new_search_character_group_post, methods=("POST",))
-app.add_url_rule("/search_characters/new", "rp_new_search_character_get", search_characters.new_search_character_get, methods=("GET",))
-app.add_url_rule("/search_characters/new", "rp_new_search_character_post", search_characters.new_search_character_post, methods=("POST",))
-app.add_url_rule("/search_characters/<int:id>", "rp_search_character", search_characters.search_character, methods=("GET",))
-app.add_url_rule("/search_characters/<int:id>.json", "rp_search_character_json", search_characters.search_character_json, methods=("GET",))
-app.add_url_rule("/search_characters/<int:id>/save", "rp_save_search_character", search_characters.save_search_character, methods=("POST",))
-app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_character_get", search_characters.delete_search_character_get, methods=("GET",))
-app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_character_post", search_characters.delete_search_character_post, methods=("POST",))
+app.add_url_rule("/unread", "unread", views.unread, methods=("GET",))
 
 app.add_url_rule("/log_in", "log_in", account.log_in_get, methods=("GET",))
 app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",))
@@ -116,6 +106,16 @@ app.add_url_rule("/create_chat", "rp_create_chat", chat.create_chat, methods=("P
 
 # 5. Searching
 
+app.add_url_rule("/search_characters", "rp_search_character_list", search_characters.search_character_list, methods=("GET",))
+app.add_url_rule("/search_characters/new_group", "rp_new_search_character_group_post", search_characters.new_search_character_group_post, methods=("POST",))
+app.add_url_rule("/search_characters/new", "rp_new_search_character_get", search_characters.new_search_character_get, methods=("GET",))
+app.add_url_rule("/search_characters/new", "rp_new_search_character_post", search_characters.new_search_character_post, methods=("POST",))
+app.add_url_rule("/search_characters/<int:id>", "rp_search_character", search_characters.search_character, methods=("GET",))
+app.add_url_rule("/search_characters/<int:id>.json", "rp_search_character_json", search_characters.search_character_json, methods=("GET",))
+app.add_url_rule("/search_characters/<int:id>/save", "rp_save_search_character", search_characters.save_search_character, methods=("POST",))
+app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_character_get", search_characters.delete_search_character_get, methods=("GET",))
+app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_character_post", search_characters.delete_search_character_post, methods=("POST",))
+
 app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
@@ -145,9 +145,9 @@ app.add_url_rule("/roulette/stop", "rp_roulette_stop", roulette.roulette_stop, m
 #app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, methods=("GET",))
 #app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, methods=("POST",))
 
-# 7. Rooms
+# 7. Groups
 
-make_rules("rp", "/groups", rp.groups, formats=True)
+make_rules("rp", "/groups", views.groups, formats=True)
 
 # 8. Chats
 
@@ -170,7 +170,7 @@ app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POS
 app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
 app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
-app.add_url_rule("/redirect", "redirect", rp.redirect, methods=("GET",))
+app.add_url_rule("/redirect", "redirect", views.redirect, methods=("GET",))
 
 # 9. Chat API
 
