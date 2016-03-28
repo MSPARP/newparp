@@ -1,21 +1,9 @@
-{% extends "rp/chat/base.html" %}
-{% macro day_navigation(): %}
-{% if previous_day or next_day: %}
-<p class="pager">
-{% if previous_day: %}
-  <span class="previous_day">&laquo; <a href="{{url_for("rp_log_day", url=url, year=previous_day.year, month=previous_day.strftime("%m"), day=previous_day.strftime("%d"))}}">{{previous_day.strftime("%Y-%m-%d")}}</a></span>
-{% endif %}
-{% if next_day: %}
-  <span class="next_day"><a href="{{url_for("rp_log_day", url=url, year=next_day.year, month=next_day.strftime("%m"), day=next_day.strftime("%d"))}}">{{next_day.strftime("%Y-%m-%d")}}</a> &raquo;</span>
-{% endif %}
-</p>
-{% endif %}
-{% endmacro %}
+{% extends "chat/base.html" %}
 {% block content: %}
 
 <div id="chat_wrapper" class="log_wrapper">
     <div id="chat_content">
-    
+        
         <nav id="global_navigation" class="in_chat_nav in_log_nav">
             {% if g.user and g.unread_chats and g.unread_chats > 0: %}
             <a id="unread_counter" href="{{url_for("rp_chat_list", type="unread")}}" target="_blank">{{g.unread_chats}}</a>
@@ -43,10 +31,10 @@
                 {% endif %}
             </ul>
         </nav>
+        
+        <div class="log_top_nav">{{pager()}}</div>
 
-        <div class="log_top_nav">{{day_navigation()}}</div>
-
-        <section id="archive_conversation">
+        <section id="archive_conversation">            
             {% if own_chat_user: %}
             <form action="{{url_for("save_variables")}}" method="POST">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
@@ -56,19 +44,15 @@
             </form>
             {% endif %}
             <div id="conversation_wrap" tabindex="1">
-                {% if messages: %}
                 {{render_messages(messages, bbcode_tags=request.args.get("mode") == "bbcode")}}
-                {% else: %}
-                <p>No messages.</p>
-                {% endif %}
-                {% if next_day == None and own_chat_user: %}
+                {% if paginator.page == paginator.last_page and (chat.type != "roulette" or own_chat_user): %}
                 <p><a href="{{url_for("rp_chat", url=url)}}">Continue this chat</a></p>
                 {% endif %}
             </div>
         </section>
 
-        <div class="log_bottom_nav">{{day_navigation()}}</div>
-    
+        <div class="log_bottom_nav">{{pager()}}</div>
+        
     </div>
 </div>
 

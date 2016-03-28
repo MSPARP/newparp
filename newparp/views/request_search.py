@@ -76,7 +76,7 @@ def request_list(fmt=None, page=1):
     )
 
     return render_template(
-        "rp/request_search/request_list.html",
+        "request_search/request_list.html",
         page="all",
         requests=requests,
         paginator=paginator,
@@ -118,7 +118,7 @@ def your_request_list(fmt=None, page=1):
     )
 
     return render_template(
-        "rp/request_search/request_list.html",
+        "request_search/request_list.html",
         page="yours",
         requests=requests,
         paginator=paginator,
@@ -192,7 +192,7 @@ def tagged_request_list(tag_type, name, fmt=None, page=1):
     )
 
     return render_template(
-        "rp/request_search/request_list.html",
+        "request_search/request_list.html",
         page="tag",
         tag=tag,
         requests=requests,
@@ -209,7 +209,7 @@ def new_request_get():
     ).order_by(Character.title, Character.id).all()
 
     return render_template(
-        "rp/request_search/new_request.html",
+        "request_search/new_request.html",
         case_options=case_options,
         Tag=Tag,
         characters=characters,
@@ -386,7 +386,7 @@ def edit_request_get(request_id):
     regexes = json.loads(search_request.regexes)
 
     return render_template(
-        "rp/request_search/edit_request.html",
+        "request_search/edit_request.html",
         case_options=case_options,
         search_request=search_request,
         search_request_tags={
@@ -491,7 +491,7 @@ def edit_request_post(request_id):
 @log_in_required
 def delete_request_get(request_id):
     return render_template(
-        "rp/request_search/delete_request.html",
+        "request_search/delete_request.html",
         search_request=_own_request_query(request_id),
     )
 

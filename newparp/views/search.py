@@ -73,7 +73,7 @@ def search_save():
 @use_db
 @log_in_required
 def search_get():
-    return render_template("rp/search.html")
+    return render_template("search.html")
 
 
 @use_db

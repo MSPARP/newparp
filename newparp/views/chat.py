@@ -111,10 +111,10 @@ def get_chat(f):
             return redirect(url_for(request.endpoint, url="theoubliette", fmt=fmt))
         except UnauthorizedException:
             if request.endpoint != "rp_chat_unsubscribe":
-                return render_template("rp/chat/private.html", chat=chat), 403
+                return render_template("chat/private.html", chat=chat), 403
         except TooManyPeopleException:
             if request.endpoint == "rp_chat":
-                return render_template("rp/chat/too_many_people.html", chat=chat), 403
+                return render_template("chat/too_many_people.html", chat=chat), 403
 
         return f(chat, None, url, fmt, *args, **kwargs)
 
@@ -174,7 +174,7 @@ def chat(chat, pm_user, url, fmt=None):
             return jsonify({"chat": chat_dict})
         if chat.type != "group":
             return render_template("account/log_in_required.html")
-        return render_template("rp/chat/log_in_required.html", chat=chat)
+        return render_template("chat/log_in_required.html", chat=chat)
 
     # Get or create ChatUser.
     try:
@@ -233,7 +233,7 @@ def chat(chat, pm_user, url, fmt=None):
     ).options(joinedload(SearchCharacterGroup.characters)).all()
 
     return render_template(
-        "rp/chat/chat.html",
+        "chat/chat.html",
         url=url,
         chat=chat_dict,
         chat_user=chat_user,
@@ -302,7 +302,7 @@ def _log_page(chat, pm_user, url, fmt, page=None):
     )
 
     return render_template(
-        "rp/chat/log.html",
+        "chat/log.html",
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
@@ -394,7 +394,7 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
         })
 
     return render_template(
-        "rp/chat/log_day.html",
+        "chat/log_day.html",
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
@@ -475,7 +475,7 @@ def users(chat, pm_user, url, fmt=None, page=1):
     )
 
     return render_template(
-        "rp/chat/chat_users.html",
+        "chat/chat_users.html",
         chat=chat,
         own_chat_user=own_chat_user,
         users=users,
@@ -532,7 +532,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
     )
 
     return render_template(
-        "rp/chat/chat_invites.html",
+        "chat/chat_invites.html",
         chat=chat,
         own_chat_user=own_chat_user,
         invites=invites,

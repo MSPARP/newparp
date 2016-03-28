@@ -129,7 +129,7 @@ def chat_list(fmt=None, type=None, page=1):
     )
 
     return render_template(
-        "rp/chat_list.html",
+        "chat_list.html",
         type=type,
         chats=chat_dicts,
         paginator=paginator,

@@ -15,7 +15,7 @@ from newparp.model.connections import use_db, db_connect
 def home():
 
     if g.user is None:
-        return render_template("rp/home_guest.html")
+        return render_template("home_guest.html")
 
     mode = request.args.get("mode", g.user.last_search_mode)
     g.user.last_search_mode = mode
@@ -28,7 +28,7 @@ def home():
 
     if mode == "roulette":
         return render_template(
-            "rp/home_roulette.html",
+            "home_roulette.html",
             characters=characters,
             search_character_groups=search_character_groups,
         )
@@ -40,7 +40,7 @@ def home():
             SearchCharacterChoice.user_id == g.user.id,
         ).all())
         return render_template(
-            "rp/home_search.html",
+            "home_search.html",
             characters=characters,
             search_character_groups=search_character_groups,
             case_options=case_options,
@@ -72,7 +72,7 @@ def redirect():
         url = "http://www.mspaintadventures.com/ACT6ACT6.php?s=6&p=009309"
 
     return render_template(
-        "rp/chat/redirect.html",
+        "chat/redirect.html",
         url=url,
     )
 
@@ -133,7 +133,7 @@ def groups(fmt=None):
         })
 
     return render_template(
-        "rp/groups.html",
+        "groups.html",
         groups=chat_dicts,
         style_filter=style_filter,
         level_filter=level_filter,

@@ -22,7 +22,7 @@ def search_character_query(id):
 @permission_required("search_characters")
 def search_character_list():
     return render_template(
-        "rp/search_characters/search_character_list.html",
+        "search_characters/search_character_list.html",
         search_character_groups=g.db.query(SearchCharacterGroup).order_by(
             SearchCharacterGroup.order,
         ).options(joinedload(SearchCharacterGroup.characters)).all(),
@@ -48,7 +48,7 @@ def new_search_character_get():
     character_defaults = {_.name: _.default.arg for _ in SearchCharacter.__table__.columns if _.default}
 
     return render_template(
-        "rp/search_characters/search_character.html",
+        "search_characters/search_character.html",
         character=character_defaults,
         replacements=[],
         regexes=[],
@@ -89,7 +89,7 @@ def new_search_character_post():
 def search_character(id):
     character = search_character_query(id)
     return render_template(
-        "rp/search_characters/search_character.html",
+        "search_characters/search_character.html",
         character=character,
         replacements=json.loads(character.replacements),
         regexes=json.loads(character.regexes),
@@ -142,7 +142,7 @@ def delete_search_character_get(id):
     if id == 1:
         abort(404)
     character = search_character_query(id)
-    return render_template("rp/search_characters/delete_search_character.html", character=character)
+    return render_template("search_characters/delete_search_character.html", character=character)
 
 
 @use_db

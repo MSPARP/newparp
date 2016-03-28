@@ -42,7 +42,7 @@ def roulette_save():
 @use_db
 @log_in_required
 def roulette_get():
-    return render_template("rp/roulette.html")
+    return render_template("roulette.html")
 
 
 @use_db

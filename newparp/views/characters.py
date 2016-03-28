@@ -23,7 +23,7 @@ def character_list(fmt=None):
         return jsonify({ "characters": [_.to_dict(include_default=True) for _ in characters] })
 
     return render_template(
-        "rp/characters/character_list.html",
+        "characters/character_list.html",
         characters=characters,
     )
 
@@ -40,7 +40,7 @@ def new_character_get():
     character_defaults["search_character"] = search_character_groups[0].characters[0]
 
     return render_template(
-        "rp/characters/character.html",
+        "characters/character.html",
         character=character_defaults,
         replacements=[],
         regexes=[],
@@ -73,7 +73,7 @@ def character(character_id, fmt=None):
         return jsonify(character.to_dict(include_default=True, include_options=True))
 
     return render_template(
-        "rp/characters/character.html",
+        "characters/character.html",
         character=character,
         replacements=json.loads(character.replacements),
         regexes=json.loads(character.regexes),
@@ -98,7 +98,7 @@ def save_character(character_id):
 @log_in_required
 def delete_character_get(character_id):
     character = character_query(character_id)
-    return render_template("rp/characters/delete_character.html", character=character)
+    return render_template("characters/delete_character.html", character=character)
 
 
 @use_db
