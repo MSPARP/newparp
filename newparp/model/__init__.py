@@ -386,7 +386,6 @@ class Chat(Base):
     type = Column(Enum(
         u"group",
         u"pm",
-        u"requested",
         u"roulette",
         u"searched",
         name=u"chats_type",
@@ -496,13 +495,6 @@ class PMChat(Chat):
         return super(PMChat, self).computed_title(*args, **kwargs)
 
 
-class RequestedChat(Chat):
-    __mapper_args__ = { "polymorphic_identity": "requested" }
-
-    def __repr__(self):
-        return "<RequestedChat #%s: %s>" % (self.id, self.url)
-
-
 class RouletteChat(Chat):
     __mapper_args__ = { "polymorphic_identity": "roulette" }
 
@@ -517,7 +509,7 @@ class SearchedChat(Chat):
         return "<SearchedChat #%s: %s>" % (self.id, self.url)
 
 
-AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RequestedChat, RouletteChat, SearchedChat])
+AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RouletteChat, SearchedChat])
 
 
 class LogMarker(Base):
@@ -859,89 +851,11 @@ class Ban(Base):
         return "<Ban: %s from %s>" % (self.user, self.chat)
 
 
-class Request(Base):
-
-    __tablename__ = "requests"
-
-    id = Column(Integer, primary_key=True)
-
-    user_id = Column(Integer, ForeignKey("users.id"))
-
-    status = Column(Enum(
-        u"draft",
-        u"posted",
-        name=u"requests_status",
-    ), nullable=False, default=u"draft")
-
-    posted = Column(DateTime(), nullable=False, default=now)
-
-    character_id = Column(Integer, ForeignKey("characters.id"))
-
-    name = Column(Unicode(50), nullable=False, default=u"anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
-
-    # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
-
-    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
-
-    case = Column(case_options_enum, nullable=False, default=u"normal")
-
-    replacements = Column(UnicodeText, nullable=False, default=u"[]")
-    regexes = Column(UnicodeText, nullable=False, default=u"[]")
-
-    scenario = Column(UnicodeText, nullable=False, default=u"")
-    prompt = Column(UnicodeText, nullable=False, default=u"")
-
-    def tags_by_type(self):
-        tags = { _: [] for _ in Tag.type_options }
-        for request_tag in self.tags:
-            tags[request_tag.tag.type].append({
-                "type": request_tag.tag.type,
-                "name": request_tag.tag.name,
-                "alias": request_tag.alias,
-            })
-        return tags
-
-    def to_dict(self, user=None):
-        rd = {
-            "id": self.id,
-            "status": self.status,
-            "posted": time.mktime(self.posted.timetuple()),
-            "tags": self.tags_by_type(),
-            "name": self.name,
-            "acronym": self.acronym,
-            "color": self.color,
-            "scenario": self.scenario,
-            "prompt": self.prompt,
-        }
-        if user is not None:
-            rd["yours"] = user.id == self.user_id
-            if rd["yours"]:
-                rd["quirk_prefix"] = self.quirk_prefix
-                rd["quirk_suffix"] = self.quirk_suffix
-                rd["case"] = self.case
-                rd["replacements"] = json.loads(self.replacements)
-                rd["regexes"] = json.loads(self.regexes)
-        return rd
-
-
 class CharacterTag(Base):
 
     __tablename__ = "character_tags"
 
     character_id = Column(Integer, ForeignKey("characters.id"), primary_key=True)
-    tag_id = Column(Integer, ForeignKey("tags.id"), primary_key=True)
-
-    alias = Column(Unicode(50))
-
-
-class RequestTag(Base):
-
-    __tablename__ = "request_tags"
-
-    request_id = Column(Integer, ForeignKey("requests.id"), primary_key=True)
     tag_id = Column(Integer, ForeignKey("tags.id"), primary_key=True)
 
     alias = Column(Unicode(50))
@@ -1098,14 +1012,8 @@ Index("chat_users_number_unique", ChatUser.chat_id, ChatUser.number, unique=True
 # Index to make log rendering easier.
 Index("messages_chat_id", Message.chat_id, Message.posted)
 
-# XXX indexes on requests table
-# index by user id for your requests?
-
 # Index for searching characters by tag.
 Index("character_tags_tag_id", CharacterTag.tag_id)
-
-# Index for searching requests by tag.
-Index("request_tags_tag_id", RequestTag.tag_id)
 
 # Index to make tag type/name combo unique.
 Index("tags_type_name", Tag.type, Tag.name, unique=True)
@@ -1231,12 +1139,7 @@ Ban.creator_chat_user = relation(
     foreign_keys=[Ban.chat_id, Ban.creator_id],
 )
 
-Request.user = relation(User, backref="requests")
-Request.character = relation(Character, backref="requests")
-Request.tags = relation(RequestTag, backref="request", order_by=RequestTag.alias)
-
 Tag.characters = relation(CharacterTag, backref="tag")
-Tag.requests = relation(RequestTag, backref="tag")
 Tag.synonym_of = relation(Tag, backref="synonyms", remote_side=Tag.id)
 
 AdminLogEntry.action_user = relation(User, backref="admin_actions", foreign_keys=AdminLogEntry.action_user_id)

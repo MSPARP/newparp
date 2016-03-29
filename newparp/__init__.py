@@ -14,7 +14,7 @@ from newparp.model.connections import (
 from newparp import views
 from newparp.views import (
     account, admin, characters, chat, chat_api, chat_list, errors, guides,
-    request_search, roulette, search, search_characters, settings,
+    roulette, search, search_characters, settings,
 )
 from newparp.views.admin import spamless
 
@@ -128,28 +128,11 @@ app.add_url_rule("/roulette", "rp_roulette_post", roulette.roulette_post, method
 app.add_url_rule("/roulette/continue", "rp_roulette_continue", roulette.roulette_continue, methods=("POST",))
 app.add_url_rule("/roulette/stop", "rp_roulette_stop", roulette.roulette_stop, methods=("POST",))
 
-# 6. Request searching
-
-#make_rules("rp", "/requests", request_search.request_list, formats=True, paging=True)
-#make_rules("rp", "/requests/yours", request_search.your_request_list, formats=True, paging=True)
-#make_rules("rp", "/requests/<tag_type>:<name>", request_search.tagged_request_list, formats=True, paging=True)
-
-#app.add_url_rule("/requests/new", "rp_new_request_get", request_search.new_request_get, methods=("GET",))
-#app.add_url_rule("/requests/new", "rp_new_request_post", request_search.new_request_post, methods=("POST",))
-
-#app.add_url_rule("/requests/answer/<int:request_id>", "rp_answer_request", request_search.answer_request, methods=("POST",))
-
-#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_get", request_search.edit_request_get, methods=("GET",))
-#app.add_url_rule("/requests/edit/<int:request_id>", "rp_edit_request_post", request_search.edit_request_post, methods=("POST",))
-
-#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_get", request_search.delete_request_get, methods=("GET",))
-#app.add_url_rule("/requests/delete/<int:request_id>", "rp_delete_request_post", request_search.delete_request_post, methods=("POST",))
-
-# 7. Groups
+# 6. Groups
 
 make_rules("rp", "/groups", views.groups, formats=True)
 
-# 8. Chats
+# 7. Chats
 
 make_rules("rp", "/<path:url>", chat.chat, formats=True)
 
@@ -172,7 +155,7 @@ app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscr
 
 app.add_url_rule("/redirect", "redirect", views.redirect, methods=("GET",))
 
-# 9. Chat API
+# 8. Chat API
 
 app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("POST",))
@@ -193,7 +176,7 @@ app.add_url_rule("/chat_api/look_up_user", "look_up_user", chat_api.look_up_user
 app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
 app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
-# 10. Admin
+# 9. Admin
 
 app.add_url_rule("/admin", "admin_home", admin.home, methods=("GET",))
 
@@ -236,12 +219,12 @@ app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip
 
 app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_status, methods=("GET",))
 
-# 11. Guides
+# 10. Guides
 
 app.add_url_rule("/userguide", "guides_user_guide", guides.user_guide, methods=("GET",))
 app.add_url_rule("/bbcodeguide", "guides_bbcode_guide", guides.bbcode_guide, methods=("GET",))
 
-# 12. Error handlers
+# 11. Error handlers
 
 app.error_handler_spec[None][403] = errors.error_403
 app.error_handler_spec[None][404] = errors.error_404
