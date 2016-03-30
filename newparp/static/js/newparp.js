@@ -998,7 +998,8 @@ var msparp = (function() {
 					new_messages.push(message.id);
 					document.title = "New message - " + original_title;
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
-						var text_without_bbcode = bbremove(text);
+						var text_without_bbcode = text.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/ig, "[SPOILER]")
+						text_without_bbcode = bbremove(text_without_bbcode);
 						var notification = new Notification(chat.title || "MSPARP", {
 							"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
 							"icon": "/static/img/spinner-big.png"
@@ -1993,8 +1994,8 @@ var msparp = (function() {
 							// close and reopen tags
 							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
-						// and where they intersect with fonts
-						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\])([\s\S]*?)(\[\/color\])/i;
+						// and where they intersect with other tags
+						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\]|\[\/?[uibs]\]|\[\/?del\]|\[url=[^\]]+?\]|\[\/url\])([\s\S]*?)(\[\/color\])/i;
 						while (re.exec(final_text)) {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
