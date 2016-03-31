@@ -38,7 +38,7 @@
                                     <option value="user"{% if chat_user.group == "user": %} selected="selected"{% endif %}>User</option>
                                     <option value="silent"{% if chat_user.group == "silent": %} selected="selected"{% endif %}>Silenced</option>
                                 </select></div>
-                                <button>Set<span class="full_label"> group</span></button>
+                                <button type="submit">Set<span class="full_label"> group</span></button>
                             </form>
                         {% else: %}
                         {{{"admin": "God tier moderator", "creator": "Chat creator", "mod3": "Professional Wet Blanket", "mod2": "Bum's Rusher", "mod1": "Amateur Wet Blanket", "user": "User", "silent": "Silenced"}[chat_user.computed_group]}}
