@@ -623,7 +623,7 @@ def ip_bans(fmt=None, page=1):
     if page != 1 and len(ip_bans) == 0:
         abort(404)
 
-    ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).scalar()
+    ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.hidden == False).scalar()
 
     if fmt == "json":
         return jsonify({
