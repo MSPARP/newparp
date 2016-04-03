@@ -1890,8 +1890,8 @@ var msparp = (function() {
 								// Part 2: convert lone capital letters (eg. I) to lower case.
 								// Find single capital letters with adjacent lower case ones, potentially looping in case they overlap.
 								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
-                                // Part 3: also catch I... I [...], or other punctuation cases.
-                                text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*I[\W.,!?]*I\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
+								// Part 3: also catch I... I [...], or other punctuation cases.
+								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*I[\W.,!?]*I\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
 								break;
 							case "upper":
 								text_chunks[i] = text_chunks[i].toUpperCase();
