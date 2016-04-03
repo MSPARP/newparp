@@ -1890,6 +1890,8 @@ var msparp = (function() {
 								// Part 2: convert lone capital letters (eg. I) to lower case.
 								// Find single capital letters with adjacent lower case ones, potentially looping in case they overlap.
 								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
+                                // Part 3: also catch I... I [...], or other punctuation cases.
+                                text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*I[\W.,!?]*I\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
 								break;
 							case "upper":
 								text_chunks[i] = text_chunks[i].toUpperCase();
@@ -1995,7 +1997,7 @@ var msparp = (function() {
 							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
 						}
 						// and where they intersect with other tags
-						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\]|\[\/?[uibs]\]|\[\/?del\]|\[url=[^\]]+?\]|\[\/url\])([\s\S]*?)(\[\/color\])/i;
+						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\]|\[\/?[uibswc]\]|\[\/?alternian\]|\[\/?del\]|\[url=[^\]]+?\]|\[\/url\])([\s\S]*?)(\[\/color\])/i;
 						while (re.exec(final_text)) {
 							// strip empty colour tags
 							final_text = final_text.replace(re2, "");
