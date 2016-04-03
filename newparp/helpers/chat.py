@@ -9,6 +9,7 @@ from sqlalchemy.orm import joinedload
 
 from newparp.model import AnyChat, Ban, Invite, ChatUser, Message
 from newparp.model.connections import db_connect, get_chat_user
+from newparp.tasks.chat import update_log_marker
 
 
 class UnauthorizedException(Exception):
@@ -192,6 +193,11 @@ def send_message(db, redis, message, force_userlist=False):
 
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
+
+    # Post-message actions.
+    update_log_marker.delay(message.chat_id, "page_with_system_messages")
+    if message.type in ("ic", "ooc", "me"):
+        update_log_marker.delay(message.chat_id, "page_without_system_messages")
 
     # And send notifications last.
     if message.type in (u"ic", u"ooc", u"me", u"spamless"):
