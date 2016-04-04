@@ -729,7 +729,7 @@ var msparp = (function() {
 			function disconnect() {
 				exit();
 				if (messages_method == "websocket") {
-					ws.close(); receive_messages({});
+					ws.close(1000); receive_messages({});
 				} else {
 					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id } });
 				}

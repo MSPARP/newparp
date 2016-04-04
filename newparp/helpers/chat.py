@@ -293,17 +293,19 @@ def disconnect_user(redis, chat_id, user_id):
     return True
 
 
-def send_quit_message(db, redis, chat_user, user, chat):
+def send_quit_message(db, redis, chat_user, user, chat, type="disconnect"):
     if chat_user.computed_group == "silent" or chat.type in ("pm", "roulette"):
         send_userlist(db, redis, chat)
     else:
+        if type == "disconnect":
+            text = "%s [%s] disconnected." % (chat_user.name, chat_user.acronym)
+        elif type == "timeout":
+            text = "%s's connection timed out." % chat_user.name
         send_message(db, redis, Message(
             chat_id=chat.id,
             user_id=user.id,
-            type="disconnect",
+            type=type,
             name=chat_user.name,
-            text=("%s [%s] disconnected.") % (
-                chat_user.name, chat_user.acronym,
-            ),
+            text=text,
         ))
 
