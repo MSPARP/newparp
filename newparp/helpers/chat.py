@@ -204,7 +204,7 @@ def send_message(db, redis, message, force_userlist=False):
 
         # Queue an update for the last_online field.
         # TODO move the PM stuff here too
-        redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()))
+        redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()) + float(message.posted.microsecond) / 1000000)
 
         online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
         if message.chat.type == "pm":
