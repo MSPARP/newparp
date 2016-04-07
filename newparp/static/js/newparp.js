@@ -126,6 +126,7 @@ var msparp = (function() {
 	});
 
 	// Enable per-device settings that don't require pre-render hooks
+	var dev_user_disable_hotkeys = "false";
 	var dev_user_safe_bbcode = "false";
 	var dev_user_smart_quirk = "false";
 	var dev_user_wrap_smart_quirks = "false";
@@ -155,6 +156,9 @@ var msparp = (function() {
 		if (localStorage.getItem("safe_bbcode") === null) { localStorage.setItem("safe_bbcode", "true"); }
 		if (localStorage.getItem("safe_bbcode") == "true") {
 			dev_user_safe_bbcode = "true";
+		}
+		if (localStorage.getItem("disable_hotkeys") == "true") {
+			dev_user_disable_hotkeys = "true";
 		}
 		if (localStorage.getItem("smart_quirk") == "true") {
 			dev_user_smart_quirk = "true";
@@ -420,6 +424,7 @@ var msparp = (function() {
 					url = url.substr(0, url.length-1);
 					suffix = ")";
 				}
+                url = url.replace(/&amp;/g, "%26"); // re-escape ampersands to work with links
 				return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(url)), target: "_blank"}).text(url)[0].outerHTML + suffix;
 			}
 			tag = tag.toLowerCase();
@@ -982,7 +987,14 @@ var msparp = (function() {
 				if (message.user_number && user.meta.highlighted_numbers.indexOf(message.user_number) != -1) { div.addClass("highlighted"); }
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.insertBefore(status_bar);
-
+				
+				// Limit conversation length on mobile to cycle 450 messages so as to not kill touch responsiveness
+				if (touch_enabled) {
+					var cycle = $('#conversation').find("div[id^=message]:nth-last-child(n+450)");
+					cycle.prevAll("h2").remove(); // remove date stamps as well
+					cycle.remove();
+				}
+				
 				// Post all global messages as a notification banner.
 				if (message.type.indexOf("global") !== -1 && message.important) {
 					announcement_banner(message.title, message.text, message.headercolor);
@@ -1845,6 +1857,92 @@ var msparp = (function() {
 			});
 			var send_button = send_form.find("button[type=submit]");
 
+			// Chat line keyboard shortcuts
+			function insert_bbcode(initial, closing, is_attribute) {
+				var len = chat_line_input.val().length;
+				var start = chat_line_input[0].selectionStart;
+				var end = chat_line_input[0].selectionEnd;
+				var selection = chat_line_input.val().substring(start, end);
+				var output = initial + selection + closing;
+				chat_line_input.val(chat_line_input.val().substring(0, start) + output + chat_line_input.val().substring(end, len));
+				// if selection is empty, place caret within new tag
+				if (selection.length == 0 && is_attribute == false) {
+					chat_line_input[0].selectionStart = start + initial.length;
+					chat_line_input[0].selectionEnd = start + initial.length;
+				}
+				// if we're inserting a tag with an attribute value, place cursor at hex/value position
+				if (is_attribute == true) {
+					chat_line_input[0].selectionStart = start + initial.length - 1;
+					chat_line_input[0].selectionEnd = start + initial.length - 1;
+				}
+			}
+			
+			// Shortcut listener; ctrl = 17; osx command = 91 (Safari), 224 (FF)
+			var ctrl_command = false;
+			// listen only on chat line (if not disabled), so other shortcuts work normally if not focussed
+			chat_line_input.keyup(function (e) {
+				if (dev_user_disable_hotkeys == "true") return;
+				if(e.which == 17 || e.which == 91 || e.which == 224) ctrl_command=false;
+			}).keydown(function (e) {
+				if (dev_user_disable_hotkeys == "true") return;
+				if(e.which == 17 || e.which == 91 || e.which == 224) ctrl_command=true;
+				if(ctrl_command == true) {
+					switch (e.which) {
+						case 13: // enter for br/newline
+							insert_bbcode("[br]", "", false);
+							return false;
+						case 16: // shift for caps (since c is needed)
+							insert_bbcode("[c]", "[/c]", false);
+							return false;
+						case 38: // up arrow for sup
+							insert_bbcode("[sup]", "[/sup]", false);
+							return false;
+						case 40: // down arrow for sub
+							insert_bbcode("[sub]", "[/sub]", false);
+							return false;
+						case 66: // b for bold
+							insert_bbcode("[b]", "[/b]", false);
+							return false;
+						case 70: // f for font 
+							insert_bbcode("[font=]", "[/font]", true);
+							return false;
+						case 71: // g for bgcolor (since b is taken)
+							insert_bbcode("[bgcolor=]", "[/bgcolor]", true);
+							return false;
+						case 72: // h for hex (since c is needed)
+							insert_bbcode("[color=]", "[/color]", true);
+							return false;
+						case 73: // i for italics
+							insert_bbcode("[i]", "[/i]", false);
+							return false;
+						case 76: // l for aLternian (since a is needed)
+							insert_bbcode("[alternian]", "[/alternian]", false);
+							return false;
+						case 79: // o for open/link (since u is underline)
+							insert_bbcode("[url=]", "[/url]", true);
+							return false;
+						case 80: // p for sPoiler (since s is strikethrough)
+							insert_bbcode("[spoiler]", "[/spoiler]", false);
+							return false;
+						case 82: // r for raw
+							insert_bbcode("[raw]", "[/raw]", false);
+							return false;
+						case 83: // s for strikethrough
+							insert_bbcode("[s]", "[/s]", false);
+							return false;
+						case 85: // u for underline
+							insert_bbcode("[u]", "[/u]", false);
+							return false;
+						case 87: // w for whisper
+							insert_bbcode("[w]", "[/w]", false);
+							return false;
+						case 190: // toggle preview on/off with "."
+							$("#show_preview").click();
+							return false;
+					}
+				}
+			});
+			
 			// Typing quirks
 			var last_alternating_line = false;
 
@@ -1985,25 +2083,46 @@ var msparp = (function() {
 					// now that we are safe, replace temporary unicode brackets with coding ones again
 					final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					
-					// only get involved if we actually have colour tags
-					if (final_text.toLowerCase().indexOf("[color=") != -1) {
-						// attempt to catch improperly stacked colour tags  
-						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[color=[#\w\d.,()]+\])([\s\S]*?)(\[\/color\])/i;
-						var re2 = /\[color=[#\w\d.,()]+\]\[\/color\]/ig;
-						while (re.exec(final_text)) {
-							// strip empty colour tags
-							final_text = final_text.replace(re2, "");
+					// begin by removing empty tags
+					var re2 = /\[([A-Za-z]+)(=[^\]]+)?\](\s+)?\[\/\1\]/ig;
+					final_text = final_text.replace(re2, "");
+					// only get more involved if we have nested/potentially problematic tags, from quirks or otherwise
+					if (/\[[^\/\]]+\][^\[\]]*?\[[^\/\]]+\]/.test(final_text)) {
+						// attempt to catch improperly stacked colour, bgcolor and font tags  
+						var re = /(\[(color|bgcolor|font)=([#\w\d\s'-.,()]+)\])(([\s\S](?!\[\/\2\]))*?)(\[\2=[#\w\d\s'-.,()]+\])([\s\S]*?)(\[\/\2\])/i;
+						while (re.test(final_text)) {
 							// close and reopen tags
-							final_text = final_text.replace(re, "$1$3[/color]$5$6$7[color=$2]");
-						}
-						// and where they intersect with other tags
-						var re = /(\[color=([#\w\d.,()]+)\])(([\s\S](?!\[\/color\]))*?)(\[font=[^\]]+?\]|\[\/font\]|\[\/?[uibswc]\]|\[\/?alternian\]|\[\/?del\]|\[url=[^\]]+?\]|\[\/url\])([\s\S]*?)(\[\/color\])/i;
-						while (re.exec(final_text)) {
-							// strip empty colour tags
+							final_text = final_text.replace(re, "$1$4[/$2]$6$7$8[$2=$3]");
+							// strip empty tags
 							final_text = final_text.replace(re2, "");
-							// close and reopen tags
-							final_text = final_text.replace(re, "$1$3[/color]$5[color=$2]$6$7"); 
 						}
+						// escape [br]s again for this step so they aren't picked up as non matching
+						final_text = final_text.replace(/\[br\]/gi, "\ufe5dbr\ufe5e");
+						// fix intersecting tags
+						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])/i;
+						var panic = 0;
+						while (match = re.exec(final_text)) {
+							// strip empty tags
+							final_text = final_text.replace(re2, "");
+							panic++
+							if (match[4].indexOf(match[1]) !== -1) {
+								// strip empty tags
+								final_text = final_text.replace(re2, "");
+								console.log("BREAK: Stacking cannot be recovered.");
+								break;
+							} else if (panic > 50) {
+								// strip empty tags
+								final_text = final_text.replace(re2, "");
+								console.log("BREAK: Too many BBCode intersection issues.");
+								break;
+							}
+							// close and reopen tags
+							final_text = final_text.replace(re, "$1$4[$6$7]$8[/$6]$10[$6$7]" ); 
+							// strip empty tags
+							final_text = final_text.replace(re2, "");
+						}
+						// make [br]s coding again
+						final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					}
 					
 					// this is also where we replace URLs with original casing
