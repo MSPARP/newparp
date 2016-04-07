@@ -424,7 +424,7 @@ var msparp = (function() {
 					url = url.substr(0, url.length-1);
 					suffix = ")";
 				}
-                url = url.replace(/&amp;/g, "%26"); // re-escape ampersands to work with links
+				url = url.replace(/&amp;/g, "%26"); // re-escape ampersands to work with links
 				return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(url)), target: "_blank"}).text(url)[0].outerHTML + suffix;
 			}
 			tag = tag.toLowerCase();
