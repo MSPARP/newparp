@@ -19,7 +19,7 @@
                 <tbody>
                     {% for character in characters: %}
                     <tr>
-                        <td>{{character.title}}</td>
+                        <td><a href="{{url_for("rp_character", character_id=character.id)}}"><span class="t_edit"><span>{{character.title}}</span></span></a></td>
                         <td><span style="color: #{{character.color}}">{{character.name}}</span>{% if character.acronym != "": %} [<span style="color: #{{character.color}}">{{character.acronym}}</span>]{% endif %}</td>
                         <td>{% if character.shortcut: %}/{{character.shortcut}}{% endif %}</td>
                         <td>
