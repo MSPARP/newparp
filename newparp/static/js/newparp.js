@@ -988,9 +988,9 @@ var msparp = (function() {
 				if (message.user_number && user.meta.ignored_numbers.indexOf(message.user_number) != -1) { div.addClass("ignored"); }
 				div.insertBefore(status_bar);
 				
-				// Limit conversation length on mobile to cycle 450 messages so as to not kill touch responsiveness
+				// Limit conversation length on mobile to cycle 200 messages so as to not kill touch responsiveness
 				if (touch_enabled) {
-					var cycle = $('#conversation').find("div[id^=message]:nth-last-child(n+450)");
+					var cycle = $('#conversation').find("div[id^=message]:nth-last-child(n+200)");
 					cycle.prevAll("h2").remove(); // remove date stamps as well
 					cycle.remove();
 				}
