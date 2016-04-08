@@ -2286,7 +2286,7 @@ body.no_forms #sidebar_left_tabs button:active {padding-right:40px}
 
 .sidebar.left {border-right:none;border-left:4px solid #b0b0b0;}
 .sidebar.left .sidebar_title{text-align:right}
-.sidebar.left .sidebar_title span:after {left:-37px; border-width: 37px 0 0 37px;margin-left:0px}
+.sidebar.left .sidebar_title span:after {left:-37px; border-width: 37px 0 0 37px;margin-left:0.3px}
 
 .sidebar {overflow:visible}
 .sidebar .sidebar_wrap {position:absolute; top:24px;left:0px;bottom:0px;right:0px;overflow:auto}
