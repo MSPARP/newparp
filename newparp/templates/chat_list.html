@@ -44,7 +44,7 @@
                 		{% else: %}
                         {{chat.chat.online}} online.
                 		{% endif %}
-                        <a href="{{url_for("rp_log", url=chat.chat.url)}}">View log</a>.
+                        <a href="{{url_for("rp_log", url=chat.chat.url)}}">(view log)</a>
                     </p>
                     <p class="desc" tabindex="0">
                     {% if chat.chat_user.notes: %}
