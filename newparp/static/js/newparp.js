@@ -1864,6 +1864,7 @@ var msparp = (function() {
 			var send_button = send_form.find("button[type=submit]");
 
 			// Chat line keyboard shortcuts
+            var ctrl_command = false;
 			function insert_bbcode(initial, closing, is_attribute) {
 				var len = chat_line_input.val().length;
 				var start = chat_line_input[0].selectionStart;
@@ -1881,10 +1882,10 @@ var msparp = (function() {
 					chat_line_input[0].selectionStart = start + initial.length - 1;
 					chat_line_input[0].selectionEnd = start + initial.length - 1;
 				}
+                ctrl_command=false;
 			}
 			
 			// Shortcut listener; ctrl = 17; osx command = 91 (Safari), 224 (FF)
-			var ctrl_command = false;
 			// listen only on chat line (if not disabled), so other shortcuts work normally if not focussed
 			chat_line_input.keyup(function (e) {
 				if (dev_user_disable_hotkeys == "true") return;
