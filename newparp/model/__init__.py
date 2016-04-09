@@ -190,8 +190,8 @@ class User(Base):
             "username": self.username,
             "group": self.group,
             "is_admin": self.is_admin,
-            "created": self.created.isoformat(),
-            "last_online": self.last_online.isoformat(),
+            "created": time.mktime(self.created.timetuple()),
+            "last_online": time.mktime(self.last_online.timetuple()),
             "name": self.name,
             "acronym": self.acronym,
             "color": self.color,
@@ -226,7 +226,7 @@ class Block(Base):
     def to_dict(self, include_users=False):
         bd = {
             "chat": self.chat.to_dict(),
-            "created": self.created.isoformat(),
+            "created": time.mktime(self.created.timetuple()),
             "reason": self.reason,
         }
         if include_users:
@@ -797,7 +797,7 @@ class Message(Base):
         md = {
             "id": self.id,
             "user_number": self.chat_user.number if self.chat_user is not None else None,
-            "posted": self.posted.isoformat(),
+            "posted": time.mktime(self.posted.timetuple()),
             "type": self.type,
             "color": self.color,
             "acronym": self.acronym,
@@ -905,7 +905,7 @@ class AdminLogEntry(Base):
     def to_dict(self):
         return {
             "id": self.id,
-            "date": self.date.isoformat(),
+            "date": time.mktime(self.date.timetuple()),
             "action_user": self.action_user.to_dict(),
             "type": self.type,
             "description": self.description,
@@ -928,7 +928,7 @@ class IPBan(Base):
     def to_dict(self):
         return {
             "address": self.address,
-            "date": self.date.isoformat(),
+            "date": time.mktime(self.date.timetuple()),
             "creator": self.creator.to_dict(),
             "reason": self.reason,
         }
