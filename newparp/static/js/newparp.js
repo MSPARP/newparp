@@ -205,10 +205,16 @@ var msparp = (function() {
 		else { dev_user_smart_quirk = "false"; }
 	});
 	
-	// Auto refresh unread counter in nav bar - PLS DO NOT KILL SERVER
-	// setInterval(function(){ 
-	// 	$('#unread_update').load('/unread');  
-	// }, 5102);
+	// Auto refresh unread counter in nav bar; use json
+	//setInterval(function(){ 
+	//	$.get("/unread.json", {}, function(data) {
+	//		if (data.unread) {
+	//			$("#unread_update").html("<a id='unread_counter' href='" + data.url + "'>" + data.unread + "</a>");
+	//		} else {
+	//			$("#unread_update").html("");
+	//		}
+	//	});
+	//}, 14130);
 	
 	// Character info
 	function update_character(data) {

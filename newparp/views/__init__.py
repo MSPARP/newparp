@@ -53,11 +53,18 @@ def home():
     abort(404)
 
 
+@alt_formats({"json"})
 @use_db
-def unread():
+def unread(fmt=None):
 
     if g.user is None:
         return ""
+
+    if fmt == "json":
+        return jsonify({
+            "unread": g.unread_chats,
+            "url":url_for("rp_chat_list", type="unread"),
+        })
 
     return render_template(
         "account/unread.html",

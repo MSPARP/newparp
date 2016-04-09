@@ -63,7 +63,7 @@ app.add_url_rule("/health", "health", views.health, methods=("GET",))
 
 app.add_url_rule("/", "home", views.home, methods=("GET",))
 
-app.add_url_rule("/unread", "unread", views.unread, methods=("GET",))
+make_rules("unread", "/unread", views.unread, formats=True)
 
 app.add_url_rule("/log_in", "log_in", account.log_in_get, methods=("GET",))
 app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",))
