@@ -619,7 +619,8 @@ var msparp = (function() {
 			var status;
 			var next_chat_url;
 			var user_data = {};
-			var latest_date = user.meta.show_timestamps ? new Date(latest_time * 1000) : null;
+			if (typeof latest_time == "number") { latest_time = latest_time * 1000 }
+			var latest_date = user.meta.show_timestamps ? new Date(latest_time) : null;
 			var new_messages = [];
 
 			// Websockets
@@ -938,7 +939,8 @@ var msparp = (function() {
 				// XXX yeah you should be using a template here
 				// Use initial setting for consistency.
 				if (latest_date) {
-					message_date = new Date(message.posted * 1000);
+					if (typeof message.posted == "number") { message.posted = message.posted * 1000 }
+					message_date = new Date(message.posted);
 					if (latest_date.getDate() != message_date.getDate() || latest_date.getMonth() != message_date.getMonth() || latest_date.getFullYear() != message_date.getFullYear()) {
 						$("<h2>").text(message_date.toDateString()).insertBefore(status_bar);
 					}
