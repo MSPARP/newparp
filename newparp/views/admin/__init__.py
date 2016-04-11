@@ -615,7 +615,11 @@ def ip_bans(fmt=None, page=1):
     ip_bans = (
         g.db.query(IPBan)
         .filter(IPBan.hidden == False)
-        .options(joinedload(IPBan.creator))
+    )
+    if request.args.get("address"):
+        ip_bans = ip_bans.filter(IPBan.address.op("<<=")(request.args["address"]))
+    ip_bans = (
+        ip_bans.options(joinedload(IPBan.creator))
         .order_by(IPBan.address)
         .offset((page - 1) * 50).limit(50).all()
     )
@@ -623,7 +627,10 @@ def ip_bans(fmt=None, page=1):
     if page != 1 and len(ip_bans) == 0:
         abort(404)
 
-    ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.hidden == False).scalar()
+    ip_ban_count = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.hidden == False)
+    if request.args.get("address"):
+        ip_ban_count = ip_ban_count.filter(IPBan.address.op("<<=")(request.args["address"]))
+    ip_ban_count = ip_ban_count.scalar()
 
     if fmt == "json":
         return jsonify({

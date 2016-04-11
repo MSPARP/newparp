@@ -19,6 +19,11 @@
                 </form>
             </div>
 
+            <form action="{{url_for("admin_ip_bans")}}" method="get">
+                <div class="input"><p><input type="text" id="search_address" name="address" {% if request.args.address %}value="{{ request.args.address }}"{% endif %}><label for="search_address">IP address</label></p></div>
+                <p><button type="submit">Search</button></p>
+            </form>
+
             {% if ip_bans: %}
             {{ pager() }}
             <table class="ban_table">
