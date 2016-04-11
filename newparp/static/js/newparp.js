@@ -1864,6 +1864,97 @@ var msparp = (function() {
 				return false;
 			});
 			var send_button = send_form.find("button[type=submit]");
+
+			// Chat line keyboard shortcuts
+			var ctrl_command = false;
+			var alt_command = false;
+			function insert_bbcode(initial, closing, is_attribute) {
+				var len = chat_line_input.val().length;
+				var start = chat_line_input[0].selectionStart;
+				var end = chat_line_input[0].selectionEnd;
+				var selection = chat_line_input.val().substring(start, end);
+				var output = initial + selection + closing;
+				chat_line_input.val(chat_line_input.val().substring(0, start) + output + chat_line_input.val().substring(end, len));
+				// if selection is empty, place caret within new tag
+				if (selection.length == 0 && is_attribute == false) {
+					chat_line_input[0].selectionStart = start + initial.length;
+					chat_line_input[0].selectionEnd = start + initial.length;
+				}
+				// if we're inserting a tag with an attribute value, place cursor at hex/value position
+				if (is_attribute == true) {
+					chat_line_input[0].selectionStart = start + initial.length - 1;
+					chat_line_input[0].selectionEnd = start + initial.length - 1;
+				}
+				ctrl_command=false;
+				alt_command=false;
+			}
+			
+			// Shortcut listener; ctrl = 17; osx command = 91 (Safari), 224 (FF)
+			// listen only on chat line (if not disabled), so other shortcuts work normally if not focussed
+			chat_line_input.keyup(function (e) {
+				if (dev_user_disable_hotkeys == "true") return;
+				alt_command = false;
+				ctrl_command = false;
+			}).keydown(function (e) {
+				if (dev_user_disable_hotkeys == "true") return;
+				if(e.which == 17 || e.which == 91 || e.which == 224) ctrl_command=true;
+				if(e.which == 18) alt_command=true;
+				if(ctrl_command == true && alt_command == true) {
+					switch (e.which) {
+						case 13: // enter for br/newline
+							insert_bbcode("[br]", "", false);
+							return false;
+						case 38: // up arrow for sup
+							insert_bbcode("[sup]", "[/sup]", false);
+							return false;
+						case 40: // down arrow for sub
+							insert_bbcode("[sub]", "[/sub]", false);
+							return false;
+						case 66: // b for bold
+							insert_bbcode("[b]", "[/b]", false);
+							return false;
+						case 67: // c for caps
+							insert_bbcode("[c]", "[/c]", false);
+							return false;
+						case 70: // f for font 
+							insert_bbcode("[font=]", "[/font]", true);
+							return false;
+						case 71: // g for bgcolor (since b is taken)
+							insert_bbcode("[bgcolor=]", "[/bgcolor]", true);
+							return false;
+						case 72: // h for hex (since c is needed)
+							insert_bbcode("[color=]", "[/color]", true);
+							return false;
+						case 73: // i for italics
+							insert_bbcode("[i]", "[/i]", false);
+							return false;
+						case 76: // l for aLternian (since a is needed)
+							insert_bbcode("[alternian]", "[/alternian]", false);
+							return false;
+						case 79: // o for open/link (since u is underline)
+							insert_bbcode("[url=]", "[/url]", true);
+							return false;
+						case 80: // p for sPoiler (since s is strikethrough)
+							insert_bbcode("[spoiler]", "[/spoiler]", false);
+							return false;
+						case 82: // r for raw
+							insert_bbcode("[raw]", "[/raw]", false);
+							return false;
+						case 83: // s for strikethrough
+							insert_bbcode("[s]", "[/s]", false);
+							return false;
+						case 85: // u for underline
+							insert_bbcode("[u]", "[/u]", false);
+							return false;
+						case 87: // w for whisper
+							insert_bbcode("[w]", "[/w]", false);
+							return false;
+						case 190: // toggle preview on/off with "."
+							$("#show_preview").click();
+							return false;
+					}
+				}
+			});
 			
 			// Typing quirks
 			var last_alternating_line = false;
