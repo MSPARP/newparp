@@ -421,6 +421,11 @@ var msparp = (function() {
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
+		// convert BBCode inside [raw] to html escapes to prevent stacking problems and make it show with BBcode disabled
+		var re = /\[raw\]([\s\S]*?)\[([\s\S]*?)\]([\s\S]*?)\[\/raw\]/ig;
+		while (re.exec(text)) {
+			text = text.replace(re, "[raw]$1&#91;$2&#93;$3[/raw]");
+		}
 		// Just outright make this match case insensitive so we don't have to worry about tags matching in casing on the \2 callback
 		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/gi, function(str, url, tag, attribute, content) {
 			if (url) {
@@ -1965,6 +1970,13 @@ var msparp = (function() {
 				if (dev_user_safe_bbcode == "true") {
 					// as they are case sensitive, save URLs to array to survive this step
 					var url_matches = text.match(/\[url=([^\]]+?)\]/gi);
+					// save [raw] content so quirks don't apply to it at all; greedy so [raw] inside [raw] works
+					var re = /\[raw\](.*)\[\/raw\]/gi;
+					var raw_content = false;
+					if (match = re.exec(text)) {
+						raw_content = match[1];
+					}
+					text = text.replace(re, "\ufe5drawc\ufe5e");
 					// selectively replace [BBCode] tag wrapping with unicode placeholders to do negative lookaheads without e.g. Terezi's quirk breaking
 					// to be consistent, use same rules here that are used for BBCode removal, except recursive to catch stacked tags
 					var re = /\[([A-Za-z]+)(=[^\]]+)?\]([\s\S]*?)\[(\/\1)\]/ig;
@@ -2109,8 +2121,8 @@ var msparp = (function() {
 							// strip empty tags
 							final_text = final_text.replace(re2, "");
 						}
-						// escape [br]s again for this step so they aren't picked up as non matching
-						final_text = final_text.replace(/\[br\]/gi, "\ufe5dbr\ufe5e");
+						// escape [br]s and [rawc] again for this step so they aren't picked up as non matching
+						final_text = final_text.replace(/\[(br|rawc)\]/gi, "\ufe5d$1\ufe5e");
 						// fix intersecting tags
 						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])/i;
 						var panic = 0;
@@ -2137,7 +2149,10 @@ var msparp = (function() {
 						// make [br]s coding again
 						final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					}
-					
+					// reinsert original [raw] content
+					if (raw_content) {
+						final_text = final_text.replace(/\[rawc\]/i, "[raw]" + raw_content + "[/raw]");
+					}
 					// this is also where we replace URLs with original casing
 					if (url_matches !== null) {
 						var urls_number = url_matches.length;
