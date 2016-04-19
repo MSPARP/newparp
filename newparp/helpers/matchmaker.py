@@ -38,11 +38,11 @@ def run_matchmaker(
     # Reset the searcher list for the next iteration.
     redis.delete(searchers_key)
 
-    logging.info("Starting match loop.")
+    logging.debug("Starting match loop.")
 
     # We can't do anything with less than 2 people, so don't bother.
     if len(searcher_ids) < 2:
-        logging.info("Not enough searchers, skipping.")
+        logging.debug("Not enough searchers, skipping.")
         wake_unmatched_searchers(redis, searcher_prefix, searcher_ids)
         return
 
