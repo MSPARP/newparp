@@ -854,7 +854,7 @@ body.disable_left_bar #chat_logo {display:block;left:auto;right:90px; top:10px; 
 
 /* override character colours */
 
-*[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #fff !important}
+*[style*="color: #000000"]:not([style*="background-color"]), *[style*="color: rgb(0, 0, 0)"]:not([style*="background-color"]){color: #fff !important}
 *[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #2cff4b !important}
 .message_disconnect p[style*="color: #000000"],.message_disconnect p[style*="color: rgb(0, 0, 0)"],
 .message_join p[style*="color: #000000"],.message_join p[style*="color: rgb(0, 0, 0)"],

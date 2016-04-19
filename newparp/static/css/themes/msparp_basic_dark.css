@@ -586,7 +586,7 @@ body:not(.touch) .highlighted .unum:hover + p {background:#161823}
 
 /* override character colours */
 
-*[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #626262 !important}
+*[style*="color: #000000"]:not([style*="background-color"]), *[style*="color: rgb(0, 0, 0)"]:not([style*="background-color"]){color: #626262 !important}
 *[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #626262 !important}
 *[style*="color: #000056"],*[style*="color: rgb(0, 0, 86)"]{color: #2323ed !important}
 *[style*="color: #2b0057"],*[style*="color: #2B0057"],*[style*="color: rgb(43, 0, 87)"]{color: #6d03de !important}

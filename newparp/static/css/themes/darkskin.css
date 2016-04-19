@@ -836,7 +836,7 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 /* override character colours */
 
-*[style*="color: #000000"], *[style*="color: rgb(0, 0, 0)"]{color: #60626e !important}
+*[style*="color: #000000"]:not([style*="background-color"]), *[style*="color: rgb(0, 0, 0)"]:not([style*="background-color"]){color: #60626e !important}
 *[style*="color: #000000"].system, *[style*="color: rgb(0, 0, 0)"].system{color: #5f6287 !important}
 .message_disconnect p[style*="color: #000000"],.message_disconnect p[style*="color: rgb(0, 0, 0)"],
 .message_join p[style*="color: #000000"],.message_join p[style*="color: rgb(0, 0, 0)"],
