@@ -2773,3 +2773,12 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 /* 6. Settings overrides */
 
 body.no_moving *, body.no_moving *:before, body.no_moving *:after {animation:none !important; -webkit-animation: none !important; transition:none !important; -webkit-transition:none !important}
+
+/* Kindle readers don't like sizing things, or fonts */
+@media amzn-kf8, amzn-mobi7 {
+	html {-webkit-text-size-adjust: none}
+	#text_preview_container, body {font-family: "Courier", "Courier New", monospace;}
+	#topbar h1, #global_navigation.in_chat_nav li, #global_navigation.in_chat_nav label, #global_navigation.in_chat_nav label:before, .sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list, .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear, #global_navigation li, #global_navigation label, #global_navigation label:before, #global_navigation .user, #users_online p, main { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+	#prompt-cursor{display:none}
+	#chat_line_input input {font-size:16px;line-height:19px} /*try and prevent zoom for these devices since they disregard anything else */
+}
