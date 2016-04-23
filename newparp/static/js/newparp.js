@@ -1909,9 +1909,11 @@ var msparp = (function() {
 						case 13: // enter for br/newline
 							insert_bbcode("[br]", "", false);
 							return false;
+						case 74: // j for sup
 						case 38: // up arrow for sup
 							insert_bbcode("[sup]", "[/sup]", false);
 							return false;
+						case 75: // k for sub
 						case 40: // down arrow for sub
 							insert_bbcode("[sub]", "[/sub]", false);
 							return false;
