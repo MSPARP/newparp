@@ -420,12 +420,12 @@ var msparp = (function() {
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
-		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
 		// convert BBCode inside [raw] to html escapes to prevent stacking problems and make it show with BBcode disabled
 		var re = /\[raw\]([\s\S]*?)\[([\s\S]*?)\]([\s\S]*?)\[\/raw\]/ig;
 		while (re.exec(text)) {
 			text = text.replace(re, "[raw]$1&#91;$2&#93;$3[/raw]");
 		}
+		text = text.replace(/(\[[bB][rR]\])+/g, "<br>");
 		// Just outright make this match case insensitive so we don't have to worry about tags matching in casing on the \2 callback
 		return text.replace(/(https?:\/\/\S+)|\[([A-Za-z]+)(?:=([^\]]+))?\]([\s\S]*?)\[\/\2\]/gi, function(str, url, tag, attribute, content) {
 			if (url) {
@@ -2152,7 +2152,7 @@ var msparp = (function() {
 						final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
 					}
 					// reinsert original [raw] content
-					if (raw_content) {
+					if (raw_content !== false) {
 						final_text = final_text.replace(/\[rawc\]/i, "[raw]" + raw_content + "[/raw]");
 					}
 					// this is also where we replace URLs with original casing
