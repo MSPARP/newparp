@@ -146,6 +146,14 @@ def join(redis, db, context):
             # If they just disconnected, delete the disconnect message instead.
             if last_message is not None and last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
                 delete_message(db, redis, last_message, force_userlist=True)
+            elif context.user.is_admin:
+                send_message(db, redis, Message(
+                    chat_id=context.chat.id,
+                    user_id=context.user.id,
+                    type="join",
+                    name=context.chat_user.name,
+                    text="%s [%s] joined chat. ~~MSPARP STAFF~~" % (context.chat_user.name, context.chat_user.acronym),
+                    ))
             else:
                 send_message(db, redis, Message(
                     chat_id=context.chat.id,
@@ -153,7 +161,7 @@ def join(redis, db, context):
                     type="join",
                     name=context.chat_user.name,
                     text="%s [%s] joined chat." % (context.chat_user.name, context.chat_user.acronym),
-                ))
+                    ))
 
     return not user_online
 
