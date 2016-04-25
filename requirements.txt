@@ -21,13 +21,16 @@ kombu==3.0.34
 librabbitmq==1.6.1
 Mako==1.0.3
 MarkupSafe==0.23
+ndg-httpsclient==0.4.0
 paginate==0.4.3
 psycopg2==2.6
+pyasn1==0.1.9
 pycparser==2.13
+pyOpenSSL>=0.13
 pytz==2015.4
 redis==2.10.5
 hiredis==0.2.0
-requests[security]==2.9.1
+requests==2.9.1
 six==1.10.0
 speaklater==1.3
 SQLAlchemy==1.0.5
