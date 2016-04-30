@@ -1904,7 +1904,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 /* make chat cards line up */
 #group_chats .subtitle + p {height:1.2em;overflow: hidden}
 #group_chats .subtitle + p span {cursor:pointer}
-#group_chats .subtitle + p:active, #group_chats .subtitle + p:focus {outline:0; min-height: 1.2em; height:auto;}
+#group_chats .subtitle + p:active, #group_chats .subtitle + p:focus, #group_chats .subtitle + p.user_note {outline:0; min-height: 1.2em; height:auto;}
 /* once again, say hello to iOS */
 .touch #group_chats .subtitle + p:active, .touch #group_chats .subtitle + p:focus {outline:0; height:1.2em;}
 .touch #group_chats .subtitle + p.expanded {min-height: 1.2em; height:auto;}

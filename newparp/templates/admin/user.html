@@ -124,5 +124,28 @@
             </table>
         </div>
     </div>
+    <div class="common_box">
+        <h2><label class="user_edit_box_header"><span>Notes</span></label></h2>
+        <div class="common_box_wrap">
+            <form action="{{url_for("admin_user_notes_post", username=user.username)}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input nolabel_text"><p>
+                    <textarea name="text" rows="3" required></textarea>
+                </p></div>
+                <p><button type="submit">Save</button></p>
+            </form>
+            <ul id="group_chats">
+                {% for note in notes: %}
+                <li>
+                    <p class="subtitle">
+                        {{g.user.localize_time(note.created).strftime("%Y-%m-%d %H:%M:%S")}},
+                        by <a href="{{url_for("admin_user", username=note.creator.username)}}">{{note.creator.username}}</a>
+                    </p>
+                    <p class="user_note chat_info">{{note.text}}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 

@@ -192,6 +192,7 @@ app.add_url_rule("/admin/users/<username>/set_group", "admin_user_set_group", ad
 app.add_url_rule("/admin/users/<username>/set_admin_tier", "admin_user_set_admin_tier", admin.user_set_admin_tier, methods=("POST",))
 app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password", admin.user_reset_password_get, methods=("GET",))
 app.add_url_rule("/admin/users/<username>/reset_password", "admin_user_reset_password_post", admin.user_reset_password_post, methods=("POST",))
+app.add_url_rule("/admin/users/<username>/notes", "admin_user_notes_post", admin.user_notes_post, methods=("POST",))
 
 make_rules("admin", "/admin/blocks", admin.block_list, formats=True, paging=True)
 

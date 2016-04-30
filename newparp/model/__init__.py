@@ -212,6 +212,30 @@ class User(Base):
         return ud
 
 
+class UserNote(Base):
+    __tablename__ = "user_notes"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created = Column(DateTime(), nullable=False, default=now)
+    text = Column(UnicodeText, nullable=False)
+
+    def to_dict(self):
+        return {
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+            },
+            "creator": {
+                "id": self.creator.id,
+                "username": self.creator.username,
+            },
+            "created": time.mktime(self.created.timetuple()),
+            "text": self.text,
+        }
+
+
+
 class Block(Base):
     __tablename__ = "blocks"
     blocking_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
@@ -1034,6 +1058,9 @@ User.characters = relation(
 User.search_character = relation(SearchCharacter, foreign_keys=User.search_character_id)
 User.roulette_search_character = relation(SearchCharacter, foreign_keys=User.roulette_search_character_id)
 User.roulette_character = relation(Character, foreign_keys=User.roulette_character_id)
+
+UserNote.user = relation(User, primaryjoin=UserNote.user_id == User.id)
+UserNote.creator = relation(User, primaryjoin=UserNote.creator_id == User.id)
 
 Block.blocking_user = relation(User, primaryjoin=Block.blocking_user_id == User.id)
 Block.blocked_user = relation(User, primaryjoin=Block.blocked_user_id == User.id)

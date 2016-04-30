@@ -12,7 +12,7 @@ from uuid import uuid4
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required, permission_required
-from newparp.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User
+from newparp.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User, UserNote
 from newparp.model.connections import use_db
 from newparp.model.validators import color_validator
 from newparp.tasks import celery
@@ -229,9 +229,18 @@ def user(username, fmt=None):
         .filter(IPBan.address.op(">>=")(user.last_ip))
         .order_by(IPBan.address).all()
     )
+
+    notes = (
+        g.db.query(UserNote)
+        .filter(UserNote.user_id == user.id)
+        .options(joinedload(UserNote.creator))
+        .order_by(UserNote.id.desc()).all()
+    )
+
     if fmt == "json":
         user = user.to_dict(include_options=True)
         user["ip_bans"] = [_.to_dict() for _ in ip_bans]
+        user["notes"] = [_.to_dict() for _ in notes]
         return jsonify(user)
 
     search_characters = ", ".join(_.title for _ in (
@@ -248,6 +257,7 @@ def user(username, fmt=None):
         ip_bans=[_.address for _ in ip_bans],
         search_characters=search_characters,
         admin_tiers=g.db.query(AdminTier).order_by(AdminTier.id).all(),
+        notes=notes,
     )
 
 
@@ -337,6 +347,26 @@ def user_reset_password_post(username):
     new_password = str(uuid4())
     user.set_password(new_password)
     return render_template("admin/user_reset_password_done.html", user=user, new_password=new_password)
+
+
+@use_db
+@permission_required("user_list")
+def user_notes_post(username):
+    try:
+        user = g.db.query(User).filter(func.lower(User.username) == username.lower()).one()
+    except NoResultFound:
+        abort(404)
+    if not request.form.get("text"):
+        abort(403)
+    g.db.add(UserNote(
+        user_id=user.id,
+        creator_id=g.user.id,
+        text=request.form["text"],
+    ))
+    return redirect(
+        request.headers.get("Referer")
+        or url_for("admin_user", username=user.username)
+    )
 
 
 @alt_formats({"json"})
