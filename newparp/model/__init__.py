@@ -994,20 +994,34 @@ class AdminTierPermission(Base):
     def __repr__(self):
         return "<AdminTierPermission: %s has %s>" % (self.admin_tier_id, self.permission)
 
+
+spamless_filter_types = Enum(
+    u"banned_names",
+    u"blacklist",
+    u"warnlist",
+    name="spamless_filter_types"
+)
+
+
 class SpamlessFilter(Base):
     __tablename__ = "spamless_filters"
     id = Column(Integer, primary_key=True)
-    type = Column(Enum(
-        u"banned_names",
-        u"blacklist",
-        u"warnlist",
-        name="spamless_filter_types"
-    ), nullable=False)
+    type = Column(spamless_filter_types, nullable=False)
     regex = Column(UnicodeText, nullable=False)
     points = Column(Integer, default=0)
 
     def __repr__(self):
         return "<SpamlessFilter: '%s'>" % (self.id, self.regex)
+
+
+class SpamFlag(Base):
+    __tablename__ = "spam_flags"
+    id = Column(Integer, primary_key=True)
+    message_id = Column(Integer, ForeignKey("messages.id"), nullable=False)
+    type = Column(spamless_filter_types, nullable=False)
+    points = Column(Integer, default=0)
+    muted = Column(Boolean, default=False)
+
 
 # 2. Indexes
 
@@ -1180,4 +1194,6 @@ AdminTier.permissions = association_proxy(
     "admin_tier_permissions", "permission",
     creator=lambda permission: AdminTierPermission(permission=permission),
 )
+
+SpamFlag.message = relation(Message) # no backref for now so it doesn't collide with the spam_flag field
 
