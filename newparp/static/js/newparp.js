@@ -450,7 +450,7 @@ var msparp = (function() {
 						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
 					case "url":
 						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
-                            attribute = attribute.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'"); // re-escape to work with links
+							attribute = attribute.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'"); // re-escape to work with links
 							return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(attribute)), target: "_blank"}).html(raw_bbencode(content, admin))[0].outerHTML;
 						}
 						break;
@@ -1891,22 +1891,25 @@ var msparp = (function() {
 					chat_line_input[0].selectionStart = start + initial.length - 1;
 					chat_line_input[0].selectionEnd = start + initial.length - 1;
 				}
-				ctrl_command=false;
-				alt_command=false;
+				ctrl_command = false;
+				alt_command = false;
 			}
 			
 			// Shortcut listener; ctrl = 17; osx command = 91 (Safari), 224 (FF)
 			// listen only on chat line (if not disabled), so other shortcuts work normally if not focussed
-			chat_line_input.keyup(function (e) {
+			document.getElementById("chat_line_input").addEventListener("keyup", function(e) {
 				if (dev_user_disable_hotkeys == "true") return;
 				alt_command = false;
 				ctrl_command = false;
-			}).keydown(function (e) {
+			});
+			
+			document.getElementById("chat_line_input").addEventListener("keydown", function(e) {
 				if (dev_user_disable_hotkeys == "true") return;
-				if(e.which == 17 || e.which == 91 || e.which == 224) ctrl_command=true;
-				if(e.which == 18) alt_command=true;
-				if(ctrl_command == true && alt_command == true) {
-					switch (e.which) {
+				var keyLocation = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"][e.location];
+				if (e.keyCode == 18 && keyLocation !== "Right") alt_command=true;
+				if (e.keyCode == 17 || e.keyCode == 91 || e.keyCode == 224) ctrl_command=true;
+				if (ctrl_command == true && alt_command == true){
+					switch (e.keyCode) {
 						case 13: // enter for br/newline
 							insert_bbcode("[br]", "", false);
 							return false;
