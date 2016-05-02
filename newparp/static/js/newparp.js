@@ -435,7 +435,7 @@ var msparp = (function() {
 					url = url.substr(0, url.length-1);
 					suffix = ")";
 				}
-				url = url.replace(/&amp;/g, "&"); // re-escape ampersands to work with links
+				url = url.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'"); // re-escape to work with links
 				return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(url)), target: "_blank"}).text(url)[0].outerHTML + suffix;
 			}
 			tag = tag.toLowerCase();
@@ -450,6 +450,7 @@ var msparp = (function() {
 						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
 					case "url":
 						if (attribute.substr(0, 7) == "http://" || attribute.substr(0, 8) == "https://") {
+                            attribute = attribute.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#x27;/g, "'"); // re-escape to work with links
 							return $("<a>").attr({href: ("/redirect?url=" + encodeURIComponent(attribute)), target: "_blank"}).html(raw_bbencode(content, admin))[0].outerHTML;
 						}
 						break;
