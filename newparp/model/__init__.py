@@ -1017,7 +1017,7 @@ class SpamlessFilter(Base):
 class SpamFlag(Base):
     __tablename__ = "spam_flags"
     id = Column(Integer, primary_key=True)
-    message_id = Column(Integer, ForeignKey("messages.id"), nullable=False)
+    message_id = Column(Integer, ForeignKey("messages.id"), nullable=False, unique=True)
     type = Column(spamless_filter_types, nullable=False)
     points = Column(Integer, default=0)
     muted = Column(Boolean, default=False)
