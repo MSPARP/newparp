@@ -1013,6 +1013,14 @@ class SpamlessFilter(Base):
     def __repr__(self):
         return "<SpamlessFilter: '%s'>" % (self.id, self.regex)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "regex": self.regex,
+            "points": self.points,
+        }
+
 
 class SpamFlag(Base):
     __tablename__ = "spam_flags"
@@ -1021,6 +1029,15 @@ class SpamFlag(Base):
     type = Column(spamless_filter_types, nullable=False)
     points = Column(Integer, default=0)
     muted = Column(Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "message": self.message.to_dict(),
+            "type": self.type,
+            "points": self.points,
+            "muted": self.muted,
+        }
 
 
 # 2. Indexes
