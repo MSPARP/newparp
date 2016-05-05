@@ -1,0 +1,41 @@
+{% extends "admin/spamless/base.html" %}
+{% block title: %}Spamless2 - {% endblock %}
+{% block content: %}
+    {{ super() }}
+    <div class="settings_box spamless_box admin_wide">
+        <div class="settings_box_wrap">
+            <h2>Message log</h2>
+            {% if flags: %}
+            <table class="spam_table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Chat</th>
+                        <th>Flag</th>
+                        <th>Username</th>
+                        <th>#</th>
+                        <th>Character</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flag in flags: %}
+                    <tr>
+                        <td>{{ g.user.localize_time(flag.message.posted).strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td><a href="{{ url_for("rp_log", url=flag.message.chat.url) }}">{{ flag.message.chat.url }}</a></td>
+                        <td>x{{ flag.points }}{% if flag.muted %} SILENCED{% endif %}</td>
+                        <td>{% if flag.message.user: %}<a href="{{ url_for("admin_user", username=flag.message.user.username) }}">{{ flag.message.user.username }}</a>{% endif %}</td>
+                        <td>{{ flag.message.chat_user.number }}</td>
+                        <td>{{ flag.message.name }}</td>
+                        <td style="color: #{{ flag.message.color }}" class="abridged_message" tabindex="0" title="expand message">{% if flag.message.acronym: %}{{ flag.message.acronym }}: {% endif %}{{ flag.message.text }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>No messages.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

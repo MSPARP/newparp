@@ -16,7 +16,7 @@ from newparp.views import (
     account, admin, characters, chat, chat_api, chat_list, errors, guides,
     roulette, search, search_characters, settings,
 )
-from newparp.views.admin import spamless
+from newparp.views.admin import spamless, spamless2
 
 
 app = Flask(__name__)
@@ -213,6 +213,8 @@ app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist", spamless.bla
 app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist_post", spamless.blacklist_post, methods=("POST",))
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist", spamless.warnlist)
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.warnlist_post, methods=("POST",))
+
+make_rules("spamless2", "/admin/spamless2", spamless2.home, formats=True)
 
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))
