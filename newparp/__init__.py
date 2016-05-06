@@ -214,7 +214,7 @@ app.add_url_rule("/admin/spamless/blacklist", "spamless_blacklist_post", spamles
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist", spamless.warnlist)
 app.add_url_rule("/admin/spamless/warnlist", "spamless_warnlist_post", spamless.warnlist_post, methods=("POST",))
 
-make_rules("spamless2", "/admin/spamless2", spamless2.home, formats=True)
+make_rules("spamless2", "/admin/spamless2", spamless2.home, formats=True, paging=True)
 
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))

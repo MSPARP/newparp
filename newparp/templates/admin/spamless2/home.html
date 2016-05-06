@@ -5,6 +5,7 @@
     <div class="settings_box spamless_box admin_wide">
         <div class="settings_box_wrap">
             <h2>Message log</h2>
+            {{ pager() }}
             {% if flags: %}
             <table class="spam_table">
                 <thead>
@@ -35,6 +36,7 @@
             {% else: %}
             <p>No messages.</p>
             {% endif %}
+            {{ pager() }}
         </div>
     </div>
 {% endblock %}
