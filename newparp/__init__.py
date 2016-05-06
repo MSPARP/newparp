@@ -25,12 +25,13 @@ app.url_map.strict_slashes = False
 # Config
 
 app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
-app.config["SENTRY_DSN"] = os.environ.get("SENTRY_DSN", None)
+app.config["SENTRY_PRIVATE_DSN"] = os.environ.get("SENTRY_PRIVATE_DSN", None)
+app.config["SENTRY_PUBLIC_DSN"] = os.environ.get("SENTRY_PUBLIC_DSN", None)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
-if app.config["SENTRY_DSN"]:
+if app.config["SENTRY_PRIVATE_DSN"]:
     from raven.contrib.flask import Sentry
-    sentry = Sentry(app, app.config["SENTRY_DSN"])
+    sentry = Sentry(app, app.config["SENTRY_PRIVATE_DSN"])
 
 app.before_request(redis_connect)
 
