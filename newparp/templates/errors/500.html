@@ -3,5 +3,8 @@
 {% block content: %}
     <h2>500 Internal Server Error</h2>
     <p>OH SHIT I BROKE SOMETHING</p>
+    {% if g.sentry_event_id %}
+	<p style="font-family: monospace">{{g.sentry_event_id}}</p>
+	{% endif %}
 {% endblock %}
 
