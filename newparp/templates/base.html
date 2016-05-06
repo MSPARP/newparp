@@ -120,10 +120,10 @@ if (timezone) {
 </script>
 {% endif %}
 <script src="/static/js/spectrum.js"></script>
-{% if app.config["SENTRY_PUBLIC_DSN"] %}
+{% if config["SENTRY_PUBLIC_DSN"] %}
 <script src="//cdn.ravenjs.com/3.0.2/raven.min.js"></script>
 <script>
-    Raven.config({{app.config["SENTRY_PUBLIC_DSN"]|tojson|safe}}).install();
+    Raven.config({{config["SENTRY_PUBLIC_DSN"]|tojson|safe}}).install();
 </script>
 {% endif %}
 <script src="/static/js/ui.js"></script>
