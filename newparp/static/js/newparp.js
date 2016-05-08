@@ -1026,17 +1026,20 @@ var msparp = (function() {
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
 						var text_without_bbcode = text.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/ig, "[SPOILER]");
 						text_without_bbcode = bbremove(text_without_bbcode);
-						var notification = new Notification(chat.title || "MSPARP", {
-							"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
-							"icon": "/static/img/spinner-big.png"
-						});
+						// make this optional so notifications don't error on mobile when they've been enabled on another device
+						try {
+							var notification = new Notification(chat.title || "MSPARP", {
+								"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
+								"icon": "/static/img/spinner-big.png"
+							});
 
-						notification.onclick = function() {
-							window.focus();
-							this.close();
-						}
+							notification.onclick = function() {
+								window.focus();
+								this.close();
+							}
 
-						window.setTimeout(notification.close.bind(notification), 5000);
+							window.setTimeout(notification.close.bind(notification), 5000);
+						} catch (e) { }
 					}
 				}
 			}
