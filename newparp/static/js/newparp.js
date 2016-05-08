@@ -40,6 +40,12 @@ var msparp = (function() {
 	
 	} catch (e) {var localstorage = false;}
 	
+	// Prevent console is undefined errors for IE9 Mobile and other horrors
+	window.console = window.console || (function(){
+		var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile = c.clear = c.exception = c.trace = c.assert = function(){};
+		return c;
+	})();
+	
 	// Detect touch devices because apple/some browsers cannot handle focus highlighting
 	var touch_enabled = false;
 	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
