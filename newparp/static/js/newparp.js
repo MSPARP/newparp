@@ -1506,16 +1506,16 @@ var msparp = (function() {
 			if (localstorage) {
 				if (localStorage.getItem( chat.url + "_smart_quirk_mode") !== null) { smart_quirk_mode = localStorage.getItem( chat.url + "_smart_quirk_mode"); $("#smart_quirk_mode_" + smart_quirk_mode).prop('checked',true); }
 			}
-			// If unset, base this on chat style
+			// If unset, base this on chat style, with script as fallback
 			if (smart_quirk_mode == "") {
+				smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);
+				// check if group is paragraph
 				if (chat.type == "group") {
 					if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
-					else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
 				}
 				if (chat.type == "searched") {
 					// grab preference for searched chats, save it explicitly since style cannot be changed
 					if ($(".message_search_info p").text().indexOf("This is a paragraph style chat.") != -1) {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
-					else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
 					if (localstorage) {
 						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
 					}
