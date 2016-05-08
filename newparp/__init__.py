@@ -32,6 +32,8 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 if app.config["SENTRY_PRIVATE_DSN"]:
     from raven.contrib.flask import Sentry
     sentry = Sentry(app, dsn=app.config["SENTRY_PRIVATE_DSN"])
+else:
+    sentry = None
 
 app.before_request(redis_connect)
 

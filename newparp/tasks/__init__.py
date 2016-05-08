@@ -1,7 +1,9 @@
 from celery import Celery, Task
 from classtools import reify
 from redis import StrictRedis
+from raven.contrib.celery import register_signal, register_logger_signal
 
+from newparp import sentry
 from newparp.model import sm
 from newparp.model.connections import redis_pool
 
@@ -11,6 +13,11 @@ celery = Celery("newparp", include=[
     "newparp.tasks.reaper",
     "newparp.tasks.roulette_matchmaker",
 ])
+
+# Sentry exception logging if there is a sentry object.
+if sentry:
+    register_logger_signal(sentry)
+    register_signal(sentry)
 
 celery.config_from_object('newparp.tasks.config')
 
