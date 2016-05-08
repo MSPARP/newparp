@@ -1,6 +1,10 @@
+import os
+import raven
+
 from celery import Celery, Task
 from classtools import reify
 from redis import StrictRedis
+from raven.contrib.celery import register_signal, register_logger_signal
 
 from newparp.model import sm
 from newparp.model.connections import redis_pool
@@ -11,6 +15,12 @@ celery = Celery("newparp", include=[
     "newparp.tasks.reaper",
     "newparp.tasks.roulette_matchmaker",
 ])
+
+# Sentry exception logging if there is a sentry object.
+if "SENTRY_PRIVATE_DSN" in os.environ:
+    sentry = raven.Client(os.environ["SENTRY_PRIVATE_DSN"])
+    register_logger_signal(sentry)
+    register_signal(sentry)
 
 celery.config_from_object('newparp.tasks.config')
 

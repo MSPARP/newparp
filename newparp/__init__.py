@@ -21,9 +21,19 @@ from newparp.views.admin import spamless, spamless2
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
 
+# Config
+
+app.config["SERVER_NAME"] = os.environ["BASE_DOMAIN"]
+app.config["SENTRY_PRIVATE_DSN"] = os.environ.get("SENTRY_PRIVATE_DSN", None)
+app.config["SENTRY_PUBLIC_DSN"] = os.environ.get("SENTRY_PUBLIC_DSN", None)
 app.config['PROPAGATE_EXCEPTIONS'] = True
+
+if app.config["SENTRY_PRIVATE_DSN"]:
+    from raven.contrib.flask import Sentry
+    sentry = Sentry(app, dsn=app.config["SENTRY_PRIVATE_DSN"])
+else:
+    sentry = None
 
 app.before_request(redis_connect)
 

@@ -5,6 +5,7 @@ Babel==2.1.1
 backports.ssl-match-hostname==3.4.0.2
 bcrypt==1.1.1
 billiard==3.3.0.22
+blinker>=1.1
 celery==3.1.23
 certifi==2015.9.6.2
 cffi==1.1.2
@@ -27,6 +28,7 @@ pycparser==2.13
 pytz==2015.4
 redis==2.10.5
 hiredis==0.2.0
+raven==5.15.0
 requests[security]==2.9.1
 six==1.10.0
 speaklater==1.3
