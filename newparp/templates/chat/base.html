@@ -64,21 +64,26 @@ document.body.className += ' no_forms';
 {% block content: %}{% endblock %}
 
 <script src="/static/js/jquery-2.1.1.min.js"></script>
-<script src="/static/js/handlebars.min.js"></script>
-<script src="/static/js/spectrum.js"></script>
-<script src="/static/js/ui.js"></script>
-<script src="/static/js/newparp.js"></script>
-{% block scripts: %}{% endblock %}
-
 {% if g.user and g.user.timezone == None: %}
 <script src="/static/js/jstz-1.0.4.min.js"></script>
 <script>
 var timezone = jstz.determine().name();
 if (timezone) {
-	$.post("/settings/timezone", {"timezone": timezone, "token": {{g.csrf_token|tojson|safe}}});
+    $.post("/settings/timezone", {"timezone": timezone, "token": {{g.csrf_token|tojson|safe}}});
 }
 </script>
 {% endif %}
+<script src="/static/js/handlebars.min.js"></script>
+<script src="/static/js/spectrum.js"></script>
+{% if config["SENTRY_PUBLIC_DSN"] %}
+<script src="//cdn.ravenjs.com/3.0.2/raven.min.js"></script>
+<script>
+    Raven.config({{config["SENTRY_PUBLIC_DSN"]|tojson|safe}}).install();
+</script>
+{% endif %}
+<script src="/static/js/ui.js"></script>
+<script src="/static/js/newparp.js"></script>
+{% block scripts: %}{% endblock %}
 
 </body>
 </html>
