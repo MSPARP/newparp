@@ -1024,7 +1024,7 @@ var msparp = (function() {
 					new_messages.push(message.id);
 					document.title = "New message - " + original_title;
 					if (user.meta.desktop_notifications && typeof Notification != "undefined") {
-						var text_without_bbcode = text.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/ig, "[SPOILER]")
+						var text_without_bbcode = text.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/ig, "[SPOILER]");
 						text_without_bbcode = bbremove(text_without_bbcode);
 						var notification = new Notification(chat.title || "MSPARP", {
 							"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
@@ -1505,8 +1505,18 @@ var msparp = (function() {
 			}
 			// If unset, base this on chat style
 			if (smart_quirk_mode == "") {
-				if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
-				else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
+				if (chat.type == "group") {
+					if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
+					else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
+				}
+				if (chat.type == "searched") {
+					// grab preference for searched chats, save it explicitly since style cannot be changed
+					if ($(".message_search_info p").text().indexOf("This is a paragraph style chat.") != -1) {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
+					else {smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);}
+					if (localstorage) {
+						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+					}
+				}
 			}
 			
 			// Update smart quirk settings and save for individual chats
