@@ -1925,56 +1925,73 @@ var msparp = (function() {
 					switch (e.keyCode) {
 						case 13: // enter for br/newline
 							insert_bbcode("[br]", "", false);
+							e.preventDefault();
 							return false;
 						case 74: // j for sup
 						case 38: // up arrow for sup
 							insert_bbcode("[sup]", "[/sup]", false);
+							e.preventDefault();
 							return false;
 						case 75: // k for sub
 						case 40: // down arrow for sub
 							insert_bbcode("[sub]", "[/sub]", false);
+							e.preventDefault();
 							return false;
 						case 66: // b for bold
 							insert_bbcode("[b]", "[/b]", false);
+							e.preventDefault();
 							return false;
 						case 67: // c for caps
 							insert_bbcode("[c]", "[/c]", false);
+							e.preventDefault();
 							return false;
 						case 70: // f for font 
 							insert_bbcode("[font=]", "[/font]", true);
+							e.preventDefault();
 							return false;
 						case 71: // g for bgcolor (since b is taken)
 							insert_bbcode("[bgcolor=]", "[/bgcolor]", true);
+							e.preventDefault();
 							return false;
 						case 72: // h for hex (since c is needed)
 							insert_bbcode("[color=]", "[/color]", true);
+							e.preventDefault();
 							return false;
 						case 73: // i for italics
 							insert_bbcode("[i]", "[/i]", false);
+							e.preventDefault();
 							return false;
 						case 76: // l for aLternian (since a is needed)
 							insert_bbcode("[alternian]", "[/alternian]", false);
+							e.preventDefault();
 							return false;
 						case 79: // o for open/link (since u is underline)
 							insert_bbcode("[url=]", "[/url]", true);
+							e.preventDefault();
 							return false;
 						case 80: // p for sPoiler (since s is strikethrough)
 							insert_bbcode("[spoiler]", "[/spoiler]", false);
+							e.preventDefault();
 							return false;
 						case 82: // r for raw
 							insert_bbcode("[raw]", "[/raw]", false);
+							e.preventDefault();
 							return false;
 						case 83: // s for strikethrough
 							insert_bbcode("[s]", "[/s]", false);
+							e.preventDefault();
 							return false;
 						case 85: // u for underline
 							insert_bbcode("[u]", "[/u]", false);
+							e.preventDefault();
 							return false;
 						case 87: // w for whisper
 							insert_bbcode("[w]", "[/w]", false);
+							e.preventDefault();
 							return false;
 						case 190: // toggle preview on/off with "."
 							$("#show_preview").click();
+							e.preventDefault();
 							return false;
 					}
 				}
