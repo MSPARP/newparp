@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask, abort, redirect, request, send_from_directory
 from werkzeug.routing import BaseConverter
@@ -31,7 +32,12 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 
 if app.config["SENTRY_PRIVATE_DSN"]:
     from raven.contrib.flask import Sentry
-    sentry = Sentry(app, dsn=app.config["SENTRY_PRIVATE_DSN"])
+    app.config["SENTRY_INCLUDE_PATHS"] = ["newparp"]
+    sentry = Sentry(app,
+        dsn=app.config["SENTRY_PRIVATE_DSN"],
+        logging=True,
+        level=logging.ERROR,
+    )
 else:
     sentry = None
 

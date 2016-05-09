@@ -18,7 +18,10 @@ celery = Celery("newparp", include=[
 
 # Sentry exception logging if there is a sentry object.
 if "SENTRY_PRIVATE_DSN" in os.environ:
-    sentry = raven.Client(os.environ["SENTRY_PRIVATE_DSN"])
+    sentry = raven.Client(
+        dsn=os.environ["SENTRY_PRIVATE_DSN"],
+        include_paths=["newparp"],
+    )
     register_logger_signal(sentry)
     register_signal(sentry)
 
