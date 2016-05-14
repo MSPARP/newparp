@@ -2,7 +2,7 @@
 {% block title: %}#{{user.id}} {{user.username}} - {% endblock %}
 {% block content: %}
     <div class="common_box">
-        <h2><label class="user_edit_box_header"><span>#{{user.id}} {{user.username}}</span></label></h2>
+        <h2><label class="user_edit_box_header"><span>#{{user.id}} <a href="{{url_for("admin_user_list", username=user.username)}}">{{user.username}}</a></span></label></h2>
         <div class="common_box_wrap">
             <table class="admin_user_info">
                 <tbody>
@@ -47,7 +47,7 @@
                     {% endif %}
                     <tr>
                         <td>Email address</td>
-                        <td>{{user.email_address}}</td>
+                        <td> <a href="{{url_for("admin_user_list", email=user.email_address)}}">{{user.email_address}}</a></td>
                     </tr>
                     <tr>
                         <td>Created</td>
@@ -61,7 +61,7 @@
                         <td>Last IP</td>
                         <td>
                         {% if not ip_bans: %}
-                            {{user.last_ip}}
+                            <a href="{{url_for("admin_user_list", ip=user.last_ip)}}">{{user.last_ip}}</a>
                             <form action="{{url_for("admin_new_ip_ban")}}" method="post">
                                 <input type="hidden" name="token" value="{{g.csrf_token}}">
                                 <input type="hidden" name="address" value="{{user.last_ip}}">
@@ -74,11 +74,12 @@
                                 <button type="submit">Ban</button>
                             </form>
                         {% else %}
-                            <del>{{user.last_ip}}</del>
+                            <del><a href="{{url_for("admin_user_list", ip=user.last_ip)}}">{{user.last_ip}}</a></del>
                             {% if ip_bans[0].address != user.last_ip: %}
                                 (ban{% if ip_bans|length > 1 %}s{% endif %}: {{ ", ".join(ip_bans) }})
                             {% endif %}
                         {% endif %}
+                        (<a href="http://forums.msparp.com/modcp.php?action=ipsearch&ipaddress={{user.last_ip}}&search_users=1&search_posts=1" target="_blank">F</a>)
                         </td>
                     </tr>
                     <tr>

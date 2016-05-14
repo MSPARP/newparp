@@ -742,12 +742,14 @@ def look_up_user():
         abort(404)
     send_temporary_message(
         g.redis, g.chat, g.user.id, None, "chat_meta",
-        "User number %s is [url=%s]#%s %s[/url], last IP %s." % (
+        "User number %s is [url=%s]#%s %s[/url], last IP [url=%s]%s[/url]. ([url=%s]F[/url])" % (
             chat_user.number,
             url_for("admin_user", username=chat_user.user.username, _external=True),
             chat_user.user.id,
             chat_user.user.username,
+            url_for("admin_user_list", ip=chat_user.user.last_ip, _external=True),
             chat_user.user.last_ip,
+            "http://forums.msparp.com/modcp.php?action=ipsearch&ipaddress=" + chat_user.user.last_ip + "&search_users=1&search_posts=1",
         ),
     )
     return "", 204
