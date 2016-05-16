@@ -27,24 +27,6 @@ def generate_counters():
             break
     redis.set("connected_users", len(connected_users))
 
-    # Searching counter
-    searching_users = set()
-    for searcher_id in redis.smembers("searchers"):
-        session_id = redis.get("searcher:%s:session_id" % searcher_id)
-        user_id = redis.get("session:%s" % session_id)
-        if user_id is not None:
-            searching_users.add(user_id)
-    redis.set("searching_users", len(searching_users))
-
-    # Roulette counter
-    rouletting_users = set()
-    for searcher_id in redis.smembers("roulette_searchers"):
-        session_id = redis.get("roulette:%s:session_id" % searcher_id)
-        user_id = redis.get("session:%s" % session_id)
-        if user_id is not None:
-            rouletting_users.add(user_id)
-    redis.set("rouletting_users", len(rouletting_users))
-
 
 @celery.task(base=WorkerTask)
 def unlist_chats():

@@ -44,10 +44,20 @@ def run_matchmaker(
     if len(searcher_ids) < 2:
         logging.debug("Not enough searchers, skipping.")
         wake_unmatched_searchers(redis, searcher_prefix, searcher_ids)
+        redis.set(
+            "searching_users" if searchers_key == "searchers" else "rouletting_users",
+            len(searcher_ids),
+        )
         return
 
     searchers = get_searcher_info(redis, searcher_ids)
     logging.debug("Searcher list: %s" % searchers)
+
+    redis.set(
+        "searching_users" if searchers_key == "searchers" else "rouletting_users",
+        len({_["user_id"] for _ in searchers}),
+    )
+
     shuffle(searchers)
 
     already_matched = set()
