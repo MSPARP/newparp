@@ -41,6 +41,7 @@ def redis_connect():
         g.session_id = request.cookies["newparp"]
         g.user_id = g.redis.get("session:" + g.session_id)
         if g.user_id is not None:
+            g.redis.expire("session:" + g.session_id, 2592000)
             g.user_id = int(g.user_id)
     else:
         g.session_id = str(uuid4())

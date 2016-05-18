@@ -47,7 +47,7 @@ def log_in_post(fmt=None):
             return jsonify({"error": "wrong_password"}), 400
         return redirect(referer_or_home() + "?log_in_error=wrong_password")
 
-    g.redis.set("session:" + g.session_id, user.id)
+    g.redis.set("session:" + g.session_id, user.id, 2592000)
 
     if fmt == "json":
         return jsonify(user.to_dict(include_options=True))
@@ -116,7 +116,7 @@ def register_post():
     new_user.set_password(request.form["password"])
     g.db.add(new_user)
     g.db.flush()
-    g.redis.set("session:" + g.session_id, new_user.id)
+    g.redis.set("session:" + g.session_id, new_user.id, 2592000)
     g.redis.setex("register:" + request.headers["X-Forwarded-For"], 86400, 1)
     g.db.commit()
 
