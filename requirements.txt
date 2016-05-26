@@ -28,7 +28,7 @@ pycparser==2.13
 pytz==2015.4
 redis==2.10.5
 hiredis==0.2.0
-raven==5.15.0
+raven==5.18.0
 requests[security]==2.9.1
 six==1.10.0
 speaklater==1.3
