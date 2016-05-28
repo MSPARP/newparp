@@ -92,6 +92,7 @@ class User(Base):
     secret_answer = Column(String(60))
 
     email_address = Column(String(100))
+    email_verified = Column(Boolean, nullable=False, default=False)
 
     group = Column(Enum(
         u"banned",
