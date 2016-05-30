@@ -189,6 +189,8 @@ class User(Base):
         ud = {
             "id": self.id,
             "username": self.username,
+            "email_address": self.email_address,
+            "email_verified": self.email_verified,
             "group": self.group,
             "is_admin": self.is_admin,
             "created": time.mktime(self.created.timetuple()),
