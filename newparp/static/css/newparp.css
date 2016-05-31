@@ -2518,13 +2518,28 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 .log_top_nav, .log_bottom_nav {position:absolute;left:8px;right:8px;min-height:24px;background:#eee}
 .log_top_nav {top:46px}
 .log_bottom_nav {bottom:6px}
- #archive_conversation {bottom:33px;top:73px;right:8px}
- .hideshow_log_button {position:absolute;top:2px;right:20px;z-index:1}
+#archive_conversation {bottom:33px;top:73px;right:8px;}
+#archive_conversation #conversation_wrap div p {cursor: text}
+#log_options {text-align:left; border-bottom: 3px solid #cccccc; padding-left:10px; color: #888}
+#log_options form {display:inline-block; padding:4px;box-sizing:border-box}
+#log_options button {background:#ddd; color:#666; padding: 4px 10px}
+#log_options button .ripple {display:none}
+#log_options button.is_shown, #log_options button:active {background: #d0d0d0}
+#log_options button:active {padding-right:9px}
+#log_options button span {color:#666}
+#log_options button.is_shown span:before {content: '\2713\00A0'}
+#log_options button.is_hidden span:before {content: '\2717\00A0'}
  
- @media (max-width: 460px) {
-	.hideshow_log_button {position:static;margin:0;}
-	#hideshow_system {width:100%}
- }
+@media (max-width: 530px) {
+	#log_options {padding-left:0px; text-align:center}
+	#log_options .options_label {display:none}
+}
+ 
+@media (max-width: 437px) {
+	#log_options form, #log_options button {display:block;width:100%}
+	#log_options {padding: 2px 0px}
+	#log_options form {padding: 2px 4px}
+}
 
 /* 4.6. Global Announcements */
 

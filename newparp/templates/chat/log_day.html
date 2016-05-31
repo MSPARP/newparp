@@ -46,14 +46,30 @@
 
         <div class="log_top_nav">{{day_navigation()}}</div>
 
-        <section id="archive_conversation">
+        <section id="archive_conversation" {% if own_chat_user and not own_chat_user.show_user_numbers: %}class="hide_user_numbers"{% endif %}>            
             {% if own_chat_user: %}
-            <form action="{{url_for("save_variables")}}" method="POST">
-                <input type="hidden" name="token" value="{{g.csrf_token}}">
-                <input type="hidden" name="chat_id" value="{{chat.id}}">
-                <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
-                    <p class="hideshow_log_button"><button id="hideshow_system" type="submit">{{"Hide" if own_chat_user.show_system_messages else "Show"}} system messages</button></p>
-            </form>
+            <div id="log_options">
+                <span class="options_label">Hide/show:</span>
+                <form action="{{url_for("save_variables")}}" method="POST">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <input type="hidden" name="chat_id" value="{{chat.id}}">
+                    <input type="hidden" name="show_system_messages" value="{{"off" if own_chat_user.show_system_messages else "on"}}">
+                        <span class="hideshow_log_button"><button id="hideshow_system" type="submit" class="{{"is_shown" if own_chat_user.show_system_messages else "is_hidden"}}"><span>system messages</span></button></span>
+                </form>
+                <form action="{{url_for("save_variables")}}" method="POST">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <input type="hidden" name="chat_id" value="{{chat.id}}">
+                    <input type="hidden" name="show_user_numbers" value="{{"off" if own_chat_user.show_user_numbers else "on"}}">
+                        <span class="hideshow_log_button"><button id="hideshow_users" type="submit" class="{{"is_shown" if own_chat_user.show_user_numbers else "is_hidden"}}"><span>user numbers</span></button></span>
+                </form>
+                <form>
+                        {% if request.args.get("mode") == "bbcode" %}
+                            <span class="hideshow_log_button"><button id="hideshow_bbcode_form" type="submit" class="is_shown"><span>bbcode format</span></button></span>
+                        {% else %}
+                            <span class="hideshow_log_button"><button id="hideshow_bbcode_form" onclick="window.location.href='?mode=bbcode'" class="is_hidden"><span>bbcode format</span></button></span>
+                        {% endif %}
+                </form>
+            </div>
             {% endif %}
             <div id="conversation_wrap" tabindex="1">
                 {% if messages: %}

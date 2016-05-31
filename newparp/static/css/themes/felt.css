@@ -786,7 +786,11 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 
 .chat .pager { background-color: #0e4603; }
 .log_top_nav, .log_bottom_nav {background:#0e4603}
-
+#log_options {border-bottom: 3px solid #061E00; color: #20A107}
+#log_options button {background:#082D00; color:#156704;}
+#log_options button.is_shown, #log_options button:active {background: #0E4603}
+#log_options button span {color:#156704}
+#log_options button.is_shown span{color:#20A107}
 
 /* 4.6. Global Announcements */
 

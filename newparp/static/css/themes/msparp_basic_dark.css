@@ -431,7 +431,12 @@ p:hover > .timestamp { display: block; float: right; color: #666; }
 
 .log_top_nav {top:6px}
 .log_bottom_nav {bottom:6px}
- #archive_conversation {bottom:33px;top:33px;right:3px;left:3px}
+#archive_conversation {bottom:33px;top:33px;right:3px;left:3px}
+#log_options {border-bottom: 3px solid #1D1F2C; color: #444444}
+#log_options button {background:#333; color:#868686;}
+#log_options button.is_shown, #log_options button:active {background: #393939}
+#log_options button span {color:#868686}
+#log_options button.is_shown span{color:#b0b0b0}
 
 
 @media (max-width:650px) {
