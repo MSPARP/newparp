@@ -1,12 +1,12 @@
 import os
 import json
 from flask import abort, g, jsonify, make_response, render_template, request, redirect, url_for
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import admin_required, log_in_required
 from newparp.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
@@ -152,4 +152,20 @@ def health():
     g.redis.set("health", 1)
     g.db.query(SearchCharacter).first()
     return "ok"
+
+
+@use_db
+@admin_required
+def api_users():
+    if not request.args.get("email_address"):
+        abort(404)
+    return jsonify({
+        "users": [
+            {"id": user.id, "username": user.username} for user in
+            g.db.query(User).filter(and_(
+                func.lower(User.email_address) == request.args["email_address"].strip().lower()[:100],
+                User.email_verified == True,
+            ))
+        ]
+    })
 
