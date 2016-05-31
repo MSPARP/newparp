@@ -30,7 +30,7 @@
                         <td>{% if message.user: %}<a href="{{ url_for("admin_user", username=message.user.username) }}">{{ message.user.username }}</a>{% endif %}</td>
                         <td>{{ message.chat_user.number }}</td>
                         <td>{{ message.name }}</td>
-                        <td style="color: #{{ message.color }}" class="abridged_message" tabindex="0" title="expand message">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
+                        <td style="color: #{{ message.color }}" class="abridged_message message_content" tabindex="0" title="expand message">{% if message.acronym: %}{{ message.acronym }}: {% endif %}{{ message.text }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -42,4 +42,6 @@
         </div>
     </div>
 {% endblock %}
-
+{% block scripts: %}
+<script>msparp.spamless({{"true" if g.user.show_bbcode else "false"}});</script>
+{% endblock %}

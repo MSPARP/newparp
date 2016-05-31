@@ -503,6 +503,8 @@ var msparp = (function() {
 			$("#log_in_show_password_input").change(function(e) {
 				$("#log_in_password_input").attr("type", this.checked ? "text" : "password");
 			});
+			// Parse BBCode in chat info (if present)
+			$(".chat_info").each(function(line) { this.innerHTML = raw_bbencode(this.innerHTML, false); });
 		},
 		// Homepage
 		"home": function() {
@@ -1890,118 +1892,114 @@ var msparp = (function() {
 			});
 			var send_button = send_form.find("button[type=submit]");
 
-			// Chat line keyboard shortcuts
+			// Text entry keyboard shortcuts
 			var ctrl_command = false;
 			var alt_command = false;
-			function insert_bbcode(initial, closing, is_attribute) {
-				var len = chat_line_input.val().length;
-				var start = chat_line_input[0].selectionStart;
-				var end = chat_line_input[0].selectionEnd;
-				var selection = chat_line_input.val().substring(start, end);
+			function insert_bbcode(target, initial, closing, is_attribute) {
+				var len = target.val().length;
+				var start = target[0].selectionStart;
+				var end = target[0].selectionEnd;
+				var selection = target.val().substring(start, end);
 				var output = initial + selection + closing;
-				chat_line_input.val(chat_line_input.val().substring(0, start) + output + chat_line_input.val().substring(end, len));
+				target.val(target.val().substring(0, start) + output + target.val().substring(end, len));
 				// if selection is empty, place caret within new tag
 				if (selection.length == 0 && is_attribute == false) {
-					chat_line_input[0].selectionStart = start + initial.length;
-					chat_line_input[0].selectionEnd = start + initial.length;
+					target[0].selectionStart = start + initial.length;
+					target[0].selectionEnd = start + initial.length;
 				}
 				// if we're inserting a tag with an attribute value, place cursor at hex/value position
 				if (is_attribute == true) {
-					chat_line_input[0].selectionStart = start + initial.length - 1;
-					chat_line_input[0].selectionEnd = start + initial.length - 1;
+					target[0].selectionStart = start + initial.length - 1;
+					target[0].selectionEnd = start + initial.length - 1;
 				}
 				ctrl_command = false;
 				alt_command = false;
 			}
 			
-			// Shortcut listener; ctrl = 17; osx command = 91 (Safari), 224 (FF)
-			// listen only on chat line (if not disabled), so other shortcuts work normally if not focussed
-			document.getElementById("chat_line_input").addEventListener("keyup", function(e) {
-				if (dev_user_disable_hotkeys == "true") return;
-				alt_command = false;
-				ctrl_command = false;
-			});
-			
-			document.getElementById("chat_line_input").addEventListener("keydown", function(e) {
-				if (dev_user_disable_hotkeys == "true") return;
+			// Shortcut listener check; ctrl = 17; osx command = 91 (Safari), 224 (FF)			
+			function is_shortcut(e) {
+				var target = e.target || e.srcElement;
+				target = $(target); // pass target as jQuery
 				var keyLocation = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"][e.location];
 				if (e.keyCode == 18 && keyLocation !== "Right") alt_command=true;
 				if (e.keyCode == 17 || e.keyCode == 91 || e.keyCode == 224) ctrl_command=true;
 				if (ctrl_command == true && alt_command == true){
 					switch (e.keyCode) {
 						case 13: // enter for br/newline
-							insert_bbcode("[br]", "", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[br]", "", false);
+							return true;
 						case 74: // j for sup
 						case 38: // up arrow for sup
-							insert_bbcode("[sup]", "[/sup]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[sup]", "[/sup]", false);
+							return true;
 						case 75: // k for sub
 						case 40: // down arrow for sub
-							insert_bbcode("[sub]", "[/sub]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[sub]", "[/sub]", false);
+							return true;
 						case 66: // b for bold
-							insert_bbcode("[b]", "[/b]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[b]", "[/b]", false);
+							return true;
 						case 67: // c for caps
-							insert_bbcode("[c]", "[/c]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[c]", "[/c]", false);
+							return true;
 						case 70: // f for font 
-							insert_bbcode("[font=]", "[/font]", true);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[font=]", "[/font]", true);
+							return true;
 						case 71: // g for bgcolor (since b is taken)
-							insert_bbcode("[bgcolor=]", "[/bgcolor]", true);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[bgcolor=]", "[/bgcolor]", true);
+							return true;
 						case 72: // h for hex (since c is needed)
-							insert_bbcode("[color=]", "[/color]", true);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[color=]", "[/color]", true);
+							return true;
 						case 73: // i for italics
-							insert_bbcode("[i]", "[/i]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[i]", "[/i]", false);
+							return true;
 						case 76: // l for aLternian (since a is needed)
-							insert_bbcode("[alternian]", "[/alternian]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[alternian]", "[/alternian]", false);
+							return true;
 						case 79: // o for open/link (since u is underline)
-							insert_bbcode("[url=]", "[/url]", true);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[url=]", "[/url]", true);
+							return true;
 						case 80: // p for sPoiler (since s is strikethrough)
-							insert_bbcode("[spoiler]", "[/spoiler]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[spoiler]", "[/spoiler]", false);
+							return true;
 						case 82: // r for raw
-							insert_bbcode("[raw]", "[/raw]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[raw]", "[/raw]", false);
+							return true;
 						case 83: // s for strikethrough
-							insert_bbcode("[s]", "[/s]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[s]", "[/s]", false);
+							return true;
 						case 85: // u for underline
-							insert_bbcode("[u]", "[/u]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[u]", "[/u]", false);
+							return true;
 						case 87: // w for whisper
-							insert_bbcode("[w]", "[/w]", false);
-							e.preventDefault();
-							return false;
+							insert_bbcode(target, "[w]", "[/w]", false);
+							return true;
 						case 190: // toggle preview on/off with "."
 							$("#show_preview").click();
-							e.preventDefault();
-							return false;
+							return true;
 					}
 				}
-			});
+				return false;
+			}
+			
+			// Attach functions only where needed (if not disabled) so other shortcuts work normally if not focussed
+			var shortcut_enabled = ["chat_line_input", "edit_info_description", "edit_info_rules"];
+			if (dev_user_disable_hotkeys !== "true") {
+				for (i = 0; i < shortcut_enabled.length; i++) {
+					document.getElementById(shortcut_enabled[i]).addEventListener("keyup", function(e) {
+						alt_command = false;
+						ctrl_command = false;
+					});
+					document.getElementById(shortcut_enabled[i]).addEventListener("keydown", function(e) {
+						// prevent default if we're actually using a shortcut
+						if (is_shortcut(e)) {
+							e.preventDefault();
+							return false;
+						}
+					});
+				}
+			}
 			
 			// Typing quirks
 			var last_alternating_line = false;
@@ -2258,6 +2256,10 @@ var msparp = (function() {
 		"log": function(show_bbcode) {
 			// Perform BBCode conversion
 			$("#archive_conversation div p").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
+		},
+		"spamless": function(show_bbcode) {
+			// Perform BBCode conversion
+			$(".spam_table .message_content").each(function(line) { show_bbcode ? this.innerHTML = raw_bbencode(this.innerHTML, false) : $(this).html(bbremove(this.innerHTML)); });
 		},
 		// Broadcast page
 		"broadcast": function() {
