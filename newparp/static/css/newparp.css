@@ -1113,8 +1113,8 @@ body:not(.no_forms) .fit_select_button {padding: 8px 20px}
 .chartable th:nth-of-type(3), .chartable th:nth-of-type(4), .admin_log th:nth-of-type(4) {width:10%}
 .user_chartable th:nth-of-type(3), .user_chartable th:nth-of-type(5),  .user_chartable th:nth-of-type(6) {width:10%}
 .admin_userlist th:nth-of-type(1), .admin_chats_list th:nth-of-type(1), .admin_log th:nth-of-type(1), .user_blocked th:nth-of-type(1) {width:5%}
-.admin_log tr td:nth-of-type(2), .spam_table tr td:nth-of-type(1)  {font-size: 80%}
-.admin_log .notelabel a:only-child {display:inline}
+.admin_log tr td:nth-of-type(2), .spam_table tr td:nth-of-type(1) {font-size: 80%}
+.admin_log .notelabel a:only-child, .spam_table .abridged_message a:only-child {display:inline}
 .admin_userlist th:nth-of-type(4) {width:50%}
 .spam_table th:nth-of-type(7) {width:40%}
 .admin_user_info {display: table }
