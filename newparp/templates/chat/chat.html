@@ -379,7 +379,7 @@
                 <div class="input"><p><input type="checkbox" class="variable" id="enable_activity_indicator"{% if chat_user.enable_activity_indicator: %} checked="checked"{% endif %}> <label for="enable_activity_indicator">Enable activity indicator</label></p></div>
                 <div class="input"><p><input type="checkbox" id="subscribed"{% if chat_user.subscribed: %} checked="checked"{% endif %}> <label for="subscribed">Subscribed</label></p></div>
                 <h2>Device settings</h2>
-                <div class="input"><p><input type="checkbox" id="smart_quirk" class="device_settings" name="smart_quirk"><label for="smart_quirk"> Enable smart quirking</label> <a href="{{url_for("settings")}}/#smart_quirk" target="_blank">(?)</a></p></div>
+                <div class="input"><p><input type="checkbox" id="chat_smart_quirk" class="chat_settings" name="chat_smart_quirk"><label for="chat_smart_quirk"> Enable smart quirking</label> <a href="{{url_for("settings")}}/#smart_quirk" target="_blank">(?)</a></p></div>
                 <form id="smart_quirk_select">
                     <div class="input"><p><input type="radio" name="smart_quirk_mode" id="smart_quirk_mode_script" value="script"><label for ="smart_quirk_mode_script">Script mode</label></p></div>
                     <div class="input"><p><input type="radio" name="smart_quirk_mode" id="smart_quirk_mode_paragraph" value="paragraph"><label for ="smart_quirk_mode_paragraph">Paragraph mode</label></p></div>

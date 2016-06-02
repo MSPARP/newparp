@@ -1509,10 +1509,18 @@ var msparp = (function() {
 			// only close on non mobile if it isn't a default sidebar
 			$(".sidebar .close").click(function() {if (sidebar_defaults.indexOf($(this).parents(".sidebar").attr("id")) == -1) {$("#chat_wrapper").removeClass($(this).parents(".sidebar").attr("id") + "_open") }; $(this).parents(".sidebar").removeClass("mobile_override"); });
 			
-			// Attempt to load smart quirk mode for this chat from localstorage, otherwise fall back to default
+			// Attempt to load smart quirk settings for this chat from localstorage, otherwise fall back to default
 			var smart_quirk_mode = "";
 			if (localstorage) {
-				if (localStorage.getItem( chat.url + "_smart_quirk_mode") !== null) { smart_quirk_mode = localStorage.getItem( chat.url + "_smart_quirk_mode"); $("#smart_quirk_mode_" + smart_quirk_mode).prop('checked',true); }
+				if (localStorage.getItem( chat.url + "_smart_quirk") !== null) {
+					dev_user_smart_quirk = localStorage.getItem( chat.url + "_smart_quirk");
+				}
+				localStorage.setItem( chat.url + "_smart_quirk", dev_user_smart_quirk);
+				dev_user_smart_quirk == "true" ? $("#chat_smart_quirk" + smart_quirk_mode).prop('checked',true) : $("#chat_smart_quirk" + smart_quirk_mode).prop('checked',false); 
+				if (localStorage.getItem( chat.url + "_smart_quirk_mode") !== null) { 
+					smart_quirk_mode = localStorage.getItem( chat.url + "_smart_quirk_mode"); 
+					$("#smart_quirk_mode_" + smart_quirk_mode).prop('checked',true); 
+				}
 			}
 			// If unset, base this on chat style, with script as fallback
 			if (smart_quirk_mode == "") {
@@ -1525,21 +1533,26 @@ var msparp = (function() {
 					// grab preference for searched chats, save it explicitly since style cannot be changed
 					if ($(".message_search_info p").text().indexOf("This is a paragraph style chat.") != -1) {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
 					if (localstorage) {
-						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode);
 					}
 				}
 			}
 			
 			// Update smart quirk settings and save for individual chats
-			$("#settings #smart_quirk").change(function() {
-				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
+			$("#settings #chat_smart_quirk").change(function() {
 				if ($("#smart_quirk_mode_paragraph").prop('checked')) {
 					// unset defaults to script, so reset value here
 					smart_quirk_mode = "paragraph"
 					if (localstorage) {
-						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode);
 					}
 				}
+				if ($("#chat_smart_quirk").is(':checked')) {dev_user_smart_quirk = "true";}
+				else { dev_user_smart_quirk = "false"; }
+				if (localstorage) {
+					localStorage.setItem( chat.url + "_smart_quirk", dev_user_smart_quirk);
+				}
+				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
 			});
 			
 			$("#smart_quirk_select").change(function() {
@@ -1984,7 +1997,8 @@ var msparp = (function() {
 			}
 			
 			// Attach functions only where needed (if not disabled) so other shortcuts work normally if not focussed
-			var shortcut_enabled = ["chat_line_input", "edit_info_description", "edit_info_rules"];
+			if (chat.type == "group") { var shortcut_enabled = ["chat_line_input", "edit_info_description", "edit_info_rules"]; }
+			else { var shortcut_enabled = ["chat_line_input"]; }
 			if (dev_user_disable_hotkeys !== "true") {
 				for (i = 0; i < shortcut_enabled.length; i++) {
 					document.getElementById(shortcut_enabled[i]).addEventListener("keyup", function(e) {
