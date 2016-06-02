@@ -2150,7 +2150,7 @@ var msparp = (function() {
 					
 					// begin by removing empty tags
 					var re2 = /\[([A-Za-z]+)(=[^\]]+)?\](\s+)?\[\/\1\]/ig;
-					final_text = final_text.replace(re2, "");
+					final_text = final_text.replace(re2, "$3");
 					// only get more involved if we have nested/potentially problematic tags, from quirks or otherwise
 					if (/\[[^\/\]]+\][^\[\]]*?\[[^\/\]]+\]/.test(final_text)) {
 						// attempt to catch improperly stacked colour, bgcolor and font tags  
@@ -2159,32 +2159,32 @@ var msparp = (function() {
 							// close and reopen tags
 							final_text = final_text.replace(re, "$1$4[/$2]$6$7$8[$2=$3]");
 							// strip empty tags
-							final_text = final_text.replace(re2, "");
+							final_text = final_text.replace(re2, "$3");
 						}
 						// escape [br]s and [rawc] again for this step so they aren't picked up as non matching
 						final_text = final_text.replace(/\[(br|rawc)\]/gi, "\ufe5d$1\ufe5e");
 						// fix intersecting tags
-						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])/i;
+						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])(.*?)(\[\/\6\])/i;
 						var panic = 0;
 						while (match = re.exec(final_text)) {
 							// strip empty tags
-							final_text = final_text.replace(re2, "");
+							final_text = final_text.replace(re2, "$3");
 							panic++
 							if (match[4].indexOf(match[1]) !== -1) {
 								// strip empty tags
-								final_text = final_text.replace(re2, "");
+								final_text = final_text.replace(re2, "$3");
 								console.log("BREAK: Stacking cannot be recovered.");
 								break;
 							} else if (panic > 50) {
 								// strip empty tags
-								final_text = final_text.replace(re2, "");
+								final_text = final_text.replace(re2, "$3");
 								console.log("BREAK: Too many BBCode intersection issues.");
 								break;
 							}
 							// close and reopen tags
-							final_text = final_text.replace(re, "$1$4[$6$7]$8[/$6]$10[$6$7]" ); 
+							final_text = final_text.replace(re, "$1$4[$6$7]$8[/$6]$10[$6$7]$11$12" ); 
 							// strip empty tags
-							final_text = final_text.replace(re2, "");
+							final_text = final_text.replace(re2, "$3");
 						}
 						// make [br]s coding again
 						final_text = final_text.replace(/\ufe5d/g, "[").replace(/\ufe5e/g,"]");
