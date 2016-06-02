@@ -363,6 +363,14 @@ def user_notes_post(username):
         creator_id=g.user.id,
         text=request.form["text"],
     ))
+
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="user_notes_post",
+        description=request.form["text"],
+        affected_user=user,
+    ))
+
     return redirect(
         request.headers.get("Referer")
         or url_for("admin_user", username=user.username)

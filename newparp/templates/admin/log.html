@@ -31,6 +31,11 @@
                 {% else %}
                 <a href="{{url_for("admin_log", type="user_set_group")}}">User group</a>
                 {% endif %}
+                {% if request.args.type == "user_notes_post": %}
+                <span class="tab_active">User notes</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="user_notes_post")}}">User notes</a>
+                {% endif %}
                 {% if request.args.type == "user_set_admin_tier": %}
                 <span class="tab_active">User admin tier</span>
                 {% else %}
@@ -77,6 +82,9 @@
                         {% elif entry.type == "user_set_group": %}
                         <td>User group</td>
                         <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a> to <strong>{{entry.description}}</strong>.</td>
+                        {% elif entry.type == "user_notes_post": %}
+                        <td>User notes</td>
+                        <td><span class="notelabel">Left note on <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a>:</span> <pre>{{entry.description}}</pre></td>
                         {% elif entry.type == "user_set_admin_tier": %}
                         <td>User group</td>
                         <td>Set <a href="{{url_for("admin_user", username=entry.affected_user.username)}}">{{entry.affected_user.username}}</a>'s admin tier to <strong>{{entry.description}}</strong>.</td>
