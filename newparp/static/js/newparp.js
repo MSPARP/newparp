@@ -206,10 +206,6 @@ var msparp = (function() {
 	$("#disable_animations").click(function() {
 		$("body").toggleClass("no_moving");
 	});
-	$("#smart_quirk").click(function() {
-		if ($("#smart_quirk").is(':checked')) {dev_user_smart_quirk = "true";}
-		else { dev_user_smart_quirk = "false"; }
-	});
 	
 	// Auto refresh unread counter in nav bar; use json
 	//setInterval(function(){ 
