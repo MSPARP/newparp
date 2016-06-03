@@ -4,6 +4,8 @@
     {{ super() }}
     <div class="settings_box">
         <div class="settings_box_wrap">
+            <h2>Email address</h2>
+            <p>{{ g.user.email_address }}</p>
             <h2>Password</h2>
             {% if request.args["saved"] == "password": %}
             <p>Your password has been changed.</p>
