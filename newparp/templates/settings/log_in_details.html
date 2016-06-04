@@ -4,8 +4,22 @@
     {{ super() }}
     <div class="settings_box">
         <div class="settings_box_wrap">
-            <h2>Email address</h2>
-            <p>{{ g.user.email_address }}</p>
+            <h2>E-mail address</h2>
+            {% if request.args["saved"] == "email_address": %}
+            <p>Your e-mail address has been changed.</p>
+            {% endif %}
+            <form action="{{url_for("settings_change_email")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                {% if error == "invalid_email": %}
+                <p class="error">That's not a valid e-mail address.</p>
+                {% endif %}
+                <div class="input_table password_settings">
+                    <div class="input"><p>
+                    <input type="email" name="email_address" id="change_email_email_address" required maxlength="100" value="{{ g.user.email_address }}"><label for="change_email_email_address">E-mail address</label>
+                    </p></div>
+                </div>
+                <p><button type="submit">Change</button></p>
+            </form>
             <h2>Password</h2>
             {% if request.args["saved"] == "password": %}
             <p>Your password has been changed.</p>

@@ -25,7 +25,7 @@
                 {% if request.args.group %}<input type="hidden" name="group" value="{{ request.args.group }}">{% endif %}
                 <div class="input"><p><input type="text" id="search_username" name="username" {% if request.args.username %}value="{{ request.args.username }}"{% endif %}><label for="search_username">Username</label></p></div>
                 <div class="input"><p><input type="text" id="search_ip" name="ip" {% if request.args.ip %}value="{{ request.args.ip }}"{% endif %}><label for="search_ip">IP address</label></p></div>
-                <div class="input"><p><input type="text" id="search_email" name="email" {% if request.args.email %}value="{{ request.args.email }}"{% endif %}><label for="search_email">Email</label></p></div>
+                <div class="input"><p><input type="text" id="search_email" name="email" {% if request.args.email %}value="{{ request.args.email }}"{% endif %}><label for="search_email">E-mail</label></p></div>
                 <label for="select_sort" class="textlabel">Order by</label><div class="input select"><p><select name="order" id="select_sort">
                 {% for id, order in user_orders.items(): %}
                     <option value="{{ id }}"{% if request.args.order == id: %} selected{% endif %}>{{ order.name }}</option>

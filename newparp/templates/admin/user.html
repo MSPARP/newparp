@@ -46,7 +46,7 @@
                     </tr>
                     {% endif %}
                     <tr>
-                        <td>Email address</td>
+                        <td>E-mail address</td>
                         <td>
                             <a href="{{url_for("admin_user_list", email=user.email_address)}}">{{user.email_address}}</a>
                             {% if user.email_verified: %}(verified){% else: %}(not verified){% endif %}
