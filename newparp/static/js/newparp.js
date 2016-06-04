@@ -2086,14 +2086,15 @@ var msparp = (function() {
 								break;
 							case "proper":
 								// Capitalise the first letter at the beginning, the first letter of each sentence, and lone Is.
-								text_chunks[i] = text_chunks[i].replace(/^.|[.?!]\s+\w|\bi\b/g, function(str) { return str.toUpperCase() });
+								text_chunks[i] = text_chunks[i].replace(/(?:^|[^.][.?!]\s+)(\w)/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
+								text_chunks[i] = text_chunks[i].replace(/\bi\b/g, function(str) { return str.toUpperCase() });
 								break;
 							case "first-letter":
 								// Part 1: same as adaptive lower.
 								text_chunks[i] = text_chunks[i].replace(/\w*[a-z]+\w*/g, function(str) { return str.toLowerCase(); });
 								text_chunks[i] = text_chunks[i].replace(/(^|[a-z])(\W*[A-Z]\W*([a-z]|$))+/g, function(str) { return str.toLowerCase(); });
 								// Part 2: capitalise the first letter at the beginning and the first letter of each sentence.
-								text_chunks[i] = text_chunks[i].replace(/^.|[.?!]\s+\w/g, function(str) { return str.toUpperCase() });
+								text_chunks[i] = text_chunks[i].replace(/(?:^|[^.][.?!]\s+)(\w)/g, function(str, p1){ return str.replace(p1, p1.toUpperCase()); });
 								break;
 						}
 						// Ordinary replacements. Escape any regex control characters before replacing.
