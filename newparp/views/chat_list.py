@@ -37,36 +37,14 @@ def chat_list(fmt=None, type=None, page=1):
     except KeyError:
         abort(404)
 
-    if type in (None, "pm", "unread"):
-
-        # Join opposing ChatUser on PM chats so we know who the other person is.
-        PMChatUser = aliased(ChatUser)
-        chats = g.db.query(ChatUser, ChatClass, PMChatUser).filter(
-            ChatUser.subscribed == True,
-        ).join(ChatClass).outerjoin(
-            PMChatUser,
-            and_(
-                ChatClass.type == "pm",
-                PMChatUser.chat_id == ChatClass.id,
-                PMChatUser.user_id != g.user.id,
-            ),
-        ).options(joinedload(PMChatUser.user))
-
-        if type == "pm":
-            chats = chats.filter(ChatClass.type == "pm")
-        elif type == "unread":
-            chats = chats.filter(ChatClass.last_message > ChatUser.last_online)
-
-    else:
-
-        chats = g.db.query(ChatUser, ChatClass).join(ChatClass).filter(and_(
-            ChatUser.subscribed == True,
-            ChatClass.type == type,
-        ))
-
-    chats = chats.filter(
+    chats = g.db.query(ChatUser, ChatClass).join(ChatClass).filter(and_(
         ChatUser.user_id == g.user.id,
-    ).order_by(
+        ChatUser.subscribed == True,
+    ))
+    if type == "unread":
+        chats = chats.filter(ChatClass.last_message > ChatUser.last_online)
+
+    chats = chats.order_by(
         ChatClass.last_message.desc(),
     ).offset((page - 1) * 50).limit(50).all()
 
@@ -82,7 +60,7 @@ def chat_list(fmt=None, type=None, page=1):
             ChatClass.last_message > ChatUser.last_online,
         )
     elif type is not None:
-        chat_count = chat_count.join(ChatClass).filter(ChatClass.type == type)
+        chat_count = chat_count.join(ChatClass)
     chat_count = chat_count.scalar()
 
     pipeline = g.redis.pipeline()
@@ -90,13 +68,15 @@ def chat_list(fmt=None, type=None, page=1):
         pipeline.hvals("chat:%s:online" % c[1].id)
 
     chat_dicts = []
-    for c, online_user_ids in zip(chats, pipeline.execute()):
+    for (chat_user, chat), online_user_ids in zip(chats, pipeline.execute()):
 
-        if len(c) == 2:
-            chat_user, chat = c
-            pm_chat_user = None
+        if chat.type == "pm":
+            pm_chat_user = g.db.query(ChatUser).filter(and_(
+                ChatUser.chat_id == chat.id,
+                ChatUser.user_id != g.user.id,
+            )).options(joinedload(ChatUser.user)).first()
         else:
-            chat_user, chat, pm_chat_user = c
+            pm_chat_user = None
 
         cd = chat.to_dict(pm_user=pm_chat_user.user if pm_chat_user is not None else None)
 
