@@ -27,6 +27,7 @@ if "SENTRY_PRIVATE_DSN" in os.environ:
 
 celery.config_from_object('newparp.tasks.config')
 
+
 class WorkerTask(Task):
     abstract = True
 
