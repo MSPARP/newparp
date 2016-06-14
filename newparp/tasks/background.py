@@ -28,7 +28,7 @@ def generate_counters():
     redis.set("connected_users", len(connected_users))
 
 
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def unlist_chats():
     unlist_chats.db.query(GroupChat).filter(and_(
         GroupChat.id == Chat.id,
@@ -38,7 +38,7 @@ def unlist_chats():
     unlist_chats.db.commit()
 
 
-@celery.task(base=WorkerTask)
+@celery.task(base=WorkerTask, queue="worker")
 def update_lastonline():
     db = update_lastonline.db
     redis = update_lastonline.redis

@@ -14,6 +14,7 @@ celery = Celery("newparp", include=[
     "newparp.tasks.matchmaker",
     "newparp.tasks.reaper",
     "newparp.tasks.roulette_matchmaker",
+    "newparp.tasks.chat",
 ])
 
 # Sentry exception logging if there is a sentry object.
