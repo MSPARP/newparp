@@ -250,7 +250,7 @@ app.register_error_handler(403, errors.error_403)
 app.register_error_handler(404, errors.error_404)
 app.register_error_handler(500, errors.error_500)
 
-if "DEBUG" not in os.environ and not app.config["DEBUG"]:
+if not app.debug:
     app.register_error_handler(Exception, errors.error_500)
 
 # 12. Log cabin
