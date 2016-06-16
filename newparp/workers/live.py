@@ -152,6 +152,7 @@ class ChatHandler(WebSocketHandler):
             self.safe_write(json.dumps({"users": get_userlist(self.db, redis, self.chat)}))
 
         self.db.commit()
+        self.db.close()
 
     def on_message(self, message):
         if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
