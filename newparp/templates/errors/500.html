@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block title: %}Internal Server Error - {% endblock %}
 {% block content: %}
-    <h2>500 Internal Server Error</h2>
-    <p>OH SHIT I BROKE SOMETHING</p>
+    <h2>Internal Server Error</h2>
+    <p>MSPARP is currently falling down the stairs! If you are reading this, something has gone wrong with MSPARP. Please try refreshing your page. If the issue persists after a few minutes, please send a message to our <a href="http://help.msparp.com/" target="_blank">Ticket System</a>.</p>
     {% if g.sentry_event_id %}
 	<p style="font-family: monospace">{{g.sentry_event_id}}</p>
+	<p>If you are seeing this code, please paste this into your ticket.</p>
+	{% endif %}
+	{% if admin and exception %}
+	<img src="//i.imgur.com/GEbaQ8I.gif">
+	<p>you're not supposed to see this</p>
+	<pre>{{exception}}</pre>
 	{% endif %}
 {% endblock %}
 

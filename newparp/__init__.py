@@ -250,6 +250,9 @@ app.error_handler_spec[None][403] = errors.error_403
 app.error_handler_spec[None][404] = errors.error_404
 app.error_handler_spec[None][500] = errors.error_500
 
+if "DEBUG" not in os.environ and not app.config["DEBUG"]:
+    app.error_handler_spec[None][Exception] = errors.error_500
+
 # 12. Log cabin
 
 app.add_url_rule("/api/users.json", "api_users", views.api_users, methods=("GET",))
