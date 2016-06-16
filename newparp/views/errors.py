@@ -1,6 +1,6 @@
 import traceback
 
-from flask import render_template, request, g, jsonify
+from flask import render_template, request, g, jsonify, current_app
 
 
 def error_403(e):
@@ -12,6 +12,9 @@ def error_404(e):
 
 
 def error_500(e):
+    if "sentry" in current_app.extensions:
+        current_app.extensions["sentry"].captureException()
+
     exception = traceback.format_exc()
 
     if hasattr(g, "user") and g.user:
