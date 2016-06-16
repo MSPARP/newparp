@@ -15,6 +15,7 @@ from sqlalchemy.orm import (
     sessionmaker,
     with_polymorphic,
 )
+from sqlalchemy.pool import NullPool
 # Sorry SQLiters, this just ain't gonna work.
 from sqlalchemy.dialects.postgresql import ARRAY, INET
 from sqlalchemy.ext.declarative import declarative_base
@@ -37,10 +38,7 @@ engine = create_engine(
     os.environ["POSTGRES_URL"],
     convert_unicode=True,
     echo="ECHO" in os.environ or "--debug" in sys.argv,
-    pool_size=100,
-    max_overflow=200,
-    pool_timeout=60,
-    pool_recycle=1800,
+    poolclass=NullPool,
 )
 
 sm = sessionmaker(
