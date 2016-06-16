@@ -246,12 +246,12 @@ app.add_url_rule("/bbcodeguide", "guides_bbcode_guide", guides.bbcode_guide, met
 
 # 11. Error handlers
 
-app.error_handler_spec[None][403] = errors.error_403
-app.error_handler_spec[None][404] = errors.error_404
-app.error_handler_spec[None][500] = errors.error_500
+app.register_error_handler(403, errors.error_403)
+app.register_error_handler(404, errors.error_404)
+app.register_error_handler(500, errors.error_500)
 
 if "DEBUG" not in os.environ and not app.config["DEBUG"]:
-    app.error_handler_spec[None][Exception] = errors.error_500
+    app.register_error_handler(Exception, errors.error_500)
 
 # 12. Log cabin
 
