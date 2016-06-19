@@ -659,7 +659,7 @@ var msparp = (function() {
 						// Otherwise try to reconnect.
 						exit();
 						status_bar.css("color", "#f00").text("Sorry, the connection to the server has been lost. Attempting to reconnect...");
-						window.setTimeout(launch_websocket, 2000);
+						window.setTimeout(launch_websocket, Math.random() * 10000);
 					}
 				}
 			}
