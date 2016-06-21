@@ -8,6 +8,7 @@ import signal
 import sys
 import time
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from redis import StrictRedis
 from sqlalchemy import and_, func
@@ -37,6 +38,7 @@ from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchChara
 from newparp.model.connections import redis_pool
 
 redis = StrictRedis(connection_pool=redis_pool)
+thread_pool = ThreadPoolExecutor()
 
 
 origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(".", "\."))
@@ -77,6 +79,7 @@ class ChatHandler(WebSocketHandler):
     def check_origin(self, origin):
         return origin_regex.match(origin) is not None
 
+    @coroutine
     def prepare(self):
         self.id = str(uuid4())
         self.joined = False
@@ -89,7 +92,7 @@ class ChatHandler(WebSocketHandler):
             return
         self.db = sm()
         try:
-            self.chat_user, self.user, self.chat = self.get_chat_user()
+            self.chat_user, self.user, self.chat = yield thread_pool.submit(self.get_chat_user)
         except NoResultFound:
             self.send_error(404)
             return
@@ -102,7 +105,7 @@ class ChatHandler(WebSocketHandler):
             self.send_error(403)
             return
         try:
-            authorize_joining(redis, self.db, self)
+            yield thread_pool.submit(authorize_joining, redis, self.db, self)
         except (UnauthorizedException, BannedException, TooManyPeopleException):
             self.send_error(403)
             return
@@ -144,12 +147,13 @@ class ChatHandler(WebSocketHandler):
             "messages": [json.loads(_) for _ in messages],
         }))
 
-        join_message_sent = join(redis, self.db, self)
+        join_message_sent = yield thread_pool.submit(join, redis, self.db, self)
         self.joined = True
 
         # Send userlist if nothing was sent by join().
         if not join_message_sent:
-            self.safe_write(json.dumps({"users": get_userlist(self.db, redis, self.chat)}))
+            userlist = yield thread_pool.submit(get_userlist, self.db, redis, self.chat)
+            self.safe_write(json.dumps({"users": userlist}))
 
         self.db.commit()
         self.db.close()
@@ -278,4 +282,3 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, sig_handler)
 
     ioloop.start()
-
