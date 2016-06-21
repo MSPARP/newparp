@@ -18,7 +18,7 @@ from newparp.model import (
 from newparp.model.connections import use_db
 
 chat_classes = {
-    None: AnyChat,
+    "all": AnyChat,
     "group": GroupChat,
     "pm": PMChat,
     "roulette": RouletteChat,
@@ -31,6 +31,8 @@ chat_classes = {
 @use_db
 @log_in_required
 def chat_list(fmt=None, type=None, page=1):
+    if type is None:
+        type = "all"
 
     try:
         ChatClass = chat_classes[type]
@@ -113,4 +115,3 @@ def chat_list(fmt=None, type=None, page=1):
         paginator=paginator,
         chat_classes=chat_classes,
     )
-
