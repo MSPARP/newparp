@@ -48,7 +48,7 @@ def update_lastonline():
     # Reset the list for the next iteration.
     redis.delete("queue:lastonline")
 
-    for chat_id, posted in chat_ids.iteritems():
+    for chat_id, posted in chat_ids.items():
         online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat_id))
 
         try:

@@ -18,8 +18,8 @@ import sqlalchemy as sa
 
 def upgrade():
     # Default needs to be dropped because the old default of an empty string cannot be casted to an IP.
-    op.execute(u'alter table users alter column last_ip drop default;')
-    op.execute(u'alter table users alter column last_ip type inet using last_ip::inet;')
+    op.execute('alter table users alter column last_ip drop default;')
+    op.execute('alter table users alter column last_ip type inet using last_ip::inet;')
 
 
 def downgrade():

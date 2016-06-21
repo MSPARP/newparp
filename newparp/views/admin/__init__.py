@@ -186,7 +186,7 @@ def user_list(fmt=None):
             "users": [_.to_dict() for _ in users],
         })
 
-    paginator_args = {k: v for k, v in request.args.items() if k != "page"}
+    paginator_args = {k: v for k, v in list(request.args.items()) if k != "page"}
     paginator = paginate.Page(
         [],
         page=page,
@@ -200,7 +200,7 @@ def user_list(fmt=None):
         User=User,
         users=users,
         paginator=paginator,
-        group_link_args={k: v for k, v in request.args.items() if k not in ("page", "group")},
+        group_link_args={k: v for k, v in list(request.args.items()) if k not in ("page", "group")},
         user_orders=user_orders,
     )
 
@@ -505,7 +505,7 @@ def admin_tier_post(admin_tier_id):
 
     old_permissions = set(admin_tier.permissions)
     new_permissions = {
-        _ for _ in request.form.keys()
+        _ for _ in list(request.form.keys())
         if _ in AdminTierPermission.permission.type.enums
     }
 

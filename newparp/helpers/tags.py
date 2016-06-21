@@ -40,7 +40,7 @@ def character_tags_from_form(form):
     character_tags = []
     used_ids = set()
 
-    for (tag_type, name), alias in tag_dict.iteritems():
+    for (tag_type, name), alias in tag_dict.items():
         try:
             tag = g.db.query(Tag).filter(and_(
                 Tag.type == tag_type, Tag.name == name,

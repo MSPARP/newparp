@@ -125,4 +125,3 @@ def register_post():
     if redirect_url == url_for("register", _external=True):
         return redirect(url_for("home"))
     return redirect(redirect_url)
-

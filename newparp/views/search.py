@@ -56,7 +56,7 @@ def search_save():
     # Picky checkboxes
     g.db.query(SearchCharacterChoice).filter(SearchCharacterChoice.user_id == g.user.id).delete()
     if "use_picky" in request.form:
-        for key in request.form.keys():
+        for key in list(request.form.keys()):
             if not key.startswith("picky_"):
                 continue
             try:

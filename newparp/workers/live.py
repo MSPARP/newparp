@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from __future__ import print_function
+
 
 import json
 import os
@@ -207,7 +207,7 @@ class ChatHandler(WebSocketHandler):
         )
         # Set the connection name, subscribe, and listen.
         yield Task(self.redis_client.execute_command, "CLIENT", "SETNAME", "live:%s:%s" % (self.chat_id, self.user_id))
-        yield Task(self.redis_client.subscribe, self.channels.values())
+        yield Task(self.redis_client.subscribe, list(self.channels.values()))
         self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
 
     def on_redis_message(self, message):
