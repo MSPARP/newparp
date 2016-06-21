@@ -5,3 +5,5 @@ logs/
 build/
 dist/
 celerybeat*
+env/
+venv/
