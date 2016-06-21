@@ -163,10 +163,10 @@ class User(Base):
     def set_password(self, password):
         if not password:
             raise ValueError("Password can't be blank.")
-        self.password = hashpw(password.encode("utf8"), gensalt())
+        self.password = hashpw(password.encode("utf8"), gensalt()).decode("utf8")
 
     def check_password(self, password):
-        return hashpw(password.encode("utf8"), self.password.encode()) == self.password
+        return hashpw(password.encode("utf8"), self.password.encode()).decode("utf8") == self.password
 
     @property
     def is_admin(self):
@@ -1214,4 +1214,3 @@ AdminTier.permissions = association_proxy(
 )
 
 SpamFlag.message = relation(Message) # no backref for now so it doesn't collide with the spam_flag field
-
