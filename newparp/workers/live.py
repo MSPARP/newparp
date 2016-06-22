@@ -280,7 +280,6 @@ if __name__ == "__main__":
 
     AsyncIOMainLoop().install()
     ioloop = IOLoop.instance()
-    ioloop.set_blocking_log_threshold(5.0)
 
     application = Application([
         (r"/(\d+)", ChatHandler),
