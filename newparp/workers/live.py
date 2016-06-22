@@ -8,6 +8,7 @@ import re
 import signal
 import sys
 import time
+import functools
 
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
