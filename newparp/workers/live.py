@@ -264,8 +264,8 @@ class HealthHandler(RequestHandler):
 
     async def get(self):
         try:
-            await self.loop.run_in_executor(thread_pool, functools.partial(self.test_sql))
-            await self.loop.run_in_executor(thread_pool, functools.partial(self.test_redis))
+            await self.loop.run_in_executor(thread_pool, self.test_sql)
+            await self.loop.run_in_executor(thread_pool, self.test_redis)
         except:
             self.send_error(500)
 
