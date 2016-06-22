@@ -194,9 +194,9 @@ class ChatHandler(WebSocketHandler):
                 send_userlist(self.db, redis, self.chat)
             self.db.commit()
         # Delete the database connection here and on_finish just to be sure.
-        if hasattr(self, "db"):
-            self.db.close()
-            self._db = None
+        if hasattr(self, "_db"):
+            self._db.close()
+            del self._db
         self.set_typing(False)
         if DEBUG:
             print("socket closed: %s" % (self.id))
@@ -209,9 +209,9 @@ class ChatHandler(WebSocketHandler):
             pass
 
     def on_finish(self):
-        if hasattr(self, "db"):
-            self.db.close()
-            self._db = None
+        if hasattr(self, "_db"):
+            self._db.close()
+            del self._db
 
     @coroutine
     def redis_listen(self):
