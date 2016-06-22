@@ -284,8 +284,12 @@ def sig_handler(sig, frame):
 
 def shutdown():
     print("Shutting down.")
+
     for socket in sockets:
         ioloop.add_callback(socket.close)
+
+    for task in asyncio.Task.all_tasks():
+        task.cancel()
 
     deadline = time.time() + 5
 
