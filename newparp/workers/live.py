@@ -146,8 +146,11 @@ class ChatHandler(WebSocketHandler):
             "user": "channel:%s:%s" % (self.chat_id, self.user_id),
             "typing": "channel:%s:typing" % self.chat_id,
         }
+
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
+
+        asyncio.ensure_future(self.redis_listen())
 
         # Send backlog.
         try:
@@ -170,8 +173,6 @@ class ChatHandler(WebSocketHandler):
 
         self.db.commit()
         self.db.close()
-
-        yield self.redis_listen()
 
     def on_message(self, message):
         if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
@@ -233,11 +234,11 @@ class ChatHandler(WebSocketHandler):
 
             while self.ws_connection:
                 message = await subscriber.next_published()
-                self.on_redis_message(message)
+                asyncio.ensure_future(self.on_redis_message(message))
         finally:
             self.redis_client.close()
 
-    def on_redis_message(self, message):
+    async def on_redis_message(self, message):
         if DEBUG:
             print("redis message: %s" % str(message))
 
