@@ -10,6 +10,8 @@ import sys
 import time
 import functools
 
+import asyncio_redis
+
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from redis import StrictRedis
@@ -21,7 +23,6 @@ from tornado.ioloop import IOLoop
 from tornado.platform.asyncio import AsyncIOMainLoop
 from tornado.web import Application, RequestHandler
 from tornado.websocket import WebSocketHandler, WebSocketClosedError
-from tornadoredis import Client
 from uuid import uuid4
 
 from newparp.helpers.chat import (
@@ -184,7 +185,8 @@ class ChatHandler(WebSocketHandler):
     def on_close(self):
         # Unsubscribe here and let the exit callback handle disconnecting.
         if hasattr(self, "redis_client"):
-            self.redis_client.unsubscribe(self.redis_client.subscribed)
+            self.redis_client.close()
+
         if hasattr(self, "close_code") and self.close_code in (1000, 1001):
             message_type = "disconnect"
         else:
@@ -215,34 +217,33 @@ class ChatHandler(WebSocketHandler):
             self._db.close()
             del self._db
 
-    @coroutine
-    def redis_listen(self):
-        self.redis_client = Client(
+    async def redis_listen(self):
+        self.redis_client = await asyncio_redis.Connection.create(
             host=os.environ["REDIS_HOST"],
             port=int(os.environ["REDIS_PORT"]),
-            selected_db=int(os.environ["REDIS_DB"]),
+            db=int(os.environ["REDIS_DB"]),
         )
         # Set the connection name, subscribe, and listen.
-        yield Task(self.redis_client.execute_command, "CLIENT", "SETNAME", "live:%s:%s" % (self.chat_id, self.user_id))
-        yield Task(self.redis_client.subscribe, list(self.channels.values()))
-        self.redis_client.listen(self.on_redis_message, self.on_redis_unsubscribe)
+        await self.redis_client.client_setname("live:%s:%s" % (self.chat_id, self.user_id))
+
+        subscriber = await self.redis_client.start_subscribe()
+        await subscriber.subscribe(list(self.channels.values()))
+
+        while self.ws_connection:
+            message = await subscriber.next_published()
+            self.on_redis_message(message)
 
     def on_redis_message(self, message):
         if DEBUG:
             print("redis message: %s" % str(message))
-        if message.kind != "message":
-            return
 
-        self.safe_write(message.body)
+        self.safe_write(message.value)
 
         if message.channel == self.channels["user"]:
-            data = json.loads(message.body)
+            data = json.loads(message.value)
             if "exit" in data:
                 self.joined = False
                 self.close()
-
-    def on_redis_unsubscribe(self, callback):
-        self.redis_client.disconnect()
 
 
 class HealthHandler(RequestHandler):
