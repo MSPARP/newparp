@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 
+import asyncio
 import json
 import os
 import re
@@ -16,6 +17,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from tornado.gen import coroutine, Task
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
+from tornado.platform.asyncio import AsyncIOMainLoop
 from tornado.web import Application, RequestHandler
 from tornado.websocket import WebSocketHandler, WebSocketClosedError
 from tornadoredis import Client
@@ -55,6 +57,10 @@ class ChatHandler(WebSocketHandler):
             return self._db
         else:
             self._db = sm()
+
+    @property
+    def loop(self):
+        return asyncio.get_event_loop()
 
     def get_chat_user(self):
         return self.db.query(
@@ -272,6 +278,10 @@ class HealthHandler(RequestHandler):
 
 if __name__ == "__main__":
 
+    AsyncIOMainLoop().install()
+    ioloop = IOLoop.instance()
+    ioloop.set_blocking_log_threshold(5.0)
+
     application = Application([
         (r"/(\d+)", ChatHandler),
         (r"/health", HealthHandler)
@@ -279,9 +289,6 @@ if __name__ == "__main__":
 
     http_server = HTTPServer(application)
     http_server.listen(int(os.environ.get("LISTEN_PORT", 5000)))
-
-    ioloop = IOLoop.instance()
-    ioloop.set_blocking_log_threshold(5.0)
 
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
