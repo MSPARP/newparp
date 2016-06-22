@@ -263,18 +263,30 @@ def shutdown():
     stop_loop()
 
 class HealthHandler(RequestHandler):
-    def prepare(self):
-        self.db = sm()
+    @property
+    def loop(self):
+        return asyncio.get_event_loop()
 
-    def get(self):
+    def test_sql(self):
+        db = sm()
+
+        try:
+            db.query(SearchCharacter).first()
+        finally:
+            db.close()
+            del db
+
+    def test_redis(self):
         redis.set("health", 1)
-        self.db.query(SearchCharacter).first()
-        self.write("ok")
 
-    def on_finish(self):
-        if hasattr(self, "db"):
-            self.db.close()
-            del self.db
+    async def get(self):
+        try:
+            await self.loop.run_in_executor(thread_pool, functools.partial(self.test_sql))
+            await self.loop.run_in_executor(thread_pool, functools.partial(self.test_redis))
+        except:
+            self.send_error(500)
+
+        self.write("ok")
 
 if __name__ == "__main__":
 
