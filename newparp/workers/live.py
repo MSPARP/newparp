@@ -134,7 +134,7 @@ class ChatHandler(WebSocketHandler):
             print("socket opened: %s %s %s" % (self.id, self.chat.url, self.user.username))
 
         try:
-            kick_check(redis, self)
+            yield thread_pool.submit(kick_check, redis, self)
         except KickedException:
             self.safe_write(json.dumps({"exit": "kick"}))
             self.close()
@@ -148,7 +148,6 @@ class ChatHandler(WebSocketHandler):
         }
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
-        yield self.redis_listen()
 
         # Send backlog.
         try:
@@ -171,6 +170,8 @@ class ChatHandler(WebSocketHandler):
 
         self.db.commit()
         self.db.close()
+
+        yield self.redis_listen()
 
     def on_message(self, message):
         if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
@@ -226,12 +227,15 @@ class ChatHandler(WebSocketHandler):
         # Set the connection name, subscribe, and listen.
         await self.redis_client.client_setname("live:%s:%s" % (self.chat_id, self.user_id))
 
-        subscriber = await self.redis_client.start_subscribe()
-        await subscriber.subscribe(list(self.channels.values()))
+        try:
+            subscriber = await self.redis_client.start_subscribe()
+            await subscriber.subscribe(list(self.channels.values()))
 
-        while self.ws_connection:
-            message = await subscriber.next_published()
-            self.on_redis_message(message)
+            while self.ws_connection:
+                message = await subscriber.next_published()
+                self.on_redis_message(message)
+        finally:
+            self.redis_client.close()
 
     def on_redis_message(self, message):
         if DEBUG:
