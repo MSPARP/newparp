@@ -57,6 +57,7 @@ class ChatHandler(WebSocketHandler):
             return self._db
         else:
             self._db = sm()
+            return self._db
 
     @property
     def loop(self):
