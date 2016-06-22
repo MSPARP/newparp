@@ -49,6 +49,12 @@ sockets = set()
 DEBUG = "DEBUG" in os.environ or "--debug" in sys.argv
 
 class ChatHandler(WebSocketHandler):
+    @property
+    def db(self):
+        if hasattr(self, "_db") and self._db is not None:
+            return self._db
+        else:
+            self._db = sm()
 
     def get_chat_user(self):
         return self.db.query(
@@ -90,7 +96,6 @@ class ChatHandler(WebSocketHandler):
         except (KeyError, TypeError, ValueError):
             self.send_error(400)
             return
-        self.db = sm()
         try:
             self.chat_user, self.user, self.chat = yield thread_pool.submit(self.get_chat_user)
         except NoResultFound:
@@ -185,7 +190,7 @@ class ChatHandler(WebSocketHandler):
         # Delete the database connection here and on_finish just to be sure.
         if hasattr(self, "db"):
             self.db.close()
-            del self.db
+            self._db = None
         self.set_typing(False)
         if DEBUG:
             print("socket closed: %s" % (self.id))
@@ -200,7 +205,7 @@ class ChatHandler(WebSocketHandler):
     def on_finish(self):
         if hasattr(self, "db"):
             self.db.close()
-            del self.db
+            self._db = None
 
     @coroutine
     def redis_listen(self):
