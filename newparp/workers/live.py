@@ -252,14 +252,16 @@ def shutdown():
     print("Shutting down.")
     for socket in sockets:
         ioloop.add_callback(socket.close)
-    deadline = time.time() + 10
+
+    deadline = time.time() + 5
 
     def stop_loop():
         now = time.time()
-        if now < deadline and (ioloop._callbacks or ioloop._timeouts):
+        if now < deadline and len(sockets) != 0:
             ioloop.add_timeout(now + 0.1, stop_loop)
         else:
             ioloop.stop()
+
     stop_loop()
 
 class HealthHandler(RequestHandler):
