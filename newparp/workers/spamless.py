@@ -209,3 +209,4 @@ if __name__ == "__main__":
     while ps_thread.is_alive():
         redis.setex("spamless:alive", 10, "alive")
         ps_thread.join(3)
+

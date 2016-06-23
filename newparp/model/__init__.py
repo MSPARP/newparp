@@ -1214,3 +1214,4 @@ AdminTier.permissions = association_proxy(
 )
 
 SpamFlag.message = relation(Message) # no backref for now so it doesn't collide with the spam_flag field
+

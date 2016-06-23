@@ -1,5 +1,3 @@
-
-
 import os
 
 from alembic import context

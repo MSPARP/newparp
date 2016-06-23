@@ -115,3 +115,4 @@ def chat_list(fmt=None, type=None, page=1):
         paginator=paginator,
         chat_classes=chat_classes,
     )
+
