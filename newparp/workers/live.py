@@ -85,9 +85,9 @@ class ChatHandler(WebSocketHandler):
                 "typing": list(int(_) for _ in redis.smembers(typing_key)),
             }))
 
-    def safe_write(self, message):
+    def write_message(self, *args, **kwargs):
         try:
-            self.write_message(message)
+            super().write_message(*args, **kwargs)
         except WebSocketClosedError:
             return
 
@@ -136,7 +136,7 @@ class ChatHandler(WebSocketHandler):
         try:
             yield thread_pool.submit(kick_check, redis, self)
         except KickedException:
-            self.safe_write(json.dumps({"exit": "kick"}))
+            self.write_message(json.dumps({"exit": "kick"}))
             self.close()
             return
 
@@ -158,7 +158,7 @@ class ChatHandler(WebSocketHandler):
         except (KeyError, IndexError, ValueError):
             after = 0
         messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
-        self.safe_write(json.dumps({
+        self.write_message(json.dumps({
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
@@ -169,7 +169,7 @@ class ChatHandler(WebSocketHandler):
         # Send userlist if nothing was sent by join().
         if not join_message_sent:
             userlist = yield thread_pool.submit(get_userlist, self.db, redis, self.chat)
-            self.safe_write(json.dumps({"users": userlist}))
+            self.write_message(json.dumps({"users": userlist}))
 
         self.db.commit()
         self.db.close()
@@ -242,7 +242,7 @@ class ChatHandler(WebSocketHandler):
         if DEBUG:
             print("redis message: %s" % str(message))
 
-        self.safe_write(message.value)
+        self.write_message(message.value)
 
         if message.channel == self.channels["user"]:
             data = json.loads(message.value)
