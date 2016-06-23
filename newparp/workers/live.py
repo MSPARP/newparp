@@ -115,10 +115,11 @@ class ChatHandler(WebSocketHandler):
         self.user_number = self.chat_user.number
         self.user.last_online = datetime.now()
         self.user.last_ip = self.request.headers["X-Forwarded-For"]
-        if self.user.group == "banned":
-            self.send_error(403)
-            return
+
         try:
+            if self.user.group == "banned":
+                raise BannedException
+
             yield thread_pool.submit(authorize_joining, redis, self.db, self)
         except (UnauthorizedException, BannedException, TooManyPeopleException):
             self.send_error(403)
