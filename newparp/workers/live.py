@@ -154,7 +154,7 @@ class ChatHandler(WebSocketHandler):
         if self.chat.type == "pm":
             self.channels["pm"] = "channel:pm:%s" % self.user_id
 
-        asyncio.ensure_future(self.redis_listen())
+        self.redis_task = asyncio.ensure_future(self.redis_listen())
 
         # Send backlog.
         try:
@@ -190,6 +190,9 @@ class ChatHandler(WebSocketHandler):
 
     def on_close(self):
         # Unsubscribe here and let the exit callback handle disconnecting.
+        if hasattr(self, "redis_task"):
+            self.redis_task.cancel()
+
         if hasattr(self, "redis_client"):
             self.redis_client.close()
 
