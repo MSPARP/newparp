@@ -78,6 +78,9 @@ class ChatHandler(WebSocketHandler):
         )).one()
 
     def set_typing(self, is_typing):
+        if not hasattr(self, "channels") or not hasattr(self, "user_number"):
+            return
+
         command = redis.sadd if is_typing else redis.srem
         typing_key = "chat:%s:typing" % self.chat_id
         if command(typing_key, self.user_number):
