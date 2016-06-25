@@ -74,6 +74,8 @@ def messages():
     db_disconnect()
 
     try:
+        # The subscribe message has to be popped before getting the message.
+        g.pubsub.get_message()
         # This timeout is LONGPOLL_TIMEOUT * 2
         msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=50)
         if msg:

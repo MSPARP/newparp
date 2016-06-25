@@ -145,6 +145,8 @@ def search_continue():
     g.redis.sadd("searchers", searcher_id)
 
     try:
+        # The subscribe message has to be popped before getting the message.
+        g.pubsub.get_message()
         msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=30)
         if msg:
             # The pubsub channel sends us a JSON string, so we return that
