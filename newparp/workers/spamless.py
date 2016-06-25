@@ -81,8 +81,8 @@ def on_ps(ps_message):
 
         except Mark as e:
             time.sleep(0.1)
-            q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
-            message.update({"spam_flag": e.message})
+            q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": str(e)})
+            message.update({"spam_flag": str(e)})
             redis.publish("spamless:live", json.dumps(message))
             db.commit()
 
@@ -112,10 +112,10 @@ def on_ps(ps_message):
                 flag_suffix = "SILENCED"
 
             db.query(Message).filter(Message.id == message["id"]).update({
-                "spam_flag": e.message + " " + flag_suffix,
+                "spam_flag": str(e) + " " + flag_suffix,
             })
 
-            message.update({"spam_flag": e.message + " " + flag_suffix})
+            message.update({"spam_flag": str(e) + " " + flag_suffix})
             redis.publish("spamless:live", json.dumps(message))
 
             if flag_suffix == "SILENCED":
