@@ -58,18 +58,18 @@ def now():
 
 
 case_options = {
-    u"alt-lines": "ALTERNATING lines",
-    u"alternating": "AlTeRnAtInG",
-    u"inverted": "iNVERTED",
-    u"lower": u"lower case",
-    u"normal": u"Normal",
-    u"title": u"Title Case",
-    u"upper": u"UPPER CASE",
-    u"proper": u"Proper grammar",
-    u"first-letter": u"First letter caps",
+    "alt-lines": "ALTERNATING lines",
+    "alternating": "AlTeRnAtInG",
+    "inverted": "iNVERTED",
+    "lower": "lower case",
+    "normal": "Normal",
+    "title": "Title Case",
+    "upper": "UPPER CASE",
+    "proper": "Proper grammar",
+    "first-letter": "First letter caps",
 }
 
-case_options_enum = Enum(*case_options.keys(), name=u"case")
+case_options_enum = Enum(*list(case_options.keys()), name="case")
 
 
 # 1. Classes
@@ -93,11 +93,11 @@ class User(Base):
     email_verified = Column(Boolean, nullable=False, default=False)
 
     group = Column(Enum(
-        u"banned",
-        u"guest",
-        u"active",
-        name=u"users_group",
-    ), nullable=False, default=u"guest")
+        "banned",
+        "guest",
+        "active",
+        name="users_group",
+    ), nullable=False, default="guest")
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))
 
     created = Column(DateTime(), nullable=False, default=now)
@@ -112,8 +112,8 @@ class User(Base):
     ))
 
     last_search_mode = Column(
-        Enum(u"roulette", u"search", name="user_last_search_mode"),
-        nullable=False, default=u"roulette",
+        Enum("roulette", "search", name="user_last_search_mode"),
+        nullable=False, default="roulette",
     )
 
     # Character info for searching
@@ -124,25 +124,25 @@ class User(Base):
         use_alter=True,
     ))
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
-    name = Column(Unicode(50), nullable=False, default=u"anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    name = Column(Unicode(50), nullable=False, default="anonymous")
+    acronym = Column(Unicode(15), nullable=False, default="??")
     # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
-    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
-    case = Column(case_options_enum, nullable=False, default=u"normal")
-    replacements = Column(UnicodeText, nullable=False, default=u"[]")
-    regexes = Column(UnicodeText, nullable=False, default=u"[]")
+    color = Column(Unicode(6), nullable=False, default="000000")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default="")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default="")
+    case = Column(case_options_enum, nullable=False, default="normal")
+    replacements = Column(UnicodeText, nullable=False, default="[]")
+    regexes = Column(UnicodeText, nullable=False, default="[]")
     search_style = Column(
-        Enum(u"script", u"paragraph", u"either", name="user_search_style"),
-        nullable=False, default=u"script",
+        Enum("script", "paragraph", "either", name="user_search_style"),
+        nullable=False, default="script",
     )
-    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=[u"sfw"])
+    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=["sfw"])
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
-    group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=[u"script"])
-    group_chat_levels = Column(ARRAY(Unicode(50)), nullable=False, default=[u"sfw"])
+    group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=["script"])
+    group_chat_levels = Column(ARRAY(Unicode(50)), nullable=False, default=["sfw"])
 
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
@@ -163,10 +163,10 @@ class User(Base):
     def set_password(self, password):
         if not password:
             raise ValueError("Password can't be blank.")
-        self.password = hashpw(password.encode("utf8"), gensalt())
+        self.password = hashpw(password.encode("utf8"), gensalt()).decode("utf8")
 
     def check_password(self, password):
-        return hashpw(password.encode("utf8"), self.password.encode()) == self.password
+        return hashpw(password.encode("utf8"), self.password.encode()).decode("utf8") == self.password
 
     @property
     def is_admin(self):
@@ -267,23 +267,23 @@ class Character(Base):
     id = Column(Integer, primary_key=True)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    title = Column(Unicode(50), nullable=False, default=u"New character")
+    title = Column(Unicode(50), nullable=False, default="New character")
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
     shortcut = Column(Unicode(15))
 
-    name = Column(Unicode(50), nullable=False, default=u"anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    name = Column(Unicode(50), nullable=False, default="anonymous")
+    acronym = Column(Unicode(15), nullable=False, default="??")
 
     # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
+    color = Column(Unicode(6), nullable=False, default="000000")
 
-    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default="")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default="")
 
-    case = Column(case_options_enum, nullable=False, default=u"normal")
+    case = Column(case_options_enum, nullable=False, default="normal")
 
-    replacements = Column(UnicodeText, nullable=False, default=u"[]")
-    regexes = Column(UnicodeText, nullable=False, default=u"[]")
+    replacements = Column(UnicodeText, nullable=False, default="[]")
+    regexes = Column(UnicodeText, nullable=False, default="[]")
 
     def __repr__(self):
         return "<Character #%s: %s>" % (self.id, self.title.encode("utf8"))
@@ -334,21 +334,21 @@ class SearchCharacter(Base):
     group_id = Column(Integer, ForeignKey("search_character_groups.id"), nullable=False)
     order = Column(Integer, nullable=False)
 
-    name = Column(Unicode(50), nullable=False, default=u"anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    name = Column(Unicode(50), nullable=False, default="anonymous")
+    acronym = Column(Unicode(15), nullable=False, default="??")
 
     # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
+    color = Column(Unicode(6), nullable=False, default="000000")
 
-    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default="")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default="")
 
-    case = Column(case_options_enum, nullable=False, default=u"normal")
+    case = Column(case_options_enum, nullable=False, default="normal")
 
-    replacements = Column(UnicodeText, nullable=False, default=u"[]")
-    regexes = Column(UnicodeText, nullable=False, default=u"[]")
+    replacements = Column(UnicodeText, nullable=False, default="[]")
+    regexes = Column(UnicodeText, nullable=False, default="[]")
 
-    text_preview = Column(UnicodeText, nullable=False, default=u"oh god how did this get here I am not good with computer")
+    text_preview = Column(UnicodeText, nullable=False, default="oh god how did this get here I am not good with computer")
 
     def __repr__(self):
         return "<SearchCharacter #%s: %s>" % (self.id, self.title.encode("utf8"))
@@ -409,12 +409,12 @@ class Chat(Base):
     # order.
     # Searched chats allow anyone to enter and have randomly generated URLs.
     type = Column(Enum(
-        u"group",
-        u"pm",
-        u"roulette",
-        u"searched",
-        name=u"chats_type",
-    ), nullable=False, default=u"group")
+        "group",
+        "pm",
+        "roulette",
+        "searched",
+        name="chats_type",
+    ), nullable=False, default="group")
 
     created = Column(DateTime(), nullable=False, default=now)
 
@@ -453,34 +453,34 @@ class GroupChat(Chat):
         "inherit_condition": id == Chat.id,
     }
 
-    title = Column(Unicode(50), nullable=False, default=u"")
-    topic = Column(UnicodeText, nullable=False, default=u"")
-    description = Column(UnicodeText, nullable=False, default=u"")
-    rules = Column(UnicodeText, nullable=False, default=u"")
+    title = Column(Unicode(50), nullable=False, default="")
+    topic = Column(UnicodeText, nullable=False, default="")
+    description = Column(UnicodeText, nullable=False, default="")
+    rules = Column(UnicodeText, nullable=False, default="")
 
     autosilence = Column(Boolean, nullable=False, default=False)
 
     style = Column(Enum(
-        u"script",
-        u"paragraph",
-        u"either",
-        name=u"group_chats_style",
-    ), nullable=False, default=u"script")
+        "script",
+        "paragraph",
+        "either",
+        name="group_chats_style",
+    ), nullable=False, default="script")
     level = Column(Enum(
-        u"sfw",
-        u"nsfw",
-        u"nsfw-extreme",
-        name=u"group_chats_level",
-    ), nullable=False, default=u"sfw")
+        "sfw",
+        "nsfw",
+        "nsfw-extreme",
+        name="group_chats_level",
+    ), nullable=False, default="sfw")
 
     publicity = Column(Enum(
-        u"listed",
-        u"unlisted",
-        u"pinned",
-        u"admin_only",
-        u"private",
-        name=u"group_chats_publicity",
-    ), nullable=False, default=u"unlisted")
+        "listed",
+        "unlisted",
+        "pinned",
+        "admin_only",
+        "private",
+        name="group_chats_publicity",
+    ), nullable=False, default="unlisted")
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     parent_id = Column(Integer, ForeignKey("chats.id"))
@@ -541,10 +541,10 @@ class LogMarker(Base):
     __tablename__ = "log_markers"
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
     type = Column(Enum(
-        u"page_with_system_messages",
-        u"page_without_system_messages",
-        name=u"log_markers_type",
-    ), primary_key=True, default=u"page_with_system_messages")
+        "page_with_system_messages",
+        "page_without_system_messages",
+        name="log_markers_type",
+    ), primary_key=True, default="page_with_system_messages")
     number = Column(Integer, primary_key=True, autoincrement=False)
     message_id = Column(Integer, ForeignKey("messages.id"), nullable=False)
 
@@ -566,27 +566,27 @@ class ChatUser(Base):
 
     # Ignored if the user is an admin or the chat's creator.
     group = Column(Enum(
-        u"mod3",
-        u"mod2",
-        u"mod1",
-        u"silent",
-        u"user",
-        name=u"chat_users_group",
-    ), nullable=False, default=u"user")
+        "mod3",
+        "mod2",
+        "mod1",
+        "silent",
+        "user",
+        name="chat_users_group",
+    ), nullable=False, default="user")
 
-    name = Column(Unicode(50), nullable=False, default=u"anonymous")
-    acronym = Column(Unicode(15), nullable=False, default=u"??")
+    name = Column(Unicode(50), nullable=False, default="anonymous")
+    acronym = Column(Unicode(15), nullable=False, default="??")
 
     # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
+    color = Column(Unicode(6), nullable=False, default="000000")
 
-    quirk_prefix = Column(Unicode(2000), nullable=False, default=u"")
-    quirk_suffix = Column(Unicode(2000), nullable=False, default=u"")
+    quirk_prefix = Column(Unicode(2000), nullable=False, default="")
+    quirk_suffix = Column(Unicode(2000), nullable=False, default="")
 
-    case = Column(case_options_enum, nullable=False, default=u"normal")
+    case = Column(case_options_enum, nullable=False, default="normal")
 
-    replacements = Column(UnicodeText, nullable=False, default=u"[]")
-    regexes = Column(UnicodeText, nullable=False, default=u"[]")
+    replacements = Column(UnicodeText, nullable=False, default="[]")
+    regexes = Column(UnicodeText, nullable=False, default="[]")
 
     confirm_disconnect = Column(Boolean, nullable=False, default=True)
     desktop_notifications = Column(Boolean, nullable=False, default=False)
@@ -785,27 +785,27 @@ class Message(Base):
 
     # XXX CONSIDER SPLITTING SYSTEM INTO USER_CHANGE, META_CHANGE ETC.
     type = Column(Enum(
-        u"ic",
-        u"ooc",
-        u"me",
-        u"join",
-        u"disconnect",
-        u"timeout",
-        u"user_info",
-        u"user_group",
-        u"user_action",
-        u"chat_meta",
-        u"search_info",
-        u"spamless",
-        name=u"messages_type",
-    ), nullable=False, default=u"ic")
+        "ic",
+        "ooc",
+        "me",
+        "join",
+        "disconnect",
+        "timeout",
+        "user_info",
+        "user_group",
+        "user_action",
+        "chat_meta",
+        "search_info",
+        "spamless",
+        name="messages_type",
+    ), nullable=False, default="ic")
 
     # Must be a hex code.
-    color = Column(Unicode(6), nullable=False, default=u"000000")
+    color = Column(Unicode(6), nullable=False, default="000000")
 
-    acronym = Column(Unicode(15), nullable=False, default=u"")
+    acronym = Column(Unicode(15), nullable=False, default="")
 
-    name = Column(Unicode(50), nullable=False, default=u"")
+    name = Column(Unicode(50), nullable=False, default="")
 
     text = Column(UnicodeText, nullable=False)
 
@@ -893,23 +893,23 @@ class Tag(Base):
     id = Column(Integer, primary_key=True)
 
     type_options = {
-        u"maturity",
-        u"trigger",
-        u"type",
-        u"fandom",
-        u"fandom_wanted",
-        u"character",
-        u"character_wanted",
-        u"gender",
-        u"gender_wanted",
-        u"misc",
+        "maturity",
+        "trigger",
+        "type",
+        "fandom",
+        "fandom_wanted",
+        "character",
+        "character_wanted",
+        "gender",
+        "gender_wanted",
+        "misc",
     }
 
     # List to preserve order.
     maturity_names = ["general", "teen", "mature", "explicit"]
     type_names = ["fluff", "plot-driven", "sexual", "shippy", "violent"]
 
-    type = Column(Enum(*type_options, name=u"tags_type"), nullable=False, default=u"misc")
+    type = Column(Enum(*type_options, name="tags_type"), nullable=False, default="misc")
     name = Column(Unicode(50), nullable=False)
 
     synonym_id = Column(Integer, ForeignKey("tags.id"))
@@ -979,17 +979,17 @@ class AdminTierPermission(Base):
     __tablename__ = "admin_tier_permissions"
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"), primary_key=True)
     permission = Column(Enum(
-        u"search_characters",
-        u"announcements",
-        u"broadcast",
-        u"user_list",
-        u"reset_password",
-        u"permissions",
-        u"groups",
-        u"log",
-        u"spamless",
-        u"ip_bans",
-        name=u"admin_tier_permissions_permission",
+        "search_characters",
+        "announcements",
+        "broadcast",
+        "user_list",
+        "reset_password",
+        "permissions",
+        "groups",
+        "log",
+        "spamless",
+        "ip_bans",
+        name="admin_tier_permissions_permission",
     ), primary_key=True)
 
     def __repr__(self):
@@ -997,9 +997,9 @@ class AdminTierPermission(Base):
 
 
 spamless_filter_types = Enum(
-    u"banned_names",
-    u"blacklist",
-    u"warnlist",
+    "banned_names",
+    "blacklist",
+    "warnlist",
     name="spamless_filter_types"
 )
 
@@ -1056,7 +1056,7 @@ Index("characters_user_id", Character.user_id)
 Index(
     "group_chats_publicity_listed",
     GroupChat.publicity,
-    postgresql_where=GroupChat.publicity.in_((u"listed", u"pinned")),
+    postgresql_where=GroupChat.publicity.in_(("listed", "pinned")),
 )
 
 # Index for your chats list.

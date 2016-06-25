@@ -60,10 +60,10 @@ def validate_character_form(form):
 
     # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
     # Zip replacements.
-    replacements = zip(
+    replacements = list(zip(
         form.getlist("quirk_from"),
         form.getlist("quirk_to"),
-    )
+    ))
     # Strip out any rows where from is blank or the same as to.
     replacements = [_ for _ in replacements if _[0] != "" and _[0] != _[1]]
     # And encode as JSON.
@@ -71,10 +71,10 @@ def validate_character_form(form):
 
     # XXX PUT LENGTH LIMIT ON REGEXES?
     # Zip regexes.
-    regexes = zip(
+    regexes = list(zip(
         form.getlist("regex_from"),
         form.getlist("regex_to"),
-    )
+    ))
     # Strip out any rows where from is blank or the same as to.
     regexes = [_ for _ in regexes if _[0] != "" and _[0] != _[1]]
     # And encode as JSON.

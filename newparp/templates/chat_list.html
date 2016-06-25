@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title: %}Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats - {% endblock %}
+{% block title: %}Your {% if type == 'all': %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats - {% endblock %}
 {% block content: %}
     <div class="common_box" id="filter_chats">
-        <h2><label><span>Your {% if type == None: %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats</span></label></h2>
+        <h2><label><span>Your {% if type == 'all': %}{% elif type == 'pm' %}PM{% else %}{{type}}{% endif %} chats</span></label></h2>
         <div class="common_box_wrap">
             <nav id="subnav">
                 <span class="textlabel">Show:</span>
@@ -10,7 +10,7 @@
                 {% if type == key: %}
                 {% if key == 'pm': %}
                 <span class="tab_active">PM</span>
-                {% elif key == None: %}
+                {% elif key == 'all': %}
                 <span class="tab_active">All</span>
                 {% else %}
                 <span class="tab_active">{{key|capitalize}}</span>
@@ -18,7 +18,7 @@
                 {% else %}
                 {% if key == 'pm': %}
                 <a href="{{url_for('rp_chat_list', type='pm')}}">PM</a>
-                {% elif key == None: %}
+                {% elif key == 'all': %}
                 <a href="{{url_for('rp_chat_list')}}">All</a>
                 {% else %}
                 <a href="{{url_for('rp_chat_list', type=key)}}">{{key|capitalize}}</a>
@@ -33,7 +33,7 @@
                 <li{% if chat.chat.unread: %} class="unread" title="Unread"{% endif %}>
                     <h3>{% if chat.chat.type == "group" and chat.chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.chat.url)}}">{{chat.chat_user.title or chat.chat.title}}{% if chat.chat.type == "pm" and chat.chat.partner_online: %} (online){% endif %}</a></h3>
                     <p class="subtitle">
-                        {% if type in (None, "unread"): %}
+                        {% if type in ('all', "unread"): %}
                             <a href="{{url_for("rp_chat_list", type=chat.chat.type)}}">{{"PM" if chat.chat.type == "pm" else chat.chat.type.capitalize()}}</a>,
                         {% endif %}
                         {% if chat.chat.type == "group": %}

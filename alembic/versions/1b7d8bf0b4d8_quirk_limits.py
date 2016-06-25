@@ -19,11 +19,11 @@ import sqlalchemy as sa
 def upgrade():
     tables = ['users', 'characters', 'search_characters', 'chat_users', 'requests']
 
-    op.execute(u'COMMIT;')
+    op.execute('COMMIT;')
 
     for table in tables:
-        op.execute(u'ALTER TABLE %s ALTER COLUMN quirk_prefix TYPE character varying(2000);' % (table))
-        op.execute(u'ALTER TABLE %s ALTER COLUMN quirk_suffix TYPE character varying(2000);' % (table))
+        op.execute('ALTER TABLE %s ALTER COLUMN quirk_prefix TYPE character varying(2000);' % (table))
+        op.execute('ALTER TABLE %s ALTER COLUMN quirk_suffix TYPE character varying(2000);' % (table))
 
 
 def downgrade():

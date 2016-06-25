@@ -79,7 +79,7 @@ def character(character_id, fmt=None):
         regexes=json.loads(character.regexes),
         character_tags={
             tag_type: ", ".join(tag["alias"] for tag in tags)
-            for tag_type, tags in character.tags_by_type().iteritems()
+            for tag_type, tags in character.tags_by_type().items()
         },
         search_character_groups=search_character_groups,
         case_options=case_options,

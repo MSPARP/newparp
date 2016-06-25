@@ -17,8 +17,8 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.execute(u'COMMIT;')
-    op.execute(u'ALTER TYPE user_search_level ADD VALUE \'nsfwe\';')
+    op.execute('COMMIT;')
+    op.execute('ALTER TYPE user_search_level ADD VALUE \'nsfwe\';')
 
 
 def downgrade():

@@ -185,12 +185,12 @@ def send_message(db, redis, message, force_userlist=False):
 
     # Reload userlist if necessary.
     if message.type in (
-        u"join",
-        u"disconnect",
-        u"timeout",
-        u"user_info",
-        u"user_group",
-        u"user_action",
+        "join",
+        "disconnect",
+        "timeout",
+        "user_info",
+        "user_group",
+        "user_action",
     ) or force_userlist:
         redis_message["users"] = get_userlist(db, redis, message.chat)
 
@@ -202,7 +202,7 @@ def send_message(db, redis, message, force_userlist=False):
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
     # And send notifications last.
-    if message.type in (u"ic", u"ooc", u"me", u"spamless"):
+    if message.type in ("ic", "ooc", "me", "spamless"):
 
         # Queue an update for the last_online field.
         # TODO move the PM stuff here too
@@ -284,7 +284,7 @@ def disconnect(redis, chat_id, online_id):
 def disconnect_user(redis, chat_id, user_id):
     user_id = str(user_id)
     online_ids = []
-    for online_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).iteritems():
+    for online_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).items():
         if online_user_id == user_id:
             online_ids.append(online_id)
     if not online_ids:

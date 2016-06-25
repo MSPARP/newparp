@@ -79,14 +79,14 @@ def on_ps(ps_message):
             check_message_filter(chat_id, message)
             check_warnlist(chat_id, message)
 
-        except Mark, e:
+        except Mark as e:
             time.sleep(0.1)
-            q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": e.message})
-            message.update({"spam_flag": e.message})
+            q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": str(e)})
+            message.update({"spam_flag": str(e)})
             redis.publish("spamless:live", json.dumps(message))
             db.commit()
 
-        except Silence, e:
+        except Silence as e:
             time.sleep(0.1)
 
             # XXX maybe cache this?
@@ -112,10 +112,10 @@ def on_ps(ps_message):
                 flag_suffix = "SILENCED"
 
             db.query(Message).filter(Message.id == message["id"]).update({
-                "spam_flag": e.message + " " + flag_suffix,
+                "spam_flag": str(e) + " " + flag_suffix,
             })
 
-            message.update({"spam_flag": e.message + " " + flag_suffix})
+            message.update({"spam_flag": str(e) + " " + flag_suffix})
             redis.publish("spamless:live", json.dumps(message))
 
             if flag_suffix == "SILENCED":
@@ -127,7 +127,7 @@ def on_ps(ps_message):
                     chat_id=chat_id,
                     type="spamless",
                     name="The Spamless",
-                    acronym=u"\u264b",
+                    acronym="\u264b",
                     text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
                     color="626262"
                 ), True)

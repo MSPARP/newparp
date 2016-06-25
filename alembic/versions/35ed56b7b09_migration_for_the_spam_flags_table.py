@@ -22,7 +22,7 @@ def upgrade():
     op.create_table('spam_flags',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('message_id', sa.Integer(), nullable=False, unique=True),
-    sa.Column('type', ENUM(u'banned_names', u'blacklist', u'warnlist', name='spamless_filter_types', create_type=False), nullable=False),
+    sa.Column('type', ENUM('banned_names', 'blacklist', 'warnlist', name='spamless_filter_types', create_type=False), nullable=False),
     sa.Column('points', sa.Integer(), nullable=True),
     sa.Column('muted', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['message_id'], ['messages.id'], ),
