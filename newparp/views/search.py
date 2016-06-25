@@ -144,15 +144,18 @@ def search_continue():
 
     g.redis.sadd("searchers", searcher_id)
 
-    for msg in g.pubsub.listen():
-        if msg["type"] == "message":
+    try:
+        msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=30)
+        if msg:
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
-            g.pubsub.close()
             return resp
-
+        else:
+            return jsonify({"status": "unmatched"})
+    finally:
+        g.pubsub.close()
 
 @use_db
 @log_in_required

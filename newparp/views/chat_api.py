@@ -73,15 +73,19 @@ def messages():
     db_commit()
     db_disconnect()
 
-    for msg in g.pubsub.listen():
-        if msg["type"] == "message":
+    try:
+        # This timeout is LONGPOLL_TIMEOUT * 2
+        msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=50)
+        if msg:
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
             resp = make_response(msg["data"])
             resp.headers["Content-type"] = "application/json"
-            g.pubsub.close()
             return resp
-
+        else:
+            return jsonify({"messages": []})
+    finally:
+        g.pubsub.close()
 
 @mark_alive
 def ping():
