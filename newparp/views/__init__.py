@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
-from newparp.helpers.auth import admin_required, log_in_required
+from newparp.helpers.auth import admin_required, api_required, log_in_required
 from newparp.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
@@ -155,8 +155,9 @@ def health():
 
 
 @use_db
-@admin_required
+@api_required
 def api_users():
+
     if not request.args.get("email_address"):
         abort(404)
     return jsonify({

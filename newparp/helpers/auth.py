@@ -16,6 +16,24 @@ def admin_required(f):
     return decorated_function
 
 
+def api_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        print request.headers
+        if (
+            (
+                request.headers.get("X-Msparp-Ssl-Client-Verify") == "SUCCESS"
+                # Log Cabin serial
+                # Should be in os.environ because it'll differ between dev and live
+                and request.headers.get("X-Msparp-Ssl-Client-Serial") == "1001"
+            )
+            or g.user and g.user.is_admin
+        ):
+            return f(*args, **kwargs)
+        abort(403)
+    return decorated_function
+
+
 def log_in_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):

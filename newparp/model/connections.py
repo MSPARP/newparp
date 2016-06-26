@@ -21,7 +21,8 @@ cookie_domain = "." + os.environ["BASE_DOMAIN"]
 
 
 def set_cookie(response):
-    if "newparp" not in request.cookies:
+    # Don't set cookies for API clients.
+    if "newparp" not in request.cookies and request.headers.get("X-Msparp-Ssl-Client-Verify") != "SUCCESS":
         response.set_cookie(
             "newparp",
             g.session_id,
@@ -43,11 +44,24 @@ def redis_connect():
         if g.user_id is not None:
             g.redis.expire("session:" + g.session_id, 2592000)
             g.user_id = int(g.user_id)
+    elif (
+        request.headers.get("X-Msparp-Ssl-Client-Verify") == "SUCCESS"
+        # Log Cabin serial
+        # Should be in os.environ because it'll differ between dev and live
+        and request.headers.get("X-Msparp-Ssl-Client-Serial") == "1001"
+        and request.headers.get("X-Msparp-User-Id")
+    ):
+        g.session_id = str(uuid4())
+        try:
+            g.user_id = int(request.headers["X-Msparp-User-Id"])
+        except ValueError:
+            g.user_id = None
     else:
         g.session_id = str(uuid4())
         g.user_id = None
     g.csrf_token = g.redis.get("session:%s:csrf" % g.session_id)
     expiry_time = 86400 if g.user_id is not None else 3600
+    # TODO disable CSRF for API clients?
     if g.csrf_token is None:
         g.csrf_token = str(uuid4())
         g.redis.set("session:%s:csrf" % g.session_id, g.csrf_token, expiry_time)
