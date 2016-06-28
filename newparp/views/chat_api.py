@@ -74,10 +74,12 @@ def messages():
     db_disconnect()
 
     try:
-        # The subscribe message has to be popped before getting the message.
-        g.pubsub.get_message()
-        # This timeout is LONGPOLL_TIMEOUT * 2
-        msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=50)
+        while True:
+            # This timeout is LONGPOLL_TIMEOUT * 2
+            msg = g.pubsub.get_message(timeout=50)
+            if not msg or msg["type"] == "message":
+                break
+
         if msg:
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.

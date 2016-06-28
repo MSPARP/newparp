@@ -72,9 +72,11 @@ def roulette_continue():
     g.pubsub.subscribe("roulette:%s" % searcher_id)
     g.redis.sadd("roulette_searchers", searcher_id)
     try:
-        # The subscribe message has to be popped before getting the message.
-        g.pubsub.get_message()
-        msg = g.pubsub.get_message(ignore_subscribe_messages=True, timeout=30)
+        while True:
+            msg = g.pubsub.get_message(timeout=30)
+            if not msg or msg["type"] == "message":
+                break
+
         if msg:
             # The pubsub channel sends us a JSON string, so we return that
             # instead of using jsonify.
