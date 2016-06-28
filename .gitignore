@@ -1,9 +1,12 @@
 logs/
 *.pyc
 *.egg-info
+.eggs
 .c9/
 build/
 dist/
 celerybeat*
 env/
 venv/
+htmlcov/
+.coverage
