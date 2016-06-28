@@ -1,0 +1,20 @@
+[run]
+include = newparp/*
+ 
+[report]
+exclude_lines =
+  pragma: no cover
+ 
+    # Don't complain about missing debug-only code:
+    def __unicode__
+    def __repr__
+    if app\.debug
+ 
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+ 
+omit =
+    newparp/__main__.py
+ 
+show_missing = True
