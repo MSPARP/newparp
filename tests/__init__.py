@@ -13,6 +13,15 @@ from newparp.model import sm, Chat, GroupChat, User
 from newparp.model.connections import redis_pool
 
 
+class EnsureIP(object):
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        environ["REMOTE_ADDR"] = environ.get("REMOTE_ADDR", '127.0.0.1')
+        return self.app(environ, start_response)
+
+
 class ParpTestCase(Exam, TestCase):
     @property
     def db(self):
@@ -36,6 +45,7 @@ class ParpTestCase(Exam, TestCase):
 
     @classmethod
     def setUpClass(cls):
+        newparp.app.wsgi_app = EnsureIP(newparp.app.wsgi_app)
         newparp.app.config["TESTING"] = True
 
         if None in newparp.app.error_handler_spec[None]:
