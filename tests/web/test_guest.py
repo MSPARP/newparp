@@ -19,10 +19,10 @@ class GuestTests(ParpTestCase):
         rv = self.flask_client.get("/" + self.group_chat.url + "/log")
         assert rv.status_code == 200
 
-    # def test_no_412_dots(self):
-    #     rv = self.flask_client.get("/breaking.butts")
-    #     assert rv.status_code != 412
-
     def test_nonexistant_log_404(self):
         rv = self.flask_client.get("/" + str(int(time.time())))
         assert rv.status_code == 404
+
+    def test_guest_denied(self):
+        rv = self.flask_client.get("/" + self.group_chat.url)
+        assert b"need to register" in rv.data

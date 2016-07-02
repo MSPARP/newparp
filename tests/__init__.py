@@ -3,46 +3,13 @@ import uuid
 
 from unittest import TestCase
 
-from redis import StrictRedis
 from sqlalchemy.orm.exc import NoResultFound
-from exam.decorators import fixture
-from exam.cases import Exam
 
 import newparp
-from newparp.model import sm, Chat, GroupChat, User
-from newparp.model.connections import redis_pool
+from newparp.model import Chat, GroupChat, User
+from tests.fixtures import EnsureIP, Fixtures
 
-
-class EnsureIP(object):
-    def __init__(self, app):
-        self.app = app
-
-    def __call__(self, environ, start_response):
-        environ["REMOTE_ADDR"] = environ.get("REMOTE_ADDR", '127.0.0.1')
-        return self.app(environ, start_response)
-
-
-class ParpTestCase(Exam, TestCase):
-    @property
-    def db(self):
-        if hasattr(self, "_db"):
-            return self._db
-        else:
-            self._db = sm()
-            return self._db
-
-    @property
-    def redis(self):
-        if hasattr(self, "_redis"):
-            return self._redis
-        else:
-            self._redis = StrictRedis(connection_pool=redis_pool)
-            return self._redis
-
-    @property
-    def flask_client(self):
-        return newparp.app.test_client()
-
+class ParpTestCase(Fixtures, TestCase):
     @classmethod
     def setUpClass(cls):
         newparp.app.wsgi_app = EnsureIP(newparp.app.wsgi_app)
@@ -89,19 +56,6 @@ class ParpTestCase(Exam, TestCase):
         self.db.commit()
 
         return new_chat
-
-    @fixture
-    def admin_user(self):
-        return self.create_user(admin=True)
-
-    @fixture
-    def normal_user(self):
-        return self.create_user()
-
-    @fixture
-    def group_chat(self):
-        url = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
-        return self.create_chat(url)
 
     def setUp(self):
         pass

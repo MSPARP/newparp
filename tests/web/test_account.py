@@ -4,7 +4,7 @@ import uuid
 from tests import ParpTestCase
 
 class AccountTests(ParpTestCase):
-    def create_account(self, username=None, password="hunter2", password_again="hunter2"):
+    def create_account(self, username=None, password="hunter2", password_again="hunter2", email_address="rose@example.com"):
         if not username:
             username = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
 
@@ -12,7 +12,7 @@ class AccountTests(ParpTestCase):
             username=username,
             password=password,
             password_again=password_again,
-            email_address="%s@example.com" % (username),
+            email_address=email_address,
         ), environ_base={
             "REMOTE_ADDR": "127.0.0.1"
         }, follow_redirects=True)
@@ -24,15 +24,38 @@ class AccountTests(ParpTestCase):
         self.redis.delete("register:127.0.0.1")
         assert b"log_out" in rv.data
 
+    def test_account_login(self):
+        rv = self.flask_client.post("/log_in", data=dict(
+            username=self.normal_user.username,
+            password="hunter2"
+        ), follow_redirects=True)
+        assert b"log_out" in rv.data
+
     def test_too_many_registrations(self):
-        rv1 = self.create_account()
-        rv2 = self.create_account()
+        self.create_account()
+        rv = self.create_account()
         self.redis.delete("register:127.0.0.1")
-        assert b"too many registrations" in rv2.data
+        assert b"too many registrations" in rv.data
+
+    # Invalid fields
 
     def test_invalid_password(self):
         rv = self.create_account(password_again="dickbutt")
         assert b"two passwords didn't match" in rv.data
+
+    def test_invalid_email(self):
+        rv = self.create_account(email_address="ohgodhowdidthisgethereiamnotgoodwithcomputer")
+        assert b"doesn't look like a valid" in rv.data
+
+    # Blank fields
+
+    def test_blank_email(self):
+        rv = self.create_account(email_address="")
+        assert b"E-mail address is required" in rv.data
+
+    def test_blank_password(self):
+        rv = self.create_account(password="")
+        assert b"enter a username and password" in rv.data
 
     def tearDown(self):
         self.redis.delete("register:127.0.0.1")
