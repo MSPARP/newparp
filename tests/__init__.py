@@ -1,8 +1,9 @@
 import hashlib
 import uuid
 
+from contextlib import contextmanager
+from flask import appcontext_pushed, g
 from unittest import TestCase
-
 from sqlalchemy.orm.exc import NoResultFound
 
 import newparp
@@ -28,7 +29,7 @@ class ParpTestCase(Fixtures, TestCase):
             last_ip="127.0.0.1",
             admin_tier_id=1 if admin else None
         )
-        new_user.set_password("hunter2")
+        new_user.set_password("password")
         self.db.add(new_user)
         self.db.commit()
 
@@ -56,6 +57,17 @@ class ParpTestCase(Fixtures, TestCase):
         self.db.commit()
 
         return new_chat
+
+    def login(self, username, password, client=None):
+        if not client:
+            client = self.flask_client
+
+        rv = client.post("/log_in", data=dict(
+            username=username,
+            password=password
+        ), follow_redirects=True)
+
+        return rv
 
     def setUp(self):
         pass

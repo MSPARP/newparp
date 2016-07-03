@@ -4,7 +4,7 @@ import uuid
 from tests import ParpTestCase
 
 class AccountTests(ParpTestCase):
-    def create_account(self, username=None, password="hunter2", password_again="hunter2", email_address="rose@example.com"):
+    def create_account(self, username=None, password="password", password_again="password", email_address="rose@example.com"):
         if not username:
             username = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
 
@@ -25,10 +25,7 @@ class AccountTests(ParpTestCase):
         assert b"log_out" in rv.data
 
     def test_account_login(self):
-        rv = self.flask_client.post("/log_in", data=dict(
-            username=self.normal_user.username,
-            password="hunter2"
-        ), follow_redirects=True)
+        rv = self.login(self.normal_user.username, "password")
         assert b"log_out" in rv.data
 
     def test_too_many_registrations(self):
