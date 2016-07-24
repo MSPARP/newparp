@@ -32,7 +32,7 @@ services:
   web:
     build: .
     restart: always
-    command: gunicorn -b 0.0.0.0:5000 -k gevent -w 3 newparp:app
+    command: ./extras/ensure_database.py gunicorn -b 0.0.0.0:5000 -k gevent -w 3 newparp:app
     links:
       - redis
       - postgres
@@ -50,7 +50,7 @@ services:
   live:
     build: .
     restart: always
-    command: python3 newparp/workers/live.py
+    command: ./extras/ensure_database.py python3 newparp/workers/live.py
     links:
       - redis
       - postgres
@@ -68,7 +68,7 @@ services:
   celery:
     build: .
     restart: always
-    command: celery -A newparp.tasks worker
+    command: ./extras/ensure_database.py celery -A newparp.tasks worker
     links:
       - redis
       - postgres
@@ -86,7 +86,7 @@ services:
   beat:
     build: .
     restart: always
-    command: celery -A newparp.tasks beat
+    command: ./extras/ensure_database.py celery -A newparp.tasks beat
     links:
       - redis
       - postgres
