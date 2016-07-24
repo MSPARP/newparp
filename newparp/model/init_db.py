@@ -8,7 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm, AdminTier, AdminTierPermission
 
-if __name__ == "__main__":
+def init_db():
 
     inspector = Inspector.from_engine(engine)
     if "alembic_version" in inspector.get_table_names():
@@ -55,3 +55,6 @@ if __name__ == "__main__":
             ))
 
         db.commit()
+
+if __name__ == "__main__":
+    init_db()
