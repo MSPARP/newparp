@@ -22,7 +22,7 @@ services:
       - 80:80
   
   rabbitmq:
-    image: rabbitmq:3.6.2-management
+    image: rabbitmq:3.6.3-management
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: msparp
