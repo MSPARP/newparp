@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, IPBan, User
+from newparp.helpers.users import queue_user_meta
 
 redis_pool = ConnectionPool(
     host=os.environ["REDIS_HOST"],
@@ -89,8 +90,7 @@ def use_db(f):
                 g.user = g.db.query(User).filter(User.id == g.user_id).one()
             except NoResultFound:
                 return f(*args, **kwargs)
-            g.user.last_online = datetime.now()
-            g.user.last_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+            queue_user_meta(g, g.redis, request.headers.get("X-Forwarded-For", request.remote_addr))
             g.unread_chats = g.db.query(func.count('*')).select_from(ChatUser).join(Chat).filter(and_(
                 ChatUser.user_id == g.user.id,
                 ChatUser.subscribed == True,
@@ -98,8 +98,6 @@ def use_db(f):
             )).scalar()
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
-            # Commit the changes to last_online and last_ip
-            g.db.commit()
         ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers.get("X-Forwarded-For", request.remote_addr))).scalar()
         g.ip_banned = ip_bans > 0
         if g.ip_banned and (g.user is None or not g.user.is_admin):
@@ -122,10 +120,7 @@ def get_chat_user():
         )).one()
     except NoResultFound:
         abort(400)
-    g.user.last_online = datetime.now()
-    g.user.last_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-    # Commit the changes to last_online and last_ip
-    g.db.commit()
+    queue_user_meta(g, g.redis, request.headers.get("X-Forwarded-For", request.remote_addr))
     if g.user.group == "banned":
         abort(403)
     ip_bans = g.db.query(func.count('*')).select_from(IPBan).filter(IPBan.address.op(">>=")(request.headers.get("X-Forwarded-For", request.remote_addr))).scalar()

@@ -38,6 +38,7 @@ from newparp.helpers.chat import (
     disconnect,
     send_quit_message,
 )
+from newparp.helpers.users import queue_user_meta
 from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
 from newparp.model.connections import redis_pool
 
@@ -119,8 +120,7 @@ class ChatHandler(WebSocketHandler):
         # Remember the user number so typing notifications can refer to it
         # without reopening the database session.
         self.user_number = self.chat_user.number
-        self.user.last_online = datetime.now()
-        self.user.last_ip = self.request.headers.get("X-Forwarded-For", self.request.remote_ip)
+        queue_user_meta(self, redis, self.request.headers.get("X-Forwarded-For", self.request.remote_ip))
 
         try:
             if self.user.group == "banned":
