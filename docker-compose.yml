@@ -1,0 +1,102 @@
+version: '2'
+services:
+  redis:
+    image: redis:3.2.1-alpine
+    restart: always
+
+  postgres:
+    image: postgres:9.5.3
+    restart: always
+    environment:
+      POSTGRES_USER: msparp
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: msparp
+  
+  nginx:
+    build: extras/docker-nginx
+    restart: always
+    links:
+      - web
+      - live
+    ports:
+      - 80:80
+  
+  rabbitmq:
+    image: rabbitmq:3.6.3-management
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: msparp
+      RABBITMQ_DEFAULT_PASS: development
+      RABBITMQ_DEFAULT_VHOST: msparp
+  
+  web:
+    build: .
+    restart: always
+    command: ./extras/ensure_database.py gunicorn -b 0.0.0.0:5000 -k gevent -w 3 newparp:app
+    links:
+      - redis
+      - postgres
+      - rabbitmq
+    environment:
+      DEBUG: 1
+      BASE_DOMAIN: localhost.msparp.com
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
+      CELERY_RESULT: redis://redis:6379/1
+
+  live:
+    build: .
+    restart: always
+    command: ./extras/ensure_database.py python3 newparp/workers/live.py
+    links:
+      - redis
+      - postgres
+      - rabbitmq
+    environment:
+      DEBUG: 1
+      BASE_DOMAIN: localhost.msparp.com
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
+      CELERY_RESULT: redis://redis:6379/1
+      
+  celery:
+    build: .
+    restart: always
+    command: ./extras/ensure_database.py celery -A newparp.tasks worker
+    links:
+      - redis
+      - postgres
+      - rabbitmq
+    environment:
+      DEBUG: 1
+      BASE_DOMAIN: localhost.msparp.com
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
+      CELERY_RESULT: redis://redis:6379/1
+      
+  beat:
+    build: .
+    restart: always
+    command: ./extras/ensure_database.py celery -A newparp.tasks beat
+    links:
+      - redis
+      - postgres
+      - rabbitmq
+    environment:
+      DEBUG: 1
+      BASE_DOMAIN: localhost.msparp.com
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
+      CELERY_RESULT: redis://redis:6379/1

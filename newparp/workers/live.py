@@ -95,6 +95,9 @@ class ChatHandler(WebSocketHandler):
             return
 
     def check_origin(self, origin):
+        if "localhost" in os.environ["BASE_DOMAIN"].lower():
+            return True
+
         return origin_regex.match(origin) is not None
 
     @coroutine
@@ -117,7 +120,7 @@ class ChatHandler(WebSocketHandler):
         # without reopening the database session.
         self.user_number = self.chat_user.number
         self.user.last_online = datetime.now()
-        self.user.last_ip = self.request.headers["X-Forwarded-For"]
+        self.user.last_ip = self.request.headers.get("X-Forwarded-For", self.request.remote_ip)
 
         try:
             if self.user.group == "banned":

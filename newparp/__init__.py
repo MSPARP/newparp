@@ -30,7 +30,7 @@ app.config["SENTRY_PRIVATE_DSN"] = os.environ.get("SENTRY_PRIVATE_DSN", None)
 app.config["SENTRY_PUBLIC_DSN"] = os.environ.get("SENTRY_PUBLIC_DSN", None)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
-if app.config["SENTRY_PRIVATE_DSN"]:
+if app.config["SENTRY_PRIVATE_DSN"]:  # pragma: no cover
     from raven.contrib.flask import Sentry
     app.config["SENTRY_INCLUDE_PATHS"] = ["newparp"]
     sentry = Sentry(app,
@@ -250,7 +250,7 @@ app.register_error_handler(403, errors.error_403)
 app.register_error_handler(404, errors.error_404)
 app.register_error_handler(500, errors.error_500)
 
-if not app.debug:
+if not app.debug and not app.testing:
     app.register_error_handler(Exception, errors.error_500)
 
 # 12. Log cabin

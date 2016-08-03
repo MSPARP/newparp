@@ -112,6 +112,8 @@ def send():
         abort(400)
 
     message_type = request.form.get("type", "ic")
+    if message_type not in ("ic", "ooc", "me"):
+        message_type = "ic"
 
     # Set color, name and acronym based on a saved character.
     character = None

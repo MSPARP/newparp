@@ -75,7 +75,7 @@ def register_get():
 @use_db
 def register_post():
 
-    if g.redis.exists("register:" + request.headers["X-Forwarded-For"]):
+    if g.redis.exists("register:" + request.headers.get("X-Forwarded-For", request.remote_addr)):
         return redirect(referer_or_home() + "?register_error=ip")
 
     # Don't accept blank fields.
@@ -111,13 +111,13 @@ def register_post():
         username=username,
         email_address=email_address if email_address != "" else None,
         group="active",
-        last_ip=request.headers["X-Forwarded-For"],
+        last_ip=request.headers.get("X-Forwarded-For", request.remote_addr),
     )
     new_user.set_password(request.form["password"])
     g.db.add(new_user)
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id, 2592000)
-    g.redis.setex("register:" + request.headers["X-Forwarded-For"], 86400, 1)
+    g.redis.setex("register:" + request.headers.get("X-Forwarded-For", request.remote_addr), 86400, 1)
     g.db.commit()
 
     redirect_url = referer_or_home()

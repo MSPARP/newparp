@@ -1,6 +1,6 @@
 import os
 from collections import OrderedDict
-from flask import abort, g, redirect, request, url_for
+from flask import abort, g, redirect, request, url_for, current_app
 from functools import wraps
 
 
@@ -19,8 +19,8 @@ def check_csrf_token():
     if request.method != "POST":
         return
 
-    # Ignore CSRF only for local debugging.
-    if 'NOCSRF' in os.environ:
+    # Ignore CSRF for testing.
+    if 'NOCSRF' in os.environ or current_app.testing:
         return
 
     token = g.redis.get("session:%s:csrf" % g.session_id)
