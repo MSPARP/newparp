@@ -111,9 +111,9 @@
             <button type="button" class="close">Close</button>
             <form id="edit_info_form">
                 <h2>Description</h2>
-                <div class="input"><p class="textarea_wrapper"><textarea id="edit_info_description" name="description" rows="10" maxlength="5000"></textarea></p></div>
+                <div class="input"><p class="textarea_wrapper"><textarea id="edit_info_description" name="description" rows="10" maxlength="{{MAX_LENGTH}}"></textarea></p></div>
                 <h2>Rules</h2>
-                <div class="input"><p class="textarea_wrapper"><textarea id="edit_info_rules" name="rules" rows="10" maxlength="5000"></textarea></p></div>
+                <div class="input"><p class="textarea_wrapper"><textarea id="edit_info_rules" name="rules" rows="10" maxlength="{{MAX_LENGTH}}"></textarea></p></div>
                 <p class="sidebar_submit"><button type="submit">Save</button></p>
             </form>
         </section>
@@ -430,7 +430,7 @@
                 <button type="button" disabled="disabled" id="abscond_button">Abscond</button>
             </div>
             <div id="send_form_wrap">
-                <div class="input" id="chat_line_input"><input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="5000"{% if chat_user.draft: %} value="{{ chat_user.draft }}"{% endif %}></div>
+                <div class="input" id="chat_line_input"><input type="text" disabled="disabled" name="text" autocomplete="off" maxlength="{{MAX_LENGTH}}"{% if chat_user.draft: %} value="{{ chat_user.draft }}"{% endif %}></div>
             </div>
         </form>
 

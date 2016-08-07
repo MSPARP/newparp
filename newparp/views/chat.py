@@ -246,6 +246,7 @@ def chat(chat, pm_user, url, fmt=None):
         character_shortcuts=character_shortcuts,
         search_character_groups=search_character_groups,
         themes=themes,
+        MAX_LENGTH=Message.MAX_LENGTH,
     )
 
 

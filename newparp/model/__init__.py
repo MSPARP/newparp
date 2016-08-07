@@ -772,6 +772,8 @@ class ChatUser(Base):
 
 class Message(Base):
 
+    MAX_LENGTH = 10000
+
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True)

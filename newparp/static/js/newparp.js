@@ -1780,7 +1780,7 @@ var msparp = (function() {
 			var typing_timeout;
 			var text_preview = $("#text_preview");
 			function set_text_preview(text) {
-				text_preview.html(bbencode(text.substring(0, 5000)));
+				text_preview.html(bbencode(text.substring(0, 10000))); // XXX Find a way to link this with the Message.MAX_LENGTH constant.
 				resize_conversation();
 			}
 

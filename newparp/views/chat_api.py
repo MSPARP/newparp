@@ -106,7 +106,7 @@ def send():
     if "text" not in request.form:
         abort(400)
 
-    text = request.form["text"].strip()[:5000]
+    text = request.form["text"].strip()[:Message.MAX_LENGTH]
 
     if text == "":
         abort(400)
@@ -152,7 +152,7 @@ def send():
 @use_db_chat
 @mark_alive
 def draft():
-    g.chat_user.draft = request.form.get("text", "").strip()[:5000]
+    g.chat_user.draft = request.form.get("text", "").strip()[:Message.MAX_LENGTH]
     return "", 204
 
 
@@ -506,8 +506,8 @@ def set_info():
     if not g.chat_user.can("set_info"):
         abort(403)
 
-    description = request.form["description"].strip()[:5000]
-    rules = request.form["rules"].strip()[:5000]
+    description = request.form["description"].strip()[:Message.MAX_LENGTH]
+    rules = request.form["rules"].strip()[:Message.MAX_LENGTH]
     # If it hasn't changed, don't bother sending a message about it.
     if (description == g.chat.description and rules == g.chat.rules):
         return "", 204
