@@ -51,6 +51,10 @@ CELERYBEAT_SCHEDULE = {
         "task": "newparp.tasks.background.update_lastonline",
         "schedule": timedelta(seconds=5),
     },
+    "update_user_meta": {
+        "task": "newparp.tasks.background.update_user_meta",
+        "schedule": timedelta(seconds=5),
+    },
     "matchmaker": {
         "task": "newparp.tasks.matchmaker.run",
         "schedule": timedelta(seconds=10),
