@@ -44,6 +44,10 @@ def update_lastonline():
     db = update_lastonline.db
     redis = update_lastonline.redis
 
+    if redis.exists("lock:lastonline"):
+        return
+    redis.setex("lock:lastonline", 60, 1)
+
     chat_ids = redis.hgetall("queue:lastonline")
 
     # Reset the list for the next iteration.
@@ -67,11 +71,17 @@ def update_lastonline():
 
         db.commit()
 
+    redis.delete("lock:lastonline")
+
 
 @celery.task(base=WorkerTask, queue="worker")
 def update_user_meta():
     db = update_user_meta.db
     redis = update_user_meta.redis
+
+    if redis.exists("lock:metaupdate"):
+        return
+    redis.setex("lock:metaupdate", 60, 1)
 
     meta_updates = redis.hgetall("queue:usermeta")
 
@@ -97,3 +107,4 @@ def update_user_meta():
 
         db.commit()
 
+    redis.delete("lock:metaupdate")
