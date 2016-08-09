@@ -88,13 +88,15 @@ def update_user_meta():
     # Reset the list for the next iteration.
     redis.delete("queue:usermeta")
 
-    for userid, meta in meta_updates.items():
+    for key, meta in meta_updates.items():
         try:
             meta = json.loads(meta)
         except ValueError as e:
             continue
 
-        if meta["type"] == "user" and "last_ip" in meta:
+        msgtype, userid = key.split(":", 2)
+
+        if msgtype == "user" and "last_ip" in meta:
             try:
                 last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
             except (ValueError, KeyError):
@@ -103,6 +105,15 @@ def update_user_meta():
             db.query(User).filter(User.id == userid).update({
                 "last_online": last_online,
                 "last_ip": meta["last_ip"]
+            }, synchronize_session=False)
+        elif msgtype == "chatuser":
+            try:
+                last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
+            except (ValueError, KeyError):
+                last_online = datetime.now()
+
+            db.query(ChatUser).filter(ChatUser.id == userid).update({
+                "last_online": last_online
             }, synchronize_session=False)
 
         db.commit()
