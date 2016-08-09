@@ -6,7 +6,7 @@
         <div class="settings_box_wrap">
             <h2>E-mail address</h2>
             {% if request.args["saved"] == "email_address": %}
-            <p>Your e-mail address has been changed.</p>
+            <p>We've sent a message to the address you just entered. Click the link in the message to finish changing your address.</p>
             {% endif %}
             <form action="{{url_for("settings_change_email")}}" method="post">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">

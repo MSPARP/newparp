@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask, abort, redirect, request, send_from_directory
+from flask_mail import Mail
 from werkzeug.routing import BaseConverter
 
 from newparp.helpers import check_csrf_token
@@ -12,16 +13,11 @@ from newparp.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from newparp import views
-from newparp.views import (
-    account, admin, characters, chat, chat_api, chat_list, errors, guides,
-    roulette, search, search_characters, settings,
-)
-from newparp.views.admin import spamless, spamless2
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
 
 # Config
 
@@ -50,6 +46,19 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+
+mail = Mail(app)
+
+
+# Views/routes
+
+from newparp import views
+from newparp.views import (
+    account, admin, characters, chat, chat_api, chat_list, errors, guides,
+    roulette, search, search_characters, settings,
+)
+from newparp.views.admin import spamless, spamless2
 
 
 class RegexConverter(BaseConverter):

@@ -1,7 +1,10 @@
-from flask import g, jsonify, redirect, render_template, request, url_for
+from flask import current_app, g, jsonify, redirect, render_template, request, url_for
+from flask_mail import Message as EmailMessage
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
+from uuid import uuid4
 
+from newparp import mail
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import log_in_required
 from newparp.model import Block
@@ -85,13 +88,28 @@ def log_in_details():
     return render_template("settings/log_in_details.html")
 
 
+def send_email(action, email_address):
+    email_token = str(uuid4())
+    g.redis.setex(":".join([action, str(g.user.id), email_address]), 86400 if action == "verify" else 600, email_token)
+
+    message = EmailMessage(
+        subject="Verify your email address",
+        sender="admin@msparp.com",
+        recipients=[email_address],
+        body="https://msparp.com/verify_email?user_id=%s&email_address=%s&token=%s" % ( # TODO url_for
+            g.user.id, email_address, email_token,
+        ),
+    )
+    mail.send(message)
+
+
 @use_db
 @log_in_required
 def change_email():
     email_address = request.form.get("email_address").strip()[:100]
     if not email_address or email_validator.match(email_address) is None:
         return render_template("settings/log_in_details.html", error="invalid_email")
-    g.user.email_address = email_address
+    send_email("verify", email_address)
     return redirect(url_for("settings_log_in_details", saved="email_address"))
 
 
