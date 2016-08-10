@@ -112,7 +112,7 @@ def update_user_meta():
             except (ValueError, KeyError):
                 last_online = datetime.now()
 
-            db.query(ChatUser).filter(ChatUser.id == userid).update({
+            db.query(ChatUser).filter(and_(ChatUser.user_id == userid, ChatUser.chat_id == meta["chat_id"])).update({
                 "last_online": last_online
             }, synchronize_session=False)
 

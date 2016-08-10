@@ -126,8 +126,9 @@ def kick_check(redis, context):
 def join(redis, db, context):
 
     # Queue their last_online update.
-    redis.hset("queue:usermeta", "chatuser:%s" % (context.user.id), json.dumps({
-        "last_online": str(time.time())
+    redis.hset("queue:usermeta", "chatuser:%s" % (context.chat_user.user_id), json.dumps({
+        "last_online": str(time.time()),
+        "chat_id": context.chat_user.chat_id,
     }))
     user_online = str(context.user.id) in redis.hvals("chat:%s:online" % context.chat.id)
 
