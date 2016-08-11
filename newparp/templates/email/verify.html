@@ -1,0 +1,9 @@
+{% extends "email/base.html" %}
+{% block content: %}
+  <h2 style="margin: 50px 50px 20px; color: #eee; font-size: 2em; text-align: center; line-height: normal; text-transform: uppercase;">Verify your e-mail address</h2>
+  <div style="box-sizing: border-box; max-width: 650px; margin: 20px auto; padding: 20px 25px; background-color: #eee;">
+    <p style="margin-top: 0;">Before we can change your e-mail address, we need to verify that it's really you.</p>
+    <p>Please <a style="color: #2c2c2c;" href="{{url_for("settings_verify_email", _external=True, _scheme="https", user_id=user.id, email_address=email_address, token=email_token)}}">click here</a> to verify your e-mail address.</p>
+    <p style="margin-bottom: 0;">This link will expire in 24 hours.</p>
+  </div>
+{% endblock %}

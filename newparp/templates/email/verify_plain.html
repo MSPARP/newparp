@@ -1,0 +1,5 @@
+Before we can change your e-mail address, we need to verify that it's really you.
+
+Please visit the following URL to verify your e-mail address: {{url_for("settings_verify_email", _external=True, _scheme="https", user_id=user.id, email_address=email_address, token=email_token)}}
+
+This link will expire in 24 hours.

@@ -1,4 +1,4 @@
-from flask import g, url_for
+from flask import g, render_template, url_for
 from flask_mail import Message as EmailMessage
 from uuid import uuid4
 
@@ -13,7 +13,12 @@ def send_email(action, email_address):
         subject="Verify your email address",
         sender="admin@msparp.com",
         recipients=[email_address],
-        body=url_for("settings_verify_email", user_id=g.user.id, email_address=email_address, token=email_token, _external=True),
+
+        body=render_template("email/%s_plain.html" % action, user=g.user, email_address=email_address, email_token=email_token),
+        html=render_template("email/%s.html" % action, user=g.user, email_address=email_address, email_token=email_token),
+
+
+#        body=url_for("settings_verify_email", user_id=g.user.id, email_address=email_address, token=email_token, _external=True),
     )
     mail.send(message)
 
