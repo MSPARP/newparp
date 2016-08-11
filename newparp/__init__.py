@@ -103,6 +103,7 @@ app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, m
 app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
 app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
 app.add_url_rule("/settings/change_email", "settings_change_email", settings.change_email, methods=("POST",))
+app.add_url_rule("/settings/verify_email", "settings_verify_email", settings.verify_email, methods=("GET",))
 app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
 make_rules("settings", "/settings/blocks", settings.blocks, formats=True)
 app.add_url_rule("/settings/unblock", "settings_unblock", settings.unblock, methods=("POST",))
