@@ -2,11 +2,11 @@ import json
 import time
 
 from redis import StrictRedis
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm.session import Session
 
-from newparp.model import IPBan
-
+from newparp.model import IPBan, Chat, ChatUser
+from newparp.tasks.user import update_unread_chats
 
 def queue_user_meta(context, redis: StrictRedis, last_ip: str):
     redis.hset("queue:usermeta", "user:%s" % (context.user.id), json.dumps({
@@ -29,3 +29,11 @@ def get_ip_banned(ip_address: str, db: Session, redis: StrictRedis, use_cache: b
 
     return banned
 
+
+def get_unread_chats(context, db: Session, redis: StrictRedis) -> int:
+    unread = redis.scard("user:%s:unread" % (context.user.id))
+
+    if unread == 0 and not redis.exists("user:%s:unread:generated" % (context.user.id)):
+        update_unread_chats.delay(context.user.id)
+
+    return unread

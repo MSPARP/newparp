@@ -182,6 +182,7 @@ class ChatHandler(WebSocketHandler):
         self.db.close()
 
     def on_message(self, message):
+        redis.srem("user:%s:unread" % (self.user_id), self.chat_id)
         if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
             # We've been reaped, so disconnect.
             self.close()

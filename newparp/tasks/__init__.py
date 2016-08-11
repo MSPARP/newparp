@@ -3,11 +3,17 @@ import raven
 
 from celery import Celery, Task
 from classtools import reify
-from redis import StrictRedis
+from redis import StrictRedis, ConnectionPool
 from raven.contrib.celery import register_signal, register_logger_signal
 
 from newparp.model import sm
-from newparp.model.connections import redis_pool
+
+redis_pool = ConnectionPool(
+    host=os.environ["REDIS_HOST"],
+    port=int(os.environ["REDIS_PORT"]),
+    db=int(os.environ["REDIS_DB"]),
+    decode_responses=True,
+)
 
 celery = Celery("newparp", include=[
     "newparp.tasks.background",
@@ -15,6 +21,7 @@ celery = Celery("newparp", include=[
     "newparp.tasks.reaper",
     "newparp.tasks.roulette_matchmaker",
     "newparp.tasks.chat",
+    "newparp.tasks.user",
 ])
 
 # Sentry exception logging if there is a sentry object.

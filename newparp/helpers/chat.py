@@ -9,6 +9,7 @@ from sqlalchemy.orm import joinedload
 
 from newparp.model import AnyChat, Ban, Invite, ChatUser, Message
 from newparp.model.connections import db_connect, get_chat_user
+from newparp.tasks.user import set_unread_chat
 
 
 class UnauthorizedException(Exception):
@@ -67,6 +68,7 @@ def mark_alive(f):
             time.time() + 60,
             "%s/%s" % (g.chat_id, g.session_id),
         )
+        g.redis.srem("user:%s:unread" % (g.user_id), g.chat_id)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -203,6 +205,7 @@ def send_message(db, redis, message, force_userlist=False):
         # Queue an update for the last_online field.
         # TODO move the PM stuff here too
         redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()) + float(message.posted.microsecond) / 1000000)
+        set_unread_chat.delay(message.chat_id)
 
         online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
         if message.chat.type == "pm":

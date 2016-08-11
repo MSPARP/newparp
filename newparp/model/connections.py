@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, User
-from newparp.helpers.users import queue_user_meta, get_ip_banned
+from newparp.helpers.users import queue_user_meta, get_ip_banned, get_unread_chats
 
 redis_pool = ConnectionPool(
     host=os.environ["REDIS_HOST"],
@@ -91,11 +91,7 @@ def use_db(f):
             except NoResultFound:
                 return f(*args, **kwargs)
             queue_user_meta(g, g.redis, request.headers.get("X-Forwarded-For", request.remote_addr))
-            g.unread_chats = g.db.query(func.count('*')).select_from(ChatUser).join(Chat).filter(and_(
-                ChatUser.user_id == g.user.id,
-                ChatUser.subscribed == True,
-                Chat.last_message > ChatUser.last_online,
-            )).scalar()
+            g.unread_chats = get_unread_chats(g, g.db, g.redis)
             if g.user.group == "banned":
                 return redirect("http://rp.terminallycapricio.us/")
         g.ip_banned = get_ip_banned(request.headers.get("X-Forwarded-For", request.remote_addr), g.db, g.redis)
