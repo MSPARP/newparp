@@ -48,6 +48,11 @@ app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
 
 
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER", "localhost")
+app.config["MAIL_PORT"] = int(os.environ.get("MAIL_PORT", 25))
+app.config["MAIL_USE_TLS"] = "MAIL_USE_TLS" in os.environ
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
 mail = Mail(app)
 
 

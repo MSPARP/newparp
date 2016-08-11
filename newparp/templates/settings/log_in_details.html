@@ -9,7 +9,7 @@
             <p>We've sent a message to the address you just entered. Click the link in the message to finish changing your address.</p>
             {% elif request.args["saved"] == "email_verified": %}
             <p>Your e-mail address has been verified.</p>
-            {% elif request.args["saved"] == "email_address": %}
+            {% elif request.args["saved"] == "email_changed": %}
             <p>Your e-mail address has been changed.</p>
             {% endif %}
             <form action="{{url_for("settings_change_email")}}" method="post">
