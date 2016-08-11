@@ -20,8 +20,7 @@ def update_unread_chats(user_id):
     )).all()
     logger.debug("%s unread chats for user %s", len(unread_chats), user_id)
 
-    for chat in unread_chats:
-        redis.sadd("user:%s:unread" % (user_id), chat.chat_id)
+    redis.sadd("user:%s:unread" % (user_id), *[chat.chat_id for chat in unread_chats])
     redis.expire("user:%s:unread" % (user_id), 86400)
     redis.setex("user:%s:unread:generated" % (user_id), 3600, "1")
 
