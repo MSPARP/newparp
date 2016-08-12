@@ -121,7 +121,7 @@ def register_post():
     g.redis.setex("register:" + request.headers.get("X-Forwarded-For", request.remote_addr), 86400, 1)
 
     g.user = new_user
-    send_email("verify", email_address)
+    send_email("welcome", email_address)
 
     g.db.commit()
 
