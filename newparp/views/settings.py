@@ -95,6 +95,9 @@ def change_email():
     email_address = request.form.get("email_address").strip()[:100]
     if not email_address or email_validator.match(email_address) is None:
         return render_template("settings/log_in_details.html", error="invalid_email")
+    # This is pointless.
+    if g.user.email_verified and email_address == g.user.email_address:
+        return redirect(url_for("settings_log_in_details", saved="email_changed"))
     send_email("verify", email_address)
     return redirect(url_for("settings_log_in_details", saved="email_address"))
 
