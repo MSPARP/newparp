@@ -125,17 +125,17 @@ def kick_check(redis, context):
 
 def join(redis, db, context):
 
-    # Update their last_online.
-    context.chat_user.last_online = datetime.now()
+    # Queue their last_online update.
+    redis.hset("queue:usermeta", "chatuser:%s" % (context.chat_user.user_id), json.dumps({
+        "last_online": str(time.time()),
+        "chat_id": context.chat_user.chat_id,
+    }))
     user_online = str(context.user.id) in redis.hvals("chat:%s:online" % context.chat.id)
 
     # Add them to the online list.
     # Use socket id for websockets or session id for long polling.
     online_id = context.id if hasattr(context, "id") else context.session_id
     redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
-
-    # Commit early because of the potential of deadlocks on the last_online.
-    db.commit()
 
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:

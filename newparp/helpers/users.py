@@ -9,8 +9,7 @@ from newparp.model import IPBan
 
 
 def queue_user_meta(context, redis: StrictRedis, last_ip: str):
-    redis.hset("queue:usermeta", context.user.id, json.dumps({
-        "type": "user",
+    redis.hset("queue:usermeta", "user:%s" % (context.user.id), json.dumps({
         "last_online": str(time.time()),
         "last_ip": last_ip,
     }))

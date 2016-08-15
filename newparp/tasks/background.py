@@ -44,6 +44,10 @@ def update_lastonline():
     db = update_lastonline.db
     redis = update_lastonline.redis
 
+    if redis.exists("lock:lastonline"):
+        return
+    redis.setex("lock:lastonline", 60, 1)
+
     chat_ids = redis.hgetall("queue:lastonline")
 
     # Reset the list for the next iteration.
@@ -67,24 +71,32 @@ def update_lastonline():
 
         db.commit()
 
+    redis.delete("lock:lastonline")
+
 
 @celery.task(base=WorkerTask, queue="worker")
 def update_user_meta():
     db = update_user_meta.db
     redis = update_user_meta.redis
 
+    if redis.exists("lock:metaupdate"):
+        return
+    redis.setex("lock:metaupdate", 60, 1)
+
     meta_updates = redis.hgetall("queue:usermeta")
 
     # Reset the list for the next iteration.
     redis.delete("queue:usermeta")
 
-    for userid, meta in meta_updates.items():
+    for key, meta in meta_updates.items():
         try:
             meta = json.loads(meta)
         except ValueError as e:
             continue
 
-        if meta["type"] == "user" and "last_ip" in meta:
+        msgtype, userid = key.split(":", 2)
+
+        if msgtype == "user" and "last_ip" in meta:
             try:
                 last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
             except (ValueError, KeyError):
@@ -94,6 +106,16 @@ def update_user_meta():
                 "last_online": last_online,
                 "last_ip": meta["last_ip"]
             }, synchronize_session=False)
+        elif msgtype == "chatuser":
+            try:
+                last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
+            except (ValueError, KeyError):
+                last_online = datetime.now()
+
+            db.query(ChatUser).filter(and_(ChatUser.user_id == userid, ChatUser.chat_id == meta["chat_id"])).update({
+                "last_online": last_online
+            }, synchronize_session=False)
 
         db.commit()
 
+    redis.delete("lock:metaupdate")
