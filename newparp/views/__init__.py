@@ -74,12 +74,11 @@ def redirect():
 
     if "url" in request.args:
         url = request.args["url"].strip()
-        if not url.startswith("http:") or not url.startswith("https"):
+        if not url.startswith("http:") or not url.startswith("https:"):
             url = "http://www.mspaintadventures.com/ACT6ACT6.php?s=6&p=009309"
 
     else:
-        url = "http://www.mspaintadventures.com/ACT6ACT6.php?s=6&p=009309"
-
+        
     return render_template(
         "chat/redirect.html",
         url=url,
