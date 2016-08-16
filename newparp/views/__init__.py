@@ -78,6 +78,7 @@ def redirect():
             url = "http://www.mspaintadventures.com/ACT6ACT6.php?s=6&p=009309"
 
     else:
+        url = url
         
     return render_template(
         "chat/redirect.html",
