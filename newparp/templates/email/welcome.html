@@ -2,7 +2,8 @@
 {% block content: %}
   <h2 style="margin: 50px 50px 20px; color: #eee; font-size: 2em; text-align: center; line-height: normal; text-transform: uppercase;">Welcome to MSPARP</h2>
   <div style="box-sizing: border-box; max-width: 650px; margin: 20px auto; padding: 20px 25px; background-color: #eee;">
-    <p>Please <a style="color: #2c2c2c;" href="{{url_for("settings_verify_email", _external=True, _scheme="https", user_id=user.id, email_address=email_address, token=email_token)}}">click here</a> to verify your e-mail address.</p>
-    <p style="margin-bottom: 0;">This link will expire in 24 hours.</p>
+    <p>Thank you for signing up for MSPARP. Your new account is almost ready. Please <a style="color: #2c2c2c;" href="{{url_for("settings_verify_email", _external=True, _scheme="https", user_id=user.id, email_address=email_address, token=email_token)}}">click here</a> to verify your e-mail address and complete your registration.</p>
+    <p style="margin-bottom: 0;">This link will expire in 24 hours. If you are having trouble with the registration process, please contact us through our <a href="http://help.msparp.com/"target="_blank">Ticket System</a>.</p>
+    <p>Cordially, <br>MSPARP Administration</p>
   </div>
 {% endblock %}
