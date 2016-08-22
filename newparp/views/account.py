@@ -9,6 +9,7 @@ except ImportError:
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import not_logged_in_required
+from newparp.helpers.email import send_email
 from newparp.model import User
 from newparp.model.connections import use_db
 from newparp.model.validators import username_validator, email_validator, reserved_usernames
@@ -109,7 +110,7 @@ def register_post():
 
     new_user = User(
         username=username,
-        email_address=email_address if email_address != "" else None,
+        email_address=email_address,
         group="active",
         last_ip=request.headers.get("X-Forwarded-For", request.remote_addr),
     )
@@ -118,6 +119,10 @@ def register_post():
     g.db.flush()
     g.redis.set("session:" + g.session_id, new_user.id, 2592000)
     g.redis.setex("register:" + request.headers.get("X-Forwarded-For", request.remote_addr), 86400, 1)
+
+    g.user = new_user
+    send_email("welcome", email_address)
+
     g.db.commit()
 
     redirect_url = referer_or_home()

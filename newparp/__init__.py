@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask, abort, redirect, request, send_from_directory
+from flask_mail import Mail
 from werkzeug.routing import BaseConverter
 
 from newparp.helpers import check_csrf_token
@@ -12,16 +13,11 @@ from newparp.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from newparp import views
-from newparp.views import (
-    account, admin, characters, chat, chat_api, chat_list, errors, guides,
-    roulette, search, search_characters, settings,
-)
-from newparp.views.admin import spamless, spamless2
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
 
 # Config
 
@@ -50,6 +46,24 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER", "localhost")
+app.config["MAIL_PORT"] = int(os.environ.get("MAIL_PORT", 25))
+app.config["MAIL_USE_TLS"] = "MAIL_USE_TLS" in os.environ
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+mail = Mail(app)
+
+
+# Views/routes
+
+from newparp import views
+from newparp.views import (
+    account, admin, characters, chat, chat_api, chat_list, errors, guides,
+    roulette, search, search_characters, settings,
+)
+from newparp.views.admin import spamless, spamless2
 
 
 class RegexConverter(BaseConverter):
@@ -94,6 +108,7 @@ app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, m
 app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
 app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
 app.add_url_rule("/settings/change_email", "settings_change_email", settings.change_email, methods=("POST",))
+app.add_url_rule("/settings/verify_email", "settings_verify_email", settings.verify_email, methods=("GET",))
 app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
 make_rules("settings", "/settings/blocks", settings.blocks, formats=True)
 app.add_url_rule("/settings/unblock", "settings_unblock", settings.unblock, methods=("POST",))

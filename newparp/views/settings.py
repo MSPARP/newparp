@@ -1,12 +1,15 @@
-from flask import g, jsonify, redirect, render_template, request, url_for
+from flask import abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import log_in_required
-from newparp.model import Block
+from newparp.helpers.email import send_email
+from newparp.model import Block, User
 from newparp.model.connections import use_db
 from newparp.model.validators import email_validator
+
 
 @use_db
 @log_in_required
@@ -16,6 +19,7 @@ def home_get():
         timezones=sorted(list(timezones)),
         themes=themes,
     )
+
 
 @use_db
 @log_in_required
@@ -91,8 +95,42 @@ def change_email():
     email_address = request.form.get("email_address").strip()[:100]
     if not email_address or email_validator.match(email_address) is None:
         return render_template("settings/log_in_details.html", error="invalid_email")
-    g.user.email_address = email_address
+    # This is pointless.
+    if g.user.email_verified and email_address == g.user.email_address:
+        return redirect(url_for("settings_log_in_details", saved="email_changed"))
+    send_email("verify", email_address)
     return redirect(url_for("settings_log_in_details", saved="email_address"))
+
+
+@use_db
+def verify_email():
+    try:
+        user_id = int(request.args["user_id"].strip())
+        email_address = request.args["email_address"].strip()
+        token = request.args["token"].strip()
+    except (KeyError, ValueError):
+        abort(404)
+    stored_token = g.redis.get("verify:%s:%s" % (user_id, email_address))
+    if not user_id or not email_address or not token or not stored_token:
+        abort(404)
+
+    if not stored_token == token:
+        abort(404)
+
+    try:
+        user = g.db.query(User).filter(User.id == user_id).one()
+    except NoResultFound:
+        abort(404)
+
+    g.redis.delete("verify:%s:%s" % (user_id, email_address))
+
+    next_message = "email_verified" if user.email_address == email_address else "email_changed"
+
+    user.email_address = email_address
+    user.email_verified = True
+
+    g.redis.set("session:" + g.session_id, user.id, 2592000)
+    return redirect(url_for("settings_log_in_details", saved=next_message))
 
 
 @use_db
