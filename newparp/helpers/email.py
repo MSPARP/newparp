@@ -17,11 +17,17 @@ subjects = {
     "reset": "Reset your password",
 }
 
+keys = {
+    "welcome": "verify",
+    "verify": "verify",
+    "reset": "reset",
+}
+
 
 def send_email(action, email_address):
     email_token = str(uuid4())
     g.redis.setex(
-        ":".join([action, str(g.user.id), email_address]),
+        ":".join([keys[action], str(g.user.id), email_address]),
         expiry_times[action],
         email_token,
     )

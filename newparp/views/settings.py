@@ -110,7 +110,10 @@ def verify_email():
         token = request.args["token"].strip()
     except (KeyError, ValueError):
         abort(404)
-    stored_token = g.redis.get("verify:%s:%s" % (user_id, email_address))
+    stored_token = (
+        g.redis.get("verify:%s:%s" % (user_id, email_address))
+        or g.redis.get("welcome:%s:%s" % (user_id, email_address))
+    )
     if not user_id or not email_address or not token or not stored_token:
         abort(404)
 
