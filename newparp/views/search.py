@@ -70,24 +70,17 @@ def search_save():
     return redirect(url_for("rp_search"))
 
 
-@use_db
-@log_in_required
-def search_get():
-    return render_template("search.html")
-
-
-@use_db
-@log_in_required
-def search_post():
+def _create_searcher():
+    pipe = g.redis.pipeline()
 
     searcher_id = str(uuid4())
-    g.redis.set("searcher:%s:session_id" % searcher_id, g.session_id)
-    g.redis.expire("searcher:%s:session_id" % searcher_id, 30)
+    pipe.set("searcher:%s:session_id" % searcher_id, g.session_id)
+    pipe.expire("searcher:%s:session_id" % searcher_id, 30)
 
-    g.redis.set("searcher:%s:search_character_id" % searcher_id, g.user.search_character_id)
-    g.redis.expire("searcher:%s:search_character_id" % searcher_id, 30)
+    pipe.set("searcher:%s:search_character_id" % searcher_id, g.user.search_character_id)
+    pipe.expire("searcher:%s:search_character_id" % searcher_id, 30)
 
-    g.redis.hmset("searcher:%s:character" % searcher_id, {
+    pipe.hmset("searcher:%s:character" % searcher_id, {
         "name": g.user.name,
         "acronym": g.user.acronym,
         "color": g.user.color,
@@ -97,29 +90,42 @@ def search_post():
         "replacements": g.user.replacements,
         "regexes": g.user.regexes,
     })
-    g.redis.expire("searcher:%s:character" % searcher_id, 30)
+    pipe.expire("searcher:%s:character" % searcher_id, 30)
 
-    g.redis.set("searcher:%s:style" % searcher_id, g.user.search_style)
-    g.redis.expire("searcher:%s:style" % searcher_id, 30)
+    pipe.set("searcher:%s:style" % searcher_id, g.user.search_style)
+    pipe.expire("searcher:%s:style" % searcher_id, 30)
 
-    g.redis.sadd("searcher:%s:levels" % searcher_id, *g.user.search_levels)
-    g.redis.expire("searcher:%s:levels" % searcher_id, 30)
+    pipe.sadd("searcher:%s:levels" % searcher_id, *g.user.search_levels)
+    pipe.expire("searcher:%s:levels" % searcher_id, 30)
 
     if g.user.search_filters:
-        g.redis.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters) # XXX why is this a list and not a set?
-    g.redis.expire("searcher:%s:filters" % searcher_id, 30)
+        pipe.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters) # XXX why is this a list and not a set?
+    pipe.expire("searcher:%s:filters" % searcher_id, 30)
 
-    g.redis.delete("searcher:%s:choices" % searcher_id)
     choices = [_[0] for _ in g.db.query(
         SearchCharacterChoice.search_character_id,
     ).filter(
         SearchCharacterChoice.user_id == g.user.id,
     ).all()]
     if choices:
-        g.redis.sadd("searcher:%s:choices" % searcher_id, *choices)
-    g.redis.expire("searcher:%s:choices" % searcher_id, 30)
+        pipe.sadd("searcher:%s:choices" % searcher_id, *choices)
+    pipe.expire("searcher:%s:choices" % searcher_id, 30)
 
-    return jsonify({ "id": searcher_id })
+    pipe.execute()
+
+    return searcher_id
+
+
+@use_db
+@log_in_required
+def search_get():
+    return render_template("search.html")
+
+
+@use_db
+@log_in_required
+def search_post():
+    return jsonify({ "id": _create_searcher() })
 
 
 def search_continue():
