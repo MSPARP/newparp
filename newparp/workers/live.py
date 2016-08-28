@@ -23,7 +23,7 @@ from tornado.ioloop import IOLoop
 from tornado.platform.asyncio import AsyncIOMainLoop
 from tornado.web import Application, RequestHandler
 from tornado.websocket import WebSocketHandler, WebSocketClosedError
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from newparp.helpers.chat import (
     UnauthorizedException,
@@ -41,6 +41,7 @@ from newparp.helpers.chat import (
 from newparp.helpers.users import queue_user_meta
 from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
 from newparp.model.connections import redis_pool
+from newparp.tasks.matchmaker import new_searcher
 
 redis = StrictRedis(connection_pool=redis_pool)
 thread_pool = ThreadPoolExecutor()
@@ -261,6 +262,97 @@ class ChatHandler(WebSocketHandler):
                 self.close()
 
 
+class SearchHandler(WebSocketHandler):
+
+    def check_origin(self, origin):
+        if "localhost" in os.environ["BASE_DOMAIN"].lower():
+            return True
+
+        return origin_regex.match(origin) is not None
+
+    def prepare(self):
+        if "newparp" not in self.cookies:
+            self.send_error(401)
+            return
+        self.searcher_id = searcher_id = self.path_args[0]
+        pipe = redis.pipeline()
+        pipe.get("searcher:%s:session_id" % searcher_id) # TODO check user id
+        pipe.get("searcher:%s:search_character_id" % searcher_id)
+        pipe.hlen("searcher:%s:character" % searcher_id)
+        pipe.get("searcher:%s:style" % searcher_id)
+        pipe.scard("searcher:%s:levels" % searcher_id)
+        result = pipe.execute()
+        if not all(result) or result[0] != self.cookies["newparp"].value:
+            self.send_error(404)
+            return
+
+    @coroutine
+    def open(self, searcher_id):
+        self.redis_task = asyncio.ensure_future(self.redis_listen())
+        redis.sadd("searchers", searcher_id)
+        new_searcher.delay(searcher_id)
+
+    def on_message(self, message):
+        pipe = redis.pipeline()
+        pipe.sismember("searchers", self.searcher_id)
+        pipe.expire("searcher:%s:session_id" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:search_character_id" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:character" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:style" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:levels" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:filters" % self.searcher_id, 30)
+        pipe.expire("searcher:%s:choices" % self.searcher_id, 30)
+        if not all(pipe.execute())
+            self.close()
+
+    async def redis_listen(self):
+        self.redis_client = await asyncio_redis.Connection.create(
+            host=os.environ["REDIS_HOST"],
+            port=int(os.environ["REDIS_PORT"]),
+            db=int(os.environ["REDIS_DB"]),
+        )
+        # Set the connection name, subscribe, and listen.
+        await self.redis_client.client_setname("searcher:%s" % self.searcher_id)
+        try:
+            subscriber = await self.redis_client.start_subscribe()
+            await subscriber.subscribe(["searcher:%s" % self.searcher_id])
+            while self.ws_connection:
+                message = await subscriber.next_published()
+                asyncio.ensure_future(self.on_redis_message(message))
+        finally:
+            self.redis_client.close()
+
+    async def on_redis_message(self, message):
+        if DEBUG:
+            print("redis message: %s" % str(message))
+        self.write_message(message.value)
+
+    def on_close(self):
+        # Unsubscribe here and let the exit callback handle disconnecting.
+        if hasattr(self, "redis_task"):
+            self.redis_task.cancel()
+
+        if hasattr(self, "redis_client"):
+            self.redis_client.close()
+
+        pipe = redis.pipeline()
+        pipe.srem("searchers", self.searcher_id)
+        pipe.delete("searcher:%s:session_id" % self.searcher_id)
+        pipe.delete("searcher:%s:search_character_id" % self.searcher_id)
+        pipe.delete("searcher:%s:character" % self.searcher_id)
+        pipe.delete("searcher:%s:style" % self.searcher_id)
+        pipe.delete("searcher:%s:levels" % self.searcher_id)
+        pipe.execute()
+
+        if DEBUG:
+            print("socket closed: %s" % (self.searcher_id))
+
+        try:
+            sockets.remove(self)
+        except KeyError:
+            pass
+
+
 class HealthHandler(RequestHandler):
     @property
     def loop(self):
@@ -320,6 +412,7 @@ if __name__ == "__main__":
 
     application = Application([
         (r"/(\d+)", ChatHandler),
+        (r"/search/([0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12})", SearchHandler),
         (r"/health", HealthHandler)
     ])
 
