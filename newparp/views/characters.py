@@ -108,7 +108,9 @@ def delete_character_post(character_id):
     character_id = character.id
     if g.user.default_character_id == character_id:
         g.user.default_character_id = None
-        g.db.flush()
+    if g.user.roulette_character_id == character_id:
+        g.user.roulette_character_id = None
+    g.db.flush()
     g.db.query(CharacterTag).filter(CharacterTag.character_id == character_id).delete()
     # Don't use g.db.delete(character) because it does a load of extra queries
     # for foreign keys and stuff.
