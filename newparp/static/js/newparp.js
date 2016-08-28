@@ -588,9 +588,24 @@ var msparp = (function() {
 		},
 		// Character search
 		"search": function(token) {
+			var ws;
 			$.ajaxSetup({data: {"token": token}});
-			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
+
+
+
+
+			$.post("/" + search_type, {}, function(data) {
+				searcher_id = data.id;
+				ws = new WebSocket("wss://live." + location.host + "/search/" + searcher_id);
+				window.ws = ws;
+			}).error(function() {
+				searching = false;
+				body.removeClass("searching").addClass("search_error");
+			});
+
+
+
+
 		},
 		// Roulette
 		"roulette": function(token) {

@@ -1,3 +1,4 @@
+from celery import chord
 from celery.utils.log import get_task_logger
 
 from newparp.helpers.matchmaker import run_matchmaker
@@ -97,6 +98,7 @@ def check_compatibility(redis, s1, s2):
 def get_character_info(db, searcher):
     return searcher["character"]
 
+
 @celery.task(base=WorkerTask, queue="worker")
 def run():
     db = run.db
@@ -106,4 +108,43 @@ def run():
         db, redis, 2, "searchers", "searcher", get_searcher_info,
         check_compatibility, SearchedChat, get_character_info,
     )
+
+
+@celery.task(base=WorkerTask, queue="matchmaker")
+def new_searcher(searcher_id):
+    # TODO lock
+    logger.debug("new searcher: %s")
+    searchers = new_searcher.redis.smembers("searchers")
+    try:
+        searchers.remove(searcher_id)
+    except KeyError:
+        logger.debug("no longer searching")
+        return
+    if not searchers:
+        logger.debug("not enough searchers, skipping")
+        return
+    chord(
+        (compare.s(searcher_id, _) for _ in searchers if _ != searcher_id),
+        comparison_callback.s(searcher_id),
+    ).delay()
+
+
+@celery.task(base=WorkerTask, queue="matchmaker")
+def compare(searcher_id_1, searcher_id_2):
+    logger.debug("comparing %s and %s" % (searcher_id_1, searcher_id_2))
+
+
+@celery.task(base=WorkerTask, queue="matchmaker")
+def comparison_callback(results, searcher_id):
+    logger.debug("match results: %s" % results)
+    matched_searchers = [_ for _ in results if _ is not None]
+    if not matched_searchers:
+        logger.debug("no results")
+        return
+    logger.debug("results: %s" % matched_searchers)
+    # TODO something
+
+
+
+
 
