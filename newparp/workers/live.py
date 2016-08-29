@@ -302,7 +302,7 @@ class SearchHandler(WebSocketHandler):
         pipe.expire("searcher:%s:levels" % self.searcher_id, 30)
         pipe.expire("searcher:%s:filters" % self.searcher_id, 30)
         pipe.expire("searcher:%s:choices" % self.searcher_id, 30)
-        if not all(pipe.execute())
+        if not all(pipe.execute()[:-2]): # filters and choices are optional
             self.close()
 
     async def redis_listen(self):
@@ -342,6 +342,8 @@ class SearchHandler(WebSocketHandler):
         pipe.delete("searcher:%s:character" % self.searcher_id)
         pipe.delete("searcher:%s:style" % self.searcher_id)
         pipe.delete("searcher:%s:levels" % self.searcher_id)
+        pipe.delete("searcher:%s:filters" % self.searcher_id)
+        pipe.delete("searcher:%s:choices" % self.searcher_id)
         pipe.execute()
 
         if DEBUG:
