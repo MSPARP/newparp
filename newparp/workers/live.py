@@ -38,6 +38,7 @@ from newparp.helpers.chat import (
     disconnect,
     send_quit_message,
 )
+from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher
 from newparp.helpers.users import queue_user_meta
 from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
 from newparp.model.connections import redis_pool
@@ -274,15 +275,19 @@ class SearchHandler(WebSocketHandler):
         if "newparp" not in self.cookies:
             self.send_error(401)
             return
+
         self.searcher_id = searcher_id = self.path_args[0]
-        pipe = redis.pipeline()
-        pipe.get("searcher:%s:session_id" % searcher_id) # TODO check user id
-        pipe.get("searcher:%s:search_character_id" % searcher_id)
-        pipe.hlen("searcher:%s:character" % searcher_id)
-        pipe.get("searcher:%s:style" % searcher_id)
-        pipe.scard("searcher:%s:levels" % searcher_id)
-        result = pipe.execute()
-        if not all(result) or result[0] != self.cookies["newparp"].value:
+        try:
+            UUID(self.path_args[0])
+        except ValueError:
+            self.send_error(404)
+            return
+
+        result = validate_searcher_exists(redis, self.searcher_id)
+        if (
+            not all(result)
+            or result[0] != self.cookies["newparp"].value
+        ):
             self.send_error(404)
             return
 
@@ -293,16 +298,8 @@ class SearchHandler(WebSocketHandler):
         new_searcher.delay(searcher_id)
 
     def on_message(self, message):
-        pipe = redis.pipeline()
-        pipe.sismember("searchers", self.searcher_id)
-        pipe.expire("searcher:%s:session_id" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:search_character_id" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:character" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:style" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:levels" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:filters" % self.searcher_id, 30)
-        pipe.expire("searcher:%s:choices" % self.searcher_id, 30)
-        if not all(pipe.execute()[:-2]): # filters and choices are optional
+        result = refresh_searcher(redis, self.searcher_id)
+        if not all(result[:-2]): # -2 because filters and choices are optional
             self.close()
 
     async def redis_listen(self):
