@@ -1,7 +1,7 @@
 from celery import chord
 from celery.utils.log import get_task_logger
 
-from newparp.helpers.matchmaker import run_matchmaker
+from newparp.helpers.matchmaker import run_matchmaker, fetch_searcher
 from newparp.model import SearchedChat
 from newparp.tasks import celery, WorkerTask
 
@@ -131,18 +131,47 @@ def new_searcher(searcher_id):
 
 @celery.task(base=WorkerTask, queue="matchmaker")
 def compare(searcher_id_1, searcher_id_2):
+    redis = compare.redis
     logger.debug("comparing %s and %s" % (searcher_id_1, searcher_id_2))
+
+    s1 = fetch_searcher(compare.redis, searcher_id_1)
+    logger.debug(s1)
+    s2 = fetch_searcher(compare.redis, searcher_id_2)
+    logger.debug(s2)
+
+    alive = True
+    for searcher in (s1, s2):
+        if not all(searcher[:-2]):
+            logger.debug("%s not alive" % searcher.id)
+            redis.srem("searchers", searcher.id)
+            alive = False
+    if not alive:
+        return False
+
+    options = {}
+
+    if (
+        # Match if either person has wildcard, or if they're otherwise compatible.
+        (len(s2.choices) == 0 or s1.search_character_id in s2.choices)
+        and (len(s1.choices) == 0 or s2.search_character_id in s1.choices)
+    ):
+        # don't do this until comparison_callback
+        #redis.set(match_key, 1)
+        #redis.expire(match_key, 1800)
+        return True, options
+
+    return False, None
 
 
 @celery.task(base=WorkerTask, queue="matchmaker")
 def comparison_callback(results, searcher_id):
     logger.debug("match results: %s" % results)
-    matched_searchers = [_ for _ in results if _ is not None]
+    matched_searchers = [_ for _ in results if _[0] is True]
     if not matched_searchers:
         logger.debug("no results")
         return
     logger.debug("results: %s" % matched_searchers)
-    # TODO something
+
 
 
 

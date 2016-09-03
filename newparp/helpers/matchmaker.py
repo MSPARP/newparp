@@ -2,6 +2,7 @@ import os
 import json
 import logging
 
+from collections import namedtuple
 from random import shuffle
 from sqlalchemy import and_, func
 from uuid import uuid4
@@ -11,7 +12,7 @@ from newparp.model import Block, ChatUser, Message, User
 
 def validate_searcher_exists(redis, searcher_id):
     """Check whether a searcher's mandatory keys are present."""
-    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or "-"
+    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
     return {
         session_id,
         redis.call("get",   "session:"..session_id),
@@ -24,7 +25,7 @@ def validate_searcher_exists(redis, searcher_id):
 
 def validate_searcher_is_searching(redis, searcher_id):
     """Check whether a searcher's mandatory keys are present and they're in the searchers set."""
-    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or "-"
+    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
     return {
         redis.call("sismember", "searchers", ARGV[1]),
         session_id,
@@ -38,7 +39,7 @@ def validate_searcher_is_searching(redis, searcher_id):
 
 def refresh_searcher(redis, searcher_id):
     """Reset the expiry times on a searcher's keys."""
-    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or "-"
+    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
     return {
         redis.call("get",       "session:"..session_id),
         redis.call("sismember", "searchers", ARGV[1]),
@@ -52,9 +53,12 @@ def refresh_searcher(redis, searcher_id):
     }""", 0, searcher_id)
 
 
+searcher = namedtuple("searcher", ("id", "searching", "session_id", "user_id", "search_character_id", "name", "style", "levels", "filters", "choices"))
+
+
 def fetch_searcher(redis, searcher_id):
     """Fetch searcher keys for matching."""
-    return redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or "-"
+    return searcher(searcher_id, *redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
     return {
         redis.call("sismember", "searchers", ARGV[1]),
         session_id,
@@ -63,9 +67,9 @@ def fetch_searcher(redis, searcher_id):
         redis.call("hget",     "searcher:"..ARGV[1]..":character", "name"),
         redis.call("get",      "searcher:"..ARGV[1]..":style"),
         redis.call("smembers", "searcher:"..ARGV[1]..":levels"),
-        redis.call("lrange",    "searcher:"..ARGV[1]..":filters",             30),
-        redis.call("expire",    "searcher:"..ARGV[1]..":choices",             30),
-    }""", 0, searcher_id)
+        redis.call("lrange",   "searcher:"..ARGV[1]..":filters", 0, -1),
+        redis.call("smembers", "searcher:"..ARGV[1]..":choices"),
+    }""", 0, searcher_id))
 
 
 option_messages = {
