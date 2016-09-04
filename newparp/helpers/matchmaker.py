@@ -53,23 +53,28 @@ def refresh_searcher(redis, searcher_id):
     }""", 0, searcher_id)
 
 
-searcher = namedtuple("searcher", ("id", "searching", "session_id", "user_id", "search_character_id", "name", "style", "levels", "filters", "choices"))
+searcher = namedtuple("searcher", ("id", "searching", "session_id", "user_id", "search_character_id", "character", "style", "levels", "filters", "choices"))
 
 
 def fetch_searcher(redis, searcher_id):
     """Fetch searcher keys for matching."""
-    return searcher(searcher_id, *redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
+    searcher_keys = redis.eval("""local session_id = redis.call("get", "searcher:"..ARGV[1]..":session_id") or ""
     return {
         redis.call("sismember", "searchers", ARGV[1]),
         session_id,
         redis.call("get",      "session:"..session_id),
         redis.call("get",      "searcher:"..ARGV[1]..":search_character_id"),
-        redis.call("hget",     "searcher:"..ARGV[1]..":character", "name"),
+        redis.call("hgetall",  "searcher:"..ARGV[1]..":character"),
         redis.call("get",      "searcher:"..ARGV[1]..":style"),
         redis.call("smembers", "searcher:"..ARGV[1]..":levels"),
         redis.call("lrange",   "searcher:"..ARGV[1]..":filters", 0, -1),
         redis.call("smembers", "searcher:"..ARGV[1]..":choices"),
-    }""", 0, searcher_id))
+    }""", 0, searcher_id)
+    # Hashes get returned as lists so we need to convert them manually.
+    print(searcher_keys[4])
+    if searcher_keys[4]:
+        searcher_keys[4] = {k: v for k, v in zip(*(iter(searcher_keys[4]),) * 2)}
+    return searcher(searcher_id, *searcher_keys)
 
 
 option_messages = {

@@ -1,8 +1,13 @@
+import json
+
 from celery import chord
 from celery.utils.log import get_task_logger
+from random import shuffle
+from sqlalchemy import and_, func, or_
+from uuid import uuid4
 
 from newparp.helpers.matchmaker import run_matchmaker, fetch_searcher
-from newparp.model import SearchedChat
+from newparp.model import Block, ChatUser, SearchedChat, User
 from newparp.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
@@ -134,9 +139,9 @@ def compare(searcher_id_1, searcher_id_2):
     redis = compare.redis
     logger.debug("comparing %s and %s" % (searcher_id_1, searcher_id_2))
 
-    s1 = fetch_searcher(compare.redis, searcher_id_1)
+    s1 = fetch_searcher(redis, searcher_id_1)
     logger.debug(s1)
-    s2 = fetch_searcher(compare.redis, searcher_id_2)
+    s2 = fetch_searcher(redis, searcher_id_2)
     logger.debug(s2)
 
     alive = True
@@ -146,7 +151,7 @@ def compare(searcher_id_1, searcher_id_2):
             redis.srem("searchers", searcher.id)
             alive = False
     if not alive:
-        return False
+        return None, None
 
     options = {}
 
@@ -158,22 +163,70 @@ def compare(searcher_id_1, searcher_id_2):
         # don't do this until comparison_callback
         #redis.set(match_key, 1)
         #redis.expire(match_key, 1800)
-        return True, options
+        return s2.id, options
 
-    return False, None
+    return None, None
 
 
 @celery.task(base=WorkerTask, queue="matchmaker")
-def comparison_callback(results, searcher_id):
+def comparison_callback(results, searcher_id_1):
+    redis = comparison_callback.redis
+    db = comparison_callback.db
+
+    # Check if there's a match.
     logger.debug("match results: %s" % results)
-    matched_searchers = [_ for _ in results if _[0] is True]
+    matched_searchers = [_ for _ in results if _[0] is not None]
     if not matched_searchers:
         logger.debug("no results")
         return
     logger.debug("results: %s" % matched_searchers)
+    shuffle(matched_searchers)
 
+    # Fetch searcher 1.
+    s1 = fetch_searcher(redis, searcher_id_1)
+    logger.debug(s1)
+    if not all(s1[:-2]):
+        logger.debug("%s has expired" % searcher_id_1)
+        return
 
+    # Pick a second searcher from the matches.
+    for searcher_id_2, options in matched_searchers:
+        s2 = fetch_searcher(redis, searcher_id_2)
+        logger.debug(s2)
+        if all(s2[:-2]) and db.query(func.count("*")).select_from(Block).filter(or_(
+            and_(Block.blocking_user_id == s1.user_id, Block.blocked_user_id == s2.user_id),
+            and_(Block.blocking_user_id == s2.user_id, Block.blocked_user_id == s1.user_id),
+        )).scalar() == 0:
+            logger.debug("matched %s" % searcher_id_2)
+            break
+    else:
+        logger.debug("all matches have expired")
+        return
 
+    new_url = str(uuid4()).replace("-", "")
+    logger.info("matched %s and %s, sending to %s." % (s1.id, s2.id, new_url))
+    new_chat = SearchedChat(url=new_url)
+    db.add(new_chat)
+    db.flush()
 
+    s1_user = db.query(User).filter(User.id == s1.user_id).one()
+    s2_user = db.query(User).filter(User.id == s2.user_id).one()
+    db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, search_character_id=s1.search_character_id, **s1.character))
+    if s1_user != s2_user:
+        db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, search_character_id=s2.search_character_id, **s2.character))
 
+    if options:
+        db.add(Message(
+            chat_id=new_chat.id,
+            type="search_info",
+            text=" ".join(option_messages[_] for _ in options),
+        ))
+
+    db.commit()
+
+    match_message = json.dumps({ "status": "matched", "url": new_url })
+    redis.publish("searcher:%s" % s1.id, match_message)
+    redis.publish("searcher:%s" % s2.id, match_message)
+
+    redis.srem("searchers", s1.id, s2.id)
 
