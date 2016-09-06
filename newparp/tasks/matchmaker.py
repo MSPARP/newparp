@@ -13,9 +13,14 @@ logger = get_task_logger(__name__)
 
 @celery.task(base=WorkerTask, queue="matchmaker")
 def new_searcher(searcher_id):
-    # TODO lock
+    redis = new_searcher.redis
+    if redis.exists("lock:matchmaker"):
+        new_searcher.apply_async((searcher_id,), countdown=2)
+        return
+
     logger.debug("new searcher: %s")
-    searchers = new_searcher.redis.smembers("searchers")
+    searchers = redis.smembers("searchers")
+
     try:
         searchers.remove(searcher_id)
     except KeyError:
@@ -24,10 +29,13 @@ def new_searcher(searcher_id):
     if not searchers:
         logger.debug("not enough searchers, skipping")
         return
+
     chord(
         (compare.s(searcher_id, _) for _ in searchers if _ != searcher_id),
         comparison_callback.s(searcher_id),
     ).delay()
+
+    redis.setex("lock:matchmaker", 60, 1)
 
 
 @celery.task(base=WorkerTask, queue="matchmaker")
@@ -114,6 +122,7 @@ def comparison_callback(results, searcher_id_1):
     matched_searchers = [_ for _ in results if _[0] is not None]
     if not matched_searchers:
         logger.debug("no results")
+        redis.delete("lock:matchmaker")
         return
     logger.debug("results: %s" % matched_searchers)
     shuffle(matched_searchers)
@@ -122,6 +131,7 @@ def comparison_callback(results, searcher_id_1):
     s1 = fetch_searcher(redis, searcher_id_1)
     if not all(s1[:-2]):
         logger.debug("%s has expired" % searcher_id_1)
+        redis.delete("lock:matchmaker")
         return
 
     # Pick a second searcher from the matches.
@@ -135,6 +145,7 @@ def comparison_callback(results, searcher_id_1):
             break
     else:
         logger.debug("all matches have expired")
+        redis.delete("lock:matchmaker")
         return
 
     new_url = str(uuid4()).replace("-", "")
@@ -166,5 +177,6 @@ def comparison_callback(results, searcher_id_1):
     match_message = """{"status":"matched","url":"%s"}""" % new_url
     pipe.publish("searcher:%s" % s1.id, match_message)
     pipe.publish("searcher:%s" % s2.id, match_message)
+    pipe.delete("lock:matchmaker")
     pipe.execute()
 
