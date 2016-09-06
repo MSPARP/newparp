@@ -151,8 +151,6 @@ app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_charact
 app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
-app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
-app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
 
 app.add_url_rule("/roulette/save", "rp_roulette_save", roulette.roulette_save, methods=("POST",))
 app.add_url_rule("/roulette", "rp_roulette", roulette.roulette_get, methods=("GET",))
