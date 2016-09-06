@@ -6,8 +6,8 @@ from random import shuffle
 from sqlalchemy import and_, func, or_
 from uuid import uuid4
 
-from newparp.helpers.matchmaker import run_matchmaker, fetch_searcher
-from newparp.model import Block, ChatUser, SearchedChat, User
+from newparp.helpers.matchmaker import option_messages, run_matchmaker, fetch_searcher
+from newparp.model import Block, ChatUser, Message, SearchedChat, User
 from newparp.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
@@ -140,9 +140,7 @@ def compare(searcher_id_1, searcher_id_2):
     logger.debug("comparing %s and %s" % (searcher_id_1, searcher_id_2))
 
     s1 = fetch_searcher(redis, searcher_id_1)
-    logger.debug(s1)
     s2 = fetch_searcher(redis, searcher_id_2)
-    logger.debug(s2)
 
     alive = True
     for searcher in (s1, s2):
@@ -153,7 +151,52 @@ def compare(searcher_id_1, searcher_id_2):
     if not alive:
         return None, None
 
-    options = {}
+    # Don't pair people with themselves.
+    if s1.user_id == s2.user_id:
+        return None, None
+
+    # Don't match if they've already been paired up recently.
+    match_key = "matched:%s:%s" % tuple(sorted([s1.user_id, s2.user_id]))
+    if redis.exists(match_key):
+        return None, None
+
+    options = []
+
+    # Style options should be matched with themselves or "either".
+    if s1.style != "either" and s2.style != "either" and s1.style != s2.style:
+        return None, None
+    if s1.style != "either":
+        options.append(s1.style)
+    elif s2.style != "either":
+        options.append(s2.style)
+
+    # Levels have to overlap.
+    levels_in_common = s1.levels & s2.levels
+    logger.debug("Levels in common: %s" % levels_in_common)
+    if levels_in_common:
+        options.append(
+            "nsfw-extreme" if "nsfw-extreme" in levels_in_common
+            else "nsfw" if "nsfw" in levels_in_common
+            else "sfw"
+        )
+    else:
+        return None, None
+
+    # Check filters.
+    s1_name = s1.character["name"].lower().encode("utf8")
+    for search_filter in s2.filters:
+        search_filter = search_filter.encode("utf8")
+        logger.debug("comparing %s and %s" % (s1_name, search_filter))
+        if search_filter in s1_name:
+            logger.debug("FILTER %s MATCHED" % search_filter)
+            return None, None
+    s2_name = s2.character["name"].lower().encode("utf8")
+    for search_filter in s1.filters:
+        search_filter = search_filter.encode("utf8")
+        logger.debug("comparing %s and %s" % (s2_name, search_filter))
+        if search_filter in s2_name:
+            logger.debug("FILTER %s MATCHED" % search_filter)
+            return None, None
 
     if (
         # Match if either person has wildcard, or if they're otherwise compatible.
@@ -161,8 +204,6 @@ def compare(searcher_id_1, searcher_id_2):
         and (len(s1.choices) == 0 or s2.search_character_id in s1.choices)
     ):
         # don't do this until comparison_callback
-        #redis.set(match_key, 1)
-        #redis.expire(match_key, 1800)
         return s2.id, options
 
     return None, None
@@ -174,7 +215,6 @@ def comparison_callback(results, searcher_id_1):
     db = comparison_callback.db
 
     # Check if there's a match.
-    logger.debug("match results: %s" % results)
     matched_searchers = [_ for _ in results if _[0] is not None]
     if not matched_searchers:
         logger.debug("no results")
@@ -184,7 +224,6 @@ def comparison_callback(results, searcher_id_1):
 
     # Fetch searcher 1.
     s1 = fetch_searcher(redis, searcher_id_1)
-    logger.debug(s1)
     if not all(s1[:-2]):
         logger.debug("%s has expired" % searcher_id_1)
         return
@@ -192,7 +231,6 @@ def comparison_callback(results, searcher_id_1):
     # Pick a second searcher from the matches.
     for searcher_id_2, options in matched_searchers:
         s2 = fetch_searcher(redis, searcher_id_2)
-        logger.debug(s2)
         if all(s2[:-2]) and db.query(func.count("*")).select_from(Block).filter(or_(
             and_(Block.blocking_user_id == s1.user_id, Block.blocked_user_id == s2.user_id),
             and_(Block.blocking_user_id == s2.user_id, Block.blocked_user_id == s1.user_id),
@@ -224,9 +262,13 @@ def comparison_callback(results, searcher_id_1):
 
     db.commit()
 
+    pipe = redis.pipeline()
+    match_key = "matched:%s:%s" % tuple(sorted([s1.user_id, s2.user_id]))
+    pipe.set(match_key, 1)
+    pipe.expire(match_key, 1800)
+    pipe.srem("searchers", s1.id, s2.id)
     match_message = json.dumps({ "status": "matched", "url": new_url })
-    redis.publish("searcher:%s" % s1.id, match_message)
-    redis.publish("searcher:%s" % s2.id, match_message)
-
-    redis.srem("searchers", s1.id, s2.id)
+    pipe.publish("searcher:%s" % s1.id, match_message)
+    pipe.publish("searcher:%s" % s2.id, match_message)
+    pipe.execute()
 

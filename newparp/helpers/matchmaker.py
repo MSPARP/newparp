@@ -70,10 +70,11 @@ def fetch_searcher(redis, searcher_id):
         redis.call("lrange",   "searcher:"..ARGV[1]..":filters", 0, -1),
         redis.call("smembers", "searcher:"..ARGV[1]..":choices"),
     }""", 0, searcher_id)
-    # Hashes get returned as lists so we need to convert them manually.
-    print(searcher_keys[4])
+    # Hashes and sets get returned as lists so we need to convert them manually.
     if searcher_keys[4]:
         searcher_keys[4] = {k: v for k, v in zip(*(iter(searcher_keys[4]),) * 2)}
+    searcher_keys[6] = set(searcher_keys[6])
+    searcher_keys[8] = set(searcher_keys[8])
     return searcher(searcher_id, *searcher_keys)
 
 
