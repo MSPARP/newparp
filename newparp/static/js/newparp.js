@@ -588,9 +588,36 @@ var msparp = (function() {
 		},
 		// Character search
 		"search": function(token) {
+			var ws, ws_interval;
 			$.ajaxSetup({data: {"token": token}});
-			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
+			$.post("/" + search_type, {}, function(data) {
+				matched = false;
+				body.addClass("searching");
+				searcher_id = data.id;
+				ws = new WebSocket("wss://live." + location.host + "/search/" + searcher_id);
+				ws.onopen = function() {
+					console.log("ready");
+					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000)
+				}
+				ws.onmessage = function(e) {
+					var data = JSON.parse(e.data);
+					console.log(data);
+					if (data.status == "matched") {
+						matched = true;
+						window.location.href = "/" + data.url;
+					} else if (data.status == "quit") {
+						ws.close();
+					}
+				}
+				ws.onclose = function() {
+					if (matched) { return; }
+					body.removeClass("searching").addClass("search_error");
+					window.clearInterval(ws_interval);
+				}
+			}).error(function() {
+				searching = false;
+				body.removeClass("searching").addClass("search_error");
+			});
 		},
 		// Roulette
 		"roulette": function(token) {

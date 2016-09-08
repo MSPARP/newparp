@@ -4,7 +4,7 @@ from datetime import timedelta
 from kombu import Exchange, Queue
 
 # Debug
-if 'DEBUG' in os.environ:
+if "DEBUG" in os.environ:
     CELERY_REDIRECT_STDOUTS_LEVEL = "DEBUG"
 
 # Broker and Result backends
@@ -28,13 +28,16 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_DISABLE_RATE_LIMITS = True
 
 # Queue config
-CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_QUEUE = "default"
 CELERY_QUEUES = (
     # Default queue
-    Queue('default', Exchange('default'), routing_key='default'),
+    Queue("default", Exchange("default"), routing_key="default"),
 
     # Worker queue
-    Queue('worker', Exchange('worker'), routing_key='worker', delivery_mode=1),
+    Queue("worker", Exchange("worker"), routing_key="worker", delivery_mode=1),
+
+    # Matchmaker queue
+    Queue("matchmaker", Exchange("matchmaker"), routing_key="matchmaker", delivery_mode=1),
 )
 
 # Beats config
@@ -54,10 +57,6 @@ CELERYBEAT_SCHEDULE = {
     "update_user_meta": {
         "task": "newparp.tasks.background.update_user_meta",
         "schedule": timedelta(seconds=5),
-    },
-    "matchmaker": {
-        "task": "newparp.tasks.matchmaker.run",
-        "schedule": timedelta(seconds=10),
     },
     "roulette_matchmaker": {
         "task": "newparp.tasks.roulette_matchmaker.run",
