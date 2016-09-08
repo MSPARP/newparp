@@ -58,10 +58,6 @@ CELERYBEAT_SCHEDULE = {
         "task": "newparp.tasks.background.update_user_meta",
         "schedule": timedelta(seconds=5),
     },
-    "roulette_matchmaker": {
-        "task": "newparp.tasks.roulette_matchmaker.run",
-        "schedule": timedelta(seconds=10),
-    },
     "ping_longpolls": {
         "task": "newparp.tasks.reaper.ping_longpolls",
         "schedule": timedelta(seconds=5),
