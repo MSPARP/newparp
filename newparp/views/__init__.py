@@ -14,6 +14,9 @@ from newparp.model.connections import use_db, db_connect
 @use_db
 def home():
 
+    if "mode" in request.args:
+        return redirect("/")
+
     if g.user is None:
         return render_template("home_guest.html")
 
@@ -57,7 +60,7 @@ def unread(fmt=None):
         "account/unread.html",
     )
 
-def redirect():
+def redirect_view():
 
     if "url" in request.args:
         url = request.args["url"].strip()

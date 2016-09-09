@@ -177,7 +177,7 @@ app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POS
 app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
 app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
-app.add_url_rule("/redirect", "redirect", views.redirect, methods=("GET",))
+app.add_url_rule("/redirect", "redirect", views.redirect_view, methods=("GET",))
 
 # 8. Chat API
 
