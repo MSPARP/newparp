@@ -49,7 +49,6 @@ document.body.className += ' no_forms';
             <div id="users_online">
                 <p>{{g.redis.get("connected_users") or 0}} connected</p>
                 <p>{{g.redis.get("searching_users") or 0}} searching</p>
-                <p>{{g.redis.get("rouletting_users") or 0}} rouletting</p>
             </div>
             <h1><span id="logo"><a href="{{url_for("home")}}"><img src="/static/img/logo-spacer.png" alt="MSPARP"></a></span> <span id="prompt">CHAT TERMINAL <span id="prompt-cursor"></span></span></h1>
         </header>
