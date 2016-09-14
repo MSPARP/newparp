@@ -11,6 +11,21 @@ from newparp.tasks import celery, WorkerTask
 logger = get_task_logger(__name__)
 
 
+@celery.task(base=WorkerTask, queue="worker")
+def generate_searching_counter():
+    redis = generate_searching_counter.redis
+
+    pipe = redis.pipeline()
+    for searcher_id in redis.smembers("searchers"):
+        pipe.get("searcher:%s:session_id" % searcher_id)
+
+    for session_id in set(pipe.execute()):
+        if session_id:
+            pipe.get("session:%s" % session_id)
+
+    redis.set("searching_users", len(set(pipe.execute())))
+
+
 @celery.task(base=WorkerTask, queue="matchmaker")
 def new_searcher(searcher_id):
     redis = new_searcher.redis
