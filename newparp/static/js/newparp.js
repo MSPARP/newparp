@@ -375,49 +375,6 @@ var msparp = (function() {
 		$('#clear_regexes').click(clear_regexes_and_add);
 	}
 
-	// Searching
-	var search_type = "search"
-	var searching = false;
-	var searcher_id;
-
-	function start_search() {
-		if (!searching) {
-			searching = true;
-			body.addClass("searching");
-			$.post("/" + search_type, {}, function(data) {
-				searcher_id = data.id;
-				continue_search();
-			}).error(function() {
-				searching = false;
-				body.removeClass("searching").addClass("search_error");
-			});
-		}
-	}
-	function continue_search() {
-		if (searching) {
-			$.post("/" + search_type + "/continue", { "id": searcher_id }, function(data) {
-				if (data.status == "matched") {
-					searching = false;
-					window.location.href = "/" + data.url;
-				} else if (data.status == "quit") {
-					searching = false;
-				} else {
-					continue_search();
-				}
-			}).error(function() {
-				window.setTimeout(function() {
-					searching = false;
-					start_search();
-				}, 2000);
-			});
-		}
-	}
-	function stop_search() {
-		searching = false;
-		$.ajax("/" + search_type + "/stop", { "type": "POST", data: { "id": searcher_id }, "async": false });
-		body.removeClass("searching");
-	}
-
 	// BBCode
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
@@ -618,13 +575,6 @@ var msparp = (function() {
 				searching = false;
 				body.removeClass("searching").addClass("search_error");
 			});
-		},
-		// Roulette
-		"roulette": function(token) {
-			$.ajaxSetup({data: {"token": token}});
-			search_type = "roulette";
-			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
 		},
 		// Character pages
 		"character": function() {
@@ -2249,8 +2199,6 @@ var msparp = (function() {
 					if (confirm("Are you sure you want to abscond?")) { disconnect(); }
 				} else if (chat.type == "searched") {
 					location.href = "/search";
-				} else if (chat.type == "roulette") {
-					location.href = "/roulette";
 				} else {
 					connect();
 				}
