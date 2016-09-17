@@ -27,46 +27,22 @@ class KickedException(Exception):
     pass
 
 
+def require_socket(f):
+    """Only allow this request if the user has a socket open."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        g.chat_id = int(request.form["chat_id"])
+        if not g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) != 0:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def group_chat_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.chat.type != "group":
             abort(404)
-        return f(*args, **kwargs)
-    return decorated_function
-
-
-def mark_alive(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        g.joining = False
-        g.chat_id = int(request.form["chat_id"])
-        # Don't bother with any of this if we have a socket open, because the
-        # request is probably from that window.
-        if g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) != 0:
-            return f(*args, **kwargs)
-        session_online = g.redis.hexists("chat:%s:online" % g.chat_id, g.session_id)
-        if not session_online:
-            g.joining = True
-            # Make sure we're connected to the database.
-            db_connect()
-            # Get ChatUser if we haven't got it already.
-            if not hasattr(g, "chat_user"):
-                get_chat_user()
-            try:
-                authorize_joining(g.redis, g.db, g)
-            except (UnauthorizedException, BannedException, TooManyPeopleException):
-                abort(403)
-            try:
-                kick_check(g.redis, g)
-            except KickedException:
-                return jsonify({"exit": "kick"})
-            join(g.redis, g.db, g)
-        g.redis.zadd(
-            "chats_alive",
-            time.time() + 60,
-            "%s/%s" % (g.chat_id, g.session_id),
-        )
         return f(*args, **kwargs)
     return decorated_function
 
