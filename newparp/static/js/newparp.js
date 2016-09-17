@@ -547,7 +547,7 @@ var msparp = (function() {
 		"search": function(token) {
 			var ws, ws_interval;
 			$.ajaxSetup({data: {"token": token}});
-			$.post("/" + search_type, {}, function(data) {
+			$.post("/search", {}, function(data) {
 				matched = false;
 				body.addClass("searching");
 				searcher_id = data.id;
