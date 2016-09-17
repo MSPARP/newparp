@@ -61,7 +61,7 @@ mail = Mail(app)
 from newparp import views
 from newparp.views import (
     account, admin, characters, chat, chat_api, chat_list, errors, guides,
-    roulette, search, search_characters, settings,
+    search, search_characters, settings,
 )
 from newparp.views.admin import spamless, spamless2
 
@@ -151,14 +151,6 @@ app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_charact
 app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
-app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
-app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
-
-app.add_url_rule("/roulette/save", "rp_roulette_save", roulette.roulette_save, methods=("POST",))
-app.add_url_rule("/roulette", "rp_roulette", roulette.roulette_get, methods=("GET",))
-app.add_url_rule("/roulette", "rp_roulette_post", roulette.roulette_post, methods=("POST",))
-app.add_url_rule("/roulette/continue", "rp_roulette_continue", roulette.roulette_continue, methods=("POST",))
-app.add_url_rule("/roulette/stop", "rp_roulette_stop", roulette.roulette_stop, methods=("POST",))
 
 # 6. Groups
 
@@ -185,7 +177,7 @@ app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POS
 app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
 app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
-app.add_url_rule("/redirect", "redirect", views.redirect, methods=("GET",))
+app.add_url_rule("/redirect", "redirect", views.redirect_view, methods=("GET",))
 
 # 8. Chat API
 

@@ -14,11 +14,11 @@ from newparp.model.connections import use_db, db_connect
 @use_db
 def home():
 
+    if "mode" in request.args:
+        return redirect("/")
+
     if g.user is None:
         return render_template("home_guest.html")
-
-    mode = request.args.get("mode", g.user.last_search_mode)
-    g.user.last_search_mode = mode
 
     characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
 
@@ -26,31 +26,21 @@ def home():
         SearchCharacterGroup.order,
     ).options(joinedload(SearchCharacterGroup.characters)).all()
 
-    if mode == "roulette":
-        return render_template(
-            "home_roulette.html",
-            characters=characters,
-            search_character_groups=search_character_groups,
-        )
-
-    elif mode == "search":
-        picky = set(_[0] for _ in g.db.query(
-            SearchCharacterChoice.search_character_id,
-        ).filter(
-            SearchCharacterChoice.user_id == g.user.id,
-        ).all())
-        return render_template(
-            "home_search.html",
-            characters=characters,
-            search_character_groups=search_character_groups,
-            case_options=case_options,
-            replacements=json.loads(g.user.replacements),
-            regexes=json.loads(g.user.regexes),
-            User=User,
-            picky=picky,
-        )
-
-    abort(404)
+    picky = set(_[0] for _ in g.db.query(
+        SearchCharacterChoice.search_character_id,
+    ).filter(
+        SearchCharacterChoice.user_id == g.user.id,
+    ).all())
+    return render_template(
+        "home_search.html",
+        characters=characters,
+        search_character_groups=search_character_groups,
+        case_options=case_options,
+        replacements=json.loads(g.user.replacements),
+        regexes=json.loads(g.user.regexes),
+        User=User,
+        picky=picky,
+    )
 
 
 @alt_formats({"json"})
@@ -70,7 +60,7 @@ def unread(fmt=None):
         "account/unread.html",
     )
 
-def redirect():
+def redirect_view():
 
     if "url" in request.args:
         url = request.args["url"].strip()

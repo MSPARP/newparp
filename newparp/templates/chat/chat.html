@@ -33,8 +33,7 @@
                 <button type="button" class="mobile_nav_button" id="mobile_open_my_chats">My chats</button>
                 <hr>
                 <a href="{{url_for("home")}}" class="mobile_nav_link_button">MSPARP Home</a>
-                <a href="{{url_for("home", mode="search")}}" class="mobile_nav_link_button">Character search</a>
-                <a href="{{url_for("home", mode="roulette")}}" class="mobile_nav_link_button">Roulette</a>
+                <a href="{{url_for("home")}}" class="mobile_nav_link_button">Character search</a>
                 <a href="{{url_for("rp_groups")}}" class="mobile_nav_link_button">Group chats</a>
                 <a href="http://forums.msparp.com/" target="_blank" class="mobile_nav_link_button">Forums</a>
                 {% if g.user: %}
@@ -51,8 +50,7 @@
             <label for="nav_toggle" class="hide_nav">{% if chat.type in ("searched", "roulette", "pm"): %} Menu{% endif %}</label>
             <input type="checkbox" id="nav_toggle" class="hide_nav">
             <ul>
-                <li><a href="{{url_for("home", mode="search")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
-                <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
+                <li><a href="{{url_for("home")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
                 <li><a href="{{url_for("rp_groups")}}"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
                 <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
                 {% if g.user: %}
@@ -445,8 +443,7 @@
         {% endif %}
                 <li><a href="#" class="disconnect_subscribe">Subscribe to this chat</a><span class="disconnect_subscribed">You are subscribed to this chat.</span></li>
                 <li><a href="{{url_for("rp_log", url=chat.url)}}" target="_blank">View this chat's log</a></li>
-                <li><a href="{{url_for("home", mode="search" if g.user.last_search_mode != "search" else None)}}">Character search</a></li>
-                <li><a href="{{url_for("home", mode="roulette" if g.user.last_search_mode != "roulette" else None)}}">Roulette</a></li>
+                <li><a href="{{url_for("home")}}">Character search</a></li>
                 <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
             </ul>
         </section>
