@@ -139,9 +139,16 @@ def set_state():
 
 
 @use_db_chat
-@require_socket # TODO how does this work from the chat users list?
 @group_chat_only
 def set_group():
+
+    # Admins and creators can do this from the chat users list, so only require
+    # a socket if we're not one.
+    if (
+        g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)) == 0
+        and not (g.user.is_admin or g.user.id == g.chat.creator_id)
+    ):
+        abort(403)
 
     # Validation #1: We must be allowed to set groups.
     if not g.chat_user.can("set_group"):

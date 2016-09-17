@@ -32,7 +32,7 @@ def require_socket(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         g.chat_id = int(request.form["chat_id"])
-        if not g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) != 0:
+        if g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) == 0:
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
