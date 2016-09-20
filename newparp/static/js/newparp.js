@@ -1,6 +1,7 @@
 var msparp = (function() {
 
 	var body = $(document.body);
+    var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
 
 	// Prevent breaking browsers and settings that don't like localStorage
 	try {
@@ -551,7 +552,7 @@ var msparp = (function() {
 				matched = false;
 				body.addClass("searching");
 				searcher_id = data.id;
-				ws = new WebSocket("wss://live." + location.host + "/search/" + searcher_id);
+				ws = new WebSocket(ws_protocol + "live." + location.host + "/search/" + searcher_id);
 				ws.onopen = function() {
 					console.log("ready");
 					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000)
@@ -627,7 +628,7 @@ var msparp = (function() {
 				if (ws && ws.readyState != 3) { return; }
 				status = "connecting";
 
-				ws = new WebSocket("wss://live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
+				ws = new WebSocket(ws_protocol + "live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
 				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); }
 				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
 				ws.onclose = function(e) {
