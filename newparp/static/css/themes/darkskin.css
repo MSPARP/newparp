@@ -630,8 +630,6 @@ body.chat { background-color: #000;}
 
 #chat_wrapper { background: #1d1f2c;}
 
-#connection_method {color: #3a3d59}
-
 body:not(.no_forms) .chat input, body:not(.no_forms) .chat textarea, body:not(.no_forms) .chat button, body:not(.no_forms) .chat select { background-color: #1a8005; }
 
 #chat_logo {background-image: url('/static/img/logo-dark.png');}
@@ -805,7 +803,6 @@ body:not(.no_forms) .no_preview #chat_line_input {top:0px}
 	#topbar {background:transparent;}
 	#topbar h1 {background:transparent}
 	#topbar, #topbar .topic {color: #939eb7}
-	#connection_method, #chat_logo {display:none}
 	#global_navigation.in_chat_nav label:before {
 		background-image: url('/static/img/menu-dark.png');
 		background-image: url('/static/img/menu-dark.svg'), none;

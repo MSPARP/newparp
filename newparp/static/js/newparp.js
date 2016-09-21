@@ -1,7 +1,7 @@
 var msparp = (function() {
 
 	var body = $(document.body);
-    var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
+	var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
 
 	// Prevent breaking browsers and settings that don't like localStorage
 	try {
@@ -676,7 +676,6 @@ var msparp = (function() {
 				text_input.keyup();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
-				$("#messages_method").text("websocket");
 			}
 			function exit() {
 				status = "disconnected";
@@ -690,7 +689,6 @@ var msparp = (function() {
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 				if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
-				$("#connection_method").css("display", "none");
 			}
 			function disconnect() {
 				exit();
