@@ -1,6 +1,7 @@
 var msparp = (function() {
 
 	var body = $(document.body);
+	var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
 
 	// Prevent breaking browsers and settings that don't like localStorage
 	try {
@@ -551,7 +552,7 @@ var msparp = (function() {
 				matched = false;
 				body.addClass("searching");
 				searcher_id = data.id;
-				ws = new WebSocket("wss://live." + location.host + "/search/" + searcher_id);
+				ws = new WebSocket(ws_protocol + "live." + location.host + "/search/" + searcher_id);
 				ws.onopen = function() {
 					console.log("ready");
 					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000)
@@ -610,13 +611,18 @@ var msparp = (function() {
 			var latest_date = user.meta.show_timestamps ? new Date(latest_time) : null;
 			var new_messages = [];
 
-			// Websockets
-			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
-			var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
+			// Connecting and disconnecting
+
 			var ws;
 			var ws_works = false;
 			var ws_connected_time = 0;
-			function launch_websocket() {
+
+			function connect() {
+				if (typeof(WebSocket) == "undefined") {
+					status_bar.css("color", "#f00").html("Sorry, your browser doesn't appear to support websockets. Please use the latest version of <a href=\"https://www.firefox.com/\">Firefox</a> or <a href=\"https://www.google.com/chrome\">Chrome</a> to participate in this chat.");
+					return;
+				}
+
 				// Don't create a new websocket unless the previous one is closed.
 				// This prevents problems with eg. double clicking the join button.
 				if (ws && ws.readyState != 3) { return; }
@@ -629,8 +635,7 @@ var msparp = (function() {
 					if (status == "connecting" || status == "chatting") {
 						// Fall back to long polling if we've never managed to connect.
 						if (!ws_works || (Date.now() - ws_connected_time) < 5000) {
-							messages_method = "long_poll";
-							launch_long_poll(true);
+							status_bar.css("color", "#f00").html("Sorry, the connection to the server has been lost.");
 							return;
 						}
 						// Otherwise try to reconnect.
@@ -641,44 +646,6 @@ var msparp = (function() {
 				}
 			}
 
-			// Long polling
-			function launch_long_poll(joining) {
-				var data = { "chat_id": chat.id, "after": latest_message_id };
-				if (joining) { enter(); data["joining"] = true; }
-				$.post("/chat_api/messages", data, receive_messages).complete(function(jqxhr, text_status) {
-					if (status == "chatting") {
-						if (jqxhr.status < 400 && text_status == "success") {
-							launch_long_poll();
-						} else {
-							window.setTimeout(launch_long_poll, 2000);
-							// XXX display a message if it still doesn't work after several attempts.
-						}
-					}
-				});
-			}
-
-			// Ping loop
-			function ping() {
-				if (status == "chatting") {
-					if (messages_method == "websocket") {
-						if (ws.readyState == 1) {
-							ws.send("ping");
-							window.setTimeout(ping, 10000);
-						}
-					} else {
-						$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
-					}
-				}
-			}
-
-			// Connecting and disconnecting
-			function connect() {
-				if (messages_method == "websocket") {
-					launch_websocket();
-				} else {
-					launch_long_poll(true);
-				}
-			}
 			function enter() {
 				status = "chatting";
 				window.setTimeout(ping, 10000);
@@ -702,14 +669,13 @@ var msparp = (function() {
 				}
 				status_bar.css("color", "").text((
 					// Show status bar if typing notifications are available and switched on.
-					(messages_method == "websocket" && user.meta.typing_notifications)
+					user.meta.typing_notifications
 					// Also always show it in PM and roulette chats for online status.
 					|| chat.type == "pm" || chat.type == "roulette"
 				) ? " " : "");
 				text_input.keyup();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
-				$("#messages_method").text(messages_method);
 			}
 			function exit() {
 				status = "disconnected";
@@ -723,14 +689,18 @@ var msparp = (function() {
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 				if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
-				$("#connection_method").css("display", "none");
 			}
 			function disconnect() {
 				exit();
-				if (messages_method == "websocket") {
-					ws.close(1000); receive_messages({});
-				} else {
-					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id } });
+				ws.close(1000);
+				receive_messages({});
+			}
+
+			// Ping loop
+			function ping() {
+				if (status == "chatting" && ws.readyState == 1) {
+					ws.send("ping");
+					window.setTimeout(ping, 10000);
 				}
 			}
 
@@ -744,9 +714,6 @@ var msparp = (function() {
 			$(window).unload(function() {
 				if (status == "chatting") {
 					status = "disconnected";
-					if (messages_method != "websocket") {
-						$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false });
-					}
 				}
 			});
 
@@ -1690,7 +1657,7 @@ var msparp = (function() {
 							previous_status_message = null;
 						}
 					} else {
-						status_bar.text(messages_method == "websocket" && this.checked ? " " : "");
+						status_bar.text(this.checked ? " " : "");
 					}
 				}
 				parse_variables();
@@ -1772,21 +1739,19 @@ var msparp = (function() {
 
 			var text_input = $("input[name=text]").keydown(function() {
 				changed_since_draft = true;
-				if (messages_method == "websocket") {
-					window.clearTimeout(typing_timeout);
-					if (!typing) {
-						typing = true;
-						ws.send("typing");
-						$("#activity_spinner").addClass("active_self");
-						$("#activity_spinner").attr("title", "You are typing...");
-					}
-					typing_timeout = window.setTimeout(function() {
-						typing = false;
-						ws.send("stopped_typing");
-						$("#activity_spinner").removeClass("active_self");
-						$("#activity_spinner").attr("title", "No activity");
-					}, 1000);
+				window.clearTimeout(typing_timeout);
+				if (!typing) {
+					typing = true;
+					ws.send("typing");
+					$("#activity_spinner").addClass("active_self");
+					$("#activity_spinner").attr("title", "You are typing...");
 				}
+				typing_timeout = window.setTimeout(function() {
+					typing = false;
+					ws.send("stopped_typing");
+					$("#activity_spinner").removeClass("active_self");
+					$("#activity_spinner").attr("title", "No activity");
+				}, 1000);
 			}).keyup(function() {
 				if (user.meta.show_preview) {
 					text = this.value.trim()
@@ -1833,7 +1798,8 @@ var msparp = (function() {
 					var executed = execute_command(data.text);
 					if (executed) {
 						text_input.val("");
-						if (messages_method == "websocket") { typing = false; ws.send("stopped_typing"); }
+						typing = false;
+						ws.send("stopped_typing");
 						return false;
 					}
 					// If the current temporary character matches, apply their quirks.
