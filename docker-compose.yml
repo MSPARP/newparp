@@ -1,11 +1,11 @@
 version: '2'
 services:
   redis:
-    image: redis:3.2.1-alpine
+    image: redis:3.2.4-alpine
     restart: always
 
   postgres:
-    image: postgres:9.5.3
+    image: postgres:9.6.0
     restart: always
     environment:
       POSTGRES_USER: msparp
@@ -22,7 +22,7 @@ services:
       - "80"
   
   rabbitmq:
-    image: rabbitmq:3.6.3-management
+    image: rabbitmq:3.6.5-management
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: msparp
@@ -43,7 +43,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      POSTGRES_URL: postgresql://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
 
@@ -61,7 +61,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      POSTGRES_URL: postgresql://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
       
@@ -79,7 +79,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      POSTGRES_URL: postgresql://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
       
@@ -97,6 +97,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
+      POSTGRES_URL: postgresql://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
