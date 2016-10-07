@@ -111,13 +111,14 @@ document.body.className += ' no_forms';
 msparp.update_timezone({{g.csrf_token|tojson|safe}});
 </script>
 {% endif %}
+
+<script src="/static/assets/vendor.js"></script>
+<script src="/static/assets/newparp.js"></script>
 {% if config["SENTRY_PUBLIC_DSN"] %}
 <script>
 msparp.init_sentry({{config["SENTRY_PUBLIC_DSN"]|tojson|safe}});
 </script>
 {% endif %}
-<script src="/static/assets/vendor.js"></script>
-<script src="/static/assets/newparp.js"></script>
 {% block scripts: %}{% endblock %}
 
 </body>
