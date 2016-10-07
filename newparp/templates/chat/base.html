@@ -70,7 +70,9 @@ msparp.update_timezone({{g.csrf_token|tojson|safe}});
 </script>
 {% endif %}
 {% if config["SENTRY_PUBLIC_DSN"] %}
+<script>
 msparp.init_sentry({{config["SENTRY_PUBLIC_DSN"]|tojson|safe}});
+</script>
 {% endif %}
 {% block scripts: %}{% endblock %}
 

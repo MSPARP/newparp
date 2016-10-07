@@ -1,9 +1,9 @@
 import $ from "jquery";
 import Handlebars from "handlebars";
 import jstz from "jstimezonedetect";
-import Raven from "raven-js"
+import Raven from "raven-js";
 import "spectrum-colorpicker";
-import "./ui.js"
+import "./ui.js";
 
 require("./css/newparp.scss");
 
@@ -14,6 +14,7 @@ var msparp = (function() {
 
 	var body = $(document.body);
 	var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
+	var localstorage;
 
 	// Prevent breaking browsers and settings that don't like localStorage
 	try {
@@ -24,34 +25,34 @@ var msparp = (function() {
 		}).each(function() {
 			if (this.id && !this.checked) { this.checked = localStorage.getItem(this.id) == "true"; }
 		});
-		
-		if ($("#toggle_with_settings").is(':checked')) {
-			$("#player_select").addClass('tabbed_select');
+
+		if ($("#toggle_with_settings").is(":checked")) {
+			$("#player_select").addClass("tabbed_select");
 		}
 		
 		$(".character_list ul input").each(function() {
-				var group = $(this).parentsUntil("#filter_settings").last();
-				var group_input = group.find("legend input");
-				var counter = group.find(".groupcount");
-				var characters = group.find("li input");
-				var checked_characters = group.find("li input:checked");
-				if (checked_characters.length == 0) {
-					group_input.prop("checked", false).prop("indeterminate", false);
-					group_input.attr("class", "");
-					counter.html("");
-				} else if (checked_characters.length == characters.length) {
-					group_input.prop("checked", true).prop("indeterminate", false);
-					group_input.attr("class", "");
-					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
-				} else {
-					group_input.prop("checked", false).prop("indeterminate", true);
-					group_input.attr("class","indeterminate");
-					counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
-				}
-			});
-			var localstorage = "yes";
+			var group = $(this).parentsUntil("#filter_settings").last();
+			var group_input = group.find("legend input");
+			var counter = group.find(".groupcount");
+			var characters = group.find("li input");
+			var checked_characters = group.find("li input:checked");
+			if (checked_characters.length == 0) {
+				group_input.prop("checked", false).prop("indeterminate", false);
+				group_input.attr("class", "");
+				counter.html("");
+			} else if (checked_characters.length == characters.length) {
+				group_input.prop("checked", true).prop("indeterminate", false);
+				group_input.attr("class", "");
+				counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
+			} else {
+				group_input.prop("checked", false).prop("indeterminate", true);
+				group_input.attr("class","indeterminate");
+				counter.html(checked_characters.length + "/" + characters.length + "&nbsp;");
+			}
+		});
+		localstorage = "yes";
 	
-	} catch (e) {var localstorage = false;}
+	} catch (e) { localstorage = false; }
 	
 	// Prevent console is undefined errors for IE9 Mobile and other horrors
 	window.console = window.console || (function(){
@@ -83,7 +84,7 @@ var msparp = (function() {
 	
 	// Apply toggle box state to filter & stem column, hide small toggle if open, wait for IE
 	$("#toggle_search_for_characters").ready(function() {
-		if ($("#toggle_search_for_characters").is(':checked')) {
+		if ($("#toggle_search_for_characters").is(":checked")) {
 			$("#filter_column").addClass("open");
 			$("#stem_column").addClass("open");
 			$("#toggle_filter").prop("checked", true);
@@ -188,7 +189,7 @@ var msparp = (function() {
 		if (localStorage.getItem("smart_action_delimiter") !== null && localStorage.getItem("smart_action_delimiter") !== "") { 
 			dev_user_smart_action_delimiter = localStorage.getItem("smart_action_delimiter"); 
 		}
-		 if (localStorage.getItem("smart_dialogue_delimiter") !== null && localStorage.getItem("smart_dialogue_delimiter") !== "") { 
+		if (localStorage.getItem("smart_dialogue_delimiter") !== null && localStorage.getItem("smart_dialogue_delimiter") !== "") { 
 			dev_user_smart_dialogue_delimiter = localStorage.getItem("smart_dialogue_delimiter"); 
 		}
 		
@@ -254,9 +255,9 @@ var msparp = (function() {
 			$("#toggle_typing_quirks").prop("checked", true).change();
 		}
 		$("input[name=quirk_prefix]").val(data["quirk_prefix"]);
-		data["quirk_prefix"] ? $("input[name=quirk_prefix]").attr("value", data["quirk_prefix"]) : $("input[name=quirk_prefix]").removeAttr('value');
+		data["quirk_prefix"] ? $("input[name=quirk_prefix]").attr("value", data["quirk_prefix"]) : $("input[name=quirk_prefix]").removeAttr("value");
 		$("input[name=quirk_suffix]").val(data["quirk_suffix"]);
-		data["quirk_suffix"] ? $("input[name=quirk_suffix]").attr("value", data["quirk_suffix"]) : $("input[name=quirk_suffix]").removeAttr('value');
+		data["quirk_suffix"] ? $("input[name=quirk_suffix]").attr("value", data["quirk_suffix"]) : $("input[name=quirk_suffix]").removeAttr("value");
 		$("select[name=case]").val(data["case"]);
 		clear_replacements();
 		if (data["replacements"].length == 0) {
@@ -282,22 +283,22 @@ var msparp = (function() {
 	}
 	function add_replacement(e, from, to) {
 		var size = body.hasClass("chat") ? 7 : 10;
-		new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
+		let new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"quirk_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"quirk_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_replacement\">x</button></li>");
 		if (from || to) {
-			var inputs = $(new_item).find('input');
+			var inputs = $(new_item).find("input");
 			inputs[0].value = from;
 			inputs[1].value = to;
 		}
-		$(new_item).find('.delete_replacement').click(delete_replacement);
-		$(new_item).appendTo('#replacement_list');
+		$(new_item).find(".delete_replacement").click(delete_replacement);
+		$(new_item).appendTo("#replacement_list");
 		return false;
 	}
 	function clear_replacements(e) {
-		$('#replacement_list').empty();
+		$("#replacement_list").empty();
 		return false;
 	}
 	function clear_replacements_and_add(e) {
-		$('#replacement_list').empty();
+		$("#replacement_list").empty();
 		add_replacement();
 		return false;
 	}
@@ -312,22 +313,22 @@ var msparp = (function() {
 	}
 	function add_regex(e, from, to) {
 		var size = body.hasClass("chat") ? 7 : 10;
-		new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"regex_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_regex\">x</button></li>");
+		let new_item = $("<li><div class=\"input fromto\"><input type=\"text\" name=\"regex_from\" size=\"" + size + "\"></div> to <div class=\"input fromto\"><input type=\"text\" name=\"regex_to\" size=\"" + size + "\"></div> <button type=\"button\" class=\"delete_regex\">x</button></li>");
 		if (from && to) {
-			var inputs = $(new_item).find('input');
+			var inputs = $(new_item).find("input");
 			inputs[0].value = from;
 			inputs[1].value = to;
 		}
-		$(new_item).find('.delete_regex').click(delete_regex);
-		$(new_item).appendTo('#regex_list');
+		$(new_item).find(".delete_regex").click(delete_regex);
+		$(new_item).appendTo("#regex_list");
 		return false;
 	}
 	function clear_regexes(e) {
-		$('#regex_list').empty();
+		$("#regex_list").empty();
 		return false;
 	}
 	function clear_regexes_and_add(e) {
-		$('#regex_list').empty();
+		$("#regex_list").empty();
 		add_regex();
 		return false;
 	}
@@ -366,7 +367,7 @@ var msparp = (function() {
 		});
 		// Toggle filter box
 		$("#toggle_search_for_characters").change(function() {
-			if ($("#toggle_search_for_characters").is(':checked')) {
+			if ($("#toggle_search_for_characters").is(":checked")) {
 				$("#filter_column").addClass("open");
 				$("#stem_column").addClass("open");
 				$("#toggle_filter").prop("checked", true);
@@ -379,17 +380,17 @@ var msparp = (function() {
 			}
 		});
 		// Replacement list
-		$('.delete_replacement').click(delete_replacement);
-		$('#add_replacement').click(add_replacement);
-		$('#clear_replacements').click(clear_replacements_and_add);
+		$(".delete_replacement").click(delete_replacement);
+		$("#add_replacement").click(add_replacement);
+		$("#clear_replacements").click(clear_replacements_and_add);
 		// Regex list
-		$('.delete_regex').click(delete_regex);
-		$('#add_regex').click(add_regex);
-		$('#clear_regexes').click(clear_regexes_and_add);
+		$(".delete_regex").click(delete_regex);
+		$("#add_regex").click(add_regex);
+		$("#clear_regexes").click(clear_regexes_and_add);
 	}
 
 	// BBCode
-	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
+	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"};
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
 	function raw_bbencode(text, admin) {
 		// convert BBCode inside [raw] to html escapes to prevent stacking problems and make it show with BBcode disabled
@@ -486,10 +487,10 @@ var msparp = (function() {
 
 			// Keep "be" tab appearance updated
 			$(".toggle_box > #toggle_with_settings").change(function() {
-				if ($("#toggle_with_settings").is(':checked')) {
-					$("#player_select").addClass('tabbed_select');
+				if ($("#toggle_with_settings").is(":checked")) {
+					$("#player_select").addClass("tabbed_select");
 				} else {
-					$("#player_select").removeClass('tabbed_select');
+					$("#player_select").removeClass("tabbed_select");
 				}
 			});
 
@@ -502,23 +503,23 @@ var msparp = (function() {
 				return false;
 			}
 			function add_filter() {
-				new_item = $("<li><div class=\"input\"><input type=\"text\" name=\"search_filter\" size=\"25\" maxlength=\"50\"></div> <button type=\"button\" class=\"delete_filter\">x</button></li>");
-				$(new_item).find('.delete_filter').click(delete_filter);
-				$(new_item).appendTo('#filter_list');
+				let new_item = $("<li><div class=\"input\"><input type=\"text\" name=\"search_filter\" size=\"25\" maxlength=\"50\"></div> <button type=\"button\" class=\"delete_filter\">x</button></li>");
+				$(new_item).find(".delete_filter").click(delete_filter);
+				$(new_item).appendTo("#filter_list");
 				return false;
 			}
 			function clear_filters(e) {
-				$('#filter_list').empty();
+				$("#filter_list").empty();
 				return false;
 			}
 			function clear_filters_and_add(e) {
-				$('#filter_list').empty();
+				$("#filter_list").empty();
 				add_filter();
 				return false;
 			}
-			$('.delete_filter').click(delete_filter);
-			$('#add_filter').click(add_filter);
-			$('#clear_filters').click(clear_filters_and_add);
+			$(".delete_filter").click(delete_filter);
+			$("#add_filter").click(add_filter);
+			$("#clear_filters").click(clear_filters_and_add);
 
 			// Picky checkboxes
 			$(".character_list legend .input input").change(function() {
@@ -558,17 +559,17 @@ var msparp = (function() {
 		},
 		// Character search
 		"search": function(token) {
-			var ws, ws_interval;
+			var ws, ws_interval, searching;
 			$.ajaxSetup({data: {"token": token}});
 			$.post("/search", {}, function(data) {
-				matched = false;
+				let matched = false;
 				body.addClass("searching");
-				searcher_id = data.id;
+				let searcher_id = data.id;
 				ws = new WebSocket(ws_protocol + "live." + location.host + "/search/" + searcher_id);
 				ws.onopen = function() {
 					console.log("ready");
-					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000)
-				}
+					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000);
+				};
 				ws.onmessage = function(e) {
 					var data = JSON.parse(e.data);
 					console.log(data);
@@ -578,12 +579,12 @@ var msparp = (function() {
 					} else if (data.status == "quit") {
 						ws.close();
 					}
-				}
+				};
 				ws.onclose = function() {
 					if (matched) { return; }
 					body.removeClass("searching").addClass("search_error");
 					window.clearInterval(ws_interval);
-				}
+				};
 			}).error(function() {
 				searching = false;
 				body.removeClass("searching").addClass("search_error");
@@ -619,7 +620,7 @@ var msparp = (function() {
 			var status;
 			var next_chat_url;
 			var user_data = {};
-			if (typeof latest_time == "number") { latest_time = latest_time * 1000 }
+			if (typeof latest_time == "number") { latest_time = latest_time * 1000; }
 			var latest_date = user.meta.show_timestamps ? new Date(latest_time) : null;
 			var new_messages = [];
 
@@ -641,8 +642,8 @@ var msparp = (function() {
 				status = "connecting";
 
 				ws = new WebSocket(ws_protocol + "live." + location.host + "/" + chat.id + "?after=" + latest_message_id);
-				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); }
-				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); }
+				ws.onopen = function(e) { ws_works = true; ws_connected_time = Date.now(); enter(); };
+				ws.onmessage = function(e) { receive_messages(JSON.parse(e.data)); };
 				ws.onclose = function(e) {
 					if (status == "connecting" || status == "chatting") {
 						// Fall back to long polling if we've never managed to connect.
@@ -653,9 +654,9 @@ var msparp = (function() {
 						// Otherwise try to reconnect.
 						exit();
 						status_bar.css("color", "#f00").text("Sorry, the connection to the server has been lost. Attempting to reconnect...");
-						window.setTimeout(launch_websocket, Math.random() * 10000);
+						window.setTimeout(connect, Math.random() * 10000);
 					}
-				}
+				};
 			}
 
 			function enter() {
@@ -722,7 +723,8 @@ var msparp = (function() {
 					if (typeof e != "undefined") { e.preventDefault(); }
 					return "";
 				}
-			}
+			};
+
 			$(window).on("unload", function() {
 				if (status == "chatting") {
 					status = "disconnected";
@@ -747,7 +749,7 @@ var msparp = (function() {
 						});
 						scroll_to_bottom();
 					} else if (data.exit == "ban") {
-						if (chat.url != "theoubliette") { location.replace("/theoubliette") };
+						if (chat.url != "theoubliette") { location.replace("/theoubliette"); }
 					}
 					return;
 				}
@@ -905,8 +907,8 @@ var msparp = (function() {
 				// XXX yeah you should be using a template here
 				// Use initial setting for consistency.
 				if (latest_date) {
-					if (typeof message.posted == "number") { message.posted = message.posted * 1000 }
-					message_date = new Date(message.posted);
+					if (typeof message.posted == "number") { message.posted = message.posted * 1000; }
+					var message_date = new Date(message.posted);
 					if (latest_date.getDate() != message_date.getDate() || latest_date.getMonth() != message_date.getMonth() || latest_date.getFullYear() != message_date.getFullYear()) {
 						$("<h2>").text(message_date.toDateString()).insertBefore(status_bar);
 					}
@@ -920,14 +922,16 @@ var msparp = (function() {
 				div.addClass("message_" + message.type + " unum_" + message.user_number);
 				$("<div>").attr("tabindex", -1).addClass("unum cnum_" + (message.user_number ? message.user_number + (message.user_number >= 1000 ? " four_digit" : "") + (message.user_number >= 10000 ? " five_digit" : "") : "noclick")).html((message.user_number ? "<span class=\"unum_hash\">#</span>" + message.user_number : "<span class=\"unum_system\">*</span>") ).appendTo(div);
 				var p = $("<p>").css("color", "#" + message.color);
+
+				var text;
 				if (message.type == "me") {
-					var text = "* " + message.name + " " + message.text;
+					text = "* " + message.name + " " + message.text;
 				} else if (chat.type == "roulette" && ["ic", "ooc"].indexOf(message.type) != -1) {
-					var text = (message.user_number == user.meta.number ? "▲" : "▼") + ": " + message.text;
+					text = (message.user_number == user.meta.number ? "▲" : "▼") + ": " + message.text;
 				} else if (message.acronym != "") {
-					var text = message.acronym + ": " + message.text;
+					text = message.acronym + ": " + message.text;
 				} else {
-					var text = message.text;
+					text = message.text;
 				}
 				var admin = (message.user_number && user_data[message.user_number] && user_data[message.user_number].meta.group == "admin");
 				user.meta.show_bbcode ? p.html(bbencode(text, admin)) : p.text(bbremove(text));
@@ -964,7 +968,7 @@ var msparp = (function() {
 				
 				// Limit conversation length on mobile to cycle 200 messages so as to not kill touch responsiveness
 				if (touch_enabled) {
-					var cycle = $('#conversation').find("div[id^=message]:nth-last-child(n+200)");
+					var cycle = $("#conversation").find("div[id^=message]:nth-last-child(n+200)");
 					cycle.prevAll("h2").remove(); // remove date stamps as well
 					cycle.remove();
 				}
@@ -996,7 +1000,7 @@ var msparp = (function() {
 							notification.onclick = function() {
 								window.focus();
 								this.close();
-							}
+							};
 
 							window.setTimeout(notification.close.bind(notification), 5000);
 						} catch (e) { }
@@ -1374,7 +1378,7 @@ var msparp = (function() {
 			});
 			if (localstorage) {
 				let saved_type_filter = localStorage.getItem("type_filter_preference");
-				if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter)}
+				if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter);}
 			}
 			function refresh_my_chats_list() {
 				$.get("/chats.json", {}, function(data) {
@@ -1414,7 +1418,7 @@ var msparp = (function() {
 				} else if (status == "chatting" && chat.type == "roulette") {
 					sidebar_defaults = "switch_character_open my_chats_only"; sidebars_right = "settings_open"; sidebars_left = "";
 				} else if (status == "chatting" && chat.type == "pm") {
-					sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open"
+					sidebar_defaults = "switch_character_open pm_chat_list_container_open"; sidebars_right = "settings_open"; sidebars_left = "my_chats_open";
 				}
 				$(body).removeClass("has_left_tabs").removeClass("has_right_tabs");
 				if (sidebars_left !== "") { $(body).addClass("has_left_tabs"); }
@@ -1445,21 +1449,26 @@ var msparp = (function() {
 				}
 			}
 			
-			$(".switch_character_button").click(function() { open_sidebar("switch_character") });
-			$(".settings_button").click(function() { open_sidebar("settings") });
-			$(".my_chats_button").click(function() { open_sidebar("my_chats") });
+			$(".switch_character_button").click(function() { open_sidebar("switch_character"); });
+			$(".settings_button").click(function() { open_sidebar("settings"); });
+			$(".my_chats_button").click(function() { open_sidebar("my_chats"); });
 			
 			// Mobile side menu overrides
-			 function mobile_sidebar(to_open) {
+			function mobile_sidebar(to_open) {
 				$(".sidebar").not("#" + to_open).removeClass("mobile_override");
 				$("#" + to_open).toggleClass("mobile_override");
 				$("#mobile_nav_toggle").prop("checked",false);
 			}
 			
-			$(".mobile_nav_button").click(function() { mobile_sidebar($(this).attr("id").replace("mobile_open_", "")) });
+			$(".mobile_nav_button").click(function() { mobile_sidebar($(this).attr("id").replace("mobile_open_", "")); });
 			
 			// only close on non mobile if it isn't a default sidebar
-			$(".sidebar .close").click(function() {if (sidebar_defaults.indexOf($(this).parents(".sidebar").attr("id")) == -1) {$("#chat_wrapper").removeClass($(this).parents(".sidebar").attr("id") + "_open") }; $(this).parents(".sidebar").removeClass("mobile_override"); });
+			$(".sidebar .close").click(function() {
+				if (sidebar_defaults.indexOf($(this).parents(".sidebar").attr("id")) == -1) {
+					$("#chat_wrapper").removeClass($(this).parents(".sidebar").attr("id") + "_open");
+				}
+				$(this).parents(".sidebar").removeClass("mobile_override");
+			});
 			
 			// Attempt to load smart quirk settings for this chat from localstorage, otherwise fall back to default
 			var smart_quirk_mode = "";
@@ -1468,22 +1477,22 @@ var msparp = (function() {
 					dev_user_smart_quirk = localStorage.getItem( chat.url + "_smart_quirk");
 				}
 				localStorage.setItem( chat.url + "_smart_quirk", dev_user_smart_quirk);
-				dev_user_smart_quirk == "true" ? $("#chat_smart_quirk" + smart_quirk_mode).prop('checked',true) : $("#chat_smart_quirk" + smart_quirk_mode).prop('checked',false); 
+				dev_user_smart_quirk == "true" ? $("#chat_smart_quirk" + smart_quirk_mode).prop("checked",true) : $("#chat_smart_quirk" + smart_quirk_mode).prop("checked",false); 
 				if (localStorage.getItem( chat.url + "_smart_quirk_mode") !== null) { 
 					smart_quirk_mode = localStorage.getItem( chat.url + "_smart_quirk_mode"); 
-					$("#smart_quirk_mode_" + smart_quirk_mode).prop('checked',true); 
+					$("#smart_quirk_mode_" + smart_quirk_mode).prop("checked",true); 
 				}
 			}
 			// If unset, base this on chat style, with script as fallback
 			if (smart_quirk_mode == "") {
-				smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop('checked',true);
+				smart_quirk_mode = "script"; $("#smart_quirk_mode_script").prop("checked",true);
 				// check if group is paragraph
 				if (chat.type == "group") {
-					if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
+					if (chat.style == "paragraph") {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop("checked",true);}
 				}
 				if (chat.type == "searched") {
 					// grab preference for searched chats, save it explicitly since style cannot be changed
-					if ($(".message_search_info p").text().indexOf("This is a paragraph style chat.") != -1) {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop('checked',true);}
+					if ($(".message_search_info p").text().indexOf("This is a paragraph style chat.") != -1) {smart_quirk_mode = "paragraph"; $("#smart_quirk_mode_paragraph").prop("checked",true);}
 					if (localstorage) {
 						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode);
 					}
@@ -1492,14 +1501,14 @@ var msparp = (function() {
 			
 			// Update smart quirk settings and save for individual chats
 			$("#settings #chat_smart_quirk").change(function() {
-				if ($("#smart_quirk_mode_paragraph").prop('checked')) {
+				if ($("#smart_quirk_mode_paragraph").prop("checked")) {
 					// unset defaults to script, so reset value here
-					smart_quirk_mode = "paragraph"
+					smart_quirk_mode = "paragraph";
 					if (localstorage) {
 						localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode);
 					}
 				}
-				if ($("#chat_smart_quirk").is(':checked')) {dev_user_smart_quirk = "true";}
+				if ($("#chat_smart_quirk").is(":checked")) {dev_user_smart_quirk = "true";}
 				else { dev_user_smart_quirk = "false"; }
 				if (localstorage) {
 					localStorage.setItem( chat.url + "_smart_quirk", dev_user_smart_quirk);
@@ -1508,10 +1517,10 @@ var msparp = (function() {
 			});
 			
 			$("#smart_quirk_select").change(function() {
-				smart_quirk_mode = $('input[name=smart_quirk_mode]:checked').val();
+				smart_quirk_mode = $("input[name=smart_quirk_mode]:checked").val();
 				$("#chat_line_input input").trigger( "keyup" ); // refresh text so the setting is more intuitive
 				if (localstorage) {
-					localStorage.setItem( chat.url + "_smart_quirk_mode", smart_quirk_mode) 
+					localStorage.setItem(chat.url + "_smart_quirk_mode", smart_quirk_mode);
 				}
 			}); 
 
@@ -1553,14 +1562,15 @@ var msparp = (function() {
 			var action_list_template = Handlebars.compile($("#action_list_template").html());
 			var ranks = { "admin": Infinity, "creator": Infinity, "mod3": 3, "mod2": 2, "mod1": 1, "user": 0, "silent": -1 };
 			function render_action_list(event) {
-				var popup_pos = "top"
+				var popup_pos = "top";
 				var popup_x = 0;
 				var popup_y = 0;
+				var action_user_number;
 				if (this.id) {
-					var action_user_number = parseInt(this.id.substr(5));
+					action_user_number = parseInt(this.id.substr(5));
 				} else {
-					var action_user_number = parseInt(this.className.substr(10));
-					if ((event.clientY / $( window ).height()) > .5) {popup_pos = "bottom"}
+					action_user_number = parseInt(this.className.substr(10));
+					if ((event.clientY / $( window ).height()) > .5) {popup_pos = "bottom";}
 					popup_x = event.pageX;
 					popup_y = event.pageY;
 				}
@@ -1568,7 +1578,7 @@ var msparp = (function() {
 					action_user = null;
 					action_list.empty();
 				} else {
-					if (!user_data[action_user_number]) { return false }
+					if (!user_data[action_user_number]) { return false; }
 					action_user = user_data[action_user_number];
 					action_list.html(action_list_template(action_user));
 					action_list.appendTo(this);
@@ -1582,7 +1592,7 @@ var msparp = (function() {
 					$("#action_highlight").click(function() {
 						if (user.meta.highlighted_numbers.indexOf(action_user.meta.number) != -1) {
 							$(".unum_" + action_user.meta.number).removeClass("highlighted");
-							user.meta.highlighted_numbers = user.meta.highlighted_numbers.filter(function(i) { return i != action_user.meta.number; })
+							user.meta.highlighted_numbers = user.meta.highlighted_numbers.filter(function(i) { return i != action_user.meta.number; });
 						} else {
 							$(".unum_" + action_user.meta.number).addClass("highlighted");
 							user.meta.highlighted_numbers.push(action_user.meta.number);
@@ -1592,17 +1602,17 @@ var msparp = (function() {
 					$("#action_ignore").click(function() {
 						if (user.meta.ignored_numbers.indexOf(action_user.meta.number) != -1) {
 							$(".unum_" + action_user.meta.number).removeClass("ignored");
-							user.meta.ignored_numbers = user.meta.ignored_numbers.filter(function(i) { return i != action_user.meta.number; })
+							user.meta.ignored_numbers = user.meta.ignored_numbers.filter(function(i) { return i != action_user.meta.number; });
 						} else {
 							$(".unum_" + action_user.meta.number).addClass("ignored");
 							user.meta.ignored_numbers.push(action_user.meta.number);
 						}
 						$.post("/chat_api/save_variables", { "chat_id": chat.id, "ignored_numbers": user.meta.ignored_numbers.toString() });
 					});
-					$("#action_mobile_switch_character").click(function() {mobile_sidebar("switch_character") });
-					$("#action_mobile_settings").click(function() {mobile_sidebar("settings") });
-					$("#action_switch_character").click(function() { open_sidebar("switch_character") });
-					$("#action_settings").click(function() { open_sidebar("settings") });
+					$("#action_mobile_switch_character").click(function() {mobile_sidebar("switch_character"); });
+					$("#action_mobile_settings").click(function() {mobile_sidebar("settings"); });
+					$("#action_switch_character").click(function() { open_sidebar("switch_character"); });
+					$("#action_settings").click(function() { open_sidebar("settings"); });
 					$("#action_mod3, #action_mod2, #action_mod1, #action_user, #action_silent").click(function() {
 						set_group(action_user.meta.number, this.id.substr(7));
 					});
@@ -1692,7 +1702,7 @@ var msparp = (function() {
 				user.meta.subscribed = true;
 				$(".disconnect_subscribe").css("display", "none");
 				$(".disconnect_subscribed").css("display", "inline");
-				$('#subscribed').prop('checked', true);
+				$("#subscribed").prop("checked", true);
 			});
 			$("#theme_form").submit(function() {
 				var form_data = $(this).serializeArray();
@@ -1766,7 +1776,7 @@ var msparp = (function() {
 				}, 1000);
 			}).keyup(function() {
 				if (user.meta.show_preview) {
-					text = this.value.trim()
+					text = this.value.trim();
 					if (text[0] == "/") {
 						var text = text.substr(1);
 						var command_description = get_command_description(text);
@@ -2055,7 +2065,7 @@ var msparp = (function() {
 						}
 						// Ordinary replacements. Escape any regex control characters before replacing.
 						character.replacements.forEach(function(replacement) {
-							RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); }
+							RegExp.quote = function(str) {return str.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1"); };
 							if (dev_user_safe_bbcode == "true") { 
 								// if safe_bbcode is on, exclude quirking within custom [brackets]
 								var re = new RegExp("(?![^\ufe5d\ufe5e]*\ufe5e)" + RegExp.quote(replacement[0]) + "(?![^\ufe5d\ufe5e]*\ufe5e)", "g");
@@ -2109,7 +2119,7 @@ var msparp = (function() {
 					}
 				}
 				// add in prefix and suffix if it should be global
-				if (dev_user_wrap_smart_quirks !== "true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix }
+				if (dev_user_wrap_smart_quirks !== "true") { final_text = character.quirk_prefix + final_text + character.quirk_suffix; }
 				
 				if (dev_user_safe_bbcode == "true") {
 					// now that we are safe, replace temporary unicode brackets with coding ones again
@@ -2134,10 +2144,10 @@ var msparp = (function() {
 						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])(.*?)(\[\/\6\])/i;
 						var panic = 0;
 						while (true) {
-							var match = re.exec(final_text)
+							var match = re.exec(final_text);
 							// strip empty tags
 							final_text = final_text.replace(re2, "$3");
-							panic++
+							panic++;
 							if (match[4].indexOf(match[1]) !== -1) {
 								// strip empty tags
 								final_text = final_text.replace(re2, "$3");
@@ -2204,7 +2214,7 @@ var msparp = (function() {
 				announcement.removeClass("show");
 				setTimeout(function() {
 					announcement.remove();
-				}, 1000)
+				}, 1000);
 			});
 
 			// Theme specific code
@@ -2248,7 +2258,7 @@ var msparp = (function() {
 			}
 		},
 		"init_sentry": function(sentry_url) {
-			Raven.config(sentry_url).install()
+			Raven.config(sentry_url).install();
 		},
 	};
 })();
