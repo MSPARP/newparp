@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 // prepopulate boxes to eliminate FF weirdness
 
 $( document ).ready(function() {

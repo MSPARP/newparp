@@ -1,3 +1,15 @@
+import $ from "jquery";
+import Handlebars from "handlebars";
+import jstz from "jstimezonedetect";
+import Raven from "raven-js"
+import "spectrum-colorpicker";
+import "./ui.js"
+
+require("./css/newparp.scss");
+
+// TODO/XXX Split this monster file into appropriate modules.
+// TODO/XXX See what breaking changes were made with the version updates.
+
 var msparp = (function() {
 
 	var body = $(document.body);
@@ -142,19 +154,19 @@ var msparp = (function() {
 	
 	if (localstorage) {
 		$( document ).ready(function() {
-			material_feedback=localStorage.getItem("material_feedback");
+			var material_feedback = localStorage.getItem("material_feedback");
 			if (material_feedback == "true") {
 				$("body").addClass("material");
 			}
-			disable_animations=localStorage.getItem("disable_animations");
+			var disable_animations = localStorage.getItem("disable_animations");
 			if (disable_animations == "true") {
 				$("body").addClass("no_moving");
 			}
-			disable_left_bar=localStorage.getItem("disable_left_bar");
+			var disable_left_bar = localStorage.getItem("disable_left_bar");
 			if (disable_left_bar == "true") {
 				$("body").addClass("disable_left_bar");
 			}
-			collapse_padding=localStorage.getItem("collapse_padding");
+			var collapse_padding = localStorage.getItem("collapse_padding");
 			if (collapse_padding == "true") {
 				$("body").addClass("collapse_padding");
 			}
@@ -711,7 +723,7 @@ var msparp = (function() {
 					return "";
 				}
 			}
-			$(window).unload(function() {
+			$(window).on("unload", function() {
 				if (status == "chatting") {
 					status = "disconnected";
 				}
@@ -769,7 +781,7 @@ var msparp = (function() {
 				}
 				if (typeof data.users != "undefined") {
 					var others_online = false;
-					for (var i = 0; i < data.users.length; i++) {
+					for (let i = 0; i < data.users.length; i++) {
 						// Store user data so we can look it up for action lists.
 						user_data[data.users[i].meta.number] = data.users[i];
 						// Also handle group changes.
@@ -1361,7 +1373,7 @@ var msparp = (function() {
 				return this.chat.url == chat.url;
 			});
 			if (localstorage) {
-				saved_type_filter = localStorage.getItem("type_filter_preference");
+				let saved_type_filter = localStorage.getItem("type_filter_preference");
 				if (saved_type_filter !== null) {$("#type_filter").val(saved_type_filter)}
 			}
 			function refresh_my_chats_list() {
@@ -1939,7 +1951,7 @@ var msparp = (function() {
 			if (chat.type == "group") { var shortcut_enabled = ["chat_line_input", "edit_info_description", "edit_info_rules"]; }
 			else { var shortcut_enabled = ["chat_line_input"]; }
 			if (dev_user_disable_hotkeys !== "true") {
-				for (i = 0; i < shortcut_enabled.length; i++) {
+				for (let i = 0; i < shortcut_enabled.length; i++) {
 					document.getElementById(shortcut_enabled[i]).addEventListener("keyup", function(e) {
 						alt_command = false;
 						ctrl_command = false;
@@ -1966,7 +1978,8 @@ var msparp = (function() {
 					// save [raw] content so quirks don't apply to it at all; greedy so [raw] inside [raw] works
 					var re = /\[raw\](.*)\[\/raw\]/gi;
 					var raw_content = false;
-					if (match = re.exec(text)) {
+					var match = re.exec(text);
+					if (match) {
 						raw_content = match[1];
 					}
 					text = text.replace(re, "\ufe5drawc\ufe5e");
@@ -1993,7 +2006,7 @@ var msparp = (function() {
 				
 				var final_text = "";
 				var chunks_number = text_chunks.length;
-				for (var i = 0; i < chunks_number; i++) {
+				for (let i = 0; i < chunks_number; i++) {
 					// Apply case and quirk only between appropriate delimiters
 					if ((i % 2 == 0 &&  smart_quirk_mode == "script") || (i % 2 !== 0 &&  smart_quirk_mode == "paragraph")) {
 						// Case options.
@@ -2120,7 +2133,8 @@ var msparp = (function() {
 						// fix intersecting tags
 						var re = /(\[([A-Za-z]+)(=[^\]]+)?\])(([\s\S](?!\[\/\2\]))*?)\[([A-Za-z]+)(=[^\]]+)?\](([\s\S](?!\[\/\6\]))*?)(\[\/\2\])(.*?)(\[\/\6\])/i;
 						var panic = 0;
-						while (match = re.exec(final_text)) {
+						while (true) {
+							var match = re.exec(final_text)
 							// strip empty tags
 							final_text = final_text.replace(re2, "$3");
 							panic++
@@ -2227,5 +2241,16 @@ var msparp = (function() {
 				$(".announcement").css("background-color", this.value);
 			});
 		},
+		"update_timezone": function(token) {
+			var timezone = jstz.determine().name();
+			if (timezone) {
+				$.post("/settings/timezone", {"timezone": timezone, "token": token});
+			}
+		},
+		"init_sentry": function(sentry_url) {
+			Raven.config(sentry_url).install()
+		},
 	};
 })();
+
+window.msparp = msparp;
