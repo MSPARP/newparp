@@ -9,6 +9,7 @@ module.exports = {
 		vendor: ["jquery", "handlebars", "jstimezonedetect", "raven-js", "spectrum-colorpicker"],
 		newparp: root + "/newparp.js",
 	},
+	devtool: "source-map",
 	output: {
 		path: "./newparp/static/assets",
 		publicPath: "/static/assets/",
