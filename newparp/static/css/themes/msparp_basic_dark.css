@@ -282,7 +282,7 @@ body.chat #global_navigation {display:none}
 
 #chat_wrapper {left:0px !important; right:0px !important;top:0px !important;bottom:0px !important}
 
-.sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list, #topbar, #topbar h1, #topbar .topic {font-family: "Courier", "Courier New", monospace; font-weight: bold;}
+.sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, .mobile_nav_wrap, .unum #action_list, #topbar, #topbar h1, #topbar .topic {font-family: "Courier", "Courier New", monospace; font-weight: bold;}
 
 .sidebar * {font-weight:bold !important}
 
@@ -294,20 +294,16 @@ body:not(.no_forms) .sidebar .fromto input {width:50px;}
 
 /* revert sidebar wrap positioning with forms fallback to cover broken scrolling on ICS android vanilla browser */
 body.no_forms .sidebar_wrap {position:static;padding-bottom:23px}
-body.no_forms #connection_method {background:#000;width:230px;}
 
 @media (max-height: 600px) {
 	.sidebar_wrap {bottom:0px !important}
 	body.no_forms .sidebar_wrap {padding-bottom:0px}
-	#connection_method {display:none}
 }
 
 @media (max-width: 780px), (max-height: 500px) {
 	.sidebar_wrap {bottom:0px !important}
 	#topbar h1 {margin: -1px 2px 0 0; padding: 0 5px 1px 5px;}
 }
-
- #connection_method,  body.disable_left_bar #connection_method {bottom:5px;top:auto;z-index:5;font-size:12px !important}
 
 #activity_spinner {display:none}
 #send_form_wrap {margin-left:2px}

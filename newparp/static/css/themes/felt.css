@@ -636,8 +636,6 @@ body.chat { background-color: #000;}
 
 #chat_wrapper { background: #082900 url('/static/img/felt_manor_background.png') no-repeat bottom right; background-attachment: fixed;}
 
-#connection_method {color: #156704}
-
 body:not(.no_forms) .chat input, body:not(.no_forms) .chat textarea, body:not(.no_forms) .chat button, body:not(.no_forms) .chat select { background-color: #1a8005; }
 
 body:not(.disable_left_bar) #chat_logo {top:13px;left:20px; background: transparent url('/static/img/logo-felt.png') no-repeat scroll 0px bottom; background-size:cover; width:150px;height:54px; background-size:150px 54px;image-rendering: auto; -ms-interpolation-mode: auto;}

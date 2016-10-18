@@ -181,7 +181,6 @@ app.add_url_rule("/redirect", "redirect", views.redirect_view, methods=("GET",))
 
 # 8. Chat API
 
-app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("POST",))
 app.add_url_rule("/chat_api/draft", "draft", chat_api.draft, methods=("POST",))
 app.add_url_rule("/chat_api/block", "block", chat_api.block, methods=("POST",))
@@ -197,8 +196,6 @@ app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_var
 app.add_url_rule("/chat_api/request_username", "request_username", chat_api.request_username, methods=("POST",))
 app.add_url_rule("/chat_api/exchange_usernames", "exchange_usernames", chat_api.exchange_usernames, methods=("POST",))
 app.add_url_rule("/chat_api/look_up_user", "look_up_user", chat_api.look_up_user, methods=("POST",))
-app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
-app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
 # 9. Admin
 
