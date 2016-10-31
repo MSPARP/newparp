@@ -235,7 +235,8 @@ def chat(chat, pm_user, url, fmt=None):
     return render_template(
         "chat/chat.html",
         url=url,
-        chat=chat_dict,
+        chat=chat,
+        chat_dict=chat_dict,
         chat_user=chat_user,
         chat_user_dict=chat_user.to_dict(include_options=True),
         messages=messages,
