@@ -443,35 +443,27 @@ class Chat(Base):
 
 
 class GroupChat(Chat):
+    __mapper_args__ = {"polymorphic_identity": "group"}
 
-    __tablename__ = "group_chats"
+    title = Column(Unicode(50))
+    topic = Column(UnicodeText)
+    description = Column(UnicodeText)
+    rules = Column(UnicodeText)
 
-    id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
-
-    __mapper_args__ = {
-        "polymorphic_identity": "group",
-        "inherit_condition": id == Chat.id,
-    }
-
-    title = Column(Unicode(50), nullable=False, default="")
-    topic = Column(UnicodeText, nullable=False, default="")
-    description = Column(UnicodeText, nullable=False, default="")
-    rules = Column(UnicodeText, nullable=False, default="")
-
-    autosilence = Column(Boolean, nullable=False, default=False)
+    autosilence = Column(Boolean)
 
     style = Column(Enum(
         "script",
         "paragraph",
         "either",
         name="group_chats_style",
-    ), nullable=False, default="script")
+    ))
     level = Column(Enum(
         "sfw",
         "nsfw",
         "nsfw-extreme",
         name="group_chats_level",
-    ), nullable=False, default="sfw")
+    ))
 
     publicity = Column(Enum(
         "listed",
@@ -480,9 +472,9 @@ class GroupChat(Chat):
         "admin_only",
         "private",
         name="group_chats_publicity",
-    ), nullable=False, default="unlisted")
+    ))
 
-    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    creator_id = Column(Integer, ForeignKey("users.id"))
     parent_id = Column(Integer, ForeignKey("chats.id"))
 
     def __repr__(self):
@@ -1120,7 +1112,7 @@ GroupChat.creator = relation(User, backref="created_chats")
 GroupChat.parent = relation(
     Chat,
     backref="children",
-    primaryjoin=GroupChat.parent_id == Chat.id,
+    remote_side=Chat.id,
 )
 
 LogMarker.chat = relation(Chat, backref="log_markers")

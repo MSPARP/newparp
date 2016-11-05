@@ -157,6 +157,13 @@ def create_chat():
     g.db.add(GroupChat(
         url=lower_url,
         title=title,
+        topic="",
+        description="",
+        rules="",
+        autosilence=False,
+        style="script",
+        level="sfw",
+        publicity="unlisted",
         creator_id=g.user.id,
     ))
     return redirect(url_for("rp_chat", url=lower_url))
