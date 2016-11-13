@@ -1307,10 +1307,8 @@ var msparp = (function() {
 					edit_info_panel.show();
 				});
 				$(".set_topic_button").click(function() {
-					var topic = prompt("Please enter a new topic for the chat:");
-					if (topic != null) {
-						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": topic });
-					}
+					info_panel.hide();
+					text_input.val("/topic ").focus();
 				});
 				var edit_info_panel = $("#edit_info_panel");
 				$("#edit_info_form").submit(function() {
