@@ -33,6 +33,7 @@ def require_socket(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         g.chat_id = int(request.form["chat_id"])
+        # TODO lua it up
         if g.redis.scard("chat:%s:sockets:%s" % (g.chat_id, g.session_id)) == 0:
             abort(403)
         return f(*args, **kwargs)
@@ -102,17 +103,28 @@ def kick_check(redis, context):
 
 def join(redis, db, context):
 
+    pipe = redis.pipeline()
+
+    # Remember whether they're already online
+    pipe.hvals("chat:%s:online" % context.chat.id)
+
     # Queue their last_online update.
-    redis.hset("queue:usermeta", "chatuser:%s" % (context.chat_user.user_id), json.dumps({
+    pipe.hset("queue:usermeta", "chatuser:%s" % (context.chat_user.user_id), json.dumps({
         "last_online": str(time.time()),
         "chat_id": context.chat_user.chat_id,
     }))
-    user_online = str(context.user.id) in redis.hvals("chat:%s:online" % context.chat.id)
 
     # Add them to the online list.
     # Use socket id for websockets or session id for long polling.
+    # TODO lua it up
     online_id = context.id if hasattr(context, "id") else context.session_id
-    redis.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
+    pipe.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
+    pipe.sadd("chat:%s:sockets:%s" % (context.chat_id, context.session_id), context.id)
+    pipe.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (context.chat_id, context.session_id, context.id))
+
+    result = pipe.execute()
+
+    user_online = str(context.user.id) in result[0]
 
     # Send join message if user isn't already online. Or not, if they're silent.
     if not user_online:
@@ -246,29 +258,35 @@ def send_userlist(db, redis, chat):
     }))
 
 
-def disconnect(redis, chat_id, online_id):
-    redis.zrem("chats_alive", "%s/%s" % (chat_id, online_id))
+def disconnect(redis, chat_id, session_id, socket_id):
     # Return True if they were in the userlist when we tried to remove them, so
     # we can avoid sending disconnection messages if someone gratuitously sends
     # quit requests.
-    user_id = redis.hget("chat:%s:online" % chat_id, online_id)
+    user_id = redis.hget("chat:%s:online" % chat_id, socket_id)
     if user_id is None:
         return False
-    redis.hdel("chat:%s:online" % chat_id, online_id)
+    # TODO lua it up
+    # TODO remember to clear the typing key
+    pipe = redis.pipeline()
+    pipe.hdel("chat:%s:online" % chat_id, socket_id)
+    pipe.srem("chat:%s:sockets:%s" % (chat_id, session_id), socket_id)
+    pipe.zrem("sockets_alive", "%s/%s/%s" % (chat_id, session_id, socket_id))
+    pipe.execute()
     return user_id not in redis.hvals("chat:%s:online" % chat_id)
 
 
 def disconnect_user(redis, chat_id, user_id):
     user_id = str(user_id)
-    online_ids = []
-    for online_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).items():
+    socket_ids = []
+    for socket_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).items():
         if online_user_id == user_id:
-            online_ids.append(online_id)
-    if not online_ids:
+            socket_ids.append(socket_id)
+    if not socket_ids:
         return False
-    for online_id in online_ids:
-        redis.zrem("chats_alive", "%s/%s" % (chat_id, online_id))
-        redis.hdel("chat:%s:online" % chat_id, online_id)
+    for socket_id in socket_ids:
+        # TODO lua it up
+        # also srem and zrem as above
+        redis.hdel("chat:%s:online" % chat_id, socket_id)
     return True
 
 
