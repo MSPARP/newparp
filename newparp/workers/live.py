@@ -29,9 +29,11 @@ from newparp.helpers.chat import (
     BannedException,
     TooManyPeopleException,
     KickedException,
+    PingTimeoutException,
     authorize_joining,
     kick_check,
     join,
+    ping,
     send_userlist,
     get_userlist,
     disconnect,
@@ -181,14 +183,16 @@ class ChatHandler(WebSocketHandler):
         self.db.close()
 
     def on_message(self, message):
-        # TODO lua it up
-        if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
-            # We've been reaped, so disconnect.
-            self.close()
-            return
         if DEBUG:
             print("message: %s" % message)
-        if message in ("typing", "stopped_typing"):
+        if message == "ping":
+            try:
+                ping(redis, self.db, self)
+            except PingTimeoutException:
+                # We've been reaped, so disconnect.
+                self.close()
+                return
+        elif message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
 
     def on_close(self):
@@ -203,7 +207,7 @@ class ChatHandler(WebSocketHandler):
             message_type = "disconnect"
         else:
             message_type = "timeout"
-        if self.joined and disconnect(redis, self.chat_id, self.session_id, self.id):
+        if self.joined and disconnect(redis, self.chat_id, self.id):
             try:
                 send_quit_message(self.db, redis, *self.get_chat_user(), type=message_type)
             except NoResultFound:

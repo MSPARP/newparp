@@ -115,12 +115,9 @@ def join(redis, db, context):
     }))
 
     # Add them to the online list.
-    # Use socket id for websockets or session id for long polling.
-    # TODO lua it up
     online_id = context.id if hasattr(context, "id") else context.session_id
     pipe.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
-    pipe.sadd("chat:%s:sockets:%s" % (context.chat_id, context.session_id), context.id)
-    pipe.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (context.chat_id, context.session_id, context.id))
+    pipe.setex("chat:%s:online:%s" % (context.chat_id, context.id), 30, context.session_id)
 
     result = pipe.execute()
 
@@ -149,6 +146,27 @@ def join(redis, db, context):
                 ))
 
     return not user_online
+
+
+class PingTimeoutException(Exception): pass
+
+
+def ping(redis, db, context):
+    result = redis.eval("""
+    local user_id_from_chat = redis.call("hget", "chat:"..ARGV[1]..":online", ARGV[2])
+    if not user_id_from_chat then return false end
+
+    local session_id = redis.call("get", "chat:"..ARGV[1]..":online:"..ARGV[2])
+    if not session_id then return false end
+
+    local user_id_from_session_id = redis.call("get", "session:"..session_id)
+    if user_id_from_session_id ~= user_id_from_chat then return false end
+
+    redis.call("expire", "chat:"..ARGV[1]..":online:"..ARGV[2], 30)
+    return true
+    """, 0, context.chat_id, context.id)
+    if not result:
+        raise PingTimeoutException
 
 
 def send_message(db, redis, message, force_userlist=False):
@@ -258,21 +276,20 @@ def send_userlist(db, redis, chat):
     }))
 
 
-def disconnect(redis, chat_id, session_id, socket_id):
-    # Return True if they were in the userlist when we tried to remove them, so
-    # we can avoid sending disconnection messages if someone gratuitously sends
-    # quit requests.
-    user_id = redis.hget("chat:%s:online" % chat_id, socket_id)
-    if user_id is None:
-        return False
-    # TODO lua it up
-    # TODO remember to clear the typing key
+def disconnect(redis, chat_id, socket_id):
+    # Only return True if they were in the userlist when we tried to remove
+    # them, so we can avoid sending disconnection messages if someone
+    # gratuitously sends quit requests.
     pipe = redis.pipeline()
+    pipe.hget("chat:%s:online" % chat_id, socket_id)
     pipe.hdel("chat:%s:online" % chat_id, socket_id)
-    pipe.srem("chat:%s:sockets:%s" % (chat_id, session_id), socket_id)
-    pipe.zrem("sockets_alive", "%s/%s/%s" % (chat_id, session_id, socket_id))
-    pipe.execute()
-    return user_id not in redis.hvals("chat:%s:online" % chat_id)
+    pipe.delete("chat:%s:online:%s" % (chat_id, socket_id))
+    pipe.hvals("chat:%s:online" % chat_id)
+    # TODO remember to clear the typing key
+    user_id, _, _, new_user_ids = pipe.execute()
+    if not user_id:
+        return False
+    return user_id not in new_user_ids
 
 
 def disconnect_user(redis, chat_id, user_id):
