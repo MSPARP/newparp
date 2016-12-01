@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers.characters import validate_character_form
 from newparp.helpers.chat import (
     group_chat_only,
+    has_open_socket,
     require_socket,
     send_message,
     send_temporary_message,
@@ -71,7 +72,7 @@ def send():
             pass
 
     # Clear typing status so the front end doesn't have to.
-    if g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)):
+    if has_open_socket(g.redis, g.chat.id, g.session_id):
         typing_key = "chat:%s:typing" % g.chat.id
         if g.redis.srem(typing_key, g.chat_user.number):
             g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
@@ -146,7 +147,7 @@ def set_group():
     # Admins and creators can do this from the chat users list, so only require
     # a socket if we're not one.
     if (
-        g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)) == 0
+        not has_open_socket(g.redis, g.chat.id, g.session_id)
         and not (g.user.is_admin or g.user.id == g.chat.creator_id)
     ):
         abort(403)
