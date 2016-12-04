@@ -1,5 +1,6 @@
 import paginate
 import re
+import time
 
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import func
@@ -103,7 +104,7 @@ def _list_post(spamlist, **kwargs):
 
     handle_command(request.form["command"], phrase, spamlist, score)
 
-    g.redis.publish("spamless:reload", 1)
+    g.redis.set("spamless:reload", str(time.time()))
 
     return redirect(url_for("spamless_" + spamlist))
 

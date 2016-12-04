@@ -9,6 +9,7 @@ from sqlalchemy.orm import joinedload
 
 from newparp.model import AnyChat, Ban, Invite, ChatUser, Message
 from newparp.model.connections import db_connect, get_chat_user
+from newparp.tasks import celery
 
 
 class UnauthorizedException(Exception):
@@ -170,6 +171,7 @@ def send_message(db, redis, message, force_userlist=False):
     if message.type == "chat_meta":
         redis_message["chat"] = message.chat.to_dict()
 
+    celery.send_task("newparp.tasks.spamless.CheckSpamTask", args=(message.chat_id, redis_message))
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
