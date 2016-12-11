@@ -1027,9 +1027,7 @@ var msparp = (function() {
 				return (chat.type == "searched" || chat.type == "roulette") && their_number != user.meta.number;
 			}
 			function block(number) {
-				var reason = prompt("If you block this person, you will never encounter them in random chats. Optionally, you can also provide a reason below.");
-				if (reason == null) { return; }
-				$.post("/chat_api/block", { "chat_id": chat.id, "number": number, "reason": reason });
+				text_input.val("/block " + number + " (reason)").focus();
 			}
 			function can_set_group(new_group, current_group) {
 				// Setting group only works in group chats.
