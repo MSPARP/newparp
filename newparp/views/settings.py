@@ -131,6 +131,8 @@ def verify_email():
 
     user.email_address = email_address
     user.email_verified = True
+    if user.group == "new":
+        user.group = "active"
 
     g.redis.set("session:" + g.session_id, user.id, 2592000)
     return redirect(url_for("settings_log_in_details", saved=next_message))

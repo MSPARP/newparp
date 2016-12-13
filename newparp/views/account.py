@@ -111,7 +111,7 @@ def register_post():
     new_user = User(
         username=username,
         email_address=email_address,
-        group="active",
+        group="new",
         last_ip=request.headers.get("X-Forwarded-For", request.remote_addr),
     )
     new_user.set_password(request.form["password"])

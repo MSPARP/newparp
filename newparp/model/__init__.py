@@ -93,9 +93,10 @@ class User(Base):
     email_verified = Column(Boolean, nullable=False, default=False)
 
     group = Column(Enum(
-        "banned",
-        "guest",
+        "new",
         "active",
+        "deactivated",
+        "banned",
         name="users_group",
     ), nullable=False, default="guest")
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))
