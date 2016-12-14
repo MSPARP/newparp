@@ -962,21 +962,21 @@ class IPBan(Base):
         }
 
 
-class EmailHostBan(Base):
-    __tablename__ = "email_host_bans"
+class EmailBan(Base):
+    __tablename__ = "email_bans"
     id = Column(Integer, primary_key=True)
-    hostname = Column(Unicode(255), nullable=False, unique=True)
+    pattern = Column(Unicode(255), nullable=False, unique=True)
     date = Column(DateTime(), nullable=False, default=now)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     reason = Column(Unicode(255), nullable=False)
 
     def __repr__(self):
-        return "<EmailHostBan: %s>" % self.address
+        return "<EmailBan: %s>" % self.address
 
     def to_dict(self):
         return {
             "id": self.id,
-            "hostname": self.hostname,
+            "pattern": self.pattern,
             "date": time.mktime(self.date.timetuple()),
             "creator": self.creator.to_dict(),
             "reason": self.reason,
@@ -1230,7 +1230,7 @@ AdminLogEntry.affected_user = relation(User, foreign_keys=AdminLogEntry.affected
 AdminLogEntry.chat = relation(Chat)
 
 IPBan.creator = relation(User)
-EmailHostBan.creator = relation(User)
+EmailBan.creator = relation(User)
 
 AdminTier.admin_tier_permissions = relation(AdminTierPermission, backref="admin_tier")
 AdminTier.permissions = association_proxy(

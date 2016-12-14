@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title: %}Email bans - {% endblock %}
+{% block content: %}
+    <div class="common_box">
+        <h2><label><span>Email bans</span></label></h2>
+        <div class="common_box_wrap">
+
+            {% if email_bans: %}
+            <table class="ban_table">
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Banned by</th>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email_ban in email_bans: %}
+                    <tr>
+                        <td>{{email_ban.pattern}}</td>
+                        <td><a href="{{url_for("admin_user", username=email_ban.creator.username)}}">{{email_ban.creator.username}}</a></td>
+                        <td>{{g.user.localize_time(email_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
+                        <td>{{email_ban.reason}}</td>
+                        <td>TODO</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else: %}
+            <p>No email bans. Thank god.</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+

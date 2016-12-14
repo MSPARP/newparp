@@ -12,7 +12,19 @@ from uuid import uuid4
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required, permission_required
-from newparp.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User, UserNote
+from newparp.model import (
+    AdminLogEntry,
+    AdminTier,
+    AdminTierPermission,
+    Block,
+    EmailBan,
+    GroupChat,
+    IPBan,
+    SearchCharacter,
+    SearchCharacterChoice,
+    User,
+    UserNote,
+)
 from newparp.model.connections import use_db
 from newparp.model.validators import color_validator
 from newparp.tasks import celery
@@ -752,6 +764,24 @@ def delete_ip_ban():
         description="Unbanned %s." % request.form["address"],
     ))
     return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("ip_bans") # TODO permission
+def email_bans(fmt=None, page=1):
+    email_bans = g.db.query(EmailBan).order_by(EmailBan.pattern).options(joinedload(EmailBan.creator)).all()
+
+    if fmt == "json":
+        return jsonify({
+            "total": len(email_bans),
+            "email_bans": [_.to_dict() for _ in email_bans],
+        })
+
+    return render_template(
+        "admin/email_bans.html",
+        email_bans=email_bans,
+    )
 
 
 @use_db

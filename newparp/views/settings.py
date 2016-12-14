@@ -126,6 +126,7 @@ def verify_email():
         abort(404)
 
     g.redis.delete("verify:%s:%s" % (user_id, email_address))
+    g.redis.delete("welcome:%s:%s" % (user_id, email_address))
 
     next_message = "email_verified" if user.email_address == email_address else "email_changed"
 

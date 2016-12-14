@@ -241,6 +241,8 @@ make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))
 app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip_ban, methods=("POST",))
 
+make_rules("admin", "/admin/email_bans", admin.email_bans, formats=True)
+
 app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_status, methods=("GET",))
 
 # 10. Guides
