@@ -7,7 +7,7 @@
             <nav id="subnav">
                 Show:
                 {% if not request.args.type: %}
-                All
+                <span class="tab_active">All</span>
                 {% else %}
                 <a href="{{url_for("admin_log")}}">All</a>
                 {% endif %}
@@ -50,6 +50,11 @@
                 <span class="tab_active">IP ban</span>
                 {% else %}
                 <a href="{{url_for("admin_log", type="ip_ban")}}">IP ban</a>
+                {% endif %}
+                {% if request.args.type == "email_ban": %}
+                <span class="tab_active">Email ban</span>
+                {% else %}
+                <a href="{{url_for("admin_log", type="email_ban")}}">Email ban</a>
                 {% endif %}
             </nav>
             {{ pager() }}
@@ -108,6 +113,9 @@
                         <td>Removed <strong>{{entry.description}}</strong> from the <a href="{{url_for("spamless_warnlist")}}">warnlist</a>.</td>
                         {% elif entry.type == "ip_ban": %}
                         <td>IP ban</td>
+                        <td>{{entry.description}}</td>
+                        {% elif entry.type == "email_ban": %}
+                        <td>Email ban</td>
                         <td>{{entry.description}}</td>
                         {% endif %}
                     </tr>

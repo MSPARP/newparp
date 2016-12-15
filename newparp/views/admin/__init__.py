@@ -785,6 +785,52 @@ def email_bans(fmt=None, page=1):
 
 
 @use_db
+@permission_required("ip_bans")
+def new_email_ban():
+
+    if not request.form.get("pattern") or not request.form.get("reason"):
+        abort(400)
+
+    pattern = request.form["pattern"][:255]
+    reason  = request.form["reason"][:255]
+
+    try:
+        existing_ban = (
+            g.db.query(func.count('*')).select_from(EmailBan)
+            .filter(EmailBan.pattern == pattern).scalar()
+        )
+    except DataError:
+        abort(400)
+
+    if existing_ban != 0:
+        return redirect(url_for("admin_email_bans", email_ban_error="already_banned"))
+
+    try:
+        g.db.add(EmailBan(
+            pattern=pattern,
+            creator_id=g.user.id,
+            reason=reason,
+        ))
+        g.db.flush()
+    except DataError:
+        abort(400)
+
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="email_ban",
+        description="Banned %s. Reason: %s" % (pattern, reason),
+    ))
+
+    if request.headers.get("Referer"):
+        referer = request.headers["Referer"]
+        if "?email_ban_error=already_banned" in referer:
+            referer = referer.replace("?email_ban_error=already_banned", "")
+        return redirect(referer)
+
+    return redirect(url_for("admin_email_bans"))
+
+
+@use_db
 @admin_required
 def worker_status():
     return render_template(

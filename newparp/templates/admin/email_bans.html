@@ -5,6 +5,20 @@
         <h2><label><span>Email bans</span></label></h2>
         <div class="common_box_wrap">
 
+            <div class="toggle_box ban_box">
+                <input type="checkbox" id="toggle_new_email_ban"{% if "email_ban_error" in request.args: %} checked="checked"{% endif %}>
+                <h2><label for="toggle_new_email_ban"><span>Ban an email address</span></label></h2>
+                <form action="{{url_for("admin_new_email_ban")}}" method="post">
+                    <input type="hidden" name="token" value="{{ g.csrf_token }}">
+                    {% if request.args.email_ban_error == "already_banned" %}
+                    <p class="error">That pattern is already banned.</p>
+                    {% endif %}
+                    <div class="input"><p><input type="text" id="ban_pattern"name="pattern" maxlength="255" required><label for="ban_pattern">Pattern</label></p></div>
+                    <div class="input"><p><input type="text" id="ban_reason" name="reason" maxlength="255" required><label for="ban_reason">Reason</label></p></div>
+                    <button type="submit">Ban</button></label></p>
+                </form>
+            </div>
+
             {% if email_bans: %}
             <table class="ban_table">
                 <thead>
