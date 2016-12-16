@@ -831,6 +831,18 @@ def new_email_ban():
 
 
 @use_db
+@permission_required("ip_bans")
+def delete_email_ban():
+    g.db.query(EmailBan).filter(EmailBan.address == request.form["pattern"]).delete()
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="email_ban",
+        description="Unbanned %s." % request.form["pattern"],
+    ))
+    return redirect(request.headers.get("Referer") or url_for("admin_email_bans"))
+
+
+@use_db
 @admin_required
 def worker_status():
     return render_template(

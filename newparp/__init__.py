@@ -243,6 +243,7 @@ app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip
 
 make_rules("admin", "/admin/email_bans", admin.email_bans, formats=True)
 app.add_url_rule("/admin/email_bans/new", "admin_new_email_ban", admin.new_email_ban, methods=("POST",))
+app.add_url_rule("/admin/email_bans/delete", "admin_delete_email_ban", admin.delete_email_ban, methods=("POST",))
 
 app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_status, methods=("GET",))
 
