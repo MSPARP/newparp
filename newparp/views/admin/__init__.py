@@ -833,7 +833,7 @@ def new_email_ban():
 @use_db
 @permission_required("ip_bans")
 def delete_email_ban():
-    g.db.query(EmailBan).filter(EmailBan.address == request.form["pattern"]).delete()
+    g.db.query(EmailBan).filter(EmailBan.pattern == request.form["pattern"]).delete()
     g.db.add(AdminLogEntry(
         action_user=g.user,
         type="email_ban",

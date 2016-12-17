@@ -37,7 +37,11 @@
                         <td><a href="{{url_for("admin_user", username=email_ban.creator.username)}}">{{email_ban.creator.username}}</a></td>
                         <td>{{g.user.localize_time(email_ban.date).strftime("%Y-%m-%d %H:%M:%S")}}</td>
                         <td>{{email_ban.reason}}</td>
-                        <td>TODO</td>
+                        <td><form action="{{url_for("admin_delete_email_ban")}}" method="post">
+                            <input type="hidden" name="token" value="{{g.csrf_token}}">
+                            <input type="hidden" name="pattern" value="{{email_ban.pattern}}">
+                            <button type="submit">Delete</button>
+                        </form></td>
                     </tr>
                     {% endfor %}
                 </tbody>
