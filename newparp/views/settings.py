@@ -143,7 +143,7 @@ def verify_email():
             .scalar()
         )
         if email_bans:
-            user.group = "deactivated"
+            return render_template("account/banned_email.html")
         else:
             user.group = "active"
 
