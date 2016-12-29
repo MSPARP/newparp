@@ -11,7 +11,7 @@ from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import admin_required, log_in_required
 from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from newparp.model import (
     case_options,
@@ -483,6 +483,20 @@ def users(chat, pm_user, url, fmt=None, page=1):
         users=users,
         paginator=paginator,
     )
+
+
+@use_db
+@admin_required
+@get_chat
+def reset_regexes(chat, pm_user, url, fmt=None, page=1):
+    try:
+        g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == int(request.form["user_id"]),
+        )).update({"regexes": "[]"})
+    except ValueError:
+        abort(400)
+    return redirect(request.headers.get("Referer") or url_for("chat_users", url=url))
 
 
 @alt_formats({"json"})

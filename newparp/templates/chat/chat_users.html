@@ -14,6 +14,9 @@
                     <th>#</th>
                     <th>Character</th>
                     <th>Group</th>
+                    {% if g.user.is_admin: %}
+                    <th>Reset regexes</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -52,6 +55,11 @@
                         {% if own_chat_user != None and own_chat_user.can("ban"): %}
                         <form action="{{url_for("rp_chat_unban", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><input type="hidden" name="number" value="{{chat_user.number}}"><button type="submit">Unban</button></form>
                         {% endif %}
+                    </td>
+                    {% endif %}
+                    {% if g.user.is_admin: %}
+                    <td>
+                        <form action="{{url_for("rp_chat_reset_regexes", url=chat.url)}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><input type="hidden" name="user_id" value="{{chat_user.user_id}}"><button type="submit">Reset regexes</button></form>
                     </td>
                     {% endif %}
                 </tr>

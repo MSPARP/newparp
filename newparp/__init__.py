@@ -169,6 +169,7 @@ make_rules("rp", "/<path:url>/log/<int:page>", chat.log_page, formats=True)
 make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
+app.add_url_rule("/<path:url>/users/reset_regexes", "rp_chat_reset_regexes", chat.reset_regexes, methods=("POST",))
 make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
 
 app.add_url_rule("/<path:url>/uninvite", "rp_chat_uninvite", chat.uninvite, methods=("POST",))
