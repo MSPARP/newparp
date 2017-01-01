@@ -4,7 +4,7 @@ import time
 
 from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import func
+from sqlalchemy import func, literal
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
@@ -241,6 +241,12 @@ def user(username, fmt=None):
         .filter(IPBan.address.op(">>=")(user.last_ip))
         .order_by(IPBan.address).all()
     )
+    email_bans = (
+        g.db.query(EmailBan)
+        .select_from(EmailBan)
+        .filter(literal(user.email_address).op("~*")(EmailBan.pattern))
+        .order_by(EmailBan.pattern).all()
+    )
 
     notes = (
         g.db.query(UserNote)
@@ -267,6 +273,7 @@ def user(username, fmt=None):
         User=User,
         user=user,
         ip_bans=[_.address for _ in ip_bans],
+        email_bans=[_.pattern for _ in email_bans],
         search_characters=search_characters,
         admin_tiers=g.db.query(AdminTier).order_by(AdminTier.id).all(),
         notes=notes,

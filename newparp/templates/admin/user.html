@@ -48,7 +48,9 @@
                     <tr>
                         <td>E-mail address</td>
                         <td>
+                            {% if email_bans: %}<del>{% endif %}
                             <a href="{{url_for("admin_user_list", email=user.email_address)}}">{{user.email_address}}</a>
+                            {% if email_bans: %}</del>{% endif %}
                             {% if user.email_verified: %}(verified){% else: %}(not verified){% endif %}
                         </td>
                     </tr>
