@@ -166,6 +166,10 @@ def create_chat():
 @use_db
 @get_chat
 def chat(chat, pm_user, url, fmt=None):
+    if g.user.group == "new":
+        return render_template("account/user_new.html")
+    if g.user.group == "deactivated":
+        return render_template("account/user_deactivated.html")
 
     chat_dict = chat.to_dict(pm_user=pm_user)
 
