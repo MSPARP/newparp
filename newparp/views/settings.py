@@ -1,12 +1,12 @@
 from flask import abort, current_app, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import and_
+from sqlalchemy import and_, func, literal
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import log_in_required
 from newparp.helpers.email import send_email
-from newparp.model import Block, User
+from newparp.model import Block, EmailBan, User
 from newparp.model.connections import use_db
 from newparp.model.validators import email_validator
 
@@ -126,6 +126,7 @@ def verify_email():
         abort(404)
 
     g.redis.delete("verify:%s:%s" % (user_id, email_address))
+    g.redis.delete("welcome:%s:%s" % (user_id, email_address))
 
     next_message = "email_verified" if user.email_address == email_address else "email_changed"
 
@@ -133,6 +134,19 @@ def verify_email():
     user.email_verified = True
 
     g.redis.set("session:" + g.session_id, user.id, 2592000)
+
+    if user.group == "new":
+        email_bans = (
+            g.db.query(func.count("*"))
+            .select_from(EmailBan)
+            .filter(literal(user.email_address).op("~*")(EmailBan.pattern))
+            .scalar()
+        )
+        if email_bans:
+            return render_template("account/banned_email.html")
+        else:
+            user.group = "active"
+
     return redirect(url_for("settings_log_in_details", saved=next_message))
 
 

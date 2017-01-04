@@ -169,6 +169,7 @@ make_rules("rp", "/<path:url>/log/<int:page>", chat.log_page, formats=True)
 make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
+app.add_url_rule("/<path:url>/users/reset_regexes", "rp_chat_reset_regexes", chat.reset_regexes, methods=("POST",))
 make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
 
 app.add_url_rule("/<path:url>/uninvite", "rp_chat_uninvite", chat.uninvite, methods=("POST",))
@@ -240,6 +241,10 @@ make_rules("spamless2", "/admin/spamless2", spamless2.home, formats=True, paging
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))
 app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip_ban, methods=("POST",))
+
+make_rules("admin", "/admin/email_bans", admin.email_bans, formats=True)
+app.add_url_rule("/admin/email_bans/new", "admin_new_email_ban", admin.new_email_ban, methods=("POST",))
+app.add_url_rule("/admin/email_bans/delete", "admin_delete_email_ban", admin.delete_email_ban, methods=("POST",))
 
 app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_status, methods=("GET",))
 

@@ -21,8 +21,10 @@ def log_in_required(f):
     def decorated_function(*args, **kwargs):
         if g.user is None:
             return render_template("account/log_in_required.html")
-        elif g.user.group == "guest":
-            return render_template("account/activation_required.html")
+        elif g.user.group == "new":
+            return render_template("account/user_new.html")
+        elif g.user.group == "deactivated":
+            return render_template("account/user_deactivated.html")
         return f(*args, **kwargs)
     return decorated_function
 

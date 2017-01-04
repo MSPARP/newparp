@@ -146,7 +146,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 #global_navigation li a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
 #global_navigation li a:focus, #global_navigation button:focus {outline:none;}
 #global_navigation li a:focus:before, #global_navigation button:focus:before, #global_navigation li a:hover:before, #global_navigation button:hover:before { visibility: visible; }
-#global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
+#global_navigation button { width: 100%; margin: 0; padding-right: 20px; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
 #global_navigation .user {z-index:1;font-variant:normal;font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:14px;line-height:18px;}
 #global_navigation .user > a:before {content: '\22EE\00a0'; visibility:visible;}
 #global_navigation .user ul { margin: 0 0 0 -10px; font-variant:normal;}
@@ -179,7 +179,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 	#global_navigation .user li a:before{ content: "> "; }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
 	/* Swap in short titles */
 	#global_navigation li a .long {display:none}
 	#global_navigation li a .short {display:inline}
