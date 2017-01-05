@@ -83,7 +83,7 @@ h1 img { display: block; max-width: 100%; }
 #global_navigation a:hover, #global_navigation button:hover { color: #fff; }
 #global_navigation li a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
 #global_navigation li a:hover:before, #global_navigation button:hover:before { visibility: visible; }
-#global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
+#global_navigation button { width: 100%; margin: 0; padding-right: 20px; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
 #global_navigation .user ul { margin: 0 0 0 -10px; }
 #global_navigation #unread_counter { float: right; padding: 7px 14px; background-color: #a10000; }
 
