@@ -24,7 +24,7 @@
 {% endmacro %}
 <html>
 <head>
-<title>{% if request.url_rule.endpoint.startswith("rp_log"): %}Log - {% endif %}{{chat.computed_title()}} - MSPARP</title>
+<title>{% if request.url_rule.endpoint.startswith("rp_log"): %}Log - {% endif %}{{chat.computed_title(pm_user=pm_user)}} - MSPARP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 {% if g.user and g.user.theme == "felt": %}
 <meta name="theme-color" content="#0e4603">

@@ -240,6 +240,7 @@ def chat(chat, pm_user, url, fmt=None):
         "chat/chat.html",
         url=url,
         chat=chat,
+        pm_user=pm_user,
         chat_dict=chat_dict,
         chat_user=chat_user,
         chat_user_dict=chat_user.to_dict(include_options=True),
@@ -312,6 +313,7 @@ def _log_page(chat, pm_user, url, fmt, page=None):
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
+        pm_user=pm_user,
         messages=messages,
         paginator=paginator,
     )
@@ -404,6 +406,7 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
+        pm_user=pm_user,
         messages=messages,
         previous_day=previous_day,
         next_day=next_day,
