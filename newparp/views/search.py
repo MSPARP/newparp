@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.helpers import tags_to_set
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import activation_required
 from newparp.helpers.characters import validate_character_form
 from newparp.model import case_options, GroupChat, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_commit, db_disconnect
@@ -17,7 +17,7 @@ from newparp.model.validators import color_validator
 
 
 @use_db
-@log_in_required
+@activation_required
 def search_save():
 
     new_details = validate_character_form(request.form)
@@ -117,13 +117,13 @@ def _create_searcher():
 
 
 @use_db
-@log_in_required
+@activation_required
 def search_get():
     return render_template("search.html")
 
 
 @use_db
-@log_in_required
+@activation_required
 def search_post():
     return jsonify({ "id": _create_searcher() })
 

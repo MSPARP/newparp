@@ -11,7 +11,7 @@ from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
-from newparp.helpers.auth import admin_required, log_in_required
+from newparp.helpers.auth import admin_required, activation_required
 from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from newparp.model import (
     case_options,
@@ -122,7 +122,7 @@ def get_chat(f):
 
 
 @use_db
-@log_in_required
+@activation_required
 def create_chat():
 
     # Silently truncate to 50 because we've got a maxlength on the <input>.
@@ -439,7 +439,7 @@ def log_day(chat, pm_user, url, fmt, year, month, day):
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def users(chat, pm_user, url, fmt=None, page=1):
 
@@ -508,7 +508,7 @@ def reset_regexes(chat, pm_user, url, fmt=None, page=1):
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def invites(chat, pm_user, url, fmt=None, page=1):
 
@@ -564,7 +564,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def invite(chat, pm_user, url, fmt):
 
@@ -639,7 +639,7 @@ def invite(chat, pm_user, url, fmt):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def uninvite(chat, pm_user, url, fmt):
 
@@ -705,7 +705,7 @@ def uninvite(chat, pm_user, url, fmt):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def unban(chat, pm_user, url, fmt):
 
@@ -775,14 +775,14 @@ def _alter_subscription(chat, pm_user, url, new_value):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def subscribe(chat, pm_user, url, fmt):
     return _alter_subscription(chat, pm_user, url, True)
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def unsubscribe(chat, pm_user, url, fmt):
     return _alter_subscription(chat, pm_user, url, False)

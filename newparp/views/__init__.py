@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
-from newparp.helpers.auth import admin_required, log_in_required
+from newparp.helpers.auth import admin_required
 from newparp.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
