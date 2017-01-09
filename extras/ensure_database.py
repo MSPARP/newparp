@@ -64,4 +64,5 @@ finally:
     del db
     del redis
 
-subprocess.call(sys.argv[1:])
+status = subprocess.call(sys.argv[1:])
+sys.exit(status)

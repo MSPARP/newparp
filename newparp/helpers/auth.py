@@ -16,7 +16,7 @@ def admin_required(f):
     return decorated_function
 
 
-def log_in_required(f):
+def activation_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
@@ -25,6 +25,15 @@ def log_in_required(f):
             return render_template("account/user_new.html")
         elif g.user.group == "deactivated":
             return render_template("account/user_deactivated.html")
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def log_in_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return render_template("account/log_in_required.html")
         return f(*args, **kwargs)
     return decorated_function
 
