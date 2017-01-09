@@ -22,6 +22,7 @@ setup(
     newparp_init_db = newparp.model.init_db:init_db
     """,
     test_suite="nose2.collector.collector",
-    tests_require=["exam", "nose2"],
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest", "pytest-flask"],
 )
 
