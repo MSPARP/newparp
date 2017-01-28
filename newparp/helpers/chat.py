@@ -171,11 +171,10 @@ def send_message(db, redis, message, force_userlist=False):
     if message.type == "chat_meta":
         redis_message["chat"] = message.chat.to_dict()
 
-    celery.send_task("newparp.tasks.spamless.CheckSpamTask", args=(message.chat_id, redis_message))
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
     redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
-    # And send notifications last.
+    # Send notifications.
     if message.type in ("ic", "ooc", "me", "spamless"):
 
         # Queue an update for the last_online field.
@@ -192,6 +191,10 @@ def send_message(db, redis, message, force_userlist=False):
                 # Only send a notification if it's not already unread.
                 if message.chat.last_message <= chat_user.last_online:
                     redis.publish("channel:pm:%s" % chat_user.user_id, "{\"pm\":\"1\"}")
+
+    # And send the message to spamless last.
+    # 1 second delay to prevent the task from executing before we commit the message.
+    celery.send_task("newparp.tasks.spamless.CheckSpamTask", args=(message.chat_id, redis_message), countdown=1)
 
 
 def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
