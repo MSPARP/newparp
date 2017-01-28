@@ -26,23 +26,25 @@ class Silence(Exception):
 class CheckSpamTask(WorkerTask):
     queue = "worker"
 
-    def load_lists(self, lists):
+    def load_lists(self):
         if lists["reload"] == self.redis.get("spamless:reload"):
             return
 
         logger.info("reload")
         lists["reload"] = self.redis.get("spamless:reload")
+
+        filters = self.db.query(SpamlessFilter).all()
         lists["banned_names"] = [
             re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
-            for _ in self.db.query(SpamlessFilter).filter(SpamlessFilter.type == "banned_names").all()
+            for _ in filters if _.type == "banned_names"
         ]
         lists["blacklist"] = [
             (re.compile(_.regex, re.IGNORECASE | re.MULTILINE), _.points)
-            for _ in self.db.query(SpamlessFilter).filter(SpamlessFilter.type == "blacklist").all()
+            for _ in filters if _.type == "blacklist"
         ]
         lists["warnlist"] = [
             re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
-            for _ in self.db.query(SpamlessFilter).filter(SpamlessFilter.type == "warnlist").all()
+            for _ in filters if _.type == "warnlist"
         ]
 
     def increx(self, key, expire=60, incr=1):
@@ -54,7 +56,7 @@ class CheckSpamTask(WorkerTask):
         if len(data["messages"]) == 0:
             return
 
-        self.load_lists(lists)
+        self.load_lists()
 
         for message in data["messages"]:
             if message["user_number"] is None:
