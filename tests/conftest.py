@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import newparp
 from newparp.model import sm, Chat, GroupChat, User
 from newparp.model.connections import redis_pool
-from tests import create_user, create_chat
+from tests import create_user, create_chat, login
 
 class EnsureIP(object):
     def __init__(self, app):
@@ -29,6 +29,18 @@ def app():
         del newparp.app.error_handler_spec[None][None]
 
     return newparp.app
+
+@pytest.fixture()
+def user_client(app, normal_user):
+    with app.test_client() as client:
+        login(normal_user.username, "password", client=client)
+        yield client
+
+@pytest.fixture()
+def admin_client(app, admin_user):
+    with app.test_client() as client:
+        login(admin_user.username, "password", client=client)
+        yield client
 
 @pytest.fixture()
 def db():

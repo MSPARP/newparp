@@ -4,9 +4,7 @@ from tests import login
 
 # Utility
 
-def ban(client, admin_user, address: str, reason: str="Unittest ban."):
-    # Login and poke the chat to get a valid cookie and a ChatUser entry.
-    login(admin_user.username, "password", client=client)
+def ban(client, address: str, reason: str="Unittest ban."):
     rv = client.post("/admin/ip_bans/new", data=dict(
         address=address,
         reason=reason
@@ -18,37 +16,29 @@ def random_ip() -> str:
 
 # Tests
 
-def test_no_bans(client):
-    rv = client.get("/", environ_base={
+def test_no_bans(user_client):
+    rv = user_client.get("/", environ_base={
         "REMOTE_ADDR": "127.0.0.1"
     })
 
     assert rv.status_code == 200
 
-def test_user_ip_ban(app, client, admin_user):
+def test_user_ip_ban(app, admin_client, user_client):
     ban_ip = random_ip()
+    ban(admin_client, ban_ip)
 
-    with app.test_client() as admin_client:
-        ban(admin_client, admin_user, ban_ip)
-
-    rv = client.get("/", environ_base={
+    rv = user_client.get("/", environ_base={
         "REMOTE_ADDR": ban_ip
     })
-
-    print(rv.data)
 
     assert rv.status_code != 200
     assert b"pup-king-louie" in rv.data
 
-def test_admin_ip_ban(client, admin_user):
+def test_admin_ip_ban(admin_client):
     ban_ip = random_ip()
+    ban(admin_client, ban_ip)
 
-    # Login and poke the chat to get a valid cookie and a ChatUser entry.
-    login(admin_user.username, "password", client=client)
-
-    ban(client, admin_user, ban_ip)
-
-    rv = client.get("/", environ_base={
+    rv = admin_client.get("/", environ_base={
         "REMOTE_ADDR": ban_ip
     })
 
