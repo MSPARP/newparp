@@ -24,7 +24,7 @@ class Silence(Exception):
 
 
 class CheckSpamTask(WorkerTask):
-    queue = "worker"
+    queue = "spamless"
 
     def load_lists(self):
         if lists["reload"] == self.redis.get("spamless:reload"):
