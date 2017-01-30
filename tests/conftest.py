@@ -34,12 +34,14 @@ def app():
 def user_client(app, normal_user):
     with app.test_client() as client:
         login(normal_user.username, "password", client=client)
+        client.user = normal_user
         yield client
 
 @pytest.fixture()
 def admin_client(app, admin_user):
     with app.test_client() as client:
         login(admin_user.username, "password", client=client)
+        client.user = admin_user
         yield client
 
 @pytest.fixture()
