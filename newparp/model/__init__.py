@@ -326,6 +326,26 @@ class Character(Base):
         return ucd
 
 
+class Fandom(Base):
+    __tablename__ = "fandoms"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(50), nullable=False)
+
+    def __repr__(self):
+        return "<Fandom #%s: %s>" % (self.id, self.name.encode("utf8"))
+
+
+class SearchCharacterGroup(Base):
+    __tablename__ = "search_character_groups"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(50), nullable=False)
+    fandom_id = Column(Integer, ForeignKey("fandoms.id"), nullable=False)
+    order = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
+
+
 class SearchCharacter(Base):
 
     __tablename__ = "search_characters"
@@ -370,16 +390,6 @@ class SearchCharacter(Base):
             ucd["replacements"] = json.loads(self.replacements)
             ucd["regexes"] = json.loads(self.regexes)
         return ucd
-
-
-class SearchCharacterGroup(Base):
-    __tablename__ = "search_character_groups"
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(50), nullable=False)
-    order = Column(Integer, nullable=False)
-
-    def __repr__(self):
-        return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
 
 
 class SearchCharacterChoice(Base):
@@ -1133,6 +1143,7 @@ Block.blocked_chat_user = relation(
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
 
+Fandom.groups = relation(SearchCharacterGroup, backref="fandom", order_by=SearchCharacterGroup.order)
 SearchCharacterGroup.characters = relation(SearchCharacter, backref="group", order_by=SearchCharacter.order)
 
 SearchCharacterChoice.user = relation(User, backref="search_character_choices")
