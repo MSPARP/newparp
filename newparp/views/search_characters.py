@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers.auth import permission_required
 from newparp.helpers.characters import validate_character_form
-from newparp.model import case_options, Character, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
+from newparp.model import case_options, Character, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
 
@@ -31,12 +31,33 @@ def search_character_list():
 
 @use_db
 @permission_required("search_characters")
-def new_search_character_group_post():
-    name = request.form["name"].strip()
+def new_fandom_post():
+    name = request.form["name"].strip()[:100]
     if len(name) == 0:
         abort(400)
-    order = (g.db.query(func.max(SearchCharacterGroup.order)).scalar() or 0) + 1
-    g.db.add(SearchCharacterGroup(name=name, order=order))
+    g.db.add(Fandom(name=name))
+    return redirect(url_for("rp_search_character_list"))
+
+
+@use_db
+@permission_required("search_characters")
+def new_search_character_group_post():
+    name = request.form["name"].strip()[:100]
+    if len(name) == 0:
+        abort(400)
+
+    try:
+        fandom = g.db.query(Fandom).filter(Fandom.id == int(request.form["fandom_id"])).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+
+    order = (
+        g.db.query(func.max(SearchCharacterGroup.order))
+        .filter(SearchCharacterGroup.fandom_id == fandom.id)
+        .scalar() or 0
+    ) + 1
+    g.db.add(SearchCharacterGroup(fandom_id=fandom.id, name=name, order=order))
+
     return redirect(url_for("rp_search_character_list"))
 
 

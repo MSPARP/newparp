@@ -338,8 +338,8 @@ class Fandom(Base):
 class SearchCharacterGroup(Base):
     __tablename__ = "search_character_groups"
     id = Column(Integer, primary_key=True)
-    name = Column(Unicode(50), nullable=False)
     fandom_id = Column(Integer, ForeignKey("fandoms.id"), nullable=False)
+    name = Column(Unicode(50), nullable=False)
     order = Column(Integer, nullable=False)
 
     def __repr__(self):
@@ -351,8 +351,8 @@ class SearchCharacter(Base):
     __tablename__ = "search_characters"
 
     id = Column(Integer, primary_key=True)
-    title = Column(Unicode(50), nullable=False)
     group_id = Column(Integer, ForeignKey("search_character_groups.id"), nullable=False)
+    title = Column(Unicode(50), nullable=False)
     order = Column(Integer, nullable=False)
 
     name = Column(Unicode(50), nullable=False, default="anonymous")
