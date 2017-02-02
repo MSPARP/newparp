@@ -23,9 +23,14 @@ def search_character_query(id):
 def search_character_list():
     return render_template(
         "search_characters/search_character_list.html",
-        search_character_groups=g.db.query(SearchCharacterGroup).order_by(
-            SearchCharacterGroup.order,
-        ).options(joinedload(SearchCharacterGroup.characters)).all(),
+        fandoms=(
+            g.db.query(Fandom)
+            .order_by(Fandom.name)
+            .options(
+                joinedload(Fandom.groups)
+                .joinedload(SearchCharacterGroup.characters)
+            ).all()
+        )
     )
 
 
