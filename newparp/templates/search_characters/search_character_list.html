@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title: %}Search character creator - {% endblock %}
 {% block content: %}
-    {% for fandom in fandoms %}
+    {% for fandom in fandoms: %}
     <div class="common_box">
         <h2><label><span>{{fandom.name}}</span></label></h2>
         <div class="common_box_wrap">

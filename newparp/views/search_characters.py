@@ -69,7 +69,7 @@ def new_search_character_group_post():
 @use_db
 @permission_required("search_characters")
 def new_search_character_get():
-    groups = g.db.query(SearchCharacterGroup).order_by(SearchCharacterGroup.order).all()
+    fandoms = g.db.query(Fandom).order_by(Fandom.name).options(joinedload(Fandom.groups)).all()
 
     character_defaults = {_.name: _.default.arg for _ in SearchCharacter.__table__.columns if _.default}
 
@@ -78,7 +78,7 @@ def new_search_character_get():
         character=character_defaults,
         replacements=[],
         regexes=[],
-        groups=groups,
+        fandoms=fandoms,
         case_options=case_options,
     )
 
