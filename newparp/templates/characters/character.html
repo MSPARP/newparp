@@ -12,12 +12,14 @@
             <h2><label><span>Roleplay as</span></label></h2>
             <div class="common_box_wrap">
                 <div class="input select player_select_box"><select name="search_character_id" id="player_select">
-                    {% for group in search_character_groups: %}
-                    <optgroup label="{{group.name}}">
-                        {% for search_character in group.characters: %}
-                        <option value="{{search_character.id}}"{% if search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
+                    {% for fandom in fandoms: %}
+                        {% for group in fandom.groups: %}
+                        <optgroup label="{{fandom.name}}: {{group.name}}">
+                            {% for search_character in group.characters: %}
+                            <option value="{{search_character.id}}"{% if search_character.id == character.search_character_id %} selected="selected"{% endif %}>{{search_character.title}}</option>
+                            {% endfor %}
+                        </optgroup>
                         {% endfor %}
-                    </optgroup>
                     {% endfor %}
                 </select></div>
                 <br>
