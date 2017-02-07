@@ -29,9 +29,6 @@ def generate_searching_counter():
 @celery.task(base=WorkerTask, queue="matchmaker")
 def new_searcher(searcher_id):
     redis = new_searcher.redis
-    if redis.exists("lock:matchmaker"):
-        new_searcher.apply_async((searcher_id,), countdown=2)
-        return
 
     logger.debug("new searcher: %s")
     searchers = redis.smembers("searchers")
@@ -49,8 +46,6 @@ def new_searcher(searcher_id):
         (compare.s(searcher_id, _) for _ in searchers if _ != searcher_id),
         comparison_callback.s(searcher_id),
     ).delay()
-
-    redis.setex("lock:matchmaker", 60, 1)
 
 
 @celery.task(base=WorkerTask, queue="matchmaker")
@@ -132,6 +127,12 @@ def compare(searcher_id_1, searcher_id_2):
 def comparison_callback(results, searcher_id_1):
     redis = comparison_callback.redis
     db = comparison_callback.db
+
+    if redis.exists("lock:matchmaker"):
+        logger.debug("locked. calling again in 1 second.")
+        comparison_callback.apply_async((results, searcher_id_1), countdown=1)
+        return
+    redis.setex("lock:matchmaker", 60, 1)
 
     # Check if there's a match.
     matched_searchers = [_ for _ in results if _[0] is not None]
