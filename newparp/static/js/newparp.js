@@ -403,8 +403,10 @@ var msparp = (function() {
 				switch (tag) {
 					case "bgcolor":
 					case "color":
-					case "font":
 						return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML;
+					case "font":
+						// Gotta quote the font name so fonts starting with numbers work.
+						return $("<span>").css(tag_properties[tag], "'" + attribute + "'").html(raw_bbencode(content, admin))[0].outerHTML;
 					case "bshadow":
 					case "tshadow":
 						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
