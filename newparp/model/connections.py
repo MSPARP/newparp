@@ -120,7 +120,7 @@ def get_chat_user():
     except NoResultFound:
         abort(400)
     queue_user_meta(g, g.redis, request.headers.get("X-Forwarded-For", request.remote_addr))
-    if g.user.group == "banned":
+    if g.user.group != "active":
         abort(403)
     g.ip_banned = get_ip_banned(request.headers.get("X-Forwarded-For", request.remote_addr), g.db, g.redis)
     if g.ip_banned and not g.user.is_admin:
