@@ -635,7 +635,7 @@ def invite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db
@@ -701,7 +701,7 @@ def uninvite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db
