@@ -9,7 +9,7 @@ from flask import g
 from newparp.model import Message
 from newparp.helpers.chat import join
 
-def fake_socket(client, group_chat: str):
+def fake_socket(client, group_chat):
     client.get("/" + group_chat.url)
     g.redis.sadd("chat:%s:sockets:%s" % (g.chat_id, g.session_id), "1")
     g.redis.expire("chat:%s:sockets:%s" % (g.chat_id, g.session_id), 60)
@@ -19,6 +19,15 @@ def set_flag(client, chat_id: int, flag: str, value: str):
         "chat_id": chat_id,
         "flag": flag,
         "value": value,
+    })
+    return rv
+
+def user_action(client, chat_id: int, action: str, number: int, reason: str=None):
+    rv = client.post("/chat_api/user_action", data={
+        "chat_id": chat_id,
+        "action": action,
+        "number": number,
+        "reason": reason,
     })
     return rv
 
@@ -83,6 +92,15 @@ def test_flag_publicity_private_invited(user_client, admin_client, group_chat):
 
     rv = user_client.get("/" + group_chat.url)
     assert rv.status_code == 200
+
+# Bans
+
+def test_action_ban_user(user_client, admin_client, group_chat):
+    fake_socket(admin_client, group_chat)
+    ban_id = json.loads(user_client.get("/" + group_chat.url + ".json").data.decode("utf8"))["chat_user"]["meta"]["number"]
+    data = user_action(admin_client, group_chat.id, "ban", ban_id, "Unittest chat ban.")
+    rv = user_client.get("/" + group_chat.url)
+    assert rv.status_code == 302
 
 # Messages
 
