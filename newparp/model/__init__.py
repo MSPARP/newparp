@@ -1023,6 +1023,7 @@ class AdminTierPermission(Base):
         "log",
         "spamless",
         "ip_bans",
+        "email_bans",
         name="admin_tier_permissions_permission",
     ), primary_key=True)
 

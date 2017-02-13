@@ -775,7 +775,7 @@ def delete_ip_ban():
 
 @alt_formats({"json"})
 @use_db
-@permission_required("ip_bans") # TODO permission
+@permission_required("email_bans")
 def email_bans(fmt=None, page=1):
     email_bans = g.db.query(EmailBan).order_by(EmailBan.pattern).options(joinedload(EmailBan.creator)).all()
 
@@ -792,7 +792,7 @@ def email_bans(fmt=None, page=1):
 
 
 @use_db
-@permission_required("ip_bans")
+@permission_required("email_bans")
 def new_email_ban():
 
     if not request.form.get("pattern") or not request.form.get("reason"):
@@ -838,7 +838,7 @@ def new_email_ban():
 
 
 @use_db
-@permission_required("ip_bans")
+@permission_required("email_bans")
 def delete_email_ban():
     g.db.query(EmailBan).filter(EmailBan.pattern == request.form["pattern"]).delete()
     g.db.add(AdminLogEntry(
