@@ -29,6 +29,7 @@ class KickedException(Exception):
 
 
 def has_open_socket(redis, chat_id, session_id):
+    """Indicates whether the session has an open socket."""
     result = redis.eval("""
     local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
     if #online_list == 0 then return false end
@@ -53,7 +54,6 @@ def require_socket(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         g.chat_id = int(request.form["chat_id"])
-        # TODO lua it up
         if not has_open_socket(g.redis, g.chat_id, g.session_id):
             print("doesn't have open socket")
             abort(403)
@@ -123,6 +123,18 @@ def kick_check(redis, context):
 
 
 def join(redis, db, context):
+    """
+    Joins a socket to a chat.
+
+    This adds the socket to the chat's online sockets key, and if it's the only
+    socket a user currently has then it also does the following:
+    * If the last message in the chat was a disconnect from this user, it's
+      deleted.
+    * If not, a join message is sent.
+    * Either way, the user list is refreshed.
+
+    Returns a boolean indicating whether or not the user's online state changed.
+    """
 
     pipe = redis.pipeline()
 
@@ -173,6 +185,11 @@ class PingTimeoutException(Exception): pass
 
 
 def ping(redis, db, context):
+    """
+    Bumps a socket's ping time to avoid timeouts.
+
+    This raises PingTimeoutException if they've already timed out.
+    """
     result = redis.eval("""
     local user_id_from_chat = redis.call("hget", "chat:"..ARGV[1]..":online", ARGV[2])
     if not user_id_from_chat then return false end
@@ -298,9 +315,12 @@ def send_userlist(db, redis, chat):
 
 
 def disconnect(redis, chat_id, socket_id):
-    # Only return True if they were in the userlist when we tried to remove
-    # them, so we can avoid sending disconnection messages if someone
-    # gratuitously sends quit requests.
+    """
+    Removes a socket from a chat.
+
+    Returns a boolean indicating whether a quit message should be sent
+    afterwards.
+    """
     pipe = redis.pipeline()
     pipe.hget("chat:%s:online" % chat_id, socket_id)
     pipe.hdel("chat:%s:online" % chat_id, socket_id)
@@ -314,6 +334,11 @@ def disconnect(redis, chat_id, socket_id):
 
 
 def disconnect_user(redis, chat_id, user_id):
+    """
+    Removes all of a user's sockets from a chat.
+
+    Returns a boolean indicating whether the user had any online sockets.
+    """
     user_id = str(user_id)
     socket_ids = []
     for socket_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).items():
