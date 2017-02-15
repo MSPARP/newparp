@@ -339,18 +339,23 @@ def disconnect_user(redis, chat_id, user_id):
 
     Returns a boolean indicating whether the user had any online sockets.
     """
-    user_id = str(user_id)
-    socket_ids = []
-    for socket_id, online_user_id in redis.hgetall("chat:%s:online" % chat_id).items():
-        if online_user_id == user_id:
-            socket_ids.append(socket_id)
-    if not socket_ids:
-        return False
-    for socket_id in socket_ids:
-        # TODO lua it up
-        # also srem and zrem as above
-        redis.hdel("chat:%s:online" % chat_id, socket_id)
-    return True
+    # TODO remember to clear the typing key
+    result = redis.eval("""
+    local had_online_socket = false
+    local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
+    if #online_list == 0 then return false end
+    for i = 1, #online_list, 2 do
+        local socket_id = online_list[i]
+        local user_id = online_list[i+1]
+        if user_id == ARGV[2] then
+            redis.call("hdel", "chat:"..ARGV[1]..":online", socket_id)
+            redis.call("del",  "chat:"..ARGV[1]..":online:"..socket_id)
+            had_online_socket = true
+        end
+    end
+    return had_online_socket
+    """, 0, chat_id, user_id)
+    return bool(result)
 
 
 def send_quit_message(db, redis, chat_user, user, chat, type="disconnect"):
