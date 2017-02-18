@@ -14,7 +14,6 @@ import asyncio_redis
 
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from redis import StrictRedis
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from tornado.gen import coroutine, Task
@@ -41,10 +40,10 @@ from newparp.helpers.chat import (
 from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher
 from newparp.helpers.users import queue_user_meta
 from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
-from newparp.model.connections import redis_pool
+from newparp.model.connections import redis_pool, NewparpRedis
 from newparp.tasks.matchmaker import new_searcher
 
-redis = StrictRedis(connection_pool=redis_pool)
+redis = NewparpRedis(connection_pool=redis_pool)
 thread_pool = ThreadPoolExecutor()
 
 

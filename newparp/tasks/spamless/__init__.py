@@ -47,11 +47,6 @@ class CheckSpamTask(WorkerTask):
             for _ in filters if _.type == "warnlist"
         ]
 
-    def increx(self, key, expire=60, incr=1):
-        result = self.redis.incr(key, incr)
-        self.redis.expire(key, expire)
-        return result
-
     def run(self, chat_id, data):
         if len(data["messages"]) == 0:
             return
@@ -129,7 +124,7 @@ class CheckSpamTask(WorkerTask):
     def check_connection_spam(self, chat_id, message):
         if message["type"] not in ("join", "disconnect", "timeout", "user_info"):
             return
-        attempts = self.increx("spamless:join:%s:%s" % (chat_id, message["user_number"]), expire=5)
+        attempts = self.redis.increx("spamless:join:%s:%s" % (chat_id, message["user_number"]), expire=5)
         if attempts <= 10:
             return
         raise Silence("connection")
@@ -152,11 +147,11 @@ class CheckSpamTask(WorkerTask):
 
         for phrase, points in lists["blacklist"]:
             total_points = len(phrase.findall(message["text"])) * int(points)
-            self.increx(message_key, expire=60, incr=total_points)
-            self.increx(user_key, expire=10, incr=total_points)
+            self.redis.increx(message_key, expire=60, incr=total_points)
+            self.redis.increx(user_key, expire=10, incr=total_points)
 
-        message_attempts = self.increx(message_key, expire=60)
-        user_attempts = self.increx(user_key, expire=10)
+        message_attempts = self.redis.increx(message_key, expire=60)
+        user_attempts = self.redis.increx(user_key, expire=10)
 
         if message_attempts >= randint(10, 35) or user_attempts >= 15:
             raise Silence("x%s" % max(message_attempts, user_attempts))

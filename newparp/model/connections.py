@@ -10,7 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, User
-from newparp.helpers.users import queue_user_meta, get_ip_banned
+
 
 
 @contextmanager
@@ -34,6 +34,21 @@ redis_pool = ConnectionPool(
     decode_responses=True,
 )
 
+
+class NewparpRedis(StrictRedis):
+    def increx(self, key, expire=60, incr=1):
+        """Increment a key and set its TTL. Like SETEX but for INCR."""
+        pipe = self.pipeline()
+        pipe.incr(key, incr)
+        pipe.expire(key, expire)
+        result, _ = pipe.execute()
+        return result
+
+
+# relies on importing NewparpRedis
+from newparp.helpers.users import queue_user_meta, get_ip_banned
+
+
 cookie_domain = "." + os.environ["BASE_DOMAIN"]
 
 
@@ -53,7 +68,7 @@ def set_cookie(response):
 
 
 def redis_connect():
-    g.redis = StrictRedis(connection_pool=redis_pool)
+    g.redis = NewparpRedis(connection_pool=redis_pool)
     if "newparp" in request.cookies:
         g.session_id = request.cookies["newparp"]
         g.user_id = g.redis.get("session:" + g.session_id)

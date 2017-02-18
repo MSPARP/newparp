@@ -3,12 +3,11 @@ import pytest
 import uuid
 
 
-from redis import StrictRedis
 from sqlalchemy.orm.exc import NoResultFound
 
 import newparp
 from newparp.model import sm, Chat, GroupChat, User
-from newparp.model.connections import redis_pool
+from newparp.model.connections import NewparpRedis, redis_pool
 from tests import create_user, create_chat, login
 
 class EnsureIP(object):
@@ -50,7 +49,7 @@ def db():
 
 @pytest.fixture()
 def redis():
-    return StrictRedis(connection_pool=redis_pool)
+    return NewparpRedis(connection_pool=redis_pool)
 
 @pytest.fixture()
 def admin_user(db):
