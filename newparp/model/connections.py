@@ -28,10 +28,18 @@ def session_scope():
         session.close()
 
 
+# Redis DB for sessions, caching etc.
 redis_pool = ConnectionPool(
     host=os.environ["REDIS_HOST"],
     port=int(os.environ["REDIS_PORT"]),
     db=int(os.environ["REDIS_DB"]),
+    decode_responses=True,
+)
+# Redis db for chat info.
+redis_chat_pool = ConnectionPool(
+    host=os.environ["REDIS_HOST"],
+    port=int(os.environ["REDIS_PORT"]),
+    db=int(os.environ["REDIS_CHAT_DB"]),
     decode_responses=True,
 )
 
