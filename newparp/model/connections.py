@@ -5,6 +5,7 @@ from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
+from redis.client import BasePipeline
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
@@ -36,13 +37,29 @@ redis_pool = ConnectionPool(
 
 
 class NewparpRedis(StrictRedis):
+    def pipeline(self, transaction=True, shard_hint=None):
+        """
+        Copy of StrictRedis.pipeline() which uses NewparpPipeline.
+        """
+        return NewparpPipeline(
+            self.connection_pool,
+            self.response_callbacks,
+            transaction,
+            shard_hint,
+        )
+
     def increx(self, key, expire=60, incr=1):
         """Increment a key and set its TTL. Like SETEX but for INCR."""
-        pipe = self.pipeline()
+        pipe = self if isinstance(self, BasePipeline) else self.pipeline()
         pipe.incr(key, incr)
         pipe.expire(key, expire)
-        result, _ = pipe.execute()
-        return result
+        if not isinstance(self, BasePipeline):
+            result, _ = pipe.execute()
+            return result
+
+
+class NewparpPipeline(BasePipeline, NewparpRedis):
+    pass
 
 
 # relies on importing NewparpRedis
