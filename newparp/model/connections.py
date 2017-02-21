@@ -1,5 +1,6 @@
 import os
 
+from contextlib import contextmanager
 from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
@@ -10,6 +11,21 @@ from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, User
 from newparp.helpers.users import queue_user_meta, get_ip_banned
+
+
+@contextmanager
+def session_scope():
+    """Provide a transactional scope around a series of operations."""
+    session = sm()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
 
 redis_pool = ConnectionPool(
     host=os.environ["REDIS_HOST"],
