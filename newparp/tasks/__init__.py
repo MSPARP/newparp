@@ -6,7 +6,6 @@ from classtools import reify
 from redis import StrictRedis
 from raven.contrib.celery import register_signal, register_logger_signal
 
-from newparp.model import sm
 from newparp.model.connections import redis_pool
 
 celery = Celery("newparp", include=[
@@ -30,10 +29,6 @@ celery.config_from_object('newparp.tasks.config')
 
 class WorkerTask(Task):
     abstract = True
-
-    @reify
-    def db(self):
-        return sm()
 
     @reify
     def redis(self):
