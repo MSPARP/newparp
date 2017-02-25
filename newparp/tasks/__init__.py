@@ -35,9 +35,6 @@ class WorkerTask(Task):
         return StrictRedis(connection_pool=redis_pool)
 
     def after_return(self, *args, **kwargs):
-        if hasattr(self, "db"):
-            self.db.close()
-            del self.db
-
         if hasattr(self, "redis"):
             del self.redis
+

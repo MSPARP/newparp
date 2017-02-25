@@ -76,7 +76,6 @@ def update_lastonline():
 
 @celery.task(base=WorkerTask, queue="worker")
 def update_user_meta():
-    db = update_user_meta.db
     redis = update_user_meta.redis
 
     if redis.exists("lock:metaupdate"):
