@@ -99,6 +99,9 @@ make_rules("unread", "/unread", views.unread, formats=True)
 app.add_url_rule("/log_in", "log_in", account.log_in_get, methods=("GET",))
 app.add_url_rule("/log_in", "log_in_post", account.log_in_post, methods=("POST",))
 app.add_url_rule("/log_in.<fmt>", "log_in_post", account.log_in_post, methods=("POST",))
+# Fake rule for GET, because if we only accept POST then the chat creation check
+# doesn't find it.
+app.add_url_rule("/log_out", "log_out_404", lambda: abort(404), methods=("GET",))
 app.add_url_rule("/log_out", "log_out", account.log_out, methods=("POST",))
 app.add_url_rule("/register", "register", account.register_get, methods=("GET",))
 app.add_url_rule("/register", "register_post", account.register_post, methods=("POST",))
