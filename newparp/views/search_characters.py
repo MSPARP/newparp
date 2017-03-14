@@ -103,7 +103,7 @@ def new_search_character_post():
     new_search_character = SearchCharacter(
         group_id=group.id,
         order=order,
-        text_preview=request.form["text_preview"],
+        text_preview=request.form.get("text_preview", SearchCharacter.text_preview.default.arg),
         **new_details
     )
     g.db.add(new_search_character)

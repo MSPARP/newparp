@@ -25,8 +25,20 @@
                         <td>{% if character.id != 1: %}<a href="{{url_for("rp_delete_search_character_get", id=character.id)}}"><span class="t_delete"><span>Delete<span></span></a>{% endif %}</td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <td><input form="group_{{group.id}}_quick_create" name="title" required="" maxlength="100" type="text" placeholder="Title"></td>
+                        <td>
+                            <input form="group_{{group.id}}_quick_create" name="name" required="" maxlength="100" type="text" placeholder="Name">
+                            [<input form="group_{{group.id}}_quick_create" name="acronym" required="" maxlength="15" type="text" placeholder="??" size="5">]
+                        </td>
+                        <td colspan="2"><button form="group_{{group.id}}_quick_create" type="submit">Quick create</button></td>
+                    </tr>
                 </tbody>
             </table>
+            <form id="group_{{group.id}}_quick_create" action="{{url_for("rp_new_search_character_post")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <input type="hidden" name="group_id" value="{{group.id}}">
+            </form>
             <p><a href="{{url_for("rp_new_search_character_get", group_id=group.id)}}">New character in {{group.name}}</a></p>
             {% endfor %}
             <h3>New group</h3>
