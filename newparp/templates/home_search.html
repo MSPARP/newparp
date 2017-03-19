@@ -183,19 +183,20 @@
             <div id="filter_settings">
             <span class="textlabel">click &#x25BE;/&#x25B4; to expand or collapse categories</span>
                 {% for fandom in fandoms %}
-                    {% for group in fandom.groups: %}
                     <fieldset class="character_list">
-                        <legend><div class='input'><input id="group_{{group.id}}" name="group_{{group.id}}" type="checkbox"><label for="group_{{group.id}}">{{fandom.name}}: {{group.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_group_{{group.id}}"><label for="toggle_group_{{group.id}}"><span class="groupcount"></span></label>
-                        <ul>
-                        {% for character in group.characters: %}
-                        <li><div class='input'>
-                            <input id="picky_{{character.id}}" name="picky_{{character.id}}" type="checkbox" {% if character.id in picky: %} checked="checked"{% endif %}>
-                            <label for="picky_{{character.id}}"><span class="character_name">{{character.title}}</span>
-                        </label></div></li>
+                        <legend><div class='input'><input id="fandom_{{fandom.id}}" name="fandom_{{fandom.id}}" type="checkbox"><label for="fandom_{{fandom.id}}">{{fandom.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_fandom_{{fandom.id}}"><label for="toggle_fandom_{{fandom.id}}"><span class="groupcount"></span></label>
+                        {% for group in fandom.groups: %}
+                            <h3>{{group.name}}</h3>
+                            <ul>
+                            {% for character in group.characters: %}
+                            <li><div class='input'>
+                                <input id="picky_{{character.id}}" name="picky_{{character.id}}" type="checkbox" {% if character.id in picky: %} checked="checked"{% endif %}>
+                                <label for="picky_{{character.id}}"><span class="character_name">{{character.title}}</span>
+                            </label></div></li>
+                            {% endfor %}
+                            </ul>
                         {% endfor %}
-                        </ul>
                     </fieldset>
-                    {% endfor %}
                 {% endfor %}
             </div>
         </div>

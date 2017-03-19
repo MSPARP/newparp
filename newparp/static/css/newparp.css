@@ -1049,7 +1049,7 @@ body:not(.no_forms) .shortname_box #invite_name + label {top:1.05em}
 }
 
 
-.group_toggle:not(:checked) + label + ul {display:none}
+.group_toggle:not(:checked) + label ~ h3, .group_toggle:not(:checked) + label ~ ul {display:none}
 
 .groupcount {
 	color:#b9b9b9;font-size:80%;padding-bottom:2px;  
