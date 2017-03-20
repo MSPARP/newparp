@@ -69,11 +69,13 @@ def fetch_searcher(redis, searcher_id):
 
 
 option_messages = {
-    "script": "This is a script style chat.",
-    "paragraph": "This is a paragraph style chat.",
-    "sfw": "Please keep this chat safe for work.",
-    "nsfw": "NSFW content is allowed.",
+    "script":       "This is a script style chat.",
+    "paragraph":    "This is a paragraph style chat.",
+    "sfw":          "Please keep this chat safe for work.",
+    "nsfw":         "NSFW content is allowed.", # Kept here for backwards compatibility while we migrate.
+    "nsfws":        "NSFW (sexual) content is allowed.",
+    "nsfwv":        "NSFW (violent) content is allowed.",
+    "nsfws-nsfwv":  "NSFW (sexual or violent) content is allowed.",
     "nsfw-extreme": "Extreme NSFW content is allowed.",
-    "roulette": "TT: There is a 98.413% chance that you have just connected to someone anonymously. It seems that you should probably say \"Hello\" now.",
 }
 

@@ -89,11 +89,16 @@ def compare(searcher_id_1, searcher_id_2):
     levels_in_common = s1.levels & s2.levels
     logger.debug("Levels in common: %s" % levels_in_common)
     if levels_in_common:
-        options.append(
-            "nsfw-extreme" if "nsfw-extreme" in levels_in_common
-            else "nsfw" if "nsfw" in levels_in_common
-            else "sfw"
-        )
+        if "nsfw-extreme" in levels_in_common:
+            options.append("nsfw-extreme")
+        elif "nsfws" in levels_in_common and "nsfwv" in levels_in_common:
+            options.append("nsfws-nsfwv")
+        elif "nsfws" in levels_in_common:
+            options.append("nsfws")
+        elif "nsfwv" in levels_in_common:
+            options.append("nsfwv")
+        else:
+            options.append("sfw")
     else:
         return None, None
 

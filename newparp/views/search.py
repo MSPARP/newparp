@@ -11,7 +11,7 @@ from uuid import uuid4
 from newparp.helpers import tags_to_set
 from newparp.helpers.auth import activation_required
 from newparp.helpers.characters import validate_character_form
-from newparp.model import case_options, GroupChat, SearchCharacter, SearchCharacterChoice, User
+from newparp.model import case_options, level_options, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_commit, db_disconnect
 from newparp.model.validators import color_validator
 
@@ -35,7 +35,7 @@ def search_save():
         g.user.search_style = request.form["style"]
 
     level_filter = set()
-    for level in GroupChat.level.type.enums:
+    for level in level_options.keys():
         if level in request.form:
             level_filter.add(level)
     if not level_filter:

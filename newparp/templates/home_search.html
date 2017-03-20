@@ -152,9 +152,9 @@
                     <div>
                         <span class="textlabel">Content:</span>
                         <div class="content_boxes">
-                            <div class="input"><input type="checkbox" id="content_sfw" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_sfw">SFW</label></div>
-                            <div class="input"><input type="checkbox" id="content_nsfw" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfw">NSFW</label></div>
-                            <div class="input"><input type="checkbox" id="content_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfwe">NSFW extreme</label></div>
+                            {% for option, name in level_options.items(): %}
+                                <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

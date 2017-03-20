@@ -5,6 +5,7 @@ import sys
 import time
 
 from bcrypt import gensalt, hashpw
+from collections import OrderedDict
 from pytz import timezone, utc
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
@@ -57,20 +58,27 @@ def now():
     return datetime.datetime.now()
 
 
-case_options = {
-    "alt-lines": "ALTERNATING lines",
-    "alternating": "AlTeRnAtInG",
-    "inverted": "iNVERTED",
-    "lower": "lower case",
-    "normal": "Normal",
-    "title": "Title Case",
-    "upper": "UPPER CASE",
-    "proper": "Proper grammar",
-    "first-letter": "First letter caps",
-}
+case_options = OrderedDict([
+    ("alt-lines",    "ALTERNATING lines"),
+    ("alternating",  "AlTeRnAtInG"),
+    ("inverted",     "iNVERTED"),
+    ("lower",        "lower case"),
+    ("normal",       "Normal"),
+    ("title",        "Title Case"),
+    ("upper",        "UPPER CASE"),
+    ("proper",       "Proper grammar"),
+    ("first-letter", "First letter caps"),
+])
 
 case_options_enum = Enum(*list(case_options.keys()), name="case")
 
+
+level_options = OrderedDict([
+    ("sfw",          "SFW"),
+    ("nsfws",        "NSFW (sexual)"),
+    ("nfswv",        "NSFW (violent)"),
+    ("nsfw-extreme", "NSFW extreme"),
+])
 
 # 1. Classes
 

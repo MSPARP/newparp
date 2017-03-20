@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required
-from newparp.model import case_options, Character, GroupChat, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
+from newparp.model import case_options, level_options, Character, GroupChat, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
 
@@ -41,6 +41,7 @@ def home():
         characters=characters,
         fandoms=fandoms,
         case_options=case_options,
+        level_options=level_options,
         replacements=json.loads(g.user.replacements),
         regexes=json.loads(g.user.regexes),
         User=User,
