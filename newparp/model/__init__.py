@@ -73,12 +73,14 @@ case_options = OrderedDict([
 case_options_enum = Enum(*list(case_options.keys()), name="case")
 
 
+# TODO make this an enum and use sqlalchemy-enum34
 level_options = OrderedDict([
     ("sfw",          "SFW"),
     ("nsfws",        "NSFW (sexual)"),
     ("nfswv",        "NSFW (violent)"),
     ("nsfw-extreme", "NSFW extreme"),
 ])
+
 
 # 1. Classes
 
@@ -486,9 +488,7 @@ class GroupChat(Chat):
         name="group_chats_style",
     ), nullable=False, default="script")
     level = Column(Enum(
-        "sfw",
-        "nsfw",
-        "nsfw-extreme",
+        *level_options.keys(),
         name="group_chats_level",
     ), nullable=False, default="sfw")
 
