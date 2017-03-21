@@ -217,9 +217,9 @@
                         <option value="either">Either style</option>
                     </select></p></div>
                     <div class="input select slimdrop"><p><select id="flag_level">
-                        <option value="sfw">Safe for work</option>
-                        <option value="nsfw">Not safe for work</option>
-                        <option value="nsfw-extreme">NSFW extreme</option>
+                        {% for option, name in level_options.items(): %}
+                            <option value="{{option}}">{{name}}</option>
+                        {% endfor %}
                     </select></p></div>
                 </section>
                 <section id="flag_messages">

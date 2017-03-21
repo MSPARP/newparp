@@ -22,22 +22,22 @@
         <div class="common_box_wrap">
         <form action="{{url_for("rp_groups")}}" method="get">
             <p class="textlabel">Style:
-                    <div class="input"><input type="checkbox" id="filter_chats_script" name="script"{% if "script" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_script">Script</label></div>
-                    <div class="input"><input type="checkbox" id="filter_chats_para" name="paragraph"{% if "paragraph" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_para">Paragraph</label></div>
-                    <div class="input"><input type="checkbox" id="filter_chats_either" name="either"{% if "either" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_either">Either</label></div>
-                </p>
+                <div class="input"><input type="checkbox" id="filter_chats_script" name="script"{% if "script" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_script">Script</label></div>
+                <div class="input"><input type="checkbox" id="filter_chats_para" name="paragraph"{% if "paragraph" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_para">Paragraph</label></div>
+                <div class="input"><input type="checkbox" id="filter_chats_either" name="either"{% if "either" in style_filter: %} checked="checked"{% endif %}><label for="filter_chats_either">Either</label></div>
+            </p>
             <p class="textlabel">Level:
-                    <div class="input"><input type="checkbox" id="filter_chats_sfw" name="sfw"{% if "sfw" in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_sfw">SFW</label></div>
-                    <div class="input"><input type="checkbox" id="filter_chats_nsfw" name="nsfw"{% if "nsfw" in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_nsfw">NSFW</label></div>
-                    <div class="input"><input type="checkbox" id="filter_chats_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_nsfwe">NSFW extreme</label></div>
-                </p>
+                {% for option, name in level_options.items(): %}
+                    <div class="input"><input type="checkbox" id="filter_chats_{{option}}" name="{{option}}"{% if option in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_{{option}}">{{name}}</label></div>
+                {% endfor %}
+            </p>
             <p><button type="submit">Apply</button></p>
         </form>
             <ul id="group_chats">
             {% for chat in groups: %}
             <li>
                 <h3>{% if chat.publicity == "pinned": %}<span title="Pinned chat">🔮</span> {% endif %}<a href="{{url_for("rp_chat", url=chat.url)}}">{{chat.title}}</a></h3>
-                <p class="subtitle">{{chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.level] }}, {{chat.online}} online.</p>
+                <p class="subtitle">{{chat.style.capitalize()}} style, {{ level_options[chat.level] }}, {{chat.online}} online.</p>
                 <p class="desc" tabindex="0">{% if chat.topic != "": %}
                 <span title="expand description">{{chat.topic}}</span>
                 {% endif %}</p>

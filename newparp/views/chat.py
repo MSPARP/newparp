@@ -15,6 +15,7 @@ from newparp.helpers.auth import admin_required, activation_required
 from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from newparp.model import (
     case_options,
+    level_options,
     AnyChat,
     Ban,
     Character,
@@ -254,6 +255,7 @@ def chat(chat, pm_user, url, fmt=None):
         latest_message_id=latest_message_id,
         latest_time=latest_time,
         case_options=case_options,
+        level_options=level_options,
         characters=characters,
         character_shortcuts=character_shortcuts,
         fandoms=fandoms,

@@ -1013,7 +1013,12 @@ var msparp = (function() {
 				"paragraph": "Please use <span class=\"flag_label\">paragraph style</span>.",
 				"either": "<span class=\"flag_label\">Script</span> and <span class=\"flag_label\">paragraph style</span> are allowed.",
 			};
-			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
+			var level_names = {
+				"sfw": "SFW",
+				"nsfws": "NSFW (sexual)",
+				"nsfwv": "NSFW (violent)",
+				"nsfw-extreme": "NSFW extreme",
+			};
 			var group_descriptions = {
 				"admin": "God tier moderator - MSPARP staff.",
 				"creator": "Chat creator - can silence, kick and ban other users.",

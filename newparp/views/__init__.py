@@ -138,6 +138,7 @@ def groups(fmt=None):
 
     return render_template(
         "groups.html",
+        level_options=level_options,
         groups=chat_dicts,
         style_filter=style_filter,
         level_filter=level_filter,

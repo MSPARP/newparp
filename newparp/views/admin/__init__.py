@@ -13,6 +13,7 @@ from uuid import uuid4
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required, permission_required
 from newparp.model import (
+    level_options,
     AdminLogEntry,
     AdminTier,
     AdminTierPermission,
@@ -611,6 +612,7 @@ def groups(fmt=None, page=1):
     )
     return render_template(
         "admin/groups.html",
+        level_options=level_options,
         groups=groups,
         paginator=paginator,
     )
