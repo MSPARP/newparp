@@ -77,7 +77,7 @@ case_options_enum = Enum(*list(case_options.keys()), name="case")
 level_options = OrderedDict([
     ("sfw",          "SFW"),
     ("nsfws",        "NSFW (sexual)"),
-    ("nfswv",        "NSFW (violent)"),
+    ("nsfwv",        "NSFW (violent)"),
     ("nsfw-extreme", "NSFW extreme"),
 ])
 

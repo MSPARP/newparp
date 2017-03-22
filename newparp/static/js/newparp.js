@@ -1232,13 +1232,17 @@ var msparp = (function() {
 					},
 				},
 				{
-					"regex": /^level (sfw|nsfw|nsfw-extreme)$/,
+					"regex": /^level (sfw|nsfw(s|v)?|nsfw-extreme)$/,
 					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
+						if (match[1] == "nsfw") {
+							return "The NSFW option has been split. Please choose \"nsfws\" for sexual content or \"nsfwv\" for violent content.";
+						}
 						return "Mark the chat as " + level_names[match[1]] + ".";
 					},
 					"action": function(match) {
+						if (match[1] == "nsfw") { return; }
 						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": match[1] });
 					},
 				},

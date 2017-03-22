@@ -111,7 +111,7 @@ def chat_list(fmt=None, type=None, page=1):
 
     return render_template(
         "chat_list.html",
-        level_options,
+        level_options=level_options,
         type=type,
         chats=chat_dicts,
         paginator=paginator,
