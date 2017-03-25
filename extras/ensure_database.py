@@ -7,16 +7,15 @@ import sys
 import time
 import uuid
 
-from redis import StrictRedis
 from redis.exceptions import RedisError
 from sqlalchemy.exc import ProgrammingError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.model import sm, SearchCharacterGroup
-from newparp.model.connections import redis_pool
+from newparp.model.connections import redis_pool, NewparpRedis
 
 
-def init_db(redis: StrictRedis):
+def init_db(redis: NewparpRedis):
     print("Attempting to init database.")
 
     lock = str(uuid.uuid4())
@@ -34,7 +33,7 @@ def init_db(redis: StrictRedis):
 
 try:
     db = sm()
-    redis = StrictRedis(connection_pool=redis_pool)
+    redis = NewparpRedis(connection_pool=redis_pool)
 
     # Redis online check.
     while True:

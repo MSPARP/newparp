@@ -5,12 +5,13 @@ from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
+from redis.client import BasePipeline
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, User
-from newparp.helpers.users import queue_user_meta, get_ip_banned
+
 
 
 @contextmanager
@@ -34,6 +35,37 @@ redis_pool = ConnectionPool(
     decode_responses=True,
 )
 
+
+class NewparpRedis(StrictRedis):
+    def pipeline(self, transaction=True, shard_hint=None):
+        """
+        Copy of StrictRedis.pipeline() which uses NewparpPipeline.
+        """
+        return NewparpPipeline(
+            self.connection_pool,
+            self.response_callbacks,
+            transaction,
+            shard_hint,
+        )
+
+    def increx(self, key, expire=60, incr=1):
+        """Increment a key and set its TTL. Like SETEX but for INCR."""
+        pipe = self if isinstance(self, BasePipeline) else self.pipeline()
+        pipe.incr(key, incr)
+        pipe.expire(key, expire)
+        if not isinstance(self, BasePipeline):
+            result, _ = pipe.execute()
+            return result
+
+
+class NewparpPipeline(BasePipeline, NewparpRedis):
+    pass
+
+
+# relies on importing NewparpRedis
+from newparp.helpers.users import queue_user_meta, get_ip_banned
+
+
 cookie_domain = "." + os.environ["BASE_DOMAIN"]
 
 
@@ -53,7 +85,7 @@ def set_cookie(response):
 
 
 def redis_connect():
-    g.redis = StrictRedis(connection_pool=redis_pool)
+    g.redis = NewparpRedis(connection_pool=redis_pool)
     if "newparp" in request.cookies:
         g.session_id = request.cookies["newparp"]
         g.user_id = g.redis.get("session:" + g.session_id)
