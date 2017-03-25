@@ -6,7 +6,7 @@ from sqlalchemy.orm import joinedload
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import activation_required
 from newparp.helpers.characters import character_query, save_character_from_form, validate_character_form
-from newparp.model import case_options, Character, CharacterTag, SearchCharacter, SearchCharacterGroup
+from newparp.model import case_options, Character, CharacterTag, Fandom, SearchCharacter, SearchCharacterGroup
 from newparp.model.connections import use_db
 
 
@@ -32,12 +32,17 @@ def character_list(fmt=None):
 @activation_required
 def new_character_get():
 
-    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
-        SearchCharacterGroup.order,
-    ).options(joinedload(SearchCharacterGroup.characters)).all()
+    fandoms = (
+        g.db.query(Fandom)
+        .order_by(Fandom.name)
+        .options(
+            joinedload(Fandom.groups)
+            .joinedload(SearchCharacterGroup.characters)
+        ).all()
+    )
 
     character_defaults = {_.name: _.default.arg for _ in Character.__table__.columns if _.default}
-    character_defaults["search_character"] = search_character_groups[0].characters[0]
+    character_defaults["search_character"] = fandoms[0].groups[0].characters[0]
 
     return render_template(
         "characters/character.html",
@@ -45,7 +50,7 @@ def new_character_get():
         replacements=[],
         regexes=[],
         character_tags={},
-        search_character_groups=search_character_groups,
+        fandoms=fandoms,
         case_options=case_options,
     )
 
@@ -65,9 +70,14 @@ def character(character_id, fmt=None):
 
     character = character_query(character_id, join_tags=True)
 
-    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
-        SearchCharacterGroup.order,
-    ).options(joinedload(SearchCharacterGroup.characters)).all()
+    fandoms = (
+        g.db.query(Fandom)
+        .order_by(Fandom.name)
+        .options(
+            joinedload(Fandom.groups)
+            .joinedload(SearchCharacterGroup.characters)
+        ).all()
+    )
 
     if fmt == "json":
         return jsonify(character.to_dict(include_default=True, include_options=True))
@@ -81,7 +91,7 @@ def character(character_id, fmt=None):
             tag_type: ", ".join(tag["alias"] for tag in tags)
             for tag_type, tags in character.tags_by_type().items()
         },
-        search_character_groups=search_character_groups,
+        fandoms=fandoms,
         case_options=case_options,
     )
 

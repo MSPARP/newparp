@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required
-from newparp.model import case_options, Character, GroupChat, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
+from newparp.model import case_options, level_options, Character, GroupChat, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
 
@@ -22,9 +22,14 @@ def home():
 
     characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
 
-    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
-        SearchCharacterGroup.order,
-    ).options(joinedload(SearchCharacterGroup.characters)).all()
+    fandoms = (
+        g.db.query(Fandom)
+        .order_by(Fandom.name)
+        .options(
+            joinedload(Fandom.groups)
+            .joinedload(SearchCharacterGroup.characters)
+        ).all()
+    )
 
     picky = set(_[0] for _ in g.db.query(
         SearchCharacterChoice.search_character_id,
@@ -34,8 +39,9 @@ def home():
     return render_template(
         "home_search.html",
         characters=characters,
-        search_character_groups=search_character_groups,
+        fandoms=fandoms,
         case_options=case_options,
+        level_options=level_options,
         replacements=json.loads(g.user.replacements),
         regexes=json.loads(g.user.regexes),
         User=User,
@@ -132,6 +138,7 @@ def groups(fmt=None):
 
     return render_template(
         "groups.html",
+        level_options=level_options,
         groups=chat_dicts,
         style_filter=style_filter,
         level_filter=level_filter,

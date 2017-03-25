@@ -20,6 +20,7 @@ from newparp.helpers.chat import (
 )
 from newparp.model import (
     case_options,
+    level_options,
     Ban,
     Block,
     Character,
@@ -363,14 +364,16 @@ def set_flag():
         elif g.chat.style == "either":
             message = "%s [%s] marked the chat as either style."
 
-    elif (flag == "level" and value in ("sfw", "nsfw", "nsfw-extreme")):
+    elif (flag == "level" and value in level_options):
         if value == g.chat.level:
             return "", 204
         g.chat.level = value
         if g.chat.level == "sfw":
             message = "%s [%s] marked the chat as safe for work."
-        elif g.chat.level == "nsfw":
-            message = "%s [%s] marked the chat as not safe for work."
+        elif g.chat.level == "nsfws":
+            message = "%s [%s] marked the chat as not safe for work due to sexual content."
+        elif g.chat.level == "nsfwv":
+            message = "%s [%s] marked the chat as not safe for work due to violent content."
         elif g.chat.level == "nsfw-extreme":
             message = "%s [%s] marked the chat as NSFW extreme."
 

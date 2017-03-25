@@ -47,15 +47,15 @@ def validate_character_form(form):
 
     # Validate color.
     # <input type="color"> always prefixes with a #.
-    if form["color"][0] == "#":
-        color = form["color"][1:]
-    else:
-        color = form["color"]
+    color = form.get("color", "000000")
+    if color and color[0] == "#":
+        color = color[1:]
     if not color_validator.match(color):
         abort(400)
 
     # Validate case.
-    if form["case"] not in case_options:
+    case = form.get("case", "normal")
+    if case not in case_options:
         abort(400)
 
     # XXX PUT LENGTH LIMIT ON REPLACEMENTS?
@@ -88,9 +88,9 @@ def validate_character_form(form):
         "name": form["name"][:50],
         "acronym": form["acronym"][:15],
         "color": color,
-        "quirk_prefix": form["quirk_prefix"][:2000],
-        "quirk_suffix": form["quirk_suffix"][:2000],
-        "case": form["case"],
+        "quirk_prefix": form.get("quirk_prefix", "")[:2000],
+        "quirk_suffix": form.get("quirk_suffix", "")[:2000],
+        "case": case,
         "replacements": json_replacements,
         "regexes": json_regexes,
     }

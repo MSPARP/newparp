@@ -5,6 +5,7 @@ import sys
 import time
 
 from bcrypt import gensalt, hashpw
+from collections import OrderedDict
 from pytz import timezone, utc
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
@@ -57,19 +58,28 @@ def now():
     return datetime.datetime.now()
 
 
-case_options = {
-    "alt-lines": "ALTERNATING lines",
-    "alternating": "AlTeRnAtInG",
-    "inverted": "iNVERTED",
-    "lower": "lower case",
-    "normal": "Normal",
-    "title": "Title Case",
-    "upper": "UPPER CASE",
-    "proper": "Proper grammar",
-    "first-letter": "First letter caps",
-}
+case_options = OrderedDict([
+    ("alt-lines",    "ALTERNATING lines"),
+    ("alternating",  "AlTeRnAtInG"),
+    ("inverted",     "iNVERTED"),
+    ("lower",        "lower case"),
+    ("normal",       "Normal"),
+    ("title",        "Title Case"),
+    ("upper",        "UPPER CASE"),
+    ("proper",       "Proper grammar"),
+    ("first-letter", "First letter caps"),
+])
 
 case_options_enum = Enum(*list(case_options.keys()), name="case")
+
+
+# TODO make this an enum and use sqlalchemy-enum34
+level_options = OrderedDict([
+    ("sfw",          "SFW"),
+    ("nsfws",        "NSFW (sexual)"),
+    ("nsfwv",        "NSFW (violent)"),
+    ("nsfw-extreme", "NSFW extreme"),
+])
 
 
 # 1. Classes
@@ -326,13 +336,33 @@ class Character(Base):
         return ucd
 
 
+class Fandom(Base):
+    __tablename__ = "fandoms"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(50), nullable=False)
+
+    def __repr__(self):
+        return "<Fandom #%s: %s>" % (self.id, self.name.encode("utf8"))
+
+
+class SearchCharacterGroup(Base):
+    __tablename__ = "search_character_groups"
+    id = Column(Integer, primary_key=True)
+    fandom_id = Column(Integer, ForeignKey("fandoms.id"), nullable=False)
+    name = Column(Unicode(50), nullable=False)
+    order = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
+
+
 class SearchCharacter(Base):
 
     __tablename__ = "search_characters"
 
     id = Column(Integer, primary_key=True)
-    title = Column(Unicode(50), nullable=False)
     group_id = Column(Integer, ForeignKey("search_character_groups.id"), nullable=False)
+    title = Column(Unicode(50), nullable=False)
     order = Column(Integer, nullable=False)
 
     name = Column(Unicode(50), nullable=False, default="anonymous")
@@ -370,16 +400,6 @@ class SearchCharacter(Base):
             ucd["replacements"] = json.loads(self.replacements)
             ucd["regexes"] = json.loads(self.regexes)
         return ucd
-
-
-class SearchCharacterGroup(Base):
-    __tablename__ = "search_character_groups"
-    id = Column(Integer, primary_key=True)
-    name = Column(Unicode(50), nullable=False)
-    order = Column(Integer, nullable=False)
-
-    def __repr__(self):
-        return "<SearchCharacterGroup #%s: %s>" % (self.id, self.name.encode("utf8"))
 
 
 class SearchCharacterChoice(Base):
@@ -468,9 +488,7 @@ class GroupChat(Chat):
         name="group_chats_style",
     ), nullable=False, default="script")
     level = Column(Enum(
-        "sfw",
-        "nsfw",
-        "nsfw-extreme",
+        *level_options.keys(),
         name="group_chats_level",
     ), nullable=False, default="sfw")
 
@@ -1013,6 +1031,7 @@ class AdminTierPermission(Base):
         "log",
         "spamless",
         "ip_bans",
+        "email_bans",
         name="admin_tier_permissions_permission",
     ), primary_key=True)
 
@@ -1133,6 +1152,7 @@ Block.blocked_chat_user = relation(
 Character.search_character = relation(SearchCharacter, backref="characters")
 Character.tags = relation(CharacterTag, backref="character", order_by=CharacterTag.alias)
 
+Fandom.groups = relation(SearchCharacterGroup, backref="fandom", order_by=SearchCharacterGroup.order)
 SearchCharacterGroup.characters = relation(SearchCharacter, backref="group", order_by=SearchCharacter.order)
 
 SearchCharacterChoice.user = relation(User, backref="search_character_choices")

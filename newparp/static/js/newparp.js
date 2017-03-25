@@ -403,8 +403,10 @@ var msparp = (function() {
 				switch (tag) {
 					case "bgcolor":
 					case "color":
-					case "font":
 						return $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML;
+					case "font":
+						// Gotta quote the font name so fonts starting with numbers work.
+						return $("<span>").css(tag_properties[tag], "'" + attribute + "'").html(raw_bbencode(content, admin))[0].outerHTML;
 					case "bshadow":
 					case "tshadow":
 						return admin ? $("<span>").css(tag_properties[tag], attribute).html(raw_bbencode(content, admin))[0].outerHTML : raw_bbencode(content, admin);
@@ -1011,7 +1013,12 @@ var msparp = (function() {
 				"paragraph": "Please use <span class=\"flag_label\">paragraph style</span>.",
 				"either": "<span class=\"flag_label\">Script</span> and <span class=\"flag_label\">paragraph style</span> are allowed.",
 			};
-			var level_names = { "sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme" };
+			var level_names = {
+				"sfw": "SFW",
+				"nsfws": "NSFW (sexual)",
+				"nsfwv": "NSFW (violent)",
+				"nsfw-extreme": "NSFW extreme",
+			};
 			var group_descriptions = {
 				"admin": "God tier moderator - MSPARP staff.",
 				"creator": "Chat creator - can silence, kick and ban other users.",
@@ -1225,13 +1232,17 @@ var msparp = (function() {
 					},
 				},
 				{
-					"regex": /^level (sfw|nsfw|nsfw-extreme)$/,
+					"regex": /^level (sfw|nsfw(s|v)?|nsfw-extreme)$/,
 					"chat_types": "group",
 					"minimum_rank": 1,
 					"description": function(match) {
+						if (match[1] == "nsfw") {
+							return "The NSFW option has been split. Please choose \"nsfws\" for sexual content or \"nsfwv\" for violent content.";
+						}
 						return "Mark the chat as " + level_names[match[1]] + ".";
 					},
 					"action": function(match) {
+						if (match[1] == "nsfw") { return; }
 						$.post("/chat_api/set_flag", { "chat_id": chat.id, "flag": "level", "value": match[1] });
 					},
 				},

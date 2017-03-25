@@ -1,4 +1,5 @@
 from newparp.model import SearchCharacter
+from newparp.model.connections import session_scope
 from newparp.tasks import celery, WorkerTask
 
 
@@ -14,6 +15,6 @@ def redis_test():
 
 @celery.task(base=WorkerTask, queue="test")
 def postgres_test():
-    postgres_test.db.query(SearchCharacter).first()
-    postgres_test.db.rollback()
+    with session_scope() as db:
+        db.query(SearchCharacter).first()
 

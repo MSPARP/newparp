@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from newparp.helpers.matchmaker import fetch_searcher, option_messages
 from newparp.model import Block, ChatUser, Message, SearchedChat, User
+from newparp.model.connections import session_scope
 from newparp.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
@@ -29,9 +30,6 @@ def generate_searching_counter():
 @celery.task(base=WorkerTask, queue="matchmaker")
 def new_searcher(searcher_id):
     redis = new_searcher.redis
-    if redis.exists("lock:matchmaker"):
-        new_searcher.apply_async((searcher_id,), countdown=2)
-        return
 
     logger.debug("new searcher: %s")
     searchers = redis.smembers("searchers")
@@ -49,8 +47,6 @@ def new_searcher(searcher_id):
         (compare.s(searcher_id, _) for _ in searchers if _ != searcher_id),
         comparison_callback.s(searcher_id),
     ).delay()
-
-    redis.setex("lock:matchmaker", 60, 1)
 
 
 @celery.task(base=WorkerTask, queue="matchmaker")
@@ -93,11 +89,16 @@ def compare(searcher_id_1, searcher_id_2):
     levels_in_common = s1.levels & s2.levels
     logger.debug("Levels in common: %s" % levels_in_common)
     if levels_in_common:
-        options.append(
-            "nsfw-extreme" if "nsfw-extreme" in levels_in_common
-            else "nsfw" if "nsfw" in levels_in_common
-            else "sfw"
-        )
+        if "nsfw-extreme" in levels_in_common:
+            options.append("nsfw-extreme")
+        elif "nsfws" in levels_in_common and "nsfwv" in levels_in_common:
+            options.append("nsfws-nsfwv")
+        elif "nsfws" in levels_in_common:
+            options.append("nsfws")
+        elif "nsfwv" in levels_in_common:
+            options.append("nsfwv")
+        else:
+            options.append("sfw")
     else:
         return None, None
 
@@ -131,7 +132,12 @@ def compare(searcher_id_1, searcher_id_2):
 @celery.task(base=WorkerTask, queue="matchmaker")
 def comparison_callback(results, searcher_id_1):
     redis = comparison_callback.redis
-    db = comparison_callback.db
+
+    if redis.exists("lock:matchmaker"):
+        logger.debug("locked. calling again in 1 second.")
+        comparison_callback.apply_async((results, searcher_id_1), countdown=1)
+        return
+    redis.setex("lock:matchmaker", 60, 1)
 
     # Check if there's a match.
     matched_searchers = [_ for _ in results if _[0] is not None]
@@ -149,40 +155,39 @@ def comparison_callback(results, searcher_id_1):
         redis.delete("lock:matchmaker")
         return
 
-    # Pick a second searcher from the matches.
-    for searcher_id_2, options in matched_searchers:
-        s2 = fetch_searcher(redis, searcher_id_2)
-        if all(s2[:-2]) and db.query(func.count("*")).select_from(Block).filter(or_(
-            and_(Block.blocking_user_id == s1.user_id, Block.blocked_user_id == s2.user_id),
-            and_(Block.blocking_user_id == s2.user_id, Block.blocked_user_id == s1.user_id),
-        )).scalar() == 0:
-            logger.debug("matched %s" % searcher_id_2)
-            break
-    else:
-        logger.debug("all matches have expired")
-        redis.delete("lock:matchmaker")
-        return
+    with session_scope() as db:
+        # Pick a second searcher from the matches.
+        for searcher_id_2, options in matched_searchers:
+            s2 = fetch_searcher(redis, searcher_id_2)
+            if all(s2[:-2]) and db.query(func.count("*")).select_from(Block).filter(or_(
+                and_(Block.blocking_user_id == s1.user_id, Block.blocked_user_id == s2.user_id),
+                and_(Block.blocking_user_id == s2.user_id, Block.blocked_user_id == s1.user_id),
+            )).scalar() == 0:
+                logger.debug("matched %s" % searcher_id_2)
+                break
+        else:
+            logger.debug("all matches have expired")
+            redis.delete("lock:matchmaker")
+            return
 
-    new_url = str(uuid4()).replace("-", "")
-    logger.info("matched %s and %s, sending to %s." % (s1.id, s2.id, new_url))
-    new_chat = SearchedChat(url=new_url)
-    db.add(new_chat)
-    db.flush()
+        new_url = str(uuid4()).replace("-", "")
+        logger.info("matched %s and %s, sending to %s." % (s1.id, s2.id, new_url))
+        new_chat = SearchedChat(url=new_url)
+        db.add(new_chat)
+        db.flush()
 
-    s1_user = db.query(User).filter(User.id == s1.user_id).one()
-    s2_user = db.query(User).filter(User.id == s2.user_id).one()
-    db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, search_character_id=s1.search_character_id, **s1.character))
-    if s1_user != s2_user:
-        db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, search_character_id=s2.search_character_id, **s2.character))
+        s1_user = db.query(User).filter(User.id == s1.user_id).one()
+        s2_user = db.query(User).filter(User.id == s2.user_id).one()
+        db.add(ChatUser.from_user(s1_user, chat_id=new_chat.id, number=1, search_character_id=s1.search_character_id, **s1.character))
+        if s1_user != s2_user:
+            db.add(ChatUser.from_user(s2_user, chat_id=new_chat.id, number=2, search_character_id=s2.search_character_id, **s2.character))
 
-    if options:
-        db.add(Message(
-            chat_id=new_chat.id,
-            type="search_info",
-            text=" ".join(option_messages[_] for _ in options),
-        ))
-
-    db.commit()
+        if options:
+            db.add(Message(
+                chat_id=new_chat.id,
+                type="search_info",
+                text=" ".join(option_messages[_] for _ in options),
+            ))
 
     pipe = redis.pipeline()
     match_key = "matched:%s:%s" % tuple(sorted([s1.user_id, s2.user_id]))

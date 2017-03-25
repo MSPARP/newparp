@@ -11,11 +11,14 @@
 {% if not character.id: %}
     <label class="textlabel char_group_label">In group</label>
     <div class="input select char_group_selector"><select name="group_id">
-            {% for group in groups: %}
+        {% for fandom in fandoms: %}
+        <optgroup label="{{fandom.name}}">
+            {% for group in fandom.groups: %}
             <option value="{{group.id}}"{% if request.args["group_id"] == group.id|string: %} selected="selected"{% endif %}>{{group.name}}</option>
             {% endfor %}
-        </select>
-    </div>
+        </optgroup>
+        {% endfor %}
+    </select></div>
 {% endif %}
     <div class="common_box creator_box">
         <h2><label><span>With settings</span></label></h2>

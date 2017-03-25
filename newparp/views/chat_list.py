@@ -8,6 +8,7 @@ from newparp.helpers import alt_formats
 from newparp.helpers.auth import activation_required
 from newparp.model import (
     case_options,
+    level_options,
     AnyChat,
     GroupChat,
     RouletteChat,
@@ -110,6 +111,7 @@ def chat_list(fmt=None, type=None, page=1):
 
     return render_template(
         "chat_list.html",
+        level_options=level_options,
         type=type,
         chats=chat_dicts,
         paginator=paginator,

@@ -5,6 +5,7 @@ from celery.utils.log import get_task_logger
 from sqlalchemy import and_
 
 from newparp.model import Chat, ChatUser, GroupChat, User
+from newparp.model.connections import session_scope
 from newparp.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
@@ -31,17 +32,17 @@ def generate_counters():
 
 @celery.task(base=WorkerTask, queue="worker")
 def unlist_chats():
-    unlist_chats.db.query(GroupChat).filter(and_(
-        GroupChat.id == Chat.id,
-        GroupChat.publicity == "listed",
-        GroupChat.last_message < datetime.datetime.now() - datetime.timedelta(7)
-    )).update({"publicity": "unlisted"})
-    unlist_chats.db.commit()
+    with session_scope() as db:
+        db.query(GroupChat).filter(and_(
+            GroupChat.id == Chat.id,
+            GroupChat.publicity == "listed",
+            GroupChat.last_message < datetime.datetime.now() - datetime.timedelta(7)
+        )).update({"publicity": "unlisted"})
+        db.commit()
 
 
 @celery.task(base=WorkerTask, queue="worker")
 def update_lastonline():
-    db = update_lastonline.db
     redis = update_lastonline.redis
 
     if redis.exists("lock:lastonline"):
@@ -61,22 +62,20 @@ def update_lastonline():
         except ValueError:
             continue
 
-        db.query(Chat).filter(Chat.id == chat_id).update({"last_message": posted}, synchronize_session=False)
+        with session_scope() as db:
+            db.query(Chat).filter(Chat.id == chat_id).update({"last_message": posted}, synchronize_session=False)
+            if len(online_user_ids) != 0:
+                db.query(ChatUser).filter(and_(
+                    ChatUser.user_id.in_(online_user_ids),
+                    ChatUser.chat_id == chat_id,
+                )).update({"last_online": posted}, synchronize_session=False)
 
-        if len(online_user_ids) != 0:
-            db.query(ChatUser).filter(and_(
-                ChatUser.user_id.in_(online_user_ids),
-                ChatUser.chat_id == chat_id,
-            )).update({"last_online": posted}, synchronize_session=False)
-
-        db.commit()
 
     redis.delete("lock:lastonline")
 
 
 @celery.task(base=WorkerTask, queue="worker")
 def update_user_meta():
-    db = update_user_meta.db
     redis = update_user_meta.redis
 
     if redis.exists("lock:metaupdate"):
@@ -96,26 +95,25 @@ def update_user_meta():
 
         msgtype, userid = key.split(":", 2)
 
-        if msgtype == "user" and "last_ip" in meta:
-            try:
-                last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
-            except (ValueError, KeyError):
-                last_online = datetime.now()
+        with session_scope() as db:
+            if msgtype == "user" and "last_ip" in meta:
+                try:
+                    last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
+                except (ValueError, KeyError):
+                    last_online = datetime.now()
 
-            db.query(User).filter(User.id == userid).update({
-                "last_online": last_online,
-                "last_ip": meta["last_ip"]
-            }, synchronize_session=False)
-        elif msgtype == "chatuser":
-            try:
-                last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
-            except (ValueError, KeyError):
-                last_online = datetime.now()
+                db.query(User).filter(User.id == userid).update({
+                    "last_online": last_online,
+                    "last_ip": meta["last_ip"]
+                }, synchronize_session=False)
+            elif msgtype == "chatuser":
+                try:
+                    last_online = datetime.datetime.utcfromtimestamp(float(meta["last_online"]))
+                except (ValueError, KeyError):
+                    last_online = datetime.now()
 
-            db.query(ChatUser).filter(and_(ChatUser.user_id == userid, ChatUser.chat_id == meta["chat_id"])).update({
-                "last_online": last_online
-            }, synchronize_session=False)
-
-        db.commit()
+                db.query(ChatUser).filter(and_(ChatUser.user_id == userid, ChatUser.chat_id == meta["chat_id"])).update({
+                    "last_online": last_online
+                }, synchronize_session=False)
 
     redis.delete("lock:metaupdate")

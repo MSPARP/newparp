@@ -125,7 +125,7 @@ class ChatHandler(WebSocketHandler):
         queue_user_meta(self, redis, self.request.headers.get("X-Forwarded-For", self.request.remote_ip))
 
         try:
-            if self.user.group == "banned":
+            if self.user.group != "active":
                 raise BannedException
 
             yield thread_pool.submit(authorize_joining, redis, self.db, self)

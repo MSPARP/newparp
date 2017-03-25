@@ -15,11 +15,13 @@ from newparp.helpers.auth import admin_required, activation_required
 from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from newparp.model import (
     case_options,
+    level_options,
     AnyChat,
     Ban,
     Character,
     Chat,
     ChatUser,
+    Fandom,
     GroupChat,
     Invite,
     Message,
@@ -232,9 +234,14 @@ def chat(chat, pm_user, url, fmt=None):
     # Character and search character info for settings form.
     characters = g.db.query(Character).filter(Character.user_id == g.user.id).order_by(Character.title).all()
     character_shortcuts = {_.shortcut: _.id for _ in characters if _.shortcut is not None}
-    search_character_groups = g.db.query(SearchCharacterGroup).order_by(
-        SearchCharacterGroup.order,
-    ).options(joinedload(SearchCharacterGroup.characters)).all()
+    fandoms = (
+        g.db.query(Fandom)
+        .order_by(Fandom.name)
+        .options(
+            joinedload(Fandom.groups)
+            .joinedload(SearchCharacterGroup.characters)
+        ).all()
+    )
 
     return render_template(
         "chat/chat.html",
@@ -248,9 +255,10 @@ def chat(chat, pm_user, url, fmt=None):
         latest_message_id=latest_message_id,
         latest_time=latest_time,
         case_options=case_options,
+        level_options=level_options,
         characters=characters,
         character_shortcuts=character_shortcuts,
-        search_character_groups=search_character_groups,
+        fandoms=fandoms,
         themes=themes,
         MAX_LENGTH=Message.MAX_LENGTH,
     )
@@ -635,7 +643,7 @@ def invite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db
@@ -701,7 +709,7 @@ def uninvite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db

@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers.auth import permission_required
 from newparp.helpers.characters import validate_character_form
-from newparp.model import case_options, Character, SearchCharacter, SearchCharacterGroup, SearchCharacterChoice, User
+from newparp.model import case_options, Character, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_connect
 
 
@@ -23,27 +23,53 @@ def search_character_query(id):
 def search_character_list():
     return render_template(
         "search_characters/search_character_list.html",
-        search_character_groups=g.db.query(SearchCharacterGroup).order_by(
-            SearchCharacterGroup.order,
-        ).options(joinedload(SearchCharacterGroup.characters)).all(),
+        fandoms=(
+            g.db.query(Fandom)
+            .order_by(Fandom.name)
+            .options(
+                joinedload(Fandom.groups)
+                .joinedload(SearchCharacterGroup.characters)
+            ).all()
+        )
     )
 
 
 @use_db
 @permission_required("search_characters")
-def new_search_character_group_post():
-    name = request.form["name"].strip()
+def new_fandom_post():
+    name = request.form["name"].strip()[:100]
     if len(name) == 0:
         abort(400)
-    order = (g.db.query(func.max(SearchCharacterGroup.order)).scalar() or 0) + 1
-    g.db.add(SearchCharacterGroup(name=name, order=order))
+    g.db.add(Fandom(name=name))
+    return redirect(url_for("rp_search_character_list"))
+
+
+@use_db
+@permission_required("search_characters")
+def new_search_character_group_post():
+    name = request.form["name"].strip()[:100]
+    if len(name) == 0:
+        abort(400)
+
+    try:
+        fandom = g.db.query(Fandom).filter(Fandom.id == int(request.form["fandom_id"])).one()
+    except (ValueError, NoResultFound):
+        abort(404)
+
+    order = (
+        g.db.query(func.max(SearchCharacterGroup.order))
+        .filter(SearchCharacterGroup.fandom_id == fandom.id)
+        .scalar() or 0
+    ) + 1
+    g.db.add(SearchCharacterGroup(fandom_id=fandom.id, name=name, order=order))
+
     return redirect(url_for("rp_search_character_list"))
 
 
 @use_db
 @permission_required("search_characters")
 def new_search_character_get():
-    groups = g.db.query(SearchCharacterGroup).order_by(SearchCharacterGroup.order).all()
+    fandoms = g.db.query(Fandom).order_by(Fandom.name).options(joinedload(Fandom.groups)).all()
 
     character_defaults = {_.name: _.default.arg for _ in SearchCharacter.__table__.columns if _.default}
 
@@ -52,7 +78,7 @@ def new_search_character_get():
         character=character_defaults,
         replacements=[],
         regexes=[],
-        groups=groups,
+        fandoms=fandoms,
         case_options=case_options,
     )
 
@@ -77,7 +103,7 @@ def new_search_character_post():
     new_search_character = SearchCharacter(
         group_id=group.id,
         order=order,
-        text_preview=request.form["text_preview"],
+        text_preview=request.form.get("text_preview", SearchCharacter.text_preview.default.arg),
         **new_details
     )
     g.db.add(new_search_character)

@@ -11,12 +11,14 @@
                 {% endfor %}
             </optgroup>
             {% endif %}
-            {% for group in search_character_groups: %}
-            <optgroup label="{{group.name}}">
-                {% for character in group.characters: %}
-                <option value="s_{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+            {% for fandom in fandoms: %}
+                {% for group in fandom.groups: %}
+                <optgroup label="{{fandom.name}}: {{group.name}}">
+                    {% for character in group.characters: %}
+                    <option value="s_{{character.id}}"{% if character.id == g.user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                    {% endfor %}
+                </optgroup>
                 {% endfor %}
-            </optgroup>
             {% endfor %}
         </select></div></h2>
         <input type="hidden" name="search_character_id" value="{{g.user.search_character_id}}">
@@ -150,9 +152,9 @@
                     <div>
                         <span class="textlabel">Content:</span>
                         <div class="content_boxes">
-                            <div class="input"><input type="checkbox" id="content_sfw" name="sfw"{% if "sfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_sfw">SFW</label></div>
-                            <div class="input"><input type="checkbox" id="content_nsfw" name="nsfw"{% if "nsfw" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfw">NSFW</label></div>
-                            <div class="input"><input type="checkbox" id="content_nsfwe" name="nsfw-extreme"{% if "nsfw-extreme" in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_nsfwe">NSFW extreme</label></div>
+                            {% for option, name in level_options.items(): %}
+                                <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -180,18 +182,21 @@
             <h2 class="enable_anim"><label for="toggle_search_for_characters"><span>With filters</span></label></h2>
             <div id="filter_settings">
             <span class="textlabel">click &#x25BE;/&#x25B4; to expand or collapse categories</span>
-                {% for group in search_character_groups: %}
-                <fieldset class="character_list">
-                    <legend><div class='input'><input id="group_{{group.id}}" name="group_{{group.id}}" type="checkbox"><label for="group_{{group.id}}">{{group.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_group_{{group.id}}"><label for="toggle_group_{{group.id}}"><span class="groupcount"></span></label>
-                    <ul>
-                    {% for character in group.characters: %}
-                    <li><div class='input'>
-                        <input id="picky_{{character.id}}" name="picky_{{character.id}}" type="checkbox" {% if character.id in picky: %} checked="checked"{% endif %}>
-                        <label for="picky_{{character.id}}"><span class="character_name">{{character.title}}</span>
-                    </label></div></li>
-                    {% endfor %}
-                    </ul>
-                </fieldset>
+                {% for fandom in fandoms %}
+                    <fieldset class="character_list">
+                        <legend><div class='input'><input id="fandom_{{fandom.id}}" name="fandom_{{fandom.id}}" type="checkbox"><label for="fandom_{{fandom.id}}">{{fandom.name}}</label></div></legend> <input type="checkbox" class="group_toggle" id="toggle_fandom_{{fandom.id}}"><label for="toggle_fandom_{{fandom.id}}"><span class="groupcount"></span></label>
+                        {% for group in fandom.groups: %}
+                            <h3>{{group.name}}</h3>
+                            <ul>
+                            {% for character in group.characters: %}
+                            <li><div class='input'>
+                                <input id="picky_{{character.id}}" name="picky_{{character.id}}" type="checkbox" {% if character.id in picky: %} checked="checked"{% endif %}>
+                                <label for="picky_{{character.id}}"><span class="character_name">{{character.title}}</span>
+                            </label></div></li>
+                            {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    </fieldset>
                 {% endfor %}
             </div>
         </div>

@@ -217,9 +217,9 @@
                         <option value="either">Either style</option>
                     </select></p></div>
                     <div class="input select slimdrop"><p><select id="flag_level">
-                        <option value="sfw">Safe for work</option>
-                        <option value="nsfw">Not safe for work</option>
-                        <option value="nsfw-extreme">NSFW extreme</option>
+                        {% for option, name in level_options.items(): %}
+                            <option value="{{option}}">{{name}}</option>
+                        {% endfor %}
                     </select></p></div>
                 </section>
                 <section id="flag_messages">
@@ -258,12 +258,14 @@
                             {% endfor %}
                         </optgroup>
                         {% endif %}
-                        {% for group in search_character_groups: %}
-                        <optgroup label="{{group.name}}">
-                            {% for character in group.characters: %}
-                            <option value="s_{{character.id}}"{% if character.id == chat_user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                        {% for fandom in fandoms: %}
+                            {% for group in fandom.groups: %}
+                            <optgroup label="{{fandom.name}}: {{group.name}}">
+                                {% for character in group.characters: %}
+                                <option value="s_{{character.id}}"{% if character.id == chat_user.search_character_id %} selected="selected"{% endif %}>{{character.title}}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
-                        </optgroup>
                         {% endfor %}
                     </select></div>
                     <input type="hidden" name="search_character_id" value="{{g.user.search_character_id}}">

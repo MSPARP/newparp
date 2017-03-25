@@ -37,7 +37,7 @@
                             <a href="{{url_for("rp_chat_list", type=chat.chat.type)}}">{{"PM" if chat.chat.type == "pm" else chat.chat.type.capitalize()}}</a>,
                         {% endif %}
                         {% if chat.chat.type == "group": %}
-                            {{chat.chat.style.capitalize()}} style, {{ {"sfw": "SFW", "nsfw": "NSFW", "nsfw-extreme": "NSFW extreme"}[chat.chat.level] }},
+                            {{chat.chat.style.capitalize()}} style, {{level_options[chat.chat.level]}},
                         {% endif %}
                 		{% if chat.chat.type == "pm": %}
                 			{{"online" if chat.chat.partner_online else "offline"}}.

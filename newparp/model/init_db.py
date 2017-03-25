@@ -6,7 +6,7 @@ from alembic import command
 from sqlalchemy.engine.reflection import Inspector
 from sqlalchemy.orm.exc import NoResultFound
 
-from newparp.model import Base, engine, SearchCharacter, SearchCharacterGroup, sm, AdminTier, AdminTierPermission
+from newparp.model import Base, engine, Fandom, SearchCharacter, SearchCharacterGroup, sm, AdminTier, AdminTierPermission
 
 def init_db():
 
@@ -23,19 +23,27 @@ def init_db():
     # Initialise search characters if necessary.
     db = sm()
     try:
-        special_other = db.query(SearchCharacterGroup).filter(SearchCharacterGroup.id == 1).one()
+        special_other_fandom = db.query(Fandom).filter(Fandom.id == 1).one()
+        print("Special/other fandom found.")
+    except NoResultFound:
+        print("Special/other fandom not found, creating.")
+        special_other_fandom = Fandom(name="Special/other")
+        db.add(special_other_fandom)
+        db.flush()
+    try:
+        special_other_group = db.query(SearchCharacterGroup).filter(SearchCharacterGroup.id == 1).one()
         print("Special/other group found.")
     except NoResultFound:
         print("Special/other group not found, creating.")
-        special_other = SearchCharacterGroup(name="Special/other", order=1)
-        db.add(special_other)
+        special_other_group = SearchCharacterGroup(name="Special/other", fandom=special_other_fandom, order=1)
+        db.add(special_other_group)
         db.flush()
     try:
         anonymous_other = db.query(SearchCharacter).filter(SearchCharacter.id == 1).one()
         print("Anon/other character found.")
     except NoResultFound:
         print("Anon/other character not found, creating.")
-        special_other = SearchCharacter(group_id=1, order=1, title="Anonymous/other")
+        special_other = SearchCharacter(title="Anonymous/other", group=special_other_group, order=1)
         db.add(special_other)
         db.flush()
     db.commit()
