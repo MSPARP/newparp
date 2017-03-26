@@ -9,6 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers.chat import send_message
 from newparp.model import AnyChat, ChatUser, Message, User, SpamlessFilter
+from newparp.model.connections import session_scope
 from newparp.tasks import celery, WorkerTask
 
 lists = {"reload": "0"}
@@ -33,7 +34,9 @@ class CheckSpamTask(WorkerTask):
         logger.info("reload")
         lists["reload"] = self.redis.get("spamless:reload")
 
-        filters = self.db.query(SpamlessFilter).all()
+        with session_scope() as db:
+            filters = db.query(SpamlessFilter).all()
+
         lists["banned_names"] = [
             re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
             for _ in filters if _.type == "banned_names"
@@ -69,57 +72,55 @@ class CheckSpamTask(WorkerTask):
                 self.check_warnlist(chat_id, message)
 
             except Mark as e:
-                q = self.db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": str(e)})
-                message.update({"spam_flag": str(e)})
-                self.redis.publish("spamless:live", json.dumps(message))
-                self.db.commit()
+                with session_scope() as db():
+                    q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": str(e)})
+                    message.update({"spam_flag": str(e)})
+                    self.redis.publish("spamless:live", json.dumps(message))
 
             except Silence as e:
+                with session_scope() as db:
+                    # XXX maybe cache this?
+                    try:
+                        chat_user, user, chat = db.query(
+                            ChatUser, User, AnyChat,
+                        ).join(
+                            User, ChatUser.user_id == User.id,
+                        ).join(
+                            AnyChat, ChatUser.chat_id == AnyChat.id,
+                        ).filter(and_(
+                            ChatUser.chat_id == chat_id,
+                            ChatUser.number == message["user_number"],
+                        )).one()
+                    except NoResultFound:
+                        continue
 
-                # XXX maybe cache this?
-                try:
-                    chat_user, user, chat = self.db.query(
-                        ChatUser, User, AnyChat,
-                    ).join(
-                        User, ChatUser.user_id == User.id,
-                    ).join(
-                        AnyChat, ChatUser.chat_id == AnyChat.id,
-                    ).filter(and_(
-                        ChatUser.chat_id == chat_id,
-                        ChatUser.number == message["user_number"],
-                    )).one()
-                except NoResultFound:
-                    continue
+                    if chat.type != "group":
+                        flag_suffix = chat.type.upper()
+                    elif chat_user.computed_group in ("admin", "creator"):
+                        flag_suffix = chat_user.computed_group.upper()
+                    else:
+                        flag_suffix = "SILENCED"
 
-                if chat.type != "group":
-                    flag_suffix = chat.type.upper()
-                elif chat_user.computed_group in ("admin", "creator"):
-                    flag_suffix = chat_user.computed_group.upper()
-                else:
-                    flag_suffix = "SILENCED"
+                    db.query(Message).filter(Message.id == message["id"]).update({
+                        "spam_flag": str(e) + " " + flag_suffix,
+                    })
 
-                self.db.query(Message).filter(Message.id == message["id"]).update({
-                    "spam_flag": str(e) + " " + flag_suffix,
-                })
+                    message.update({"spam_flag": str(e) + " " + flag_suffix})
+                    self.redis.publish("spamless:live", json.dumps(message))
 
-                message.update({"spam_flag": str(e) + " " + flag_suffix})
-                self.redis.publish("spamless:live", json.dumps(message))
-
-                if flag_suffix == "SILENCED":
-                    self.db.query(ChatUser).filter(and_(
-                        ChatUser.chat_id == chat_id,
-                        ChatUser.number == message["user_number"]
-                    )).update({"group": "silent"})
-                    send_message(self.db, self.redis, Message(
-                        chat_id=chat_id,
-                        type="spamless",
-                        name="The Spamless",
-                        acronym="\u264b",
-                        text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
-                        color="626262"
-                    ), True)
-
-                self.db.commit()
+                    if flag_suffix == "SILENCED":
+                        db.query(ChatUser).filter(and_(
+                            ChatUser.chat_id == chat_id,
+                            ChatUser.number == message["user_number"]
+                        )).update({"group": "silent"})
+                        send_message(db, self.redis, Message(
+                            chat_id=chat_id,
+                            type="spamless",
+                            name="The Spamless",
+                            acronym="\u264b",
+                            text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
+                            color="626262"
+                        ), True)
 
     def check_connection_spam(self, chat_id, message):
         if message["type"] not in ("join", "disconnect", "timeout", "user_info"):
