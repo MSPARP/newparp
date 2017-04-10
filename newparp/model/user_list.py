@@ -12,6 +12,7 @@ class UserListStore(object):
     def __init__(self, redis, chat_id):
         self.redis   = redis
         self.chat_id = chat_id
+        self.typing_key = "chat:%s:typing" % self.chat_id
 
     def socket_join(self, socket_id):
         raise NotImplementedError
@@ -29,13 +30,22 @@ class UserListStore(object):
         raise NotImplementedError
 
     def user_start_typing(self, user_number):
-        raise NotImplementedError
+        """
+        Mark a user as typing. Returns a bool indicating whether the user's
+        typing state has changed.
+        """
+        return bool(self.redis.sadd(self.typing_key, user_number))
 
     def user_stop_typing(self, user_number):
-        raise NotImplementedError
+        """
+        Mark a user as no longer typing. Returns a bool indicating whether the
+        user's typing state has changed.
+        """
+        return bool(self.redis.srem(self.typing_key, user_number))
 
     def user_numbers_typing(self):
-        raise NotImplementedError
+        """Returns a list of user numbers who are typing."""
+        return list(int(_) for _ in self.redis.smembers(self.typing_key))
 
     # TODO manage kicking here too?
 
