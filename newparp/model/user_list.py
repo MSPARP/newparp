@@ -17,8 +17,25 @@ class UserListStore(object):
     def socket_join(self, socket_id):
         raise NotImplementedError
 
+    socket_ping_script = """
+        local user_id_from_chat = redis.call("hget", "chat:"..ARGV[1]..":online", ARGV[2])
+        if not user_id_from_chat then return false end
+
+        local session_id = redis.call("get", "chat:"..ARGV[1]..":online:"..ARGV[2])
+        if not session_id then return false end
+
+        redis.call("expire", "chat:"..ARGV[1]..":online:"..ARGV[2], 30)
+        return true
+    """
+
     def socket_ping(self, socket_id):
-        raise NotImplementedError
+        """
+        Bumps a socket's ping time to avoid timeouts. This raises
+        PingTimeoutException if they've already timed out.
+        """
+        result = self.redis.eval(self.socket_ping_script, 0, self.chat_id, socket_id)
+        if not result:
+            raise PingTimeoutException
 
     def socket_disconnect(self, socket_id):
         raise NotImplementedError
@@ -49,3 +66,5 @@ class UserListStore(object):
 
     # TODO manage kicking here too?
 
+
+class PingTimeoutException(Exception): pass
