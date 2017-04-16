@@ -181,32 +181,6 @@ def join(redis, db, context):
     return not user_online
 
 
-class PingTimeoutException(Exception): pass
-
-
-def ping(redis, db, context):
-    """
-    Bumps a socket's ping time to avoid timeouts.
-
-    This raises PingTimeoutException if they've already timed out.
-    """
-    result = redis.eval("""
-    local user_id_from_chat = redis.call("hget", "chat:"..ARGV[1]..":online", ARGV[2])
-    if not user_id_from_chat then return false end
-
-    local session_id = redis.call("get", "chat:"..ARGV[1]..":online:"..ARGV[2])
-    if not session_id then return false end
-
-    local user_id_from_session_id = redis.call("get", "session:"..session_id)
-    if user_id_from_session_id ~= user_id_from_chat then return false end
-
-    redis.call("expire", "chat:"..ARGV[1]..":online:"..ARGV[2], 30)
-    return true
-    """, 0, context.chat_id, context.id)
-    if not result:
-        raise PingTimeoutException
-
-
 def send_message(db, redis, message, force_userlist=False):
 
     db.add(message)
@@ -312,50 +286,6 @@ def send_userlist(db, redis, chat):
         "messages": [],
         "users": get_userlist(db, redis, chat),
     }))
-
-
-def disconnect(redis, chat_id, socket_id):
-    """
-    Removes a socket from a chat.
-
-    Returns a boolean indicating whether a quit message should be sent
-    afterwards.
-    """
-    pipe = redis.pipeline()
-    pipe.hget("chat:%s:online" % chat_id, socket_id)
-    pipe.hdel("chat:%s:online" % chat_id, socket_id)
-    pipe.delete("chat:%s:online:%s" % (chat_id, socket_id))
-    pipe.hvals("chat:%s:online" % chat_id)
-    # TODO remember to clear the typing key
-    user_id, _, _, new_user_ids = pipe.execute()
-    if not user_id:
-        return False
-    return user_id not in new_user_ids
-
-
-def disconnect_user(redis, chat_id, user_id):
-    """
-    Removes all of a user's sockets from a chat.
-
-    Returns a boolean indicating whether the user had any online sockets.
-    """
-    # TODO remember to clear the typing key
-    result = redis.eval("""
-    local had_online_socket = false
-    local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
-    if #online_list == 0 then return false end
-    for i = 1, #online_list, 2 do
-        local socket_id = online_list[i]
-        local user_id = online_list[i+1]
-        if user_id == ARGV[2] then
-            redis.call("hdel", "chat:"..ARGV[1]..":online", socket_id)
-            redis.call("del",  "chat:"..ARGV[1]..":online:"..socket_id)
-            had_online_socket = true
-        end
-    end
-    return had_online_socket
-    """, 0, chat_id, user_id)
-    return bool(result)
 
 
 def send_quit_message(db, redis, chat_user, user, chat, type="disconnect"):
