@@ -106,7 +106,33 @@ class UserListStore(object):
         return bool(result)
 
     def user_ids_online(self):
+        """Returns a set of user IDs who are online."""
         return set(int(_) for _ in self.redis.hvals(self.online_key))
+
+    session_has_open_socket_script = """
+        local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
+        if #online_list == 0 then return false end
+        for i = 1, #online_list, 2 do
+            local socket_id = online_list[i]
+            local user_id = online_list[i+1]
+            local session_id = redis.call("get", "chat:"..ARGV[1]..":online:"..socket_id)
+            if session_id == ARGV[2] then
+                if user_id == ARGV[3] then
+                    return true
+                end
+                return false
+            end
+        end
+        return false
+    """
+
+    def session_has_open_socket(self, session_id, user_id):
+        """
+        Indicates whether there's an open socket matching the session ID and
+        user ID.
+        """
+        result = self.redis.eval(self.session_has_open_socket_script, 0, self.chat_id, session_id, user_id)
+        return bool(result)
 
     def user_start_typing(self, user_number):
         """

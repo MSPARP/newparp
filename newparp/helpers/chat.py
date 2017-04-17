@@ -8,7 +8,6 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
 from newparp.model import AnyChat, Ban, Invite, ChatUser, Message
-from newparp.model.connections import db_connect, get_chat_user
 from newparp.tasks import celery
 
 
@@ -28,33 +27,11 @@ class KickedException(Exception):
     pass
 
 
-def has_open_socket(redis, chat_id, session_id):
-    """Indicates whether the session has an open socket."""
-    result = redis.eval("""
-    local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
-    if #online_list == 0 then return false end
-    for i = 1, #online_list, 2 do
-        local socket_id = online_list[i]
-        local user_id = online_list[i+1]
-        local session_id = redis.call("get", "chat:"..ARGV[1]..":online:"..socket_id)
-        if session_id == ARGV[2] then
-            if redis.call("get", "session:"..ARGV[2]) == user_id then
-                return true
-            end
-            return false
-        end
-    end
-    return false
-    """, 0, chat_id, session_id)
-    return bool(result)
-
-
 def require_socket(f):
     """Only allow this request if the user has a socket open."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        g.chat_id = int(request.form["chat_id"])
-        if not has_open_socket(g.redis, g.chat_id, g.session_id):
+        if not g.user_list.session_has_open_socket(g.session_id, g.user.id):
             print("doesn't have open socket")
             abort(403)
         return f(*args, **kwargs)

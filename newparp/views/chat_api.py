@@ -9,7 +9,6 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers.characters import validate_character_form
 from newparp.helpers.chat import (
     group_chat_only,
-    has_open_socket,
     require_socket,
     send_message,
     send_temporary_message,
@@ -35,10 +34,7 @@ from newparp.model.connections import (
     db_connect,
     db_commit,
     db_disconnect,
-    NewparpRedis,
-    redis_chat_pool,
 )
-from newparp.model.user_list import UserListStore
 from newparp.model.validators import color_validator
 
 
@@ -73,12 +69,10 @@ def send():
             pass
 
     # Clear typing status so the front end doesn't have to.
-    if has_open_socket(g.redis, g.chat.id, g.session_id):
-        typing_key = "chat:%s:typing" % g.chat.id
-        if g.redis.srem(typing_key, g.chat_user.number):
-            g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
-                "typing": list(int(_) for _ in g.redis.smembers(typing_key)),
-            }))
+    if g.user_list.user_stop_typing(g.chat_user.number):
+        g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
+            "typing": g.user_list.user_numbers_typing(),
+        }))
 
     g.chat_user.draft = ""
 
@@ -148,7 +142,7 @@ def set_group():
     # Admins and creators can do this from the chat users list, so only require
     # a socket if we're not one.
     if (
-        not has_open_socket(g.redis, g.chat.id, g.session_id)
+        not g.user_list.session_has_open_socket(g.session_id, g.user.id)
         and not (g.user.is_admin or g.user.id == g.chat.creator_id)
     ):
         abort(403)
@@ -256,8 +250,7 @@ def user_action():
         )
 
         # Only send a kick message if they're currently online.
-        user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), g.chat.id)
-        if user_list.user_disconnect(set_user.id, set_chat_user.number):
+        if g.user_list.user_disconnect(set_user.id, set_chat_user.number):
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=set_user.id,
@@ -325,8 +318,7 @@ def user_action():
             "{\"exit\":\"ban\"}",
         )
 
-        user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), g.chat.id)
-        user_list.user_disconnect(set_user.id, set_chat_user.number)
+        g.user_list.user_disconnect(set_user.id, set_chat_user.number)
 
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
