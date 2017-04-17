@@ -14,8 +14,6 @@ from newparp.helpers.chat import (
     send_message,
     send_temporary_message,
     send_userlist,
-    disconnect,
-    disconnect_user,
     send_quit_message,
     get_userlist,
 )
@@ -37,7 +35,10 @@ from newparp.model.connections import (
     db_connect,
     db_commit,
     db_disconnect,
+    NewparpRedis,
+    redis_chat_pool,
 )
+from newparp.model.user_list import UserListStore
 from newparp.model.validators import color_validator
 
 
@@ -244,16 +245,19 @@ def user_action():
         abort(403)
 
     if action == "kick":
-        g.redis.publish(
-            "channel:%s:%s" % (g.chat.id, set_user.id),
-            "{\"exit\":\"kick\"}",
-        )
         # Don't allow them back in for 30 seconds.
         kick_key = "kicked:%s:%s" % (g.chat.id, set_user.id)
         g.redis.set(kick_key, 1)
         g.redis.expire(kick_key, 30)
+
+        g.redis.publish(
+            "channel:%s:%s" % (g.chat.id, set_user.id),
+            "{\"exit\":\"kick\"}",
+        )
+
         # Only send a kick message if they're currently online.
-        if disconnect_user(g.redis, g.chat.id, set_user.id):
+        user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), g.chat.id)
+        if user_list.user_disconnect(set_user.id, set_chat_user.number):
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=set_user.id,
@@ -266,6 +270,7 @@ def user_action():
                     set_chat_user.name, set_chat_user.acronym,
                 )
             ))
+
         return "", 204
 
     elif action == "ban":
@@ -319,7 +324,10 @@ def user_action():
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"ban\"}",
         )
-        disconnect_user(g.redis, g.chat.id, set_user.id)
+
+        user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), g.chat.id)
+        user_list.user_disconnect(set_user.id, set_chat_user.number)
+
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=set_user.id,
