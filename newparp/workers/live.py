@@ -31,7 +31,7 @@ from newparp.helpers.chat import (
     KickedException,
     authorize_joining,
     kick_check,
-    join,
+    send_join_message,
     send_userlist,
     get_userlist,
     send_quit_message,
@@ -175,11 +175,14 @@ class ChatHandler(WebSocketHandler):
             "messages": [json.loads(_) for _ in messages],
         }))
 
-        join_message_sent = yield thread_pool.submit(join, redis, self.db, self)
+        online_state_changed = self.user_list.socket_join(self.id, self.session_id, self.user_id)
         self.joined = True
 
-        # Send userlist if nothing was sent by join().
-        if not join_message_sent:
+        # Send  a join message to everyone if we just joined, otherwise send the
+        # user list to the client.
+        if online_state_changed:
+            yield thread_pool.submit(send_join_message, redis, self.db, self)
+        else:
             userlist = yield thread_pool.submit(get_userlist, self.db, redis, self.chat)
             self.write_message(json.dumps({"users": userlist}))
 
@@ -191,7 +194,7 @@ class ChatHandler(WebSocketHandler):
             print("message: %s" % message)
         if message == "ping":
             try:
-                self.user_list.socket_ping(redis, self.id)
+                self.user_list.socket_ping(self.id)
             except PingTimeoutException:
                 # We've been reaped, so disconnect.
                 self.close()

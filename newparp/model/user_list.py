@@ -24,7 +24,7 @@ class UserListStore(object):
         Joins a socket to a chat. Returns a boolean indicating whether or not
         the user's online state changed.
         """
-        pipe = redis.pipeline()
+        pipe = self.redis.pipeline()
 
         # Remember whether they're already online.
         pipe.hvals(self.online_key)
