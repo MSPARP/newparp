@@ -1,3 +1,6 @@
+import json, time
+
+
 class UserListStore(object):
     """
     Helper class for managing online state.
@@ -16,8 +19,30 @@ class UserListStore(object):
         self.session_key = "chat:%s:online:%%s" % self.chat_id
         self.typing_key  = "chat:%s:typing"     % self.chat_id
 
-    def socket_join(self, socket_id):
-        raise NotImplementedError
+    def socket_join(self, socket_id, session_id, user_id):
+        """
+        Joins a socket to a chat. Returns a boolean indicating whether or not
+        the user's online state changed.
+        """
+        pipe = redis.pipeline()
+
+        # Remember whether they're already online.
+        pipe.hvals(self.online_key)
+
+        # Queue their last_online update.
+        # TODO make sure celery is reading this from the right redis instance
+        pipe.hset("queue:usermeta", "chatuser:%s" % user_id, json.dumps({
+            "last_online": str(time.time()),
+            "chat_id": self.chat_id,
+        }))
+
+        # Add them to the online list.
+        pipe.hset(self.online_key, socket_id, user_id)
+        pipe.setex(self.session_key % socket_id, 30, session_id)
+
+        result = pipe.execute()
+
+        return str(user_id) not in result[0]
 
     socket_ping_script = """
         local user_id_from_chat = redis.call("hget", "chat:"..ARGV[1]..":online", ARGV[2])

@@ -122,63 +122,33 @@ def kick_check(redis, context):
         raise KickedException
 
 
-def join(redis, db, context):
+def send_join_message(redis, db, context):
     """
-    Joins a socket to a chat.
-
-    This adds the socket to the chat's online sockets key, and if it's the only
-    socket a user currently has then it also does the following:
+    Send join message or delete previous disconnect message:
     * If the last message in the chat was a disconnect from this user, it's
       deleted.
     * If not, a join message is sent.
     * Either way, the user list is refreshed.
-
-    Returns a boolean indicating whether or not the user's online state changed.
     """
-
-    pipe = redis.pipeline()
-
-    # Remember whether they're already online
-    pipe.hvals("chat:%s:online" % context.chat.id)
-
-    # Queue their last_online update.
-    pipe.hset("queue:usermeta", "chatuser:%s" % (context.chat_user.user_id), json.dumps({
-        "last_online": str(time.time()),
-        "chat_id": context.chat_user.chat_id,
-    }))
-
-    # Add them to the online list.
-    online_id = context.id if hasattr(context, "id") else context.session_id
-    pipe.hset("chat:%s:online" % context.chat.id, online_id, context.user.id)
-    pipe.setex("chat:%s:online:%s" % (context.chat_id, context.id), 30, context.session_id)
-
-    result = pipe.execute()
-
-    user_online = str(context.user.id) in result[0]
-
-    # Send join message if user isn't already online. Or not, if they're silent.
-    if not user_online:
-        if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
-            send_userlist(db, redis, context.chat)
+    if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
+        send_userlist(db, redis, context.chat)
+    else:
+        last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.posted.desc()).first()
+        # If they just disconnected, delete the disconnect message instead.
+        if last_message is not None and last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
+            delete_message(db, redis, last_message, force_userlist=True)
         else:
-            last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.posted.desc()).first()
-            # If they just disconnected, delete the disconnect message instead.
-            if last_message is not None and last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
-                delete_message(db, redis, last_message, force_userlist=True)
-            else:
-                send_message(db, redis, Message(
-                    chat_id=context.chat.id,
-                    user_id=context.user.id,
-                    type="join",
-                    name=context.chat_user.name,
-                    text="%s [%s] joined chat. %s" % (
-                        context.chat_user.name,
-                        context.chat_user.acronym,
-                        "~~MSPARP STAFF~~" if context.user.is_admin else ""
-                    ),
-                ))
-
-    return not user_online
+            send_message(db, redis, Message(
+                chat_id=context.chat.id,
+                user_id=context.user.id,
+                type="join",
+                name=context.chat_user.name,
+                text="%s [%s] joined chat. %s" % (
+                    context.chat_user.name,
+                    context.chat_user.acronym,
+                    "~~MSPARP STAFF~~" if context.user.is_admin else ""
+                ),
+            ))
 
 
 def send_message(db, redis, message, force_userlist=False):
