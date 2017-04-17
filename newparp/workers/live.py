@@ -29,23 +29,25 @@ from newparp.helpers.chat import (
     BannedException,
     TooManyPeopleException,
     KickedException,
-    PingTimeoutException,
     authorize_joining,
     kick_check,
     join,
-    ping,
     send_userlist,
     get_userlist,
-    disconnect,
     send_quit_message,
 )
 from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher
 from newparp.helpers.users import queue_user_meta
 from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
-from newparp.model.connections import redis_pool, NewparpRedis
+from newparp.model.connections import redis_pool, redis_chat_pool, NewparpRedis
+from newparp.model.user_list import UserListStore, PingTimeoutException
 from newparp.tasks.matchmaker import new_searcher
 
-redis = NewparpRedis(connection_pool=redis_pool)
+
+redis      = NewparpRedis(connection_pool=redis_pool)
+redis_chat = NewparpRedis(connection_pool=redis_chat_pool)
+
+
 thread_pool = ThreadPoolExecutor()
 
 
@@ -85,11 +87,10 @@ class ChatHandler(WebSocketHandler):
         if not hasattr(self, "channels") or not hasattr(self, "user_number"):
             return
 
-        command = redis.sadd if is_typing else redis.srem
-        typing_key = "chat:%s:typing" % self.chat_id
-        if command(typing_key, self.user_number):
+        func = self.user_list.user_start_typing if is_typing else self.user_list.user_stop_typing
+        if func(self.user_number):
             redis.publish(self.channels["typing"], json.dumps({
-                "typing": list(int(_) for _ in redis.smembers(typing_key)),
+                "typing": self.user_list.user_numbers_typing(),
             }))
 
     def write_message(self, *args, **kwargs):
@@ -120,10 +121,13 @@ class ChatHandler(WebSocketHandler):
         except NoResultFound:
             self.send_error(404)
             return
+
         # Remember the user number so typing notifications can refer to it
         # without reopening the database session.
         self.user_number = self.chat_user.number
         queue_user_meta(self, redis, self.request.headers.get("X-Forwarded-For", self.request.remote_ip))
+
+        self.user_list = UserListStore(redis_chat, self.chat_id)
 
         try:
             if self.user.group != "active":
@@ -187,7 +191,7 @@ class ChatHandler(WebSocketHandler):
             print("message: %s" % message)
         if message == "ping":
             try:
-                ping(redis, self.db, self)
+                self.user_list.socket_ping(redis, self.id)
             except PingTimeoutException:
                 # We've been reaped, so disconnect.
                 self.close()
@@ -207,17 +211,19 @@ class ChatHandler(WebSocketHandler):
             message_type = "disconnect"
         else:
             message_type = "timeout"
-        if self.joined and disconnect(redis, self.chat_id, self.id):
+
+        if self.joined and self.user_list.socket_disconnect(self.id, self.user_number):
             try:
                 send_quit_message(self.db, redis, *self.get_chat_user(), type=message_type)
             except NoResultFound:
                 send_userlist(self.db, redis, self.chat)
             self.db.commit()
+
         # Delete the database connection here and on_finish just to be sure.
         if hasattr(self, "_db"):
             self._db.close()
             del self._db
-        self.set_typing(False)
+
         if DEBUG:
             print("socket closed: %s" % (self.id))
 
