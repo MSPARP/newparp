@@ -29,7 +29,8 @@ from newparp.model import (
     SearchCharacterGroup,
     User,
 )
-from newparp.model.connections import use_db
+from newparp.model.connections import use_db, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 from newparp.model.validators import url_validator
 
 
@@ -103,6 +104,7 @@ def get_chat(f):
 
         g.chat = chat
         g.chat_id = chat.id
+        g.user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), chat.id)
         try:
             authorize_joining(g.redis, g.db, g)
         except BannedException:

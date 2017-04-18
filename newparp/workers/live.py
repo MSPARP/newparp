@@ -33,7 +33,6 @@ from newparp.helpers.chat import (
     kick_check,
     send_join_message,
     send_userlist,
-    get_userlist,
     send_quit_message,
 )
 from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher

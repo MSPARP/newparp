@@ -14,7 +14,6 @@ from newparp.helpers.chat import (
     send_temporary_message,
     send_userlist,
     send_quit_message,
-    get_userlist,
 )
 from newparp.model import (
     case_options,

@@ -88,7 +88,7 @@ def authorize_joining(redis, db, context):
     )).scalar() != 0:
         raise BannedException
 
-    online_user_count = len(set(redis.hvals("chat:%s:online" % context.chat_id)))
+    online_user_count = len(context.user_list.user_ids_online())
     if online_user_count >= 50:
         raise TooManyPeopleException
 
