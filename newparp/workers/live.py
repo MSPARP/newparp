@@ -168,7 +168,7 @@ class ChatHandler(WebSocketHandler):
             after = int(self.request.query_arguments["after"][0])
         except (KeyError, IndexError, ValueError):
             after = 0
-        messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
+        messages = redis_chat.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
         self.write_message(json.dumps({
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
@@ -180,9 +180,9 @@ class ChatHandler(WebSocketHandler):
         # Send  a join message to everyone if we just joined, otherwise send the
         # user list to the client.
         if online_state_changed:
-            yield thread_pool.submit(send_join_message, redis, self.db, self)
+            yield thread_pool.submit(send_join_message, self.user_list, self.db, self)
         else:
-            userlist = yield thread_pool.submit(get_userlist, self.db, redis, self.chat)
+            userlist = yield thread_pool.submit(get_userlist, self.user_list, self.db)
             self.write_message(json.dumps({"users": userlist}))
 
         self.db.commit()
@@ -216,9 +216,9 @@ class ChatHandler(WebSocketHandler):
 
         if self.joined and self.user_list.socket_disconnect(self.id, self.user_number):
             try:
-                send_quit_message(self.db, redis, *self.get_chat_user(), type=message_type)
+                send_quit_message(self.user_list, self.db, *self.get_chat_user(), type=message_type)
             except NoResultFound:
-                send_userlist(self.db, redis, self.chat)
+                send_userlist(self.user_list, self.db)
             self.db.commit()
 
         # Delete the database connection here and on_finish just to be sure.

@@ -503,7 +503,7 @@ def save():
     # Send a message if name or acronym has changed.
     if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.db, g.redis, g.chat)
+            send_userlist(g.user_list, g.db)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -517,7 +517,7 @@ def save():
             ))
     # Just refresh the user list if the color has changed.
     elif g.chat_user.color != old_color:
-        send_userlist(g.db, g.redis, g.chat)
+        send_userlist(g.user_list, g.db)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 
@@ -554,7 +554,7 @@ def save_from_character():
 
     if changed:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.db, g.redis, g.chat)
+            send_userlist(g.user_list, g.db)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,

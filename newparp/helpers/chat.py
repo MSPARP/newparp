@@ -99,7 +99,7 @@ def kick_check(redis, context):
         raise KickedException
 
 
-def send_join_message(redis, db, context):
+def send_join_message(user_list, db, context):
     """
     Send join message or delete previous disconnect message:
     * If the last message in the chat was a disconnect from this user, it's
@@ -108,14 +108,14 @@ def send_join_message(redis, db, context):
     * Either way, the user list is refreshed.
     """
     if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
-        send_userlist(db, redis, context.chat)
+        send_userlist(user_list, db)
     else:
         last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.posted.desc()).first()
         # If they just disconnected, delete the disconnect message instead.
         if last_message is not None and last_message.type in ("disconnect", "timeout") and last_message.user_id == context.user.id:
-            delete_message(db, redis, last_message, force_userlist=True)
+            delete_message(user_list, db, last_message, force_userlist=True)
         else:
-            send_message(db, redis, Message(
+            send_message(db, user_list.redis, Message(
                 chat_id=context.chat.id,
                 user_id=context.user.id,
                 type="join",
@@ -154,7 +154,7 @@ def send_message(db, redis, message, force_userlist=False):
         "user_group",
         "user_action",
     ) or force_userlist:
-        redis_message["users"] = get_userlist(db, redis, message.chat)
+        redis_message["users"] = get_userlist(db, redis, message.chat) # TODO still using old redis handle
 
     # Reload chat metadata if necessary.
     if message.type == "chat_meta":
@@ -199,45 +199,45 @@ def send_temporary_message(redis, chat, to_id, user_number, message_type, text):
     }]}))
 
 
-def delete_message(db, redis, message, force_userlist=False):
+def delete_message(user_list, db, message, force_userlist=False):
     redis_message = {"delete": [message.id]}
     if force_userlist:
-        redis_message["users"] = get_userlist(db, redis, message.chat)
-    redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
-    redis.zremrangebyscore("chat:%s" % message.chat_id, message.id, message.id)
+        redis_message["users"] = get_userlist(user_list, db)
+    user_list.redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
+    user_list.redis.zremrangebyscore("chat:%s" % message.chat_id, message.id, message.id)
     db.delete(message)
 
 
-def get_userlist(db, redis, chat):
-    online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat.id))
+def get_userlist(user_list, db):
+    online_user_ids = user_list.user_ids_online()
     # Don't bother querying if the list is empty.
     # Also set the message cache to expire.
     if len(online_user_ids) == 0:
-        redis.expire("chat:%s" % chat.id, 30)
+        user_list.redis.expire("chat:%s" % user_list.chat_id, 30)
         return []
     return [
         _.to_dict() for _ in
         db.query(ChatUser).filter(and_(
             ChatUser.user_id.in_(online_user_ids),
-            ChatUser.chat_id == chat.id,
+            ChatUser.chat_id == user_list.chat_id,
         )).order_by(ChatUser.name).options(joinedload(ChatUser.user))
     ]
 
 
-def send_userlist(db, redis, chat):
+def send_userlist(user_list, db):
     # Update the userlist without sending a message.
     if chat.type == "pm":
-        for user_id, in db.query(ChatUser.user_id).filter(ChatUser.chat_id == chat.id):
-            redis.publish("channel:pm:%s" % user_id, "{\"pm\":\"1\"}")
-    redis.publish("channel:%s" % chat.id, json.dumps({
+        for user_id, in db.query(ChatUser.user_id).filter(ChatUser.chat_id == user_list.chat_id):
+            user_list.redis.publish("channel:pm:%s" % user_id, "{\"pm\":\"1\"}")
+    user_list.redis.publish("channel:%s" % user_list.chat_id, json.dumps({
         "messages": [],
-        "users": get_userlist(db, redis, chat),
+        "users": get_userlist(user_list, db),
     }))
 
 
-def send_quit_message(db, redis, chat_user, user, chat, type="disconnect"):
+def send_quit_message(user_list, db, chat_user, user, chat, type="disconnect"):
     if chat_user.computed_group == "silent" or chat.type in ("pm", "roulette"):
-        send_userlist(db, redis, chat)
+        send_userlist(user_list, db)
     else:
         if type == "disconnect":
             text = "%s [%s] disconnected." % (chat_user.name, chat_user.acronym)
