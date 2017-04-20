@@ -8,7 +8,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required
 from newparp.model import case_options, level_options, Character, GroupChat, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
-from newparp.model.connections import use_db, db_connect
+from newparp.model.connections import use_db, db_connect, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 
 
 @use_db
@@ -114,12 +115,13 @@ def groups(fmt=None):
         GroupChat.level.in_(level_filter),
     )).all()
 
-    pipeline = g.redis.pipeline()
-    for group in groups_query:
-        pipeline.hvals("chat:%s:online" % group.id)
+    online_userlists = UserListStore.multi_user_ids_online(
+        NewparpRedis(connection_pool=redis_chat_pool),
+        (group.id for group in groups_query),
+    )
 
     groups = []
-    for group, online_users in zip(groups_query, pipeline.execute()):
+    for group, online_users in zip(groups_query, online_userlists):
         online_user_count = len(set(online_users))
         if online_user_count > 0:
             groups.append((group, online_user_count))

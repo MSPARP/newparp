@@ -110,7 +110,7 @@ class UserListStore(object):
         return set(int(_) for _ in self.redis.hvals(self.online_key))
 
     @classmethod
-    def multi_user_ids_online(cls, redis, *chat_ids):
+    def multi_user_ids_online(cls, redis, chat_ids):
         """
         Returns a set of user IDs who are online in many chats.
         """
