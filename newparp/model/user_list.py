@@ -109,6 +109,16 @@ class UserListStore(object):
         """Returns a set of user IDs who are online."""
         return set(int(_) for _ in self.redis.hvals(self.online_key))
 
+    @classmethod
+    def multi_user_ids_online(cls, redis, *chat_ids):
+        """
+        Returns a set of user IDs who are online in many chats.
+        """
+        pipe = redis.pipeline()
+        for chat_id in chat_ids:
+            pipe.hvals("chat:%s:online" % chat_id)
+        return (set(int(user_id) for user_id in chat) for chat in pipe.execute())
+
     session_has_open_socket_script = """
         local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
         if #online_list == 0 then return false end
