@@ -503,7 +503,7 @@ def save():
     # Send a message if name or acronym has changed.
     if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.user_list, g.db)
+            send_userlist(g.user_list, g.db, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -517,7 +517,7 @@ def save():
             ))
     # Just refresh the user list if the color has changed.
     elif g.chat_user.color != old_color:
-        send_userlist(g.user_list, g.db)
+        send_userlist(g.user_list, g.db, g.chat)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 
@@ -534,7 +534,9 @@ def save_from_character():
     except NoResultFound:
         abort(404)
 
-    old_color = g.chat_user.color
+    # Remember old values so we can check if they've changed later.
+    old_name = g.chat_user.name
+    old_acronym = g.chat_user.acronym
 
     # Send a message if name, acronym or color has changed.
     changed = (
@@ -554,14 +556,14 @@ def save_from_character():
 
     if changed:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.user_list, g.db)
+            send_userlist(g.user_list, g.db, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("%s [%s] is now %s [%s].") % (
+                text="%s [%s] is now %s [%s]." % (
                     old_name, old_acronym,
                     g.chat_user.name, g.chat_user.acronym,
                 ),

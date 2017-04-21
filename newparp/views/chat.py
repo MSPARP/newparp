@@ -106,7 +106,7 @@ def get_chat(f):
         g.chat_id = chat.id
         g.user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), chat.id)
         try:
-            authorize_joining(g.redis, g.db, g)
+            authorize_joining(g.db, g)
         except BannedException:
             if request.endpoint != "rp_chat" or chat.url == "theoubliette":
                 abort(403)

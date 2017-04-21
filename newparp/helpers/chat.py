@@ -1,13 +1,12 @@
 import json
 import time
 
-from datetime import datetime
-from flask import abort, g, jsonify, request
+from flask import abort, g
 from functools import wraps
 from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
-from newparp.model import AnyChat, Ban, Invite, ChatUser, Message
+from newparp.model import Ban, Invite, ChatUser, Message
 from newparp.tasks import celery
 
 
@@ -47,7 +46,7 @@ def group_chat_only(f):
     return decorated_function
 
 
-def authorize_joining(redis, db, context):
+def authorize_joining(db, context):
     """Stuff to be verified before a person can join a chat.
 
     This includes checking whether they're banned, whether the chat is private,
@@ -108,7 +107,7 @@ def send_join_message(user_list, db, context):
     * Either way, the user list is refreshed.
     """
     if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
-        send_userlist(user_list, db)
+        send_userlist(user_list, db, context.chat)
     else:
         last_message = db.query(Message).filter(Message.chat_id == context.chat.id).order_by(Message.posted.desc()).first()
         # If they just disconnected, delete the disconnect message instead.
@@ -154,7 +153,7 @@ def send_message(db, redis, message, force_userlist=False):
         "user_group",
         "user_action",
     ) or force_userlist:
-        redis_message["users"] = get_userlist(db, redis, message.chat) # TODO still using old redis handle
+        redis_message["users"] = get_userlist(user_list, db)
 
     # Reload chat metadata if necessary.
     if message.type == "chat_meta":
@@ -224,7 +223,7 @@ def get_userlist(user_list, db):
     ]
 
 
-def send_userlist(user_list, db):
+def send_userlist(user_list, db, chat):
     # Update the userlist without sending a message.
     if chat.type == "pm":
         for user_id, in db.query(ChatUser.user_id).filter(ChatUser.chat_id == user_list.chat_id):
@@ -237,13 +236,13 @@ def send_userlist(user_list, db):
 
 def send_quit_message(user_list, db, chat_user, user, chat, type="disconnect"):
     if chat_user.computed_group == "silent" or chat.type in ("pm", "roulette"):
-        send_userlist(user_list, db)
+        send_userlist(user_list, db, chat)
     else:
         if type == "disconnect":
             text = "%s [%s] disconnected." % (chat_user.name, chat_user.acronym)
         elif type == "timeout":
             text = "%s's connection timed out." % chat_user.name
-        send_message(db, redis, Message(
+        send_message(db, user_list.redis, Message(
             chat_id=chat.id,
             user_id=user.id,
             type=type,

@@ -8,15 +8,13 @@ import re
 import signal
 import sys
 import time
-import functools
 
 import asyncio_redis
 
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
-from tornado.gen import coroutine, Task
+from tornado.gen import coroutine
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.platform.asyncio import AsyncIOMainLoop
@@ -30,6 +28,7 @@ from newparp.helpers.chat import (
     TooManyPeopleException,
     KickedException,
     authorize_joining,
+    get_userlist,
     kick_check,
     send_join_message,
     send_userlist,
@@ -37,7 +36,7 @@ from newparp.helpers.chat import (
 )
 from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher
 from newparp.helpers.users import queue_user_meta
-from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
+from newparp.model import sm, AnyChat, ChatUser, User, SearchCharacter
 from newparp.model.connections import redis_pool, redis_chat_pool, NewparpRedis
 from newparp.model.user_list import UserListStore, PingTimeoutException
 from newparp.tasks.matchmaker import new_searcher
@@ -56,6 +55,7 @@ origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(
 sockets = set()
 
 DEBUG = "DEBUG" in os.environ or "--debug" in sys.argv
+
 
 class ChatHandler(WebSocketHandler):
     @property
@@ -218,7 +218,7 @@ class ChatHandler(WebSocketHandler):
             try:
                 send_quit_message(self.user_list, self.db, *self.get_chat_user(), type=message_type)
             except NoResultFound:
-                send_userlist(self.user_list, self.db)
+                send_userlist(self.user_list, self.db, self.chat)
             self.db.commit()
 
         # Delete the database connection here and on_finish just to be sure.
@@ -227,7 +227,7 @@ class ChatHandler(WebSocketHandler):
             del self._db
 
         if DEBUG:
-            print("socket closed: %s" % (self.id))
+            print("socket closed: %s" % self.id)
 
         try:
             sockets.remove(self)
@@ -284,7 +284,7 @@ class SearchHandler(WebSocketHandler):
             self.send_error(401)
             return
 
-        self.searcher_id = searcher_id = self.path_args[0]
+        self.searcher_id = self.path_args[0]
         try:
             UUID(self.path_args[0])
         except ValueError:
