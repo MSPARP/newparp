@@ -83,7 +83,7 @@ def send():
         acronym=character.acronym if character is not None else g.chat_user.acronym,
         name=character.name if character is not None else g.chat_user.name,
         text=text,
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -204,7 +204,7 @@ def set_group():
             g.chat_user.name, g.chat_user.acronym,
             set_chat_user.name, set_chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -261,7 +261,7 @@ def user_action():
                     g.chat_user.name, g.chat_user.acronym,
                     set_chat_user.name, set_chat_user.acronym,
                 )
-            ))
+            ), g.user_list)
 
         return "", 204
 
@@ -325,7 +325,7 @@ def user_action():
             type="user_action",
             name=g.chat_user.name,
             text=ban_message,
-        ))
+        ), g.user_list)
         # Unsubscribe if necessary.
         set_chat_user.subscribed = False
         return "", 204
@@ -406,7 +406,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (g.chat_user.name, g.chat_user.acronym),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -435,7 +435,7 @@ def set_topic():
             text="%s [%s] removed the conversation topic." % (
                 g.chat_user.name, g.chat_user.acronym,
             ),
-        ))
+        ), g.user_list)
     else:
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
@@ -445,7 +445,7 @@ def set_topic():
             text="%s [%s] changed the topic to \"%s\"" % (
                 g.chat_user.name, g.chat_user.acronym, topic,
             ),
-        ))
+        ), g.user_list)
 
     return "", 204
 
@@ -475,7 +475,7 @@ def set_info():
         text="%s [%s] edited the chat information." % (
             g.chat_user.name, g.chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -514,7 +514,7 @@ def save():
                     old_name, old_acronym,
                     g.chat_user.name, g.chat_user.acronym,
                 ),
-            ))
+            ), g.user_list)
     # Just refresh the user list if the color has changed.
     elif g.chat_user.color != old_color:
         send_userlist(g.user_list, g.db, g.chat)
@@ -567,7 +567,7 @@ def save_from_character():
                     old_name, old_acronym,
                     g.chat_user.name, g.chat_user.acronym,
                 ),
-            ))
+            ), g.user_list)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 

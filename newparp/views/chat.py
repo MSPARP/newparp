@@ -635,7 +635,7 @@ def invite(chat, pm_user, url, fmt):
                 own_chat_user.name, own_chat_user.acronym,
                 invite_user.username,
             ),
-        ))
+        ), g.user_list)
 
     if (
         "X-Requested-With" in request.headers
@@ -701,7 +701,7 @@ def uninvite(chat, pm_user, url, fmt):
                 own_chat_user.name, own_chat_user.acronym,
                 invite_user.username,
             ),
-        ))
+        ), g.user_list)
 
     if (
         "X-Requested-With" in request.headers
@@ -757,7 +757,7 @@ def unban(chat, pm_user, url, fmt):
             own_chat_user.name, own_chat_user.acronym,
             unban_chat_user.name, unban_chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"])

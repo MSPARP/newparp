@@ -132,7 +132,7 @@ class ChatHandler(WebSocketHandler):
             if self.user.group != "active":
                 raise BannedException
 
-            yield thread_pool.submit(authorize_joining, redis, self.db, self)
+            yield thread_pool.submit(authorize_joining, self.db, self)
         except (UnauthorizedException, BannedException, TooManyPeopleException):
             self.send_error(403)
             return

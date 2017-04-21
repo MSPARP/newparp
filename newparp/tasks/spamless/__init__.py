@@ -72,7 +72,7 @@ class CheckSpamTask(WorkerTask):
                 self.check_warnlist(chat_id, message)
 
             except Mark as e:
-                with session_scope() as db():
+                with session_scope() as db:
                     q = db.query(Message).filter(Message.id == message["id"]).update({"spam_flag": str(e)})
                     message.update({"spam_flag": str(e)})
                     self.redis.publish("spamless:live", json.dumps(message))
@@ -120,7 +120,7 @@ class CheckSpamTask(WorkerTask):
                             acronym="\u264b",
                             text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
                             color="626262"
-                        ), True)
+                        ), force_userlist=True)
 
     def check_connection_spam(self, chat_id, message):
         if message["type"] not in ("join", "disconnect", "timeout", "user_info"):

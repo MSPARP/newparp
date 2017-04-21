@@ -7,6 +7,8 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import joinedload
 
 from newparp.model import Ban, Invite, ChatUser, Message
+from newparp.model.connections import NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 from newparp.tasks import celery
 
 
@@ -124,10 +126,10 @@ def send_join_message(user_list, db, context):
                     context.chat_user.acronym,
                     "~~MSPARP STAFF~~" if context.user.is_admin else ""
                 ),
-            ))
+            ), user_list)
 
 
-def send_message(db, redis, message, force_userlist=False):
+def send_message(db, redis, message, user_list=None, force_userlist=False):
 
     db.add(message)
     db.flush()
@@ -153,6 +155,8 @@ def send_message(db, redis, message, force_userlist=False):
         "user_group",
         "user_action",
     ) or force_userlist:
+        if user_list is None:
+            user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), message.chat_id)
         redis_message["users"] = get_userlist(user_list, db)
 
     # Reload chat metadata if necessary.
@@ -169,7 +173,9 @@ def send_message(db, redis, message, force_userlist=False):
         # TODO move the PM stuff here too
         redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()) + float(message.posted.microsecond) / 1000000)
 
-        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % message.chat.id))
+        if user_list is None:
+            user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), message.chat_id)
+        online_user_ids = user_list.user_ids_online()
         if message.chat.type == "pm":
             offline_chat_users = db.query(ChatUser).filter(and_(
                 ~ChatUser.user_id.in_(online_user_ids),
@@ -248,5 +254,5 @@ def send_quit_message(user_list, db, chat_user, user, chat, type="disconnect"):
             type=type,
             name=chat_user.name,
             text=text,
-        ))
+        ), user_list)
 
