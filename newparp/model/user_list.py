@@ -12,6 +12,19 @@ class UserListStore(object):
     * chat:<chat_id>:typing - set, with user numbers of people who are typing.
     """
 
+    @classmethod
+    def scan_active_chats(cls, redis):
+        """
+        Returns an iterator of all the chat IDs where someone is online.
+        """
+        next_index = 0
+        while True:
+            next_index, keys = redis.scan(next_index, "chat:*:online")
+            for key in keys:
+                yield int(key[5:-7])
+            if next_index == 0:
+                break
+
     def __init__(self, redis, chat_id):
         self.redis   = redis
         self.chat_id = chat_id
