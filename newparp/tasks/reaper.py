@@ -14,23 +14,6 @@ from newparp.tasks import celery, WorkerTask
 logger = get_task_logger(__name__)
 
 
-# Make sure a message is sent every 25 seconds so the long poll requests
-# don't time out.
-# XXX INCREASE THIS TO SEVERAL MINUTES
-@celery.task(base=WorkerTask, queue="worker")
-def ping_longpolls():
-    redis = ping_longpolls.redis
-
-    current_time = int(time.time())
-
-    for chat_id in redis.zrangebyscore("longpoll_timeout", 0, current_time):
-        redis.publish("channel:%s" % chat_id, "{\"messages\":[]}")
-        if redis.hlen("chat:%s:online" % chat_id) != 0:
-            redis.zadd("longpoll_timeout", time.time() + 25, chat_id)
-        else:
-            redis.zrem("longpoll_timeout", chat_id)
-
-
 @celery.task(base=WorkerTask, queue="worker")
 def reap():
     redis = reap.redis

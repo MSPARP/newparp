@@ -62,10 +62,6 @@ CELERYBEAT_SCHEDULE = {
         "task": "newparp.tasks.matchmaker.generate_searching_counter",
         "schedule": timedelta(seconds=10),
     },
-    "ping_longpolls": {
-        "task": "newparp.tasks.reaper.ping_longpolls",
-        "schedule": timedelta(seconds=5),
-    },
     "reap": {
         "task": "newparp.tasks.reaper.reap",
         "schedule": timedelta(seconds=1),
