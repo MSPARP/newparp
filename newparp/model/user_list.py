@@ -115,7 +115,7 @@ class UserListStore(object):
         Removes all of a user's sockets from a chat. Returns a boolean
         indicating whether the user's online state has changed.
         """
-        result = self.redis.eval(user_disconnect_script, 0, self.chat_id, user_id, user_number)
+        result = self.redis.eval(self.user_disconnect_script, 0, self.chat_id, user_id, user_number)
         return bool(result)
 
     def user_ids_online(self):
