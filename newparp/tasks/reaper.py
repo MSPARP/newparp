@@ -8,7 +8,8 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers.chat import disconnect, send_message, send_userlist
 from newparp.model import Message, ChatUser
-from newparp.model.connections import session_scope
+from newparp.model.connections import session_scope, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 from newparp.tasks import celery, WorkerTask
 
 logger = get_task_logger(__name__)
@@ -16,6 +17,18 @@ logger = get_task_logger(__name__)
 
 @celery.task(base=WorkerTask, queue="worker")
 def reap():
+    redis_chat = NewparpRedis(connection_pool=redis_chat_pool)
+    for chat_id in UserListStore.scan_active_chats(redis_chat):
+        reap_chat.delay(chat_id)
+
+
+@celery.task(base=WorkerTask, queue="worker")
+def reap_chat(chat_id):
+    raise NotImplementedError
+
+
+@celery.task(base=WorkerTask, queue="worker")
+def old_reap():
     redis = reap.redis
     with session_scope() as db:
         current_time = int(time.time())

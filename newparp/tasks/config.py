@@ -33,11 +33,14 @@ CELERY_QUEUES = (
     # Default queue
     Queue("default", Exchange("default"), routing_key="default"),
 
-    # Worker queue
+    # Misc worker queue
     Queue("worker", Exchange("worker"), routing_key="worker", delivery_mode=1),
 
     # Matchmaker queue
     Queue("matchmaker", Exchange("matchmaker"), routing_key="matchmaker", delivery_mode=1),
+
+    # Spamless queue
+    Queue("spamless", Exchange("spamless"), routing_key="spamless", delivery_mode=1),
 )
 
 # Beats config
@@ -64,6 +67,6 @@ CELERYBEAT_SCHEDULE = {
     },
     "reap": {
         "task": "newparp.tasks.reaper.reap",
-        "schedule": timedelta(seconds=1),
+        "schedule": timedelta(seconds=10),
     },
 }
