@@ -164,7 +164,6 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
         redis_message["chat"] = message.chat.to_dict()
 
     redis.publish("channel:%s" % message.chat_id, json.dumps(redis_message))
-    redis.zadd("longpoll_timeout", time.time() + 25, message.chat_id)
 
     # Send notifications.
     if message.type in ("ic", "ooc", "me", "spamless"):

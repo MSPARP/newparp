@@ -175,6 +175,33 @@ class UserListStore(object):
         """Returns a list of user numbers who are typing."""
         return list(int(_) for _ in self.redis.smembers(self.typing_key))
 
+    inconsistent_entries_script = """
+        local online_list = redis.call("hgetall", "chat:"..ARGV[1]..":online")
+        if #online_list == 0 then return {} end
+
+        local inconsistent_entries = {}
+
+        for i = 1, #online_list, 2 do
+            local socket_id = online_list[i]
+            local user_id = online_list[i+1]
+            if redis.call("exists", "chat:"..ARGV[1]..":online:"..socket_id) == 0 then
+                table.insert(inconsistent_entries, {socket_id, user_id})
+            end
+        end
+
+        return inconsistent_entries
+    """
+
+    def inconsistent_entries(self):
+        """
+        Returns a list of socket_id/user_id pairs where the sockets have
+        expired.
+        """
+        return [
+            (_[0], int(_[1]))
+            for _ in self.redis.eval(self.inconsistent_entries_script, 0, self.chat_id)
+        ]
+
     # TODO manage kicking here too?
 
 
