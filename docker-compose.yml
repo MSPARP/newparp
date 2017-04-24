@@ -43,6 +43,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      REDIS_CHAT_DB: 1
       POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
@@ -61,6 +62,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      REDIS_CHAT_DB: 1
       POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
@@ -79,6 +81,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      REDIS_CHAT_DB: 1
       POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
@@ -97,6 +100,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
+      REDIS_CHAT_DB: 1
       POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1

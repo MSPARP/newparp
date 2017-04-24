@@ -6,13 +6,14 @@ import uuid
 
 from flask import g
 
-from newparp.model import Message
-from newparp.helpers.chat import join
+from newparp.model import Message, Chat
+from newparp.model.connections import NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 
-def fake_socket(client, group_chat):
-    client.get("/" + group_chat.url)
-    g.redis.sadd("chat:%s:sockets:%s" % (g.chat_id, g.session_id), "1")
-    g.redis.expire("chat:%s:sockets:%s" % (g.chat_id, g.session_id), 60)
+def join(client, chat: Chat):
+    client.get("/" + chat.url)
+    user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), chat.id)
+    user_list.socket_join(str(uuid.uuid4()), g.session_id, g.user_id)
 
 def set_flag(client, chat_id: int, flag: str, value: str):
     rv = client.post("/chat_api/set_flag", data={
@@ -70,21 +71,21 @@ def test_create_existing_endpoint(user_client):
 # Flags
 
 def test_flag_publicity_admin_only(user_client, admin_client, group_chat):
-    fake_socket(admin_client, group_chat)
+    join(admin_client, group_chat)
     set_flag(admin_client, group_chat.id, "publicity", "admin_only")
 
     rv = user_client.get("/" + group_chat.url)
     assert rv.status_code == 403
 
 def test_flag_publicity_private_uninvited(user_client, admin_client, group_chat):
-    fake_socket(admin_client, group_chat)
+    join(admin_client, group_chat)
     set_flag(admin_client, group_chat.id, "publicity", "private")
 
     rv = user_client.get("/" + group_chat.url)
     assert rv.status_code == 403
 
 def test_flag_publicity_private_invited(user_client, admin_client, group_chat):
-    fake_socket(admin_client, group_chat)
+    join(admin_client, group_chat)
     set_flag(admin_client, group_chat.id, "publicity", "private")
     admin_client.post("/" + group_chat.url + "/invite", data={
         "username": user_client.user.username
@@ -96,7 +97,7 @@ def test_flag_publicity_private_invited(user_client, admin_client, group_chat):
 # Bans
 
 def test_action_ban_user(user_client, admin_client, group_chat):
-    fake_socket(admin_client, group_chat)
+    join(admin_client, group_chat)
     ban_id = json.loads(user_client.get("/" + group_chat.url + ".json").data.decode("utf8"))["chat_user"]["meta"]["number"]
     data = user_action(admin_client, group_chat.id, "ban", ban_id, "Unittest chat ban.")
     rv = user_client.get("/" + group_chat.url)
@@ -105,7 +106,7 @@ def test_action_ban_user(user_client, admin_client, group_chat):
 # Messages
 
 def test_send_messages(user_client, group_chat):
-    fake_socket(user_client, group_chat)
+    join(user_client, group_chat)
 
     for msgtype in Message.type.property.columns[0].type.enums:
         rv = user_client.post("/chat_api/send", data={
@@ -127,7 +128,7 @@ def test_set_topic(user_client, admin_client, group_chat):
 
     # Topic setting with permissions
 
-    fake_socket(admin_client, group_chat)
+    join(admin_client, group_chat)
 
     for topic in topics:
         # Test if the topic is able to be set on the server side.
@@ -144,7 +145,7 @@ def test_set_topic(user_client, admin_client, group_chat):
 
     # Topic setting without permissions
 
-    fake_socket(user_client, group_chat)
+    join(user_client, group_chat)
     rv = user_client.post("/chat_api/set_topic", data={
         "chat_id": group_chat.id,
         "topic": "fail"
