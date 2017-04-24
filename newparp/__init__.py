@@ -34,6 +34,7 @@ if app.config["SENTRY_PRIVATE_DSN"]:  # pragma: no cover
         logging=True,
         level=logging.ERROR,
     )
+    logging.getLogger("sentry.errors.uncaught").setLevel(logging.CRITICAL)
 else:
     sentry = None
 
