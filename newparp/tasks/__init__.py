@@ -38,3 +38,5 @@ class WorkerTask(Task):
         if hasattr(self, "redis"):
             del self.redis
 
+from newparp.tasks.spamless import CheckSpamTask
+celery.register_task(CheckSpamTask())

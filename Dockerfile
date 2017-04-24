@@ -7,7 +7,7 @@ RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
 WORKDIR /home/user
 
 # Update packages and install pip
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && apt-get -y install python3 python3-pip python3-dev libpq-dev libffi-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && apt-get -y install python3 python3-pip python3-dev python3-gdbm libpq-dev libffi-dev
 
 # Add and install Python modules
 ADD requirements.txt /home/user/requirements.txt
