@@ -42,6 +42,7 @@ def unlist_chats():
 @celery.task(base=WorkerTask, queue="worker")
 def update_lastonline():
     redis = update_lastonline.redis
+    redis_chat = NewparpRedis(connection_pool=redis_chat_pool)
 
     if redis.exists("lock:lastonline"):
         return
@@ -53,7 +54,7 @@ def update_lastonline():
     redis.delete("queue:lastonline")
 
     for chat_id, posted in chat_ids.items():
-        online_user_ids = set(int(_) for _ in redis.hvals("chat:%s:online" % chat_id))
+        online_user_ids = UserListStore(redis_chat, chat_id).user_ids_online()
 
         try:
             posted = datetime.datetime.utcfromtimestamp(float(posted))
