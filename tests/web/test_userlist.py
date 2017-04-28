@@ -26,11 +26,28 @@ def test_join_leave(user_client, group_chat):
     assert user_list.socket_join(socket_id, g.session_id, g.user_id) is True
     assert len(user_list.user_ids_online()) == 1
     assert user_list.socket_disconnect(socket_id, g.user_id) is True
+    assert len(user_list.user_ids_online()) == 0
+
+    # User should stop typing when they leave
+    assert user_list.socket_join(socket_id, g.session_id, g.user_id) is True
+    user_list.user_start_typing(g.user_id)
+    assert len(user_list.user_numbers_typing()) == 1
+    assert user_list.socket_disconnect(socket_id, g.user_id) is True
+    assert len(user_list.user_numbers_typing()) == 0
 
     # [Kick, Ban] join/leave process
     assert user_list.socket_join(socket_id, g.session_id, g.user_id) is True
     assert len(user_list.user_ids_online()) == 1
     assert user_list.user_disconnect(g.user_id, g.user_id) is True
+    assert len(user_list.user_ids_online()) == 0
+
+    # User should stop typing when they leave
+    assert user_list.socket_join(socket_id, g.session_id, g.user_id) is True
+    user_list.user_start_typing(g.user_id)
+    assert len(user_list.user_numbers_typing()) == 1
+    assert user_list.user_disconnect(g.user_id, g.user_id) is True
+    assert len(user_list.user_numbers_typing()) == 0
+
 
 def test_typing(user_client, group_chat):
     USER_AMOUNT = 10
