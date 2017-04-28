@@ -106,7 +106,7 @@ class UserListStore(object):
                 had_online_socket = true
             end
         end
-        redis.call("hdel", "chat:"..ARGV[1]..":typing", ARGV[3])
+        redis.call("srem", "chat:"..ARGV[1]..":typing", ARGV[3])
         return had_online_socket
     """
 
