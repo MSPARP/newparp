@@ -37,18 +37,18 @@ class CheckSpamTask(WorkerTask):
         with session_scope() as db:
             filters = db.query(SpamlessFilter).all()
 
-        lists["banned_names"] = [
-            re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
-            for _ in filters if _.type == "banned_names"
-        ]
-        lists["blacklist"] = [
-            (re.compile(_.regex, re.IGNORECASE | re.MULTILINE), _.points)
-            for _ in filters if _.type == "blacklist"
-        ]
-        lists["warnlist"] = [
-            re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
-            for _ in filters if _.type == "warnlist"
-        ]
+            lists["banned_names"] = [
+                re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
+                for _ in filters if _.type == "banned_names"
+            ]
+            lists["blacklist"] = [
+                (re.compile(_.regex, re.IGNORECASE | re.MULTILINE), _.points)
+                for _ in filters if _.type == "blacklist"
+            ]
+            lists["warnlist"] = [
+                re.compile(_.regex, re.IGNORECASE | re.MULTILINE)
+                for _ in filters if _.type == "warnlist"
+            ]
 
     def run(self, chat_id, data):
         if len(data["messages"]) == 0:

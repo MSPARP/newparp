@@ -38,6 +38,9 @@ CELERY_QUEUES = (
 
     # Matchmaker queue
     Queue("matchmaker", Exchange("matchmaker"), routing_key="matchmaker", delivery_mode=1),
+
+    # Spamless queue
+    Queue("spamless", Exchange("spamless"), routing_key="spamless", delivery_mode=1),
 )
 
 # Beats config
