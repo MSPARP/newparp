@@ -529,7 +529,7 @@ class PMChat(Chat):
         return "<PMChat #%s: %s>" % (self.id, self.url)
 
     def computed_url(self, *args, **kwargs):
-        if "pm_user" in kwargs:
+        if "pm_user" in kwargs and kwargs["pm_user"]:
             return "pm/" + kwargs["pm_user"].username
         return super(PMChat, self).computed_title(*args, **kwargs)
 
