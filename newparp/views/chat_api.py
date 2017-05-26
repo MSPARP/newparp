@@ -70,16 +70,6 @@ def send():
         except NoResultFound:
             pass
 
-    send_message(g.db, g.redis, Message(
-        chat_id=g.chat.id,
-        user_id=g.user.id,
-        type=message_type,
-        color=character.color if character is not None else g.chat_user.color,
-        acronym=character.acronym if character is not None else g.chat_user.acronym,
-        name=character.name if character is not None else g.chat_user.name,
-        text=text,
-    ))
-
     # Clear typing status so the front end doesn't have to.
     if g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)):
         typing_key = "chat:%s:typing" % g.chat.id
@@ -89,6 +79,16 @@ def send():
             }))
 
     g.chat_user.draft = ""
+
+    send_message(g.db, g.redis, Message(
+        chat_id=g.chat.id,
+        user_id=g.user.id,
+        type=message_type,
+        color=character.color if character is not None else g.chat_user.color,
+        acronym=character.acronym if character is not None else g.chat_user.acronym,
+        name=character.name if character is not None else g.chat_user.name,
+        text=text,
+    ))
 
     return "", 204
 

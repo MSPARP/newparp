@@ -3,10 +3,9 @@ import raven
 
 from celery import Celery, Task
 from classtools import reify
-from redis import StrictRedis
 from raven.contrib.celery import register_signal, register_logger_signal
 
-from newparp.model.connections import redis_pool
+from newparp.model.connections import redis_pool, NewparpRedis
 
 celery = Celery("newparp", include=[
     "newparp.tasks.background",
@@ -14,6 +13,7 @@ celery = Celery("newparp", include=[
     "newparp.tasks.reaper",
     "newparp.tasks.chat",
     "newparp.tasks.test",
+    "newparp.tasks.spamless",
 ])
 
 # Sentry exception logging if there is a sentry object.
@@ -32,7 +32,7 @@ class WorkerTask(Task):
 
     @reify
     def redis(self):
-        return StrictRedis(connection_pool=redis_pool)
+        return NewparpRedis(connection_pool=redis_pool)
 
     def after_return(self, *args, **kwargs):
         if hasattr(self, "redis"):
