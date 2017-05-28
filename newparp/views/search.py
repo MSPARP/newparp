@@ -47,7 +47,7 @@ def search_save():
         search_filter = search_filter.strip().lower()
         if search_filter:
             search_filters.add(search_filter)
-        if len(search_filters) == 100:
+        if len(search_filters) == 200:
             break
     g.user.search_filters = sorted(list(search_filters))
 

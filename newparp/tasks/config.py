@@ -43,6 +43,8 @@ CELERY_QUEUES = (
     Queue("spamless", Exchange("spamless"), routing_key="spamless", delivery_mode=1),
 )
 
+CELERY_ROUTES = {"newparp.tasks.spamless.CheckSpamTask": {"queue": "spamless"}}
+
 # Beats config
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
