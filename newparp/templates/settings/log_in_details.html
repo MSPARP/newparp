@@ -23,6 +23,8 @@
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
                 {% if error == "invalid_email": %}
                 <p class="error">That's not a valid e-mail address.</p>
+                {% elif error == "email_taken": %}
+                <p class="error">That e-mail address has already been taken.</p>
                 {% endif %}
                 <div class="input_table password_settings">
                     <div class="input"><p>

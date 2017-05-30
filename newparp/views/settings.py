@@ -93,12 +93,22 @@ def log_in_details():
 @log_in_required
 def change_email():
     email_address = request.form.get("email_address").strip()[:100]
+
     if not email_address or email_validator.match(email_address) is None:
         return render_template("settings/log_in_details.html", error="invalid_email")
-    # This is pointless.
+
+    # No need to do anything here.
     if g.user.email_verified and email_address == g.user.email_address:
         return redirect(url_for("settings_log_in_details", saved="email_changed"))
+
+    # Make sure this email address hasn't been taken before.
+    if email_address != g.user.email_address and g.db.query(User.id).filter(
+        func.lower(User.email_address) == email_address.lower(),
+    ).count() != 0:
+        return render_template("settings/log_in_details.html", error="email_taken")
+
     send_email("verify", email_address)
+
     return redirect(url_for("settings_log_in_details", saved="email_address"))
 
 

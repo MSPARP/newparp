@@ -98,7 +98,7 @@ def register_post():
     # Make sure this email address hasn't been taken before.
     if g.db.query(User.id).filter(
         func.lower(User.email_address) == email_address.lower()
-    ).count() == 1:
+    ).count() != 0:
         return redirect(referer_or_home() + "?register_error=email_taken")
 
     # Check username against username_validator.
