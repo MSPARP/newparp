@@ -138,12 +138,20 @@ def verify_email():
     g.redis.delete("verify:%s:%s" % (user_id, email_address))
     g.redis.delete("welcome:%s:%s" % (user_id, email_address))
 
-    next_message = "email_verified" if user.email_address == email_address else "email_changed"
+    g.redis.set("session:" + g.session_id, user.id, 2592000)
+
+    if user.email_address == "email_address":
+        next_message = "email_verified"
+
+    else:
+        if g.db.query(User.id).filter(
+            func.lower(User.email_address) == email_address.lower(),
+        ).count() != 0:
+            return redirect(url_for("settings_log_in_details", error="email_taken"))
+        next_message = "email_changed"
 
     user.email_address = email_address
     user.email_verified = True
-
-    g.redis.set("session:" + g.session_id, user.id, 2592000)
 
     if user.group == "new":
         email_bans = (

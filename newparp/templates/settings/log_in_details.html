@@ -21,6 +21,9 @@
             {% endif %}
             <form action="{{url_for("settings_change_email")}}" method="post">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">
+                {% if "error" in request.args: %}
+                    {% set error = request.args["error"] %}
+                {% endif %}
                 {% if error == "invalid_email": %}
                 <p class="error">That's not a valid e-mail address.</p>
                 {% elif error == "email_taken": %}
