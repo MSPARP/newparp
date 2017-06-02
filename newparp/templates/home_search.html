@@ -153,7 +153,9 @@
                         <span class="textlabel">Content:</span>
                         <div class="content_boxes">
                             {% for option, name in level_options.items(): %}
-                                <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                                {% if option in g.user.level_options: %}
+                                    <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>

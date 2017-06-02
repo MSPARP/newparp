@@ -83,10 +83,16 @@ case_options_enum = SQLAlchemyEnum(*list(case_options.keys()), name="case")
 # TODO make this an enum and use sqlalchemy-enum34
 level_options = OrderedDict([
     ("sfw",          "SFW"),
-    ("nsfws",        "NSFW (sexual)"),
     ("nsfwv",        "NSFW (violent)"),
+    ("nsfws",        "NSFW (sexual)"),
     ("nsfw-extreme", "NSFW extreme"),
 ])
+
+allowed_level_options = {
+    AgeGroup.unknown:  {"sfw", "nsfwv"},
+    AgeGroup.under_18: {"sfw", "nsfwv"},
+    AgeGroup.over_18:  {"sfw", "nsfwv", "nsfws", "nsfw-extreme"},
+}
 
 
 # 1. Classes
@@ -203,6 +209,10 @@ class User(Base):
         if self.date_of_birth is None:
             return AgeGroup.unknown
         return AgeGroup.over_18 if self.age >= 18 else AgeGroup.under_18
+
+    @property
+    def level_options(self):
+        return allowed_level_options[self.age_group]
 
     @property
     def is_admin(self):

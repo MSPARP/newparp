@@ -35,7 +35,7 @@ def search_save():
         g.user.search_style = request.form["style"]
 
     level_filter = set()
-    for level in level_options.keys():
+    for level in g.user.level_options:
         if level in request.form:
             level_filter.add(level)
     if not level_filter:
