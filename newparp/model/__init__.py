@@ -163,8 +163,9 @@ class User(Base):
         SQLAlchemyEnum("script", "paragraph", "either", name="user_search_style"),
         nullable=False, default="script",
     )
-    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=["sfw"])
+    search_levels = Column(ARRAY(Unicode(50)),  nullable=False, default=["sfw"])
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
+    search_age_restriction = Column(Boolean,    nullable=False, default=False)
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
     group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=["script"])

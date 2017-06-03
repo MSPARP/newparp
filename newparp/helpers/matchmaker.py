@@ -1,4 +1,6 @@
 from collections import namedtuple
+from newparp.model import AgeGroup
+
 
 def validate_searcher_exists(redis, searcher_id):
     """Check whether a searcher's mandatory keys are present."""
@@ -38,12 +40,16 @@ def refresh_searcher(redis, searcher_id):
         redis.call("expire",    "searcher:"..ARGV[1]..":character",           30),
         redis.call("expire",    "searcher:"..ARGV[1]..":style",               30),
         redis.call("expire",    "searcher:"..ARGV[1]..":levels",              30),
+        redis.call("expire",    "searcher:"..ARGV[1]..":age_group",           30),
         redis.call("expire",    "searcher:"..ARGV[1]..":filters",             30),
         redis.call("expire",    "searcher:"..ARGV[1]..":choices",             30),
     }""", 0, searcher_id)
 
 
-searcher = namedtuple("searcher", ("id", "searching", "session_id", "user_id", "search_character_id", "character", "style", "levels", "filters", "choices"))
+searcher = namedtuple("searcher", (
+    "id", "searching", "session_id", "user_id", "search_character_id",
+    "character", "style", "levels", "age_group", "filters", "choices",
+))
 
 
 def fetch_searcher(redis, searcher_id):
@@ -57,6 +63,7 @@ def fetch_searcher(redis, searcher_id):
         redis.call("hgetall",  "searcher:"..ARGV[1]..":character"),
         redis.call("get",      "searcher:"..ARGV[1]..":style"),
         redis.call("smembers", "searcher:"..ARGV[1]..":levels"),
+        redis.call("get",      "searcher:"..ARGV[1]..":age_group"),
         redis.call("lrange",   "searcher:"..ARGV[1]..":filters", 0, -1),
         redis.call("smembers", "searcher:"..ARGV[1]..":choices"),
     }""", 0, searcher_id)
@@ -64,7 +71,9 @@ def fetch_searcher(redis, searcher_id):
     if searcher_keys[4]:
         searcher_keys[4] = {k: v for k, v in zip(*(iter(searcher_keys[4]),) * 2)}
     searcher_keys[6] = set(searcher_keys[6])
-    searcher_keys[8] = set(searcher_keys[8])
+    if searcher_keys[7]:
+        searcher_keys[7] = AgeGroup(searcher_keys[7])
+    searcher_keys[9] = set(searcher_keys[9])
     return searcher(searcher_id, *searcher_keys)
 
 
@@ -73,8 +82,8 @@ option_messages = {
     "paragraph":    "This is a paragraph style chat.",
     "sfw":          "Please keep this chat safe for work.",
     "nsfw":         "NSFW content is allowed.", # Kept here for backwards compatibility while we migrate.
-    "nsfws":        "NSFW (sexual) content is allowed.",
     "nsfwv":        "NSFW (violent) content is allowed.",
+    "nsfws":        "NSFW (sexual) content is allowed.",
     "nsfws-nsfwv":  "NSFW (sexual or violent) content is allowed.",
     "nsfw-extreme": "Extreme NSFW content is allowed.",
 }

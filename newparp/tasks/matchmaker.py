@@ -59,7 +59,7 @@ def compare(searcher_id_1, searcher_id_2):
 
     alive = True
     for searcher in (s1, s2):
-        if not all(searcher[:-2]):
+        if not all(searcher[:-3]): # TODO make this a method
             logger.debug("%s not alive" % searcher.id)
             redis.srem("searchers", searcher.id)
             alive = False
@@ -100,6 +100,11 @@ def compare(searcher_id_1, searcher_id_2):
         else:
             options.append("sfw")
     else:
+        return None, None
+
+    # Age group must match if specified.
+    if (s1.age_group or s2.age_group) and s1.age_group != s2.age_group:
+        logger.debug("age groups %s and %s don't match", s1.age_group, s2.age_group)
         return None, None
 
     # Check filters.
@@ -150,7 +155,7 @@ def comparison_callback(results, searcher_id_1):
 
     # Fetch searcher 1.
     s1 = fetch_searcher(redis, searcher_id_1)
-    if not all(s1[:-2]):
+    if not all(s1[:-3]):
         logger.debug("%s has expired" % searcher_id_1)
         redis.delete("lock:matchmaker")
         return
@@ -159,7 +164,7 @@ def comparison_callback(results, searcher_id_1):
         # Pick a second searcher from the matches.
         for searcher_id_2, options in matched_searchers:
             s2 = fetch_searcher(redis, searcher_id_2)
-            if all(s2[:-2]) and db.query(func.count("*")).select_from(Block).filter(or_(
+            if all(s2[:-3]) and db.query(func.count("*")).select_from(Block).filter(or_(
                 and_(Block.blocking_user_id == s1.user_id, Block.blocked_user_id == s2.user_id),
                 and_(Block.blocking_user_id == s2.user_id, Block.blocked_user_id == s1.user_id),
             )).scalar() == 0:

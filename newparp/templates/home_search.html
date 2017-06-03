@@ -159,6 +159,21 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% if g.user.age_group != AgeGroup.unknown %}
+                        <div>
+                            <span class="textlabel">Age:</span>
+                            <div class="content_boxes">
+                                <div class="input">
+                                    <input type="checkbox" id="age_restriction" name="age_restriction"{% if g.user.search_age_restriction: %} checked="checked"{% endif %}>
+                                    {% if g.user.age_group == AgeGroup.under_18: %}
+                                        <label for="age_restriction">Only search for users under 18</label>
+                                    {% elif g.user.age_group == AgeGroup.over_18: %}
+                                        <label for="age_restriction">Only search for users over 18</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <h3>Filter out names containing...</h3>
                 <ul id="filter_list">
