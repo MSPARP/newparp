@@ -12,8 +12,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import admin_required, activation_required
-from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
+from newparp.helpers.chat import (
+    UnauthorizedException,
+    BannedException,
+    BadAgeException,
+    TooManyPeopleException,
+    authorize_joining,
+    send_message,
+)
 from newparp.model import (
+    AgeGroup,
     case_options,
     level_options,
     AnyChat,
@@ -116,6 +124,11 @@ def get_chat(f):
         except UnauthorizedException:
             if request.endpoint != "rp_chat_unsubscribe":
                 return render_template("chat/private.html", chat=chat), 403
+        except BadAgeException:
+            if request.endpoint != "rp_chat_unsubscribe":
+                if g.user.age_group == AgeGroup.under_18:
+                    return render_template("chat/age_under_18.html", chat=chat)
+                return render_template("chat/age_check.html", chat=chat), 403
         except TooManyPeopleException:
             if request.endpoint == "rp_chat":
                 return render_template("chat/too_many_people.html", chat=chat), 403

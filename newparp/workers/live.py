@@ -25,6 +25,7 @@ from uuid import UUID, uuid4
 from newparp.helpers.chat import (
     UnauthorizedException,
     BannedException,
+    BadAgeException,
     TooManyPeopleException,
     KickedException,
     authorize_joining,
@@ -133,7 +134,7 @@ class ChatHandler(WebSocketHandler):
                 raise BannedException
 
             yield thread_pool.submit(authorize_joining, self.db, self)
-        except (UnauthorizedException, BannedException, TooManyPeopleException):
+        except (UnauthorizedException, BannedException, BadAgeException, TooManyPeopleException):
             self.send_error(403)
             return
 

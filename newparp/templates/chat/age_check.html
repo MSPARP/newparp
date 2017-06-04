@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title: %}{{chat.computed_title()}} is 18+ - {% endblock %}
+{% block content: %}
+    <div class="common_box">
+        <h2><label><span>Age verification required</span></label></h2>
+        <div class="common_box_wrap">
+            <p>This chat is only suitable for people over 18. Please enter your date of birth to continue.</p>
+        </div>
+    </div>
+{% endblock %}
+

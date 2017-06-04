@@ -20,6 +20,10 @@ class BannedException(Exception):
     pass
 
 
+class BadAgeException(Exception):
+    pass
+
+
 class TooManyPeopleException(Exception):
     pass
 
@@ -88,6 +92,13 @@ def authorize_joining(db, context):
         Ban.user_id == context.user_id,
     )).scalar() != 0:
         raise BannedException
+
+    if (
+        context.chat.type == "group"
+        and context.user is not None
+        and context.chat.level not in context.user.level_options
+    ):
+        raise BadAgeException
 
     online_user_count = len(context.user_list.user_ids_online())
     if online_user_count >= 50:
