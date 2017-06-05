@@ -126,7 +126,9 @@ def get_chat(f):
                 return render_template("chat/private.html", chat=chat), 403
         except BadAgeException:
             if request.endpoint != "rp_chat_unsubscribe":
-                if g.user.age_group == AgeGroup.under_18:
+                if g.user is None:
+                    return render_template("chat/log_in_required.html", chat=chat)
+                elif g.user.age_group == AgeGroup.under_18:
                     return render_template("chat/age_under_18.html", chat=chat)
                 return render_template("chat/age_check.html", chat=chat), 403
         except TooManyPeopleException:
