@@ -7,7 +7,11 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required
-from newparp.model import AgeGroup, case_options, level_options, Character, GroupChat, Fandom, SearchCharacterGroup, SearchCharacter, SearchCharacterChoice, User
+from newparp.model import (
+    AgeGroup, case_options, level_options, allowed_level_options, Character,
+    GroupChat, Fandom, SearchCharacterGroup, SearchCharacter,
+    SearchCharacterChoice, User,
+)
 from newparp.model.connections import use_db, db_connect, NewparpRedis, redis_chat_pool
 from newparp.model.user_list import UserListStore
 
@@ -96,8 +100,10 @@ def groups(fmt=None):
         else:
             style_filter.add("script")
 
+    allowed_levels = g.user.level_options if g.user else allowed_level_options[AgeGroup.unknown]
+
     level_filter = set()
-    for level in GroupChat.level.type.enums:
+    for level in allowed_levels:
         if level in request.args:
             level_filter.add(level)
     if not level_filter:
@@ -141,7 +147,9 @@ def groups(fmt=None):
 
     return render_template(
         "groups.html",
+        allowed_levels=allowed_levels,
         level_options=level_options,
+        AgeGroup=AgeGroup,
         groups=chat_dicts,
         style_filter=style_filter,
         level_filter=level_filter,
