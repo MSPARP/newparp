@@ -1,3 +1,5 @@
+import datetime
+
 from flask import abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func, literal
 from sqlalchemy.orm import joinedload
@@ -80,6 +82,31 @@ def theme():
         g.user.theme = None
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return "", 204
+    return redirect(url_for("settings"))
+
+
+@use_db
+@log_in_required
+def date_of_birth():
+    # Date of birth setting is permanent.
+    if g.user.date_of_birth is not None:
+        abort(404)
+
+    try:
+        # TODO use the right time zone
+        g.user.date_of_birth = datetime.datetime(
+            int(request.form["year"]),
+            int(request.form["month"]),
+            int(request.form["day"]),
+        )
+    except ValueError:
+        return render_template(
+            "settings/home.html",
+            timezones=sorted(list(timezones)),
+            themes=themes,
+            error="invalid_date",
+        )
+
     return redirect(url_for("settings"))
 
 

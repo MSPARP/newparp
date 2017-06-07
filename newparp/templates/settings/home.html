@@ -66,6 +66,30 @@
                 </select></div>
                 <button type="submit" class="fit_select_button">Save</button>
             </form>
+            <h2>Age</h2>
+            {% if g.user.date_of_birth %}
+                <p>Your date of birth is {{ g.user.date_of_birth.strftime("%d %B %Y") }}, which makes you {{ g.user.age }}.</p>
+            {% else %}
+                {% if error == "invalid_date": %}
+                    <p class="error">That's not a valid date.</p>
+                {% endif %}
+                <form action="{{url_for("settings_date_of_birth")}}" method="post">
+                    <input type="hidden" name="token" value="{{g.csrf_token}}">
+                    <div class="input smart_quirk_settings"><p>
+                        <input type="text" id="dob_year" name="year" size="4" maxlength="4" required>
+                        <label for="dob_year">YYYY</label>
+                    </p></div>
+                    <div class="input smart_quirk_settings"><p>
+                        <input type="text" id="dob_month" name="month" size="2" maxlength="2" required>
+                        <label for="dob_month">MM</label>
+                    </p></div>
+                    <div class="input smart_quirk_settings"><p>
+                        <input type="text" id="dob_day" name="day" size="2" maxlength="2" required>
+                        <label for="dob_day">DD</label>
+                    </p></div>
+                    <button type="submit" class="fit_select_button">Save</button>
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
