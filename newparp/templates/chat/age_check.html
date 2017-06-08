@@ -5,6 +5,22 @@
         <h2><label><span>Age verification required</span></label></h2>
         <div class="common_box_wrap">
             <p>This chat is only suitable for people over 18. Please enter your date of birth to continue.</p>
+            <form action="{{url_for("settings_date_of_birth")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <div class="input smart_quirk_settings"><p>
+                    <input type="text" id="dob_year" name="year" size="4" maxlength="4" required>
+                    <label for="dob_year">YYYY</label>
+                </p></div>
+                <div class="input smart_quirk_settings"><p>
+                    <input type="text" id="dob_month" name="month" size="2" maxlength="2" required>
+                    <label for="dob_month">MM</label>
+                </p></div>
+                <div class="input smart_quirk_settings"><p>
+                    <input type="text" id="dob_day" name="day" size="2" maxlength="2" required>
+                    <label for="dob_day">DD</label>
+                </p></div>
+                <button type="submit" class="fit_select_button">Save</button>
+            </form>
         </div>
     </div>
 {% endblock %}

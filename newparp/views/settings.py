@@ -107,6 +107,8 @@ def date_of_birth():
             error="invalid_date",
         )
 
+    if "Referer" in request.headers:
+        return redirect(request.headers["referer"])
     return redirect(url_for("settings"))
 
 
