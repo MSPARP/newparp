@@ -167,6 +167,8 @@ class User(Base):
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
     search_age_restriction = Column(Boolean,    nullable=False, default=False)
 
+    pm_age_restriction = Column(Boolean, nullable=False, default=False)
+
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
     group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=["script"])
     group_chat_levels = Column(ARRAY(Unicode(50)), nullable=False, default=["sfw"])
