@@ -89,9 +89,20 @@ def get_chat(f):
                 # Only create a new PMChat on the main chat page.
                 if request.endpoint != "rp_chat":
                     abort(404)
+
+                # Reject if age-restricted.
+                if (
+                    not g.user.is_admin
+                    and pm_user.pm_age_restriction
+                    and pm_user.age_group == AgeGroup.under_18
+                    and g.user.age_group != AgeGroup.under_18
+                ):
+                    abort(404)
+
                 chat = PMChat(url=pm_url)
                 g.db.add(chat)
                 g.db.flush()
+
                 # Create ChatUser for the other user.
                 pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id, number=1, subscribed=True)
                 g.db.add(pm_chat_user)
