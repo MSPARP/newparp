@@ -8,7 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import log_in_required
 from newparp.helpers.email import send_email
-from newparp.model import Block, EmailBan, User
+from newparp.model import AgeGroup, Block, EmailBan, User
 from newparp.model.connections import use_db
 from newparp.model.validators import email_validator
 
@@ -20,6 +20,7 @@ def home_get():
         "settings/home.html",
         timezones=sorted(list(timezones)),
         themes=themes,
+        AgeGroup=AgeGroup,
     )
 
 
@@ -87,6 +88,17 @@ def theme():
 
 @use_db
 @log_in_required
+def pm_age_restriction():
+    if g.user.age_group != AgeGroup.under_18:
+        abort(404)
+
+    g.user.pm_age_restriction = "pm_age_restriction" in request.form
+
+    return redirect(url_for("settings"))
+
+
+@use_db
+@log_in_required
 def date_of_birth():
     # Date of birth setting is permanent.
     if g.user.date_of_birth is not None:
@@ -104,6 +116,7 @@ def date_of_birth():
             "settings/home.html",
             timezones=sorted(list(timezones)),
             themes=themes,
+            AgeGroup=AgeGroup,
             error="invalid_date",
         )
 

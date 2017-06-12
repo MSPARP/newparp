@@ -69,6 +69,13 @@
             <h2>Age</h2>
             {% if g.user.date_of_birth %}
                 <p>Your date of birth is {{ g.user.date_of_birth.strftime("%d %B %Y") }}, which makes you {{ g.user.age }}.</p>
+                {% if g.user.age_group == AgeGroup.under_18: %}
+                    <form action="{{url_for("settings_pm_age_restriction")}}" method="post">
+                        <input type="hidden" name="token" value="{{g.csrf_token}}">
+                        <div class="input"><p><input type="checkbox" id="pm_age_restriction" name="pm_age_restriction"{% if g.user.pm_age_restriction: %} checked="checked"{% endif %}><label for="pm_age_restriction"> Don't allow users over 18 to PM me</label></p></div>
+                        <button type="submit">Save</button>
+                    </form>
+                {% endif %}
             {% else %}
                 {% if error == "invalid_date": %}
                     <p class="error">That's not a valid date.</p>
