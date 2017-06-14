@@ -17,6 +17,18 @@ from newparp.model.connections import use_db
 @permission_required("spamless")
 def home(fmt=None, page=1):
 
+    try:
+        last_spamless_message_id = int(g.redis.get("spamless:last_id"))
+    except (TypeError, ValueError):
+        last_spamless_message_id = None
+
+    if last_spamless_message_id:
+        last_spamless_message = g.db.query(Message).filter(Message.id == last_spamless_message_id).first()
+    else:
+        last_spamless_message = None
+
+    last_message = g.db.query(Message).order_by(Message.id.desc()).first()
+
     before_id = None
     try:
         before_id = int(request.args["before_id"])
@@ -47,6 +59,8 @@ def home(fmt=None, page=1):
 
     return render_template(
         "admin/spamless/home.html",
+        last_spamless_message=last_spamless_message,
+        last_message=last_message,
         messages=messages,
         before_id=before_id,
     )
