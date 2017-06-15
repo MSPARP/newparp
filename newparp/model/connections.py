@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
 
 from newparp.model import sm, AnyChat, Chat, ChatUser, User
-
+from newparp.model.user_list import UserListStore
 
 
 @contextmanager
@@ -28,10 +28,18 @@ def session_scope():
         session.close()
 
 
+# Redis DB for sessions, caching etc.
 redis_pool = ConnectionPool(
     host=os.environ["REDIS_HOST"],
     port=int(os.environ["REDIS_PORT"]),
     db=int(os.environ["REDIS_DB"]),
+    decode_responses=True,
+)
+# Redis db for chat info.
+redis_chat_pool = ConnectionPool(
+    host=os.environ["REDIS_HOST"],
+    port=int(os.environ["REDIS_PORT"]),
+    db=int(os.environ["REDIS_CHAT_DB"]),
     decode_responses=True,
 )
 
@@ -167,12 +175,18 @@ def get_chat_user():
         )).one()
     except NoResultFound:
         abort(400)
+
     queue_user_meta(g, g.redis, request.headers.get("X-Forwarded-For", request.remote_addr))
+
     if g.user.group != "active":
         abort(403)
+
     g.ip_banned = get_ip_banned(request.headers.get("X-Forwarded-For", request.remote_addr), g.db, g.redis)
     if g.ip_banned and not g.user.is_admin:
         abort(403)
+
+    g.user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), g.chat.id)
+
 
 def use_db_chat(f):
     @wraps(f)

@@ -8,15 +8,13 @@ import re
 import signal
 import sys
 import time
-import functools
 
 import asyncio_redis
 
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
-from tornado.gen import coroutine, Task
+from tornado.gen import coroutine
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.platform.asyncio import AsyncIOMainLoop
@@ -30,20 +28,24 @@ from newparp.helpers.chat import (
     TooManyPeopleException,
     KickedException,
     authorize_joining,
-    kick_check,
-    join,
-    send_userlist,
     get_userlist,
-    disconnect,
+    kick_check,
+    send_join_message,
+    send_userlist,
     send_quit_message,
 )
 from newparp.helpers.matchmaker import validate_searcher_exists, refresh_searcher
 from newparp.helpers.users import queue_user_meta
-from newparp.model import sm, AnyChat, Ban, ChatUser, Message, User, SearchCharacter
-from newparp.model.connections import redis_pool, NewparpRedis
+from newparp.model import sm, AnyChat, ChatUser, User, SearchCharacter
+from newparp.model.connections import redis_pool, redis_chat_pool, NewparpRedis
+from newparp.model.user_list import UserListStore, PingTimeoutException
 from newparp.tasks.matchmaker import new_searcher
 
-redis = NewparpRedis(connection_pool=redis_pool)
+
+redis      = NewparpRedis(connection_pool=redis_pool)
+redis_chat = NewparpRedis(connection_pool=redis_chat_pool)
+
+
 thread_pool = ThreadPoolExecutor()
 
 
@@ -53,6 +55,7 @@ origin_regex = re.compile("^https?:\/\/%s$" % os.environ["BASE_DOMAIN"].replace(
 sockets = set()
 
 DEBUG = "DEBUG" in os.environ or "--debug" in sys.argv
+
 
 class ChatHandler(WebSocketHandler):
     @property
@@ -83,11 +86,10 @@ class ChatHandler(WebSocketHandler):
         if not hasattr(self, "channels") or not hasattr(self, "user_number"):
             return
 
-        command = redis.sadd if is_typing else redis.srem
-        typing_key = "chat:%s:typing" % self.chat_id
-        if command(typing_key, self.user_number):
+        func = self.user_list.user_start_typing if is_typing else self.user_list.user_stop_typing
+        if func(self.user_number):
             redis.publish(self.channels["typing"], json.dumps({
-                "typing": list(int(_) for _ in redis.smembers(typing_key)),
+                "typing": self.user_list.user_numbers_typing(),
             }))
 
     def write_message(self, *args, **kwargs):
@@ -118,16 +120,19 @@ class ChatHandler(WebSocketHandler):
         except NoResultFound:
             self.send_error(404)
             return
+
         # Remember the user number so typing notifications can refer to it
         # without reopening the database session.
         self.user_number = self.chat_user.number
         queue_user_meta(self, redis, self.request.headers.get("X-Forwarded-For", self.request.remote_ip))
 
+        self.user_list = UserListStore(redis_chat, self.chat_id)
+
         try:
             if self.user.group != "active":
                 raise BannedException
 
-            yield thread_pool.submit(authorize_joining, redis, self.db, self)
+            yield thread_pool.submit(authorize_joining, self.db, self)
         except (UnauthorizedException, BannedException, TooManyPeopleException):
             self.send_error(403)
             return
@@ -135,9 +140,7 @@ class ChatHandler(WebSocketHandler):
     @coroutine
     def open(self, chat_id):
 
-        redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
         sockets.add(self)
-        redis.sadd("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
         if DEBUG:
             print("socket opened: %s %s %s" % (self.id, self.chat.url, self.user.username))
 
@@ -165,31 +168,37 @@ class ChatHandler(WebSocketHandler):
             after = int(self.request.query_arguments["after"][0])
         except (KeyError, IndexError, ValueError):
             after = 0
-        messages = redis.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
+        messages = redis_chat.zrangebyscore("chat:%s" % self.chat_id, "(%s" % after, "+inf")
         self.write_message(json.dumps({
             "chat": self.chat.to_dict(),
             "messages": [json.loads(_) for _ in messages],
         }))
 
-        join_message_sent = yield thread_pool.submit(join, redis, self.db, self)
+        online_state_changed = self.user_list.socket_join(self.id, self.session_id, self.user_id)
         self.joined = True
 
-        # Send userlist if nothing was sent by join().
-        if not join_message_sent:
-            userlist = yield thread_pool.submit(get_userlist, self.db, redis, self.chat)
+        # Send  a join message to everyone if we just joined, otherwise send the
+        # user list to the client.
+        if online_state_changed:
+            yield thread_pool.submit(send_join_message, self.user_list, self.db, self)
+        else:
+            userlist = yield thread_pool.submit(get_userlist, self.user_list, self.db)
             self.write_message(json.dumps({"users": userlist}))
 
         self.db.commit()
         self.db.close()
 
     def on_message(self, message):
-        if redis.zadd("sockets_alive", time.time() + 60, "%s/%s/%s" % (self.chat_id, self.session_id, self.id)):
-            # We've been reaped, so disconnect.
-            self.close()
-            return
         if DEBUG:
             print("message: %s" % message)
-        if message in ("typing", "stopped_typing"):
+        if message == "ping":
+            try:
+                self.user_list.socket_ping(self.id)
+            except PingTimeoutException:
+                # We've been reaped, so disconnect.
+                self.close()
+                return
+        elif message in ("typing", "stopped_typing"):
             self.set_typing(message == "typing")
 
     def on_close(self):
@@ -204,21 +213,21 @@ class ChatHandler(WebSocketHandler):
             message_type = "disconnect"
         else:
             message_type = "timeout"
-        if self.joined and disconnect(redis, self.chat_id, self.id):
+
+        if self.joined and self.user_list.socket_disconnect(self.id, self.user_number):
             try:
-                send_quit_message(self.db, redis, *self.get_chat_user(), type=message_type)
+                send_quit_message(self.user_list, self.db, *self.get_chat_user(), type=message_type)
             except NoResultFound:
-                send_userlist(self.db, redis, self.chat)
+                send_userlist(self.user_list, self.db, self.chat)
             self.db.commit()
+
         # Delete the database connection here and on_finish just to be sure.
         if hasattr(self, "_db"):
             self._db.close()
             del self._db
-        self.set_typing(False)
+
         if DEBUG:
-            print("socket closed: %s" % (self.id))
-        redis.srem("chat:%s:sockets:%s" % (self.chat_id, self.session_id), self.id)
-        redis.zrem("sockets_alive", "%s/%s/%s" % (self.chat_id, self.session_id, self.id))
+            print("socket closed: %s" % self.id)
 
         try:
             sockets.remove(self)
@@ -275,7 +284,7 @@ class SearchHandler(WebSocketHandler):
             self.send_error(401)
             return
 
-        self.searcher_id = searcher_id = self.path_args[0]
+        self.searcher_id = self.path_args[0]
         try:
             UUID(self.path_args[0])
         except ValueError:

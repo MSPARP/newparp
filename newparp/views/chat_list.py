@@ -16,7 +16,8 @@ from newparp.model import (
     PMChat,
     ChatUser,
 )
-from newparp.model.connections import use_db
+from newparp.model.connections import use_db, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 
 chat_classes = {
     "all": AnyChat,
@@ -66,12 +67,13 @@ def chat_list(fmt=None, type=None, page=1):
         chat_count = chat_count.join(ChatClass)
     chat_count = chat_count.scalar()
 
-    pipeline = g.redis.pipeline()
-    for c in chats:
-        pipeline.hvals("chat:%s:online" % c[1].id)
+    online_userlists = UserListStore.multi_user_ids_online(
+        NewparpRedis(connection_pool=redis_chat_pool),
+        (c[1].id for c in chats),
+    )
 
     chat_dicts = []
-    for (chat_user, chat), online_user_ids in zip(chats, pipeline.execute()):
+    for (chat_user, chat), online_user_ids in zip(chats, online_userlists):
 
         if chat.type == "pm":
             pm_chat_user = g.db.query(ChatUser).filter(and_(
