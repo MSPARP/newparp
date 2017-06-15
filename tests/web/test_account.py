@@ -3,9 +3,12 @@ import uuid
 
 from tests import login
 
-def create_account(client, username=None, password="password", password_again="password", email_address="rose@example.com"):
+def create_account(client, username=None, password="password", password_again="password", email_address=None):
     if not username:
         username = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
+
+    if not email_address:
+        email_address = "test+%s@msparp.com" % str(uuid.uuid4())
 
     rv = client.post("/register", data=dict(
         username=username,
