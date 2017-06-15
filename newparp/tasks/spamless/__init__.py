@@ -122,7 +122,7 @@ class CheckSpamTask(WorkerTask):
                             acronym="\u264b",
                             text="Spam has been detected and silenced. Please come [url=http://help.msparp.com/]here[/url] or ask a chat moderator to unsilence you if this was an accident.",
                             color="626262"
-                        ), True)
+                        ), force_userlist=True)
 
     def check_connection_spam(self, chat_id, message):
         if message["type"] not in ("join", "disconnect", "timeout", "user_info"):

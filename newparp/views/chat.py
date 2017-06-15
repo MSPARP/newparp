@@ -29,7 +29,8 @@ from newparp.model import (
     SearchCharacterGroup,
     User,
 )
-from newparp.model.connections import use_db
+from newparp.model.connections import use_db, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 from newparp.model.validators import url_validator
 
 
@@ -103,8 +104,9 @@ def get_chat(f):
 
         g.chat = chat
         g.chat_id = chat.id
+        g.user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), chat.id)
         try:
-            authorize_joining(g.redis, g.db, g)
+            authorize_joining(g.db, g)
         except BannedException:
             if request.endpoint != "rp_chat" or chat.url == "theoubliette":
                 abort(403)
@@ -633,7 +635,7 @@ def invite(chat, pm_user, url, fmt):
                 own_chat_user.name, own_chat_user.acronym,
                 invite_user.username,
             ),
-        ))
+        ), g.user_list)
 
     if (
         "X-Requested-With" in request.headers
@@ -699,7 +701,7 @@ def uninvite(chat, pm_user, url, fmt):
                 own_chat_user.name, own_chat_user.acronym,
                 invite_user.username,
             ),
-        ))
+        ), g.user_list)
 
     if (
         "X-Requested-With" in request.headers
@@ -755,7 +757,7 @@ def unban(chat, pm_user, url, fmt):
             own_chat_user.name, own_chat_user.acronym,
             unban_chat_user.name, unban_chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"])

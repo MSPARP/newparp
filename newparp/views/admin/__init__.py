@@ -26,7 +26,8 @@ from newparp.model import (
     User,
     UserNote,
 )
-from newparp.model.connections import use_db
+from newparp.model.connections import use_db, NewparpRedis, redis_chat_pool
+from newparp.model.user_list import UserListStore
 from newparp.model.validators import color_validator
 from newparp.tasks import celery
 
@@ -118,14 +119,8 @@ def broadcast_post():
         }]
     })
 
-    next_index = 0
-    while True:
-        next_index, keys = g.redis.scan(next_index, "chat:*:online")
-        for key in keys:
-            chat_id = key[5:-7]
-            g.redis.publish("channel:%s" % chat_id, message_json)
-        if int(next_index) == 0:
-            break
+    for chat_id in UserListStore.scan_active_chats(NewparpRedis(connection_pool=redis_chat_pool)):
+        g.redis.publish("channel:%s" % chat_id, message_json)
 
     return redirect(url_for("admin_broadcast"))
 

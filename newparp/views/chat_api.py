@@ -13,10 +13,7 @@ from newparp.helpers.chat import (
     send_message,
     send_temporary_message,
     send_userlist,
-    disconnect,
-    disconnect_user,
     send_quit_message,
-    get_userlist,
 )
 from newparp.model import (
     case_options,
@@ -71,12 +68,10 @@ def send():
             pass
 
     # Clear typing status so the front end doesn't have to.
-    if g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)):
-        typing_key = "chat:%s:typing" % g.chat.id
-        if g.redis.srem(typing_key, g.chat_user.number):
-            g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
-                "typing": list(int(_) for _ in g.redis.smembers(typing_key)),
-            }))
+    if g.user_list.user_stop_typing(g.chat_user.number):
+        g.redis.publish("channel:%s:typing" % g.chat.id, json.dumps({
+            "typing": g.user_list.user_numbers_typing(),
+        }))
 
     g.chat_user.draft = ""
 
@@ -88,7 +83,7 @@ def send():
         acronym=character.acronym if character is not None else g.chat_user.acronym,
         name=character.name if character is not None else g.chat_user.name,
         text=text,
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -146,7 +141,7 @@ def set_group():
     # Admins and creators can do this from the chat users list, so only require
     # a socket if we're not one.
     if (
-        g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)) == 0
+        not g.user_list.session_has_open_socket(g.session_id, g.user.id)
         and not (g.user.is_admin or g.user.id == g.chat.creator_id)
     ):
         abort(403)
@@ -209,7 +204,7 @@ def set_group():
             g.chat_user.name, g.chat_user.acronym,
             set_chat_user.name, set_chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -243,16 +238,18 @@ def user_action():
         abort(403)
 
     if action == "kick":
-        g.redis.publish(
-            "channel:%s:%s" % (g.chat.id, set_user.id),
-            "{\"exit\":\"kick\"}",
-        )
         # Don't allow them back in for 30 seconds.
         kick_key = "kicked:%s:%s" % (g.chat.id, set_user.id)
         g.redis.set(kick_key, 1)
         g.redis.expire(kick_key, 30)
+
+        g.redis.publish(
+            "channel:%s:%s" % (g.chat.id, set_user.id),
+            "{\"exit\":\"kick\"}",
+        )
+
         # Only send a kick message if they're currently online.
-        if disconnect_user(g.redis, g.chat.id, set_user.id):
+        if g.user_list.user_disconnect(set_user.id, set_chat_user.number):
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=set_user.id,
@@ -264,7 +261,8 @@ def user_action():
                     g.chat_user.name, g.chat_user.acronym,
                     set_chat_user.name, set_chat_user.acronym,
                 )
-            ))
+            ), g.user_list)
+
         return "", 204
 
     elif action == "ban":
@@ -318,14 +316,16 @@ def user_action():
             "channel:%s:%s" % (g.chat.id, set_user.id),
             "{\"exit\":\"ban\"}",
         )
-        disconnect_user(g.redis, g.chat.id, set_user.id)
+
+        g.user_list.user_disconnect(set_user.id, set_chat_user.number)
+
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
             user_id=set_user.id,
             type="user_action",
             name=g.chat_user.name,
             text=ban_message,
-        ))
+        ), g.user_list)
         # Unsubscribe if necessary.
         set_chat_user.subscribed = False
         return "", 204
@@ -406,7 +406,7 @@ def set_flag():
         user_id=g.user.id,
         type="chat_meta",
         text=message % (g.chat_user.name, g.chat_user.acronym),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -435,7 +435,7 @@ def set_topic():
             text="%s [%s] removed the conversation topic." % (
                 g.chat_user.name, g.chat_user.acronym,
             ),
-        ))
+        ), g.user_list)
     else:
         send_message(g.db, g.redis, Message(
             chat_id=g.chat.id,
@@ -445,7 +445,7 @@ def set_topic():
             text="%s [%s] changed the topic to \"%s\"" % (
                 g.chat_user.name, g.chat_user.acronym, topic,
             ),
-        ))
+        ), g.user_list)
 
     return "", 204
 
@@ -475,7 +475,7 @@ def set_info():
         text="%s [%s] edited the chat information." % (
             g.chat_user.name, g.chat_user.acronym,
         ),
-    ))
+    ), g.user_list)
 
     return "", 204
 
@@ -503,7 +503,7 @@ def save():
     # Send a message if name or acronym has changed.
     if g.chat_user.name != old_name or g.chat_user.acronym != old_acronym:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.db, g.redis, g.chat)
+            send_userlist(g.user_list, g.db, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
@@ -514,10 +514,10 @@ def save():
                     old_name, old_acronym,
                     g.chat_user.name, g.chat_user.acronym,
                 ),
-            ))
+            ), g.user_list)
     # Just refresh the user list if the color has changed.
     elif g.chat_user.color != old_color:
-        send_userlist(g.db, g.redis, g.chat)
+        send_userlist(g.user_list, g.db, g.chat)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 
@@ -534,7 +534,9 @@ def save_from_character():
     except NoResultFound:
         abort(404)
 
-    old_color = g.chat_user.color
+    # Remember old values so we can check if they've changed later.
+    old_name = g.chat_user.name
+    old_acronym = g.chat_user.acronym
 
     # Send a message if name, acronym or color has changed.
     changed = (
@@ -554,18 +556,18 @@ def save_from_character():
 
     if changed:
         if g.chat_user.computed_group == "silent":
-            send_userlist(g.db, g.redis, g.chat)
+            send_userlist(g.user_list, g.db, g.chat)
         else:
             send_message(g.db, g.redis, Message(
                 chat_id=g.chat.id,
                 user_id=g.user.id,
                 type="user_info",
                 name=g.chat_user.name,
-                text=("%s [%s] is now %s [%s].") % (
+                text="%s [%s] is now %s [%s]." % (
                     old_name, old_acronym,
                     g.chat_user.name, g.chat_user.acronym,
                 ),
-            ))
+            ), g.user_list)
 
     return jsonify(g.chat_user.to_dict(include_options=True))
 

@@ -33,7 +33,7 @@ CELERY_QUEUES = (
     # Default queue
     Queue("default", Exchange("default"), routing_key="default"),
 
-    # Worker queue
+    # Misc worker queue
     Queue("worker", Exchange("worker"), routing_key="worker", delivery_mode=1),
 
     # Matchmaker queue
@@ -67,12 +67,8 @@ CELERYBEAT_SCHEDULE = {
         "task": "newparp.tasks.matchmaker.generate_searching_counter",
         "schedule": timedelta(seconds=10),
     },
-    "ping_longpolls": {
-        "task": "newparp.tasks.reaper.ping_longpolls",
-        "schedule": timedelta(seconds=5),
-    },
     "reap": {
         "task": "newparp.tasks.reaper.reap",
-        "schedule": timedelta(seconds=1),
+        "schedule": timedelta(seconds=10),
     },
 }
