@@ -52,11 +52,13 @@ def test_invalid_email(client):
 
 # Blank fields
 
-def test_blank_email(client):
+def test_blank_email(client, redis):
+    redis.delete("register:127.0.0.1")
     rv = create_account(client, email_address="")
     assert b"E-mail address is required" in rv.data
 
-def test_blank_password(client):
+def test_blank_password(client, redis):
+    redis.delete("register:127.0.0.1")
     rv = create_account(client, password="")
     assert b"enter a username and password" in rv.data
 
