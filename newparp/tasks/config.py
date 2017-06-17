@@ -49,7 +49,7 @@ CELERY_ROUTES = {"newparp.tasks.spamless.CheckSpamTask": {"queue": "spamless"}}
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
         "task": "newparp.tasks.background.generate_counters",
-        "schedule": timedelta(seconds=10),
+        "schedule": timedelta(seconds=30),
     },
     "unlist_chats": {
         "task": "newparp.tasks.background.unlist_chats",
@@ -57,11 +57,11 @@ CELERYBEAT_SCHEDULE = {
     },
     "update_lastonline": {
         "task": "newparp.tasks.background.update_lastonline",
-        "schedule": timedelta(seconds=5),
+        "schedule": timedelta(seconds=10),
     },
     "update_user_meta": {
         "task": "newparp.tasks.background.update_user_meta",
-        "schedule": timedelta(seconds=5),
+        "schedule": timedelta(seconds=10),
     },
     "generate_searching_counter": {
         "task": "newparp.tasks.matchmaker.generate_searching_counter",
@@ -69,6 +69,6 @@ CELERYBEAT_SCHEDULE = {
     },
     "reap": {
         "task": "newparp.tasks.reaper.reap",
-        "schedule": timedelta(seconds=10),
+        "schedule": timedelta(seconds=60),
     },
 }
