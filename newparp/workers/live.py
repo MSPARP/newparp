@@ -180,7 +180,7 @@ class ChatHandler(WebSocketHandler):
         # Send  a join message to everyone if we just joined, otherwise send the
         # user list to the client.
         if online_state_changed:
-            yield thread_pool.submit(send_join_message, self.user_list, self.db, self)
+            yield thread_pool.submit(send_join_message, self.user_list, self.db, redis, self)
         else:
             userlist = yield thread_pool.submit(get_userlist, self.user_list, self.db)
             self.write_message(json.dumps({"users": userlist}))

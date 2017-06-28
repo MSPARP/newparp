@@ -100,7 +100,7 @@ def kick_check(redis, context):
         raise KickedException
 
 
-def send_join_message(user_list, db, context):
+def send_join_message(user_list, db, redis, context):
     """
     Send join message or delete previous disconnect message:
     * If the last message in the chat was a disconnect from this user, it's
@@ -108,6 +108,13 @@ def send_join_message(user_list, db, context):
     * If not, a join message is sent.
     * Either way, the user list is refreshed.
     """
+
+    # Queue their last_online update.
+    redis.hset("queue:usermeta", "chatuser:%s" % context.chat_user.user_id, json.dumps({
+        "last_online": str(time.time()),
+        "chat_id": context.chat_user.chat_id,
+    }))
+
     if context.chat_user.computed_group == "silent" or context.chat.type in ("pm", "roulette"):
         send_userlist(user_list, db, context.chat)
     else:
