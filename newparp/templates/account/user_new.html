@@ -2,5 +2,11 @@
 {% block content: %}
     <h2>Awaiting activation.</h2>
     <p>Thank you for signing up! Before you start using MSPARP, please complete this final step to complete your registration. We've sent you an e-mail to confirm your registration. Please click the link provided in the e-mail to activate your account. The e-mail may be in your spam folder so make sure to check there too.</p>
-    <p>If you have not received an e-mail within twenty four hours, contact us through <a href="http://help.msparp.com">our support ticket system</a>.</p>
+    <p>If you have not received an e-mail within a few hours, click the button below to have a new verification e-mail sent.</p>
+    <form action="{{url_for("settings_change_email")}}" method="post">
+       <input type="hidden" name="token" value="{{g.csrf_token}}">
+       <input type="hidden" name="email_address" value="{{ g.user.email_address }}">
+       <p><button type="submit">Re-send verification e-mail</button></p>
+    </form>
+    <p>As a last resort, you can contact us through <a href="http://help.msparp.com">our support ticket system</a> for assistance, but be sure to check your SPAM FOLDER beforehand in case the e-mail ended up there.</p>
 {% endblock %}
