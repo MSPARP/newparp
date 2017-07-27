@@ -43,7 +43,7 @@
                 <div class="not_input"><p><input type="checkbox" id="basic_forms" class="device_settings" name="basic_form_elements"><label for="basic_forms"> Use basic form elements</label></p></div>
                 <p><span class="textlabel">(Tick this option if the form above does not render properly on your device or browser.)</span></p>
                 <label class="textlabel robo_q">Rules</label>
-                <div class="robo_calculate"><div class="input"><input type="checkbox" id="rules" name="rules" required><label for="rules">I have read and agree to the <a href="http://help.msparp.com/kb/faq.php?id=24" target="_blank">site rules</a>.</label></div></div>
+                <div class="robo_calculate"><div class="input"><input type="checkbox" id="rules" name="rules" required><label for="rules">I have read and agree to the <a href="http://help.msparp.com/kb/faq.php?id=24" target="_blank">site rules</a> and <a href="http://help.msparp.com/kb/faq.php?id=28">Terms of Service</a>.</label></div></div>
                 <p><button type="submit">Register</button> <a href="http://help.msparp.com/" class="reg_help">Having problems? Get help here.</a></p>
             </form>
         </div>
@@ -74,6 +74,7 @@
                     </p></div>
                 </div>
                 <p><button type="submit">Log in</button></p>
+				<p><a href="{{url_for("account_forgot_password")}}">Forgotten your password?</a></p>
             </form>
         </div>
     </div>
