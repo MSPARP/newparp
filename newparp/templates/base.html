@@ -49,7 +49,6 @@ document.body.className += ' no_forms';
             <div id="users_online">
                 <p>{{g.redis.get("connected_users") or 0}} connected</p>
                 <p>{{g.redis.get("searching_users") or 0}} searching</p>
-                <p>{{g.redis.get("rouletting_users") or 0}} rouletting</p>
             </div>
             <h1><span id="logo"><a href="{{url_for("home")}}"><img src="/static/img/logo-spacer.png" alt="MSPARP"></a></span> <span id="prompt">CHAT TERMINAL <span id="prompt-cursor"></span></span></h1>
         </header>
@@ -64,22 +63,21 @@ document.body.className += ' no_forms';
             <label for="nav_toggle">Menu</label>
             <input type="checkbox" id="nav_toggle">
             <ul>
-                <li><a href="{{url_for("home", mode="search")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
-                <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
+                <li><a href="{{url_for("home")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
                 <li><a href="{{url_for("rp_groups")}}"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
+                <li><a href="{{url_for("rp_chat_list")}}">Your chats</a></li>
+                <li><a href="{{url_for("rp_character_list")}}"><span class="long">Your characters</span><span class="short">Characters</span></a></li>
+                <li><a href="{{url_for("settings")}}">Settings</a></li>
                 <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
                 {% if g.user: %}
                 {% if g.user.is_admin: %}
                 <li><a href="{{url_for("admin_home")}}">Admin</a></li>
                 {% endif %}
                 <li class="user">
-                    <a href="#">{{g.user.username}}</a>
-                    <ul>
-                        <li><a href="{{url_for("rp_chat_list")}}">Your chats</a></li>
-                        <li><a href="{{url_for("rp_character_list")}}">Character creator</a></li>
-                        <li><a href="{{url_for("settings")}}">Settings</a></li>
-                        <li><form action="{{url_for("log_out")}}" method="post"><input type="hidden" name="token" value="{{g.csrf_token}}"><button type="submit">Log out</button></form></li>
-                    </ul>
+                    <form action="{{url_for("log_out")}}" method="post">
+                        <input type="hidden" name="token" value="{{g.csrf_token}}">
+                        <button type="submit">Log out</button>
+                    </form>
                 </li>
                 {% endif %}
             </ul>

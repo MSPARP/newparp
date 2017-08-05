@@ -93,9 +93,10 @@ class User(Base):
     email_verified = Column(Boolean, nullable=False, default=False)
 
     group = Column(Enum(
-        "banned",
-        "guest",
+        "new",
         "active",
+        "deactivated",
+        "banned",
         name="users_group",
     ), nullable=False, default="guest")
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"))
@@ -961,6 +962,27 @@ class IPBan(Base):
         }
 
 
+class EmailBan(Base):
+    __tablename__ = "email_bans"
+    id = Column(Integer, primary_key=True)
+    pattern = Column(Unicode(255), nullable=False, unique=True)
+    date = Column(DateTime(), nullable=False, default=now)
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reason = Column(Unicode(255), nullable=False)
+
+    def __repr__(self):
+        return "<EmailBan: %s>" % self.address
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "pattern": self.pattern,
+            "date": time.mktime(self.date.timetuple()),
+            "creator": self.creator.to_dict(),
+            "reason": self.reason,
+        }
+
+
 class AdminTier(Base):
     __tablename__ = "admin_tiers"
     id = Column(Integer, primary_key=True)
@@ -1208,6 +1230,7 @@ AdminLogEntry.affected_user = relation(User, foreign_keys=AdminLogEntry.affected
 AdminLogEntry.chat = relation(Chat)
 
 IPBan.creator = relation(User)
+EmailBan.creator = relation(User)
 
 AdminTier.admin_tier_permissions = relation(AdminTierPermission, backref="admin_tier")
 AdminTier.permissions = association_proxy(

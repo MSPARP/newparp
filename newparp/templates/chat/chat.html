@@ -25,7 +25,7 @@
                 {% endif %}
                 <button type="button" class="mobile_nav_button" id="mobile_open_switch_character">Switch character</button>
                 <button type="button" class="mobile_nav_button" id="mobile_open_settings">Settings</button>
-                <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="mobile_nav_link_button">Log</a>
+                <a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank" class="mobile_nav_link_button">Log</a>
                 <hr>
                 {% if chat.type == "pm": %}
                 <button type="button" class="mobile_nav_button" id="mobile_open_pm_chat_list_container">My PMs</button>
@@ -33,8 +33,7 @@
                 <button type="button" class="mobile_nav_button" id="mobile_open_my_chats">My chats</button>
                 <hr>
                 <a href="{{url_for("home")}}" class="mobile_nav_link_button">MSPARP Home</a>
-                <a href="{{url_for("home", mode="search")}}" class="mobile_nav_link_button">Character search</a>
-                <a href="{{url_for("home", mode="roulette")}}" class="mobile_nav_link_button">Roulette</a>
+                <a href="{{url_for("home")}}" class="mobile_nav_link_button">Character search</a>
                 <a href="{{url_for("rp_groups")}}" class="mobile_nav_link_button">Group chats</a>
                 <a href="http://forums.msparp.com/" target="_blank" class="mobile_nav_link_button">Forums</a>
                 {% if g.user: %}
@@ -51,8 +50,7 @@
             <label for="nav_toggle" class="hide_nav">{% if chat.type in ("searched", "roulette", "pm"): %} Menu{% endif %}</label>
             <input type="checkbox" id="nav_toggle" class="hide_nav">
             <ul>
-                <li><a href="{{url_for("home", mode="search")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
-                <li><a href="{{url_for("home", mode="roulette")}}">Roulette</a></li>
+                <li><a href="{{url_for("home")}}"><span class="long">Character search</span><span class="short">Search</span></a></li>
                 <li><a href="{{url_for("rp_groups")}}"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
                 <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
                 {% if g.user: %}
@@ -71,10 +69,6 @@
                 {% endif %}
             </ul>
         </nav>
-        
-        <div id="connection_method">
-            <p>Connection method: <span id="messages_method"></span>.</p>
-        </div>
          
          
         {% if chat.type == "group": %}
@@ -88,7 +82,7 @@
             <h2>{{chat.title}}</h2>
             <p class="topic">{{chat.topic}}</p>
             <p class="info_panel_controls"><button class="set_topic_button">Set topic</button> <button id="edit_info_button">Edit info</button></p>
-            <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a>
+            <a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank" class="log_button">View log</a>
             <h2>Description</h2>
             <p class="description">{{chat.description}}</p>
             <h2>Rules</h2>
@@ -100,7 +94,7 @@
             <label class="sidebar_title"><span>&gt; CHAT_DESCRIPTION</span></label>
             <div class="sidebar_wrap">
                 <p class="description">{{chat.description}}</p>
-                <a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a> <span class="info_panel_controls" style="display:none">| <a href="#" id="edit_info_link">Edit info</a></span>
+                <a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank" class="log_button">View log</a> <span class="info_panel_controls" style="display:none">| <a href="#" id="edit_info_link">Edit info</a></span>
                 <h2>Rules</h2>
                 <p class="rules">{{chat.rules}}</p>
                 <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=22">MSPARP site rules apply.</a></p>
@@ -216,7 +210,7 @@
                         <option value="admin_only">Admin only</option>
                         {% endif %}
                     </select></p></div>
-                    <p id="invites_link">&gt; <a href="{{url_for("rp_invites", url=chat.url)}}" target="_blank">Invite users</a></p>
+                    <p id="invites_link">&gt; <a href="{{url_for("rp_invites", url=chat.computed_url(pm_user=pm_user))}}" target="_blank">Invite users</a></p>
                     <div class="input select slimdrop"><p><select id="flag_style">
                         <option value="script">Script style</option>
                         <option value="paragraph">Paragraph style</option>
@@ -236,12 +230,12 @@
                 </section>
                 {% endif %}
                 <section id="action_list"></section>
-                <p class="infolink loglink">&gt;<a href="{{url_for("rp_log", url=chat.url)}}" target="_blank" class="log_button">View log</a></p>
+                <p class="infolink loglink">&gt;<a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank" class="log_button">View log</a></p>
                 <h2 {% if chat.type == "group": %}class="group_userlist"{% endif %}>Users</h2>
                 <ul id="user_list"></ul>
                 <p>
                     {% if chat.type == "group": %}
-                    &gt; <a href="{{url_for("rp_users", url=chat.url)}}" target="_blank">Full user list</a>
+                    &gt; <a href="{{url_for("rp_users", url=chat.computed_url(pm_user=pm_user))}}" target="_blank">Full user list</a>
                     {% endif %}
                 </p>
                 <div class="chatlinks_wrap">
@@ -401,7 +395,7 @@
 
         <section id="conversation">
             <div id="conversation_wrap">
-                <p><a href="{{url_for("rp_log", url=chat.url)}}" target="_blank">View log</a></p>
+                <p><a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank">View log</a></p>
                 {{render_messages(messages, show_timestamps=chat_user.show_timestamps)}}
                 <p id="status_bar">&nbsp;</p>
             </div>
@@ -439,14 +433,13 @@
             <p>Did you enjoy this chat? If so, remember to subscribe to it to receive notifications and keep it in your chats list.</p>
             <ul>
         {% if chat.type in ("searched", "roulette"): %}
-                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=Check+out+this+chat+I+just+had+on+MSPARP!&content={{url_for("rp_log", url=chat.url, _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_log", url=chat.url, _external=True)}}" target="_blank">Share the log on Tumblr</a></li>
+                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=Check+out+this+chat+I+just+had+on+MSPARP!&content={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share the log on Tumblr</a></li>
         {% elif chat.type == "group": %}
-                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title={{chat.title}}&content={{url_for("rp_chat", url=chat.url, _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_chat", url=chat.url, _external=True)}}" target="_blank">Share this chat on Tumblr</a></li>
+                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title={{chat.title}}&content={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share this chat on Tumblr</a></li>
         {% endif %}
                 <li><a href="#" class="disconnect_subscribe">Subscribe to this chat</a><span class="disconnect_subscribed">You are subscribed to this chat.</span></li>
-                <li><a href="{{url_for("rp_log", url=chat.url)}}" target="_blank">View this chat's log</a></li>
-                <li><a href="{{url_for("home", mode="search" if g.user.last_search_mode != "search" else None)}}">Character search</a></li>
-                <li><a href="{{url_for("home", mode="roulette" if g.user.last_search_mode != "roulette" else None)}}">Roulette</a></li>
+                <li><a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank">View this chat's log</a></li>
+                <li><a href="{{url_for("home")}}">Character search</a></li>
                 <li><a href="{{url_for("rp_groups")}}">Group chats</a></li>
             </ul>
         </section>
@@ -457,7 +450,7 @@
 {% block scripts: %}
 <script>
 msparp.chat(
-    {{chat|tojson|safe}},
+    {{chat_dict|tojson|safe}},
     {{chat_user_dict|tojson|safe}},
     {{character_shortcuts|tojson|safe}},
     {{latest_message_id|tojson|safe}},

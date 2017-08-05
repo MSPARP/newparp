@@ -1,6 +1,7 @@
 var msparp = (function() {
 
 	var body = $(document.body);
+	var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
 
 	// Prevent breaking browsers and settings that don't like localStorage
 	try {
@@ -375,49 +376,6 @@ var msparp = (function() {
 		$('#clear_regexes').click(clear_regexes_and_add);
 	}
 
-	// Searching
-	var search_type = "search"
-	var searching = false;
-	var searcher_id;
-
-	function start_search() {
-		if (!searching) {
-			searching = true;
-			body.addClass("searching");
-			$.post("/" + search_type, {}, function(data) {
-				searcher_id = data.id;
-				continue_search();
-			}).error(function() {
-				searching = false;
-				body.removeClass("searching").addClass("search_error");
-			});
-		}
-	}
-	function continue_search() {
-		if (searching) {
-			$.post("/" + search_type + "/continue", { "id": searcher_id }, function(data) {
-				if (data.status == "matched") {
-					searching = false;
-					window.location.href = "/" + data.url;
-				} else if (data.status == "quit") {
-					searching = false;
-				} else {
-					continue_search();
-				}
-			}).error(function() {
-				window.setTimeout(function() {
-					searching = false;
-					start_search();
-				}, 2000);
-			});
-		}
-	}
-	function stop_search() {
-		searching = false;
-		$.ajax("/" + search_type + "/stop", { "type": "POST", data: { "id": searcher_id }, "async": false });
-		body.removeClass("searching");
-	}
-
 	// BBCode
 	var tag_properties = {bgcolor: "background-color", color: "color", font: "font-family", bshadow: "box-shadow", tshadow: "text-shadow"}
 	function bbencode(text, admin) { return raw_bbencode(Handlebars.escapeExpression(text), admin); }
@@ -588,16 +546,36 @@ var msparp = (function() {
 		},
 		// Character search
 		"search": function(token) {
+			var ws, ws_interval;
 			$.ajaxSetup({data: {"token": token}});
-			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
-		},
-		// Roulette
-		"roulette": function(token) {
-			$.ajaxSetup({data: {"token": token}});
-			search_type = "roulette";
-			$(window).unload(function () { if (searching) { stop_search(); }});
-			start_search();
+			$.post("/search", {}, function(data) {
+				matched = false;
+				body.addClass("searching");
+				searcher_id = data.id;
+				ws = new WebSocket(ws_protocol + "live." + location.host + "/search/" + searcher_id);
+				ws.onopen = function() {
+					console.log("ready");
+					ws_interval = window.setInterval(function() { console.log("ping"); ws.send("ping"); }, 10000)
+				}
+				ws.onmessage = function(e) {
+					var data = JSON.parse(e.data);
+					console.log(data);
+					if (data.status == "matched") {
+						matched = true;
+						window.location.href = "/" + data.url;
+					} else if (data.status == "quit") {
+						ws.close();
+					}
+				}
+				ws.onclose = function() {
+					if (matched) { return; }
+					body.removeClass("searching").addClass("search_error");
+					window.clearInterval(ws_interval);
+				}
+			}).error(function() {
+				searching = false;
+				body.removeClass("searching").addClass("search_error");
+			});
 		},
 		// Character pages
 		"character": function() {
@@ -633,13 +611,18 @@ var msparp = (function() {
 			var latest_date = user.meta.show_timestamps ? new Date(latest_time) : null;
 			var new_messages = [];
 
-			// Websockets
-			var messages_method = typeof(WebSocket) != "undefined" ? "websocket" : "long_poll";
-			var ws_protocol = (location.protocol=="https:") ? "wss://" : "ws://";
+			// Connecting and disconnecting
+
 			var ws;
 			var ws_works = false;
 			var ws_connected_time = 0;
-			function launch_websocket() {
+
+			function connect() {
+				if (typeof(WebSocket) == "undefined") {
+					status_bar.css("color", "#f00").html("Sorry, your browser doesn't appear to support websockets. Please use the latest version of <a href=\"https://www.firefox.com/\">Firefox</a> or <a href=\"https://www.google.com/chrome\">Chrome</a> to participate in this chat.");
+					return;
+				}
+
 				// Don't create a new websocket unless the previous one is closed.
 				// This prevents problems with eg. double clicking the join button.
 				if (ws && ws.readyState != 3) { return; }
@@ -652,56 +635,17 @@ var msparp = (function() {
 					if (status == "connecting" || status == "chatting") {
 						// Fall back to long polling if we've never managed to connect.
 						if (!ws_works || (Date.now() - ws_connected_time) < 5000) {
-							messages_method = "long_poll";
-							launch_long_poll(true);
+							status_bar.css("color", "#f00").html("Sorry, the connection to the server has been lost.");
 							return;
 						}
 						// Otherwise try to reconnect.
 						exit();
 						status_bar.css("color", "#f00").text("Sorry, the connection to the server has been lost. Attempting to reconnect...");
-						window.setTimeout(launch_websocket, Math.random() * 10000);
+						window.setTimeout(connect, Math.random() * 10000);
 					}
 				}
 			}
 
-			// Long polling
-			function launch_long_poll(joining) {
-				var data = { "chat_id": chat.id, "after": latest_message_id };
-				if (joining) { enter(); data["joining"] = true; }
-				$.post("/chat_api/messages", data, receive_messages).complete(function(jqxhr, text_status) {
-					if (status == "chatting") {
-						if (jqxhr.status < 400 && text_status == "success") {
-							launch_long_poll();
-						} else {
-							window.setTimeout(launch_long_poll, 2000);
-							// XXX display a message if it still doesn't work after several attempts.
-						}
-					}
-				});
-			}
-
-			// Ping loop
-			function ping() {
-				if (status == "chatting") {
-					if (messages_method == "websocket") {
-						if (ws.readyState == 1) {
-							ws.send("ping");
-							window.setTimeout(ping, 10000);
-						}
-					} else {
-						$.post("/chat_api/ping", { "chat_id": chat.id }).complete(function() { window.setTimeout(ping, 10000); });
-					}
-				}
-			}
-
-			// Connecting and disconnecting
-			function connect() {
-				if (messages_method == "websocket") {
-					launch_websocket();
-				} else {
-					launch_long_poll(true);
-				}
-			}
 			function enter() {
 				status = "chatting";
 				window.setTimeout(ping, 10000);
@@ -725,14 +669,13 @@ var msparp = (function() {
 				}
 				status_bar.css("color", "").text((
 					// Show status bar if typing notifications are available and switched on.
-					(messages_method == "websocket" && user.meta.typing_notifications)
+					user.meta.typing_notifications
 					// Also always show it in PM and roulette chats for online status.
 					|| chat.type == "pm" || chat.type == "roulette"
 				) ? " " : "");
 				text_input.keyup();
 				scroll_to_bottom();
 				abscond_button.text("Abscond");
-				$("#messages_method").text(messages_method);
 			}
 			function exit() {
 				status = "disconnected";
@@ -746,14 +689,18 @@ var msparp = (function() {
 				status_bar.text("");
 				abscond_button.text(chat.type == "searched" || chat.type == "roulette" ? "Search again" : "Join");
 				if (chat.type == "searched" || chat.type == "roulette") { $("#send_form_wrap").addClass("abscond_again"); }
-				$("#connection_method").css("display", "none");
 			}
 			function disconnect() {
 				exit();
-				if (messages_method == "websocket") {
-					ws.close(1000); receive_messages({});
-				} else {
-					$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id } });
+				ws.close(1000);
+				receive_messages({});
+			}
+
+			// Ping loop
+			function ping() {
+				if (status == "chatting" && ws.readyState == 1) {
+					ws.send("ping");
+					window.setTimeout(ping, 10000);
 				}
 			}
 
@@ -767,9 +714,6 @@ var msparp = (function() {
 			$(window).unload(function() {
 				if (status == "chatting") {
 					status = "disconnected";
-					if (messages_method != "websocket") {
-						$.ajax("/chat_api/quit", { "type": "POST", data: { "chat_id": chat.id }, "async": false });
-					}
 				}
 			});
 
@@ -1083,9 +1027,7 @@ var msparp = (function() {
 				return (chat.type == "searched" || chat.type == "roulette") && their_number != user.meta.number;
 			}
 			function block(number) {
-				var reason = prompt("If you block this person, you will never encounter them in random chats. Optionally, you can also provide a reason below.");
-				if (reason == null) { return; }
-				$.post("/chat_api/block", { "chat_id": chat.id, "number": number, "reason": reason });
+				text_input.val("/block " + number + " (reason)").focus();
 			}
 			function can_set_group(new_group, current_group) {
 				// Setting group only works in group chats.
@@ -1363,10 +1305,8 @@ var msparp = (function() {
 					edit_info_panel.show();
 				});
 				$(".set_topic_button").click(function() {
-					var topic = prompt("Please enter a new topic for the chat:");
-					if (topic != null) {
-						$.post("/chat_api/set_topic", { "chat_id": chat.id, "topic": topic });
-					}
+					info_panel.hide();
+					text_input.val("/topic ").focus();
 				});
 				var edit_info_panel = $("#edit_info_panel");
 				$("#edit_info_form").submit(function() {
@@ -1713,7 +1653,7 @@ var msparp = (function() {
 							previous_status_message = null;
 						}
 					} else {
-						status_bar.text(messages_method == "websocket" && this.checked ? " " : "");
+						status_bar.text(this.checked ? " " : "");
 					}
 				}
 				parse_variables();
@@ -1795,21 +1735,19 @@ var msparp = (function() {
 
 			var text_input = $("input[name=text]").keydown(function() {
 				changed_since_draft = true;
-				if (messages_method == "websocket") {
-					window.clearTimeout(typing_timeout);
-					if (!typing) {
-						typing = true;
-						ws.send("typing");
-						$("#activity_spinner").addClass("active_self");
-						$("#activity_spinner").attr("title", "You are typing...");
-					}
-					typing_timeout = window.setTimeout(function() {
-						typing = false;
-						ws.send("stopped_typing");
-						$("#activity_spinner").removeClass("active_self");
-						$("#activity_spinner").attr("title", "No activity");
-					}, 1000);
+				window.clearTimeout(typing_timeout);
+				if (!typing) {
+					typing = true;
+					ws.send("typing");
+					$("#activity_spinner").addClass("active_self");
+					$("#activity_spinner").attr("title", "You are typing...");
 				}
+				typing_timeout = window.setTimeout(function() {
+					typing = false;
+					ws.send("stopped_typing");
+					$("#activity_spinner").removeClass("active_self");
+					$("#activity_spinner").attr("title", "No activity");
+				}, 1000);
 			}).keyup(function() {
 				if (user.meta.show_preview) {
 					text = this.value.trim()
@@ -1856,7 +1794,8 @@ var msparp = (function() {
 					var executed = execute_command(data.text);
 					if (executed) {
 						text_input.val("");
-						if (messages_method == "websocket") { typing = false; ws.send("stopped_typing"); }
+						typing = false;
+						ws.send("stopped_typing");
 						return false;
 					}
 					// If the current temporary character matches, apply their quirks.
@@ -2222,8 +2161,6 @@ var msparp = (function() {
 					if (confirm("Are you sure you want to abscond?")) { disconnect(); }
 				} else if (chat.type == "searched") {
 					location.href = "/search";
-				} else if (chat.type == "roulette") {
-					location.href = "/roulette";
 				} else {
 					connect();
 				}

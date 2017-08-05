@@ -1,53 +1,47 @@
 import random
 
-from tests import ParpTestCase
+from tests import login
 
-class BanTests(ParpTestCase):
-    def ban(self, address: str, reason: str="Unittest ban."):
-        with self.flask_client as client:
-            # Login and poke the chat to get a valid cookie and a ChatUser entry.
-            self.login(self.admin_user.username, "password", client=client)
-            rv = client.post("/admin/ip_bans/new", data=dict(
-                address=address,
-                reason=reason
-            ))
-            assert rv.status_code in (200, 302)
+# Utility
 
-    def random_ip(self) -> str:
-        return ".".join([str(random.randint(1, 255)) for x in range(0, 4)])
+def ban(client, address: str, reason: str="Unittest ban."):
+    rv = client.post("/admin/ip_bans/new", data=dict(
+        address=address,
+        reason=reason
+    ))
+    assert rv.status_code in (200, 302)
 
-    def test_no_bans(self):
-        rv = self.flask_client.get("/", environ_base={
-            "REMOTE_ADDR": "127.0.0.1"
-        })
+def random_ip() -> str:
+    return ".".join([str(random.randint(1, 255)) for x in range(0, 4)])
 
-        assert rv.status_code == 200
+# Tests
 
-    def test_user_ip_ban(self):
-        ban_ip = self.random_ip()
+def test_no_bans(user_client):
+    rv = user_client.get("/", environ_base={
+        "REMOTE_ADDR": "127.0.0.1"
+    })
 
-        self.ban(ban_ip)
+    assert rv.status_code == 200
 
-        rv = self.flask_client.get("/", environ_base={
-            "REMOTE_ADDR": ban_ip
-        })
+def test_user_ip_ban(app, admin_client, user_client):
+    ban_ip = random_ip()
+    ban(admin_client, ban_ip)
 
-        assert rv.status_code != 200
-        assert b"pup-king-louie" in rv.data
+    rv = user_client.get("/", environ_base={
+        "REMOTE_ADDR": ban_ip
+    })
 
-    def test_admin_ip_ban(self):
-        ban_ip = self.random_ip()
+    assert rv.status_code != 200
+    assert b"pup-king-louie" in rv.data
 
-        with self.flask_client as client:
-            # Login and poke the chat to get a valid cookie and a ChatUser entry.
-            self.login(self.admin_user.username, "password", client=client)
+def test_admin_ip_ban(admin_client):
+    ban_ip = random_ip()
+    ban(admin_client, ban_ip)
 
-            self.ban(ban_ip)
+    rv = admin_client.get("/", environ_base={
+        "REMOTE_ADDR": ban_ip
+    })
 
-            rv = client.get("/", environ_base={
-                "REMOTE_ADDR": ban_ip
-            })
-
-            assert rv.status_code == 200
-            assert b"LOL UR IP BANNED" in rv.data
+    assert rv.status_code == 200
+    assert b"LOL UR IP BANNED" in rv.data
 

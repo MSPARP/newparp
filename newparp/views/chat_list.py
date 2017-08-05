@@ -5,7 +5,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import aliased, joinedload
 
 from newparp.helpers import alt_formats
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import activation_required
 from newparp.model import (
     case_options,
     AnyChat,
@@ -29,7 +29,7 @@ chat_classes = {
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 def chat_list(fmt=None, type=None, page=1):
     if type is None:
         type = "all"

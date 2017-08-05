@@ -4,7 +4,7 @@ import time
 
 from collections import OrderedDict, namedtuple
 from flask import abort, g, jsonify, redirect, render_template, request, url_for
-from sqlalchemy import func
+from sqlalchemy import func, literal
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
@@ -12,7 +12,19 @@ from uuid import uuid4
 
 from newparp.helpers import alt_formats
 from newparp.helpers.auth import admin_required, permission_required
-from newparp.model import AdminLogEntry, AdminTier, AdminTierPermission, Block, GroupChat, IPBan, SearchCharacter, SearchCharacterChoice, User, UserNote
+from newparp.model import (
+    AdminLogEntry,
+    AdminTier,
+    AdminTierPermission,
+    Block,
+    EmailBan,
+    GroupChat,
+    IPBan,
+    SearchCharacter,
+    SearchCharacterChoice,
+    User,
+    UserNote,
+)
 from newparp.model.connections import use_db
 from newparp.model.validators import color_validator
 from newparp.tasks import celery
@@ -229,6 +241,12 @@ def user(username, fmt=None):
         .filter(IPBan.address.op(">>=")(user.last_ip))
         .order_by(IPBan.address).all()
     )
+    email_bans = (
+        g.db.query(EmailBan)
+        .select_from(EmailBan)
+        .filter(literal(user.email_address).op("~*")(EmailBan.pattern))
+        .order_by(EmailBan.pattern).all()
+    )
 
     notes = (
         g.db.query(UserNote)
@@ -255,6 +273,7 @@ def user(username, fmt=None):
         User=User,
         user=user,
         ip_bans=[_.address for _ in ip_bans],
+        email_bans=[_.pattern for _ in email_bans],
         search_characters=search_characters,
         admin_tiers=g.db.query(AdminTier).order_by(AdminTier.id).all(),
         notes=notes,
@@ -752,6 +771,82 @@ def delete_ip_ban():
         description="Unbanned %s." % request.form["address"],
     ))
     return redirect(request.headers.get("Referer") or url_for("admin_ip_bans"))
+
+
+@alt_formats({"json"})
+@use_db
+@permission_required("ip_bans") # TODO permission
+def email_bans(fmt=None, page=1):
+    email_bans = g.db.query(EmailBan).order_by(EmailBan.pattern).options(joinedload(EmailBan.creator)).all()
+
+    if fmt == "json":
+        return jsonify({
+            "total": len(email_bans),
+            "email_bans": [_.to_dict() for _ in email_bans],
+        })
+
+    return render_template(
+        "admin/email_bans.html",
+        email_bans=email_bans,
+    )
+
+
+@use_db
+@permission_required("ip_bans")
+def new_email_ban():
+
+    if not request.form.get("pattern") or not request.form.get("reason"):
+        abort(400)
+
+    pattern = request.form["pattern"][:255]
+    reason  = request.form["reason"][:255]
+
+    try:
+        existing_ban = (
+            g.db.query(func.count('*')).select_from(EmailBan)
+            .filter(EmailBan.pattern == pattern).scalar()
+        )
+    except DataError:
+        abort(400)
+
+    if existing_ban != 0:
+        return redirect(url_for("admin_email_bans", email_ban_error="already_banned"))
+
+    try:
+        g.db.add(EmailBan(
+            pattern=pattern,
+            creator_id=g.user.id,
+            reason=reason,
+        ))
+        g.db.flush()
+    except DataError:
+        abort(400)
+
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="email_ban",
+        description="Banned %s. Reason: %s" % (pattern, reason),
+    ))
+
+    if request.headers.get("Referer"):
+        referer = request.headers["Referer"]
+        if "?email_ban_error=already_banned" in referer:
+            referer = referer.replace("?email_ban_error=already_banned", "")
+        return redirect(referer)
+
+    return redirect(url_for("admin_email_bans"))
+
+
+@use_db
+@permission_required("ip_bans")
+def delete_email_ban():
+    g.db.query(EmailBan).filter(EmailBan.pattern == request.form["pattern"]).delete()
+    g.db.add(AdminLogEntry(
+        action_user=g.user,
+        type="email_ban",
+        description="Unbanned %s." % request.form["pattern"],
+    ))
+    return redirect(request.headers.get("Referer") or url_for("admin_email_bans"))
 
 
 @use_db

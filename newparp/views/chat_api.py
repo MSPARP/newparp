@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers.characters import validate_character_form
 from newparp.helpers.chat import (
     group_chat_only,
-    mark_alive,
+    require_socket,
     send_message,
     send_temporary_message,
     send_userlist,
@@ -39,65 +39,8 @@ from newparp.model.connections import (
 from newparp.model.validators import color_validator
 
 
-@mark_alive
-def messages():
-
-    try:
-        after = int(request.form["after"])
-    except (KeyError, ValueError):
-        after = 0
-
-    # Look for stored messages first, and only subscribe if there aren't any.
-    messages = g.redis.zrangebyscore("chat:%s" % g.chat_id, "(%s" % after, "+inf")
-
-    if "joining" in request.form or g.joining:
-        db_connect()
-        get_chat_user()
-        return jsonify({
-            "users": get_userlist(g.db, g.redis, g.chat),
-            "chat": g.chat.to_dict(),
-            "messages": [json.loads(_) for _ in messages],
-        })
-    elif len(messages) != 0:
-        message_dict = { "messages": [json.loads(_) for _ in messages] }
-        return jsonify(message_dict)
-
-    g.pubsub = g.redis.pubsub()
-    # Channel for general chat messages.
-    g.pubsub.subscribe("channel:%s" % g.chat_id)
-    # Channel for messages aimed specifically at you - kicks, bans etc.
-    g.pubsub.subscribe("channel:%s:%s" % (g.chat_id, g.user_id))
-
-    # Get rid of the database connection here so we're not hanging onto it
-    # while waiting for the redis message.
-    db_commit()
-    db_disconnect()
-
-    try:
-        while True:
-            # This timeout is LONGPOLL_TIMEOUT * 2
-            msg = g.pubsub.get_message(timeout=50)
-            if not msg or msg["type"] == "message":
-                break
-
-        if msg:
-            # The pubsub channel sends us a JSON string, so we return that
-            # instead of using jsonify.
-            resp = make_response(msg["data"])
-            resp.headers["Content-type"] = "application/json"
-            return resp
-        else:
-            return jsonify({"messages": []})
-    finally:
-        g.pubsub.close()
-
-@mark_alive
-def ping():
-    return "", 204
-
-
 @use_db_chat
-@mark_alive
+@require_socket
 def send():
 
     if g.chat_user.computed_group == "silent":
@@ -150,14 +93,14 @@ def send():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def draft():
     g.chat_user.draft = request.form.get("text", "").strip()[:Message.MAX_LENGTH]
     return "", 204
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def block():
 
     if g.chat.type not in ("roulette", "searched"):
@@ -190,15 +133,22 @@ def block():
     return "", 204
 
 
-@mark_alive
+@require_socket
 def set_state():
     raise NotImplementedError
 
 
 @use_db_chat
 @group_chat_only
-@mark_alive
 def set_group():
+
+    # Admins and creators can do this from the chat users list, so only require
+    # a socket if we're not one.
+    if (
+        g.redis.scard("chat:%s:sockets:%s" % (g.chat.id, g.session_id)) == 0
+        and not (g.user.is_admin or g.user.id == g.chat.creator_id)
+    ):
+        abort(403)
 
     # Validation #1: We must be allowed to set groups.
     if not g.chat_user.can("set_group"):
@@ -264,8 +214,8 @@ def set_group():
 
 
 @use_db_chat
+@require_socket
 @group_chat_only
-@mark_alive
 def user_action():
 
     action = request.form["action"]
@@ -381,8 +331,8 @@ def user_action():
 
 
 @use_db_chat
+@require_socket
 @group_chat_only
-@mark_alive
 def set_flag():
 
     flag = request.form["flag"]
@@ -459,8 +409,8 @@ def set_flag():
 
 
 @use_db_chat
+@require_socket
 @group_chat_only
-@mark_alive
 def set_topic():
 
     # Validation: We must be allowed to set the topic.
@@ -498,8 +448,8 @@ def set_topic():
 
 
 @use_db_chat
+@require_socket
 @group_chat_only
-@mark_alive
 def set_info():
 
     # Validation: We must be allowed to set the topic.
@@ -528,7 +478,7 @@ def set_info():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def save():
 
     # Remember old values so we can check if they've changed later.
@@ -570,7 +520,7 @@ def save():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def save_from_character():
 
     try:
@@ -661,7 +611,7 @@ def save_variables():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def request_username():
 
     try:
@@ -694,7 +644,7 @@ def request_username():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def exchange_usernames():
 
     try:
@@ -739,7 +689,7 @@ def exchange_usernames():
 
 
 @use_db_chat
-@mark_alive
+@require_socket
 def look_up_user():
     if not g.user.is_admin:
         abort(403)
@@ -762,20 +712,5 @@ def look_up_user():
             "http://forums.msparp.com/modcp.php?action=ipsearch&ipaddress=" + chat_user.user.last_ip + "&search_users=1&search_posts=1",
         ),
     )
-    return "", 204
-
-
-def quit():
-    # Only send a message if we were already online.
-    if g.user_id is None or "chat_id" not in request.form:
-        abort(400)
-    try:
-        g.chat_id = int(request.form["chat_id"])
-    except ValueError:
-        abort(400)
-    if disconnect(g.redis, g.chat_id, g.session_id):
-        db_connect()
-        get_chat_user()
-        send_quit_message(g.db, g.redis, g.chat_user, g.user, g.chat)
     return "", 204
 

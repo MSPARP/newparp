@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask, abort, redirect, request, send_from_directory
+from flask_mail import Mail
 from werkzeug.routing import BaseConverter
 
 from newparp.helpers import check_csrf_token
@@ -12,16 +13,11 @@ from newparp.model.connections import (
     redis_disconnect,
     set_cookie,
 )
-from newparp import views
-from newparp.views import (
-    account, admin, characters, chat, chat_api, chat_list, errors, guides,
-    roulette, search, search_characters, settings,
-)
-from newparp.views.admin import spamless, spamless2
 
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
 
 # Config
 
@@ -50,6 +46,25 @@ app.after_request(db_commit)
 
 app.teardown_request(db_disconnect)
 app.teardown_request(redis_disconnect)
+
+
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER", "localhost")
+app.config["MAIL_PORT"] = int(os.environ.get("MAIL_PORT", 25))
+app.config["MAIL_USE_TLS"] = "MAIL_USE_TLS" in os.environ
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_SUPPRESS_SEND"] = app.testing or bool(os.environ.get("NOMAIL"))
+mail = Mail(app)
+
+
+# Views/routes
+
+from newparp import views
+from newparp.views import (
+    account, admin, characters, chat, chat_api, chat_list, errors, guides,
+    search, search_characters, settings,
+)
+from newparp.views.admin import spamless, spamless2
 
 
 class RegexConverter(BaseConverter):
@@ -94,6 +109,7 @@ app.add_url_rule("/settings/timezone", "settings_timezone", settings.timezone, m
 app.add_url_rule("/settings/theme", "settings_theme", settings.theme, methods=("POST",))
 app.add_url_rule("/settings/log_in_details", "settings_log_in_details", settings.log_in_details, methods=("GET",))
 app.add_url_rule("/settings/change_email", "settings_change_email", settings.change_email, methods=("POST",))
+app.add_url_rule("/settings/verify_email", "settings_verify_email", settings.verify_email, methods=("GET",))
 app.add_url_rule("/settings/change_password", "settings_change_password", settings.change_password, methods=("POST",))
 make_rules("settings", "/settings/blocks", settings.blocks, formats=True)
 app.add_url_rule("/settings/unblock", "settings_unblock", settings.unblock, methods=("POST",))
@@ -136,14 +152,6 @@ app.add_url_rule("/search_characters/<int:id>/delete", "rp_delete_search_charact
 app.add_url_rule("/search/save", "rp_search_save", search.search_save, methods=("POST",))
 app.add_url_rule("/search", "rp_search", search.search_get, methods=("GET",))
 app.add_url_rule("/search", "rp_search_post", search.search_post, methods=("POST",))
-app.add_url_rule("/search/continue", "rp_search_continue", search.search_continue, methods=("POST",))
-app.add_url_rule("/search/stop", "rp_search_stop", search.search_stop, methods=("POST",))
-
-app.add_url_rule("/roulette/save", "rp_roulette_save", roulette.roulette_save, methods=("POST",))
-app.add_url_rule("/roulette", "rp_roulette", roulette.roulette_get, methods=("GET",))
-app.add_url_rule("/roulette", "rp_roulette_post", roulette.roulette_post, methods=("POST",))
-app.add_url_rule("/roulette/continue", "rp_roulette_continue", roulette.roulette_continue, methods=("POST",))
-app.add_url_rule("/roulette/stop", "rp_roulette_stop", roulette.roulette_stop, methods=("POST",))
 
 # 6. Groups
 
@@ -162,6 +170,7 @@ make_rules("rp", "/<path:url>/log/<int:page>", chat.log_page, formats=True)
 make_rules("rp", "/<path:url>/log/<regex(\"20[0-9]{2}\"):year>-<regex(\"0[1-9]|1[0-2]\"):month>-<regex(\"0[1-9]|[1-2][0-9]|3[0-1]\"):day>", chat.log_day, formats=True)
 
 make_rules("rp", "/<path:url>/users", chat.users, formats=True, paging=True)
+app.add_url_rule("/<path:url>/users/reset_regexes", "rp_chat_reset_regexes", chat.reset_regexes, methods=("POST",))
 make_rules("rp", "/<path:url>/invites", chat.invites, formats=True, paging=True)
 
 app.add_url_rule("/<path:url>/uninvite", "rp_chat_uninvite", chat.uninvite, methods=("POST",))
@@ -170,11 +179,10 @@ app.add_url_rule("/<path:url>/unban", "rp_chat_unban", chat.unban, methods=("POS
 app.add_url_rule("/<path:url>/subscribe", "rp_chat_subscribe", chat.subscribe, methods=("POST",))
 app.add_url_rule("/<path:url>/unsubscribe", "rp_chat_unsubscribe", chat.unsubscribe, methods=("POST",))
 
-app.add_url_rule("/redirect", "redirect", views.redirect, methods=("GET",))
+app.add_url_rule("/redirect", "redirect", views.redirect_view, methods=("GET",))
 
 # 8. Chat API
 
-app.add_url_rule("/chat_api/messages", "messages", chat_api.messages, methods=("POST",))
 app.add_url_rule("/chat_api/send", "send", chat_api.send, methods=("POST",))
 app.add_url_rule("/chat_api/draft", "draft", chat_api.draft, methods=("POST",))
 app.add_url_rule("/chat_api/block", "block", chat_api.block, methods=("POST",))
@@ -190,8 +198,6 @@ app.add_url_rule("/chat_api/save_variables", "save_variables", chat_api.save_var
 app.add_url_rule("/chat_api/request_username", "request_username", chat_api.request_username, methods=("POST",))
 app.add_url_rule("/chat_api/exchange_usernames", "exchange_usernames", chat_api.exchange_usernames, methods=("POST",))
 app.add_url_rule("/chat_api/look_up_user", "look_up_user", chat_api.look_up_user, methods=("POST",))
-app.add_url_rule("/chat_api/ping", "ping", chat_api.ping, methods=("POST",))
-app.add_url_rule("/chat_api/quit", "quit", chat_api.quit, methods=("POST",))
 
 # 9. Admin
 
@@ -236,6 +242,10 @@ make_rules("spamless2", "/admin/spamless2", spamless2.home, formats=True, paging
 make_rules("admin", "/admin/ip_bans", admin.ip_bans, formats=True, paging=True)
 app.add_url_rule("/admin/ip_bans/new", "admin_new_ip_ban", admin.new_ip_ban, methods=("POST",))
 app.add_url_rule("/admin/ip_bans/delete", "admin_delete_ip_ban", admin.delete_ip_ban, methods=("POST",))
+
+make_rules("admin", "/admin/email_bans", admin.email_bans, formats=True)
+app.add_url_rule("/admin/email_bans/new", "admin_new_email_ban", admin.new_email_ban, methods=("POST",))
+app.add_url_rule("/admin/email_bans/delete", "admin_delete_email_ban", admin.delete_email_ban, methods=("POST",))
 
 app.add_url_rule("/admin/worker_status", "admin_worker_status", admin.worker_status, methods=("GET",))
 

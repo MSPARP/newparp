@@ -11,7 +11,7 @@ from sqlalchemy.orm import joinedload, joinedload_all
 from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import admin_required, activation_required
 from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
 from newparp.model import (
     case_options,
@@ -122,7 +122,7 @@ def get_chat(f):
 
 
 @use_db
-@log_in_required
+@activation_required
 def create_chat():
 
     # Silently truncate to 50 because we've got a maxlength on the <input>.
@@ -166,7 +166,6 @@ def create_chat():
 @use_db
 @get_chat
 def chat(chat, pm_user, url, fmt=None):
-
     chat_dict = chat.to_dict(pm_user=pm_user)
 
     if g.user is None:
@@ -175,6 +174,11 @@ def chat(chat, pm_user, url, fmt=None):
         if chat.type != "group":
             return render_template("account/log_in_required.html")
         return render_template("chat/log_in_required.html", chat=chat)
+
+    if g.user.group == "new":
+        return render_template("account/user_new.html")
+    if g.user.group == "deactivated":
+        return render_template("account/user_deactivated.html")
 
     # Get or create ChatUser.
     try:
@@ -235,7 +239,9 @@ def chat(chat, pm_user, url, fmt=None):
     return render_template(
         "chat/chat.html",
         url=url,
-        chat=chat_dict,
+        chat=chat,
+        pm_user=pm_user,
+        chat_dict=chat_dict,
         chat_user=chat_user,
         chat_user_dict=chat_user.to_dict(include_options=True),
         messages=messages,
@@ -307,6 +313,7 @@ def _log_page(chat, pm_user, url, fmt, page=None):
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
+        pm_user=pm_user,
         messages=messages,
         paginator=paginator,
     )
@@ -399,6 +406,7 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
         own_chat_user=own_chat_user,
         url=url,
         chat=chat,
+        pm_user=pm_user,
         messages=messages,
         previous_day=previous_day,
         next_day=next_day,
@@ -431,7 +439,7 @@ def log_day(chat, pm_user, url, fmt, year, month, day):
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def users(chat, pm_user, url, fmt=None, page=1):
 
@@ -484,9 +492,23 @@ def users(chat, pm_user, url, fmt=None, page=1):
     )
 
 
+@use_db
+@admin_required
+@get_chat
+def reset_regexes(chat, pm_user, url, fmt=None, page=1):
+    try:
+        g.db.query(ChatUser).filter(and_(
+            ChatUser.chat_id == chat.id,
+            ChatUser.user_id == int(request.form["user_id"]),
+        )).update({"regexes": "[]"})
+    except ValueError:
+        abort(400)
+    return redirect(request.headers.get("Referer") or url_for("chat_users", url=url))
+
+
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def invites(chat, pm_user, url, fmt=None, page=1):
 
@@ -542,7 +564,7 @@ def invites(chat, pm_user, url, fmt=None, page=1):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def invite(chat, pm_user, url, fmt):
 
@@ -613,11 +635,11 @@ def invite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def uninvite(chat, pm_user, url, fmt):
 
@@ -679,11 +701,11 @@ def uninvite(chat, pm_user, url, fmt):
 
     if "Referer" in request.headers:
         return redirect(request.headers["Referer"].split("?")[0])
-    return redirect(url_for("rp_chat_invites", url=url))
+    return redirect(url_for("rp_invites", url=url))
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def unban(chat, pm_user, url, fmt):
 
@@ -753,14 +775,14 @@ def _alter_subscription(chat, pm_user, url, new_value):
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def subscribe(chat, pm_user, url, fmt):
     return _alter_subscription(chat, pm_user, url, True)
 
 
 @use_db
-@log_in_required
+@activation_required
 @get_chat
 def unsubscribe(chat, pm_user, url, fmt):
     return _alter_subscription(chat, pm_user, url, False)

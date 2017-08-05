@@ -6,7 +6,18 @@
         <div class="settings_box_wrap">
             <h2>E-mail address</h2>
             {% if request.args["saved"] == "email_address": %}
+            <p>We've sent a message to the address you just entered. Click the link in the message to finish changing your address.</p>
+            {% elif request.args["saved"] == "email_verified": %}
+            <p>Your e-mail address has been verified.</p>
+            {% elif request.args["saved"] == "email_changed": %}
             <p>Your e-mail address has been changed.</p>
+            {% elif g.user.email_address and not g.user.email_verified %}
+            <p>Your e-mail address hasn't been verified. If your verification e-mail has expired, click the button below to send another one.</p>
+            <form action="{{url_for("settings_change_email")}}" method="post">
+                <input type="hidden" name="token" value="{{g.csrf_token}}">
+                <input type="hidden" name="email_address" value="{{ g.user.email_address }}">
+                <p><button type="submit">Re-send verification e-mail</button></p>
+            </form>
             {% endif %}
             <form action="{{url_for("settings_change_email")}}" method="post">
                 <input type="hidden" name="token" value="{{g.csrf_token}}">

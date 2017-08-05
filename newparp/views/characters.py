@@ -4,7 +4,7 @@ from flask import g, jsonify, redirect, request, render_template, url_for
 from sqlalchemy.orm import joinedload
 
 from newparp.helpers import alt_formats
-from newparp.helpers.auth import log_in_required
+from newparp.helpers.auth import activation_required
 from newparp.helpers.characters import character_query, save_character_from_form, validate_character_form
 from newparp.model import case_options, Character, CharacterTag, SearchCharacter, SearchCharacterGroup
 from newparp.model.connections import use_db
@@ -12,7 +12,7 @@ from newparp.model.connections import use_db
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 def character_list(fmt=None):
 
     characters = g.db.query(Character).filter(
@@ -29,7 +29,7 @@ def character_list(fmt=None):
 
 
 @use_db
-@log_in_required
+@activation_required
 def new_character_get():
 
     search_character_groups = g.db.query(SearchCharacterGroup).order_by(
@@ -51,7 +51,7 @@ def new_character_get():
 
 
 @use_db
-@log_in_required
+@activation_required
 def new_character_post():
     new_details = validate_character_form(request.form)
     g.db.add(Character(user_id=g.user.id, **new_details))
@@ -60,7 +60,7 @@ def new_character_post():
 
 @alt_formats({"json"})
 @use_db
-@log_in_required
+@activation_required
 def character(character_id, fmt=None):
 
     character = character_query(character_id, join_tags=True)
@@ -87,7 +87,7 @@ def character(character_id, fmt=None):
 
 
 @use_db
-@log_in_required
+@activation_required
 def save_character(character_id):
     # In a separate function so we can call it from request search.
     character = save_character_from_form(character_id, request.form)
@@ -95,20 +95,22 @@ def save_character(character_id):
 
 
 @use_db
-@log_in_required
+@activation_required
 def delete_character_get(character_id):
     character = character_query(character_id)
     return render_template("characters/delete_character.html", character=character)
 
 
 @use_db
-@log_in_required
+@activation_required
 def delete_character_post(character_id):
     character = character_query(character_id)
     character_id = character.id
     if g.user.default_character_id == character_id:
         g.user.default_character_id = None
-        g.db.flush()
+    if g.user.roulette_character_id == character_id:
+        g.user.roulette_character_id = None
+    g.db.flush()
     g.db.query(CharacterTag).filter(CharacterTag.character_id == character_id).delete()
     # Don't use g.db.delete(character) because it does a load of extra queries
     # for foreign keys and stuff.
@@ -117,7 +119,7 @@ def delete_character_post(character_id):
 
 
 @use_db
-@log_in_required
+@activation_required
 def set_default_character(character_id):
     character = character_query(character_id)
     g.user.default_character = character

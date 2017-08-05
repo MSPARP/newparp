@@ -146,7 +146,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 #global_navigation li a:before, #global_navigation button:before { content: "> "; visibility: hidden; }
 #global_navigation li a:focus, #global_navigation button:focus {outline:none;}
 #global_navigation li a:focus:before, #global_navigation button:focus:before, #global_navigation li a:hover:before, #global_navigation button:hover:before { visibility: visible; }
-#global_navigation button { width: 100%; margin: 0; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
+#global_navigation button { width: 100%; margin: 0; padding-right: 20px; border: 0; background-color: transparent; text-align: left; text-transform: uppercase; }
 #global_navigation .user {z-index:1;font-variant:normal;font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;font-size:14px;line-height:18px;}
 #global_navigation .user > a:before {content: '\22EE\00a0'; visibility:visible;}
 #global_navigation .user ul { margin: 0 0 0 -10px; font-variant:normal;}
@@ -179,7 +179,7 @@ h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10v
 	#global_navigation .user li a:before{ content: "> "; }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
 	/* Swap in short titles */
 	#global_navigation li a .long {display:none}
 	#global_navigation li a .short {display:inline}
@@ -2050,13 +2050,11 @@ body.chat { margin: 0; background-color: #535353; font-size: 12px; word-wrap: br
 	text-decoration: underline;
 }
 
-.sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list {font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
+.sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, .mobile_nav_wrap, .unum #action_list {font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif;}
 
 .sidebar, #info_panel, #edit_info_panel {font-weight:normal;color:#555;}
 
 #chat_wrapper {background-color:#ccc}
-
-#connection_method {position:absolute;top:0px;right:5px;color: #888}
 
 #global_navigation.in_chat_nav .mobile_nav {display:none}
 
@@ -2578,7 +2576,6 @@ body:not(.no_forms) #settings .input input[type="radio"] + label {margin-left:-3
 	#conversation {top:37px}
 	#topbar ~ #conversation, #topbar ~ .sidebar, body .sidebar, #info_panel, #edit_info_panel { top: 62px; }
 	body:not(.disable_left_bar) #chat_logo {top:5px}
-	#connection_method {top:-3px;right:0px; font-size:80%}
 	#sidebar_tabs, #topbar {top:37px}
 	.log_top_nav {top:37px} #archive_conversation {top:64px}
 }
@@ -2622,7 +2619,6 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 /* fix wider right bar */
 @media (min-width: 1650px) { 
 	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, body.disable_left_bar.chatting > #chat_wrapper #chat_content #info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #edit_info_panel, body.disable_left_bar.chatting > #chat_wrapper #chat_content #conversation, body.disable_left_bar.chatting > #chat_wrapper #chat_content #send_form, body.disable_left_bar.chatting > #chat_wrapper #global_navigation.in_chat_nav { right: 260px;}
-	body.disable_left_bar #connection_method {top:-3px;right:0px; font-size:80%}
 	body.disable_left_bar #chat_wrapper #sidebar_left_tabs {width:246px}
 	.userlist_name {max-width:170px}
 }
@@ -2683,7 +2679,7 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#topbar .topic {display:inline;top:0px}
 	body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar, .chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}
 	#topbar ~ #conversation, #conversation, #topbar ~ .sidebar, body .sidebar, #info_panel, #edit_info_panel, body.disable_left_bar #topbar ~ .sidebar, body.disable_left_bar .sidebar { top: 36px; }
-	#connection_method, #chat_logo, body.disable_left_bar #chat_logo {display:none}
+	#chat_logo, body.disable_left_bar #chat_logo {display:none}
 	#sidebar_tabs, body.disable_left_bar #sidebar_tabs {top:11px}
 	.log_top_nav {top:36px} #archive_conversation {top:63px}
 }
@@ -2693,7 +2689,6 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	body #chat_logo, body.disable_left_bar #chat_logo {display:block;left:auto;right:-5px}
 	body .sidebar, body #topbar ~ .sidebar {top:92px}
 	body #sidebar_tabs, body.disable_left_bar #sidebar_tabs {top:67px}
-	#connection_method {top:-3px;right:0px; font-size:80%}
 }
 
 @media (min-width: 1270px) and (max-height:500px) { .chatting > #chat_wrapper #chat_content #topbar { left:274px; right: 320px;} body.disable_left_bar.chatting > #chat_wrapper #chat_content #topbar { left:34px; right: 320px;}}
@@ -2794,7 +2789,7 @@ body.no_moving *, body.no_moving *:before, body.no_moving *:after {animation:non
 @media amzn-kf8, amzn-mobi {
 	html {-webkit-text-size-adjust: none}
 	#text_preview_container, body {font-family: "Courier", "Courier New", monospace;}
-	#topbar h1, #global_navigation.in_chat_nav li, #global_navigation.in_chat_nav label, #global_navigation.in_chat_nav label:before, .sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, #connection_method, .mobile_nav_wrap, .unum #action_list, .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear, #global_navigation li, #global_navigation label, #global_navigation label:before, #global_navigation .user, #users_online p, main { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+	#topbar h1, #global_navigation.in_chat_nav li, #global_navigation.in_chat_nav label, #global_navigation.in_chat_nav label:before, .sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, .mobile_nav_wrap, .unum #action_list, .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear, #global_navigation li, #global_navigation label, #global_navigation label:before, #global_navigation .user, #users_online p, main { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
 	#prompt-cursor{display:none}
 	#chat_line_input input {font-size:16px;line-height:19px} /*try and prevent zoom for these devices since they disregard anything else */
 }
