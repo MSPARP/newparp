@@ -18,22 +18,26 @@ class ConnectionTokenStore(object):
     def __init__(self, redis):
         self.redis = redis
 
+    create_connection_token_script = """
+        local forward = "connection:token:"..ARGV[3]
+        local reverse = "connection:user:"..ARGV[1]..":"..ARGV[2]
+        local existing_token = redis.call("get", reverse)
+        if existing_token then
+            redis.call("del", "connection:token:"..existing_token)
+        end
+        redis.call("hmset",  forward, "user_id", ARGV[1], "chat_id", ARGV[2])
+        redis.call("expire", forward, {expire_time})
+        redis.call("set",    reverse, ARGV[3])
+        redis.call("expire", reverse, {expire_time})
+    """.format(expire_time=expire_time)
+
     def create_connection_token(self, user_id, chat_id):
         """
         Creates a connection token for the user in the chat. Returns a UUID to
         be passed to the front end.
         """
-        # TODO remove existing token if necessary
         token = str(uuid.uuid4())
-        pipe = self.redis.pipeline()
-        forward = self.forward_token_key % token
-        reverse = self.reverse_token_key % (user_id, chat_id)
-
-        pipe.hmset(forward, {"user_id": user_id, "chat_id": chat_id})
-        pipe.set(reverse, token)
-        pipe.expire(forward, self.expire_time)
-        pipe.expire(reverse, self.expire_time)
-        pipe.execute()
+        self.redis.eval(self.create_connection_token_script, 0, user_id, chat_id, token)
         return token
 
     def use_connection_token(self, token):
