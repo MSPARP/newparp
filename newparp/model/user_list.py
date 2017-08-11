@@ -40,19 +40,29 @@ class ConnectionTokenStore(object):
         self.redis.eval(self.create_connection_token_script, 0, user_id, chat_id, token)
         return token
 
+    use_connection_token_script = """
+        local user_id = redis.call("hget", "connection:token:"..ARGV[1], "user_id")
+        local chat_id = redis.call("hget", "connection:token:"..ARGV[1], "chat_id")
+        if not user_id then return {} end
+
+        redis.call("del", "connection:token:"..ARGV[1])
+        redis.call("del", "connection:user:"..user_id..":"..chat_id)
+        return {user_id, chat_id}
+    """
+
     def use_connection_token(self, token):
         """
-        Gets details for (and destroys) a token. Returns a (chat_id, user_id)
+        Gets details for (and destroys) a token. Returns a (user_id, chat_id)
         tuple.
         """
-        pipe = self.redis.pipeline()
-        pipe.hgetall(self.forward_token_key % token)
-        pipe.delete(self.forward_token_key % token)
-        # TODO delete reverse key too
-        data, _ = pipe.execute()
+        try:
+            token_uuid = uuid.UUID(token)
+        except ValueError:
+            raise InvalidToken("Not a UUID.")
+        data = self.redis.eval(self.use_connection_token_script, 0, token)
         if not data:
-            raise InvalidTokenException()
-        return data["chat_id"], data["user_id"]
+            raise InvalidToken("Token doesn't exist or already used.")
+        return int(data[0]), int(data[1])
 
     def invalidate_connection_token(self, user_id, chat_id):
         """
