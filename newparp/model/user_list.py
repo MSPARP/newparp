@@ -45,8 +45,7 @@ class ConnectionTokenStore(object):
         local chat_id = redis.call("hget", "connection:token:"..ARGV[1], "chat_id")
         if not user_id then return {} end
 
-        redis.call("del", "connection:token:"..ARGV[1])
-        redis.call("del", "connection:user:"..user_id..":"..chat_id)
+        redis.call("del", "connection:token:"..ARGV[1], "connection:user:"..user_id..":"..chat_id)
         return {user_id, chat_id}
     """
 
@@ -64,19 +63,21 @@ class ConnectionTokenStore(object):
             raise InvalidToken("Token doesn't exist or already used.")
         return int(data[0]), int(data[1])
 
+    invalidate_connection_token_script = """
+        local reverse = "connection:user:"..ARGV[1]..":"..ARGV[2]
+        local token = redis.call("get", reverse)
+        if not token then return end
+
+        redis.call("del", reverse, "connection:token:"..token)
+    """
+
     def invalidate_connection_token(self, user_id, chat_id):
         """
         Invalidates a token by user_id and chat_id. For when a user is banned or
         uninvited from a chat and we want to make sure they can't use a token
         from before.
         """
-        reverse = self.reverse_token_key % (user_id, chat_id)
-        token   = self.redis.get(self.reverse_token_key % (user_id, chat_id))
-        if not token:
-            return
-        # TODO lua it up
-        self.redis.delete(reverse)
-        self.redis.delete(self.forward_token_key % token)
+        self.redis.eval(self.invalidate_connection_token_script, 0, user_id, chat_id)
 
     def invalidate_all_tokens_for_user(self, user_id):
         """
