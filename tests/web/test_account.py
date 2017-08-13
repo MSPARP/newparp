@@ -7,7 +7,7 @@ def create_account(client, username=None, password="password", password_again="p
     if not username:
         username = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
 
-    if not email_address:
+    if email_address is None:
         email_address = "test+%s@msparp.com" % str(uuid.uuid4())
 
     rv = client.post("/register", data=dict(
