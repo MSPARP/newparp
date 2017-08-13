@@ -60,6 +60,8 @@ class CheckSpamTask(WorkerTask):
             if message["user_number"] is None:
                 continue
 
+            self.redis.set("spamless:last_id", message["id"])
+
             message["hash"] = hashlib.md5(
                 ":".join([message["color"], message["acronym"], message["text"]])
                 .encode("utf-8").lower()

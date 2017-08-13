@@ -3,7 +3,6 @@
     <div class="common_box admin_wide">
         <h2><label><span>Spamless</span></label></h2>
         <div class="common_box_wrap">
-            <p>Spamless is <strong>{% if g.redis.exists("spamless:alive"): %}running{% else %}not running{% endif %}</strong>.</p>
             <nav id="subnav">
                 Show:
                 {% if request.url_rule.endpoint == "spamless_home": %}

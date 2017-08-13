@@ -3,9 +3,12 @@ import uuid
 
 from tests import login
 
-def create_account(client, username=None, password="password", password_again="password", email_address="rose@example.com"):
+def create_account(client, username=None, password="password", password_again="password", email_address=None):
     if not username:
         username = hashlib.md5(str(uuid.uuid4()).encode("utf8")).hexdigest()
+
+    if email_address is None:
+        email_address = "test+%s@msparp.com" % str(uuid.uuid4())
 
     rv = client.post("/register", data=dict(
         username=username,
@@ -49,11 +52,13 @@ def test_invalid_email(client):
 
 # Blank fields
 
-def test_blank_email(client):
+def test_blank_email(client, redis):
+    redis.delete("register:127.0.0.1")
     rv = create_account(client, email_address="")
     assert b"E-mail address is required" in rv.data
 
-def test_blank_password(client):
+def test_blank_password(client, redis):
+    redis.delete("register:127.0.0.1")
     rv = create_account(client, password="")
     assert b"enter a username and password" in rv.data
 

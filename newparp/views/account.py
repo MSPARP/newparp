@@ -95,6 +95,12 @@ def register_post():
     if email_validator.match(email_address) is None:
         return redirect(referer_or_home() + "?register_error=invalid_email")
 
+    # Make sure this email address hasn't been taken before.
+    if g.db.query(User.id).filter(
+        func.lower(User.email_address) == email_address.lower()
+    ).count() != 0:
+        return redirect(referer_or_home() + "?register_error=email_taken")
+
     # Check username against username_validator.
     # Silently truncate it because the only way it can be longer is if they've hacked the front end.
     username = request.form["username"][:50]
