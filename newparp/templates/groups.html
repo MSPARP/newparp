@@ -33,6 +33,9 @@
                     {% endif %}
                 {% endfor %}
             </p>
+            {% if g.user.age_group == AgeGroup.unknown: %}
+                <p>Please enter your date of birth on <a href="{{url_for("settings")}}">the settings page</a> to access NSFW (sexual) and NSFW extreme chats.</span></p>
+            {% endif %}
             <p><button type="submit">Apply</button></p>
         </form>
             <ul id="group_chats">

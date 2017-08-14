@@ -159,7 +159,9 @@
                             {% endfor %}
                         </div>
                     </div>
-                    {% if g.user.age_group != AgeGroup.unknown %}
+                    {% if g.user.age_group == AgeGroup.unknown: %}
+                        <div><span class="textlabel">Please enter your date of birth on <a href="{{url_for("settings")}}">the settings page</a> to access NSFW (sexual) and NSFW extreme chats.</span></div>
+                    {% else: %}
                         <div>
                             <span class="textlabel">Age:</span>
                             <div class="content_boxes">
