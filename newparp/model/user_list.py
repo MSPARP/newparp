@@ -25,28 +25,29 @@ class ConnectionTokenStore(object):
         if existing_token then
             redis.call("del", "connection:token:"..existing_token)
         end
-        redis.call("hmset",  forward, "user_id", ARGV[1], "chat_id", ARGV[2])
+        redis.call("hmset",  forward, "user_id", ARGV[1], "chat_id", ARGV[2], "session_id", ARGV[3])
         redis.call("expire", forward, {expire_time})
-        redis.call("set",    reverse, ARGV[3])
+        redis.call("set",    reverse, ARGV[4])
         redis.call("expire", reverse, {expire_time})
     """.format(expire_time=expire_time)
 
-    def create_connection_token(self, user_id, chat_id):
+    def create_connection_token(self, user_id, chat_id, session_id):
         """
         Creates a connection token for the user in the chat. Returns a UUID to
         be passed to the front end.
         """
         token = str(uuid.uuid4())
-        self.redis.eval(self.create_connection_token_script, 0, user_id, chat_id, token)
+        self.redis.eval(self.create_connection_token_script, 0, user_id, chat_id, session_id, token)
         return token
 
     use_connection_token_script = """
         local user_id = redis.call("hget", "connection:token:"..ARGV[1], "user_id")
         local chat_id = redis.call("hget", "connection:token:"..ARGV[1], "chat_id")
+        local chat_id = redis.call("hget", "connection:token:"..ARGV[1], "session_id")
         if not user_id then return {} end
 
         redis.call("del", "connection:token:"..ARGV[1], "connection:user:"..user_id..":"..chat_id)
-        return {user_id, chat_id}
+        return {user_id, chat_id, session_id}
     """
 
     def use_connection_token(self, token):
@@ -61,7 +62,7 @@ class ConnectionTokenStore(object):
         data = self.redis.eval(self.use_connection_token_script, 0, token)
         if not data:
             raise InvalidToken("Token doesn't exist or already used.")
-        return int(data[0]), int(data[1])
+        return int(data[0]), int(data[1]), data[2]
 
     invalidate_connection_token_script = """
         local reverse = "connection:user:"..ARGV[1]..":"..ARGV[2]
