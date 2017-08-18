@@ -140,7 +140,7 @@ def verify_email():
 
     g.redis.set("session:" + g.session_id, user.id, 2592000)
 
-    if user.email_address == "email_address":
+    if user.email_address == email_address:
         next_message = "email_verified"
 
     else:
