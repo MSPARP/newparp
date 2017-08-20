@@ -6,6 +6,7 @@ import time
 
 from bcrypt import gensalt, hashpw
 from collections import OrderedDict
+from enum import Enum
 from pytz import timezone, utc
 from sqlalchemy import and_, create_engine
 from sqlalchemy.schema import Index
@@ -27,7 +28,7 @@ from sqlalchemy import (
     ForeignKey,
     Boolean,
     DateTime,
-    Enum,
+    Enum as SQLAlchemyEnum,
     Integer,
     String,
     Unicode,
@@ -58,6 +59,12 @@ def now():
     return datetime.datetime.now()
 
 
+class AgeGroup(Enum):
+    unknown  = "unknown"
+    under_18 = "under_18"
+    over_18  = "over_18"
+
+
 case_options = OrderedDict([
     ("alt-lines",    "ALTERNATING lines"),
     ("alternating",  "AlTeRnAtInG"),
@@ -70,16 +77,22 @@ case_options = OrderedDict([
     ("first-letter", "First letter caps"),
 ])
 
-case_options_enum = Enum(*list(case_options.keys()), name="case")
+case_options_enum = SQLAlchemyEnum(*list(case_options.keys()), name="case")
 
 
 # TODO make this an enum and use sqlalchemy-enum34
 level_options = OrderedDict([
     ("sfw",          "SFW"),
-    ("nsfws",        "NSFW (sexual)"),
     ("nsfwv",        "NSFW (violent)"),
+    ("nsfws",        "NSFW (sexual)"),
     ("nsfw-extreme", "NSFW extreme"),
 ])
+
+allowed_level_options = {
+    AgeGroup.unknown:  {"sfw", "nsfwv"},
+    AgeGroup.under_18: {"sfw", "nsfwv"},
+    AgeGroup.over_18:  {"sfw", "nsfwv", "nsfws", "nsfw-extreme"},
+}
 
 
 # 1. Classes
@@ -99,10 +112,12 @@ class User(Base):
     secret_question = Column(Unicode(50))
     secret_answer = Column(String(60))
 
+    date_of_birth = Column(DateTime())
+
     email_address = Column(String(100))
     email_verified = Column(Boolean, nullable=False, default=False)
 
-    group = Column(Enum(
+    group = Column(SQLAlchemyEnum(
         "new",
         "active",
         "deactivated",
@@ -123,7 +138,7 @@ class User(Base):
     ))
 
     last_search_mode = Column(
-        Enum("roulette", "search", name="user_last_search_mode"),
+        SQLAlchemyEnum("roulette", "search", name="user_last_search_mode"),
         nullable=False, default="roulette",
     )
 
@@ -145,11 +160,14 @@ class User(Base):
     replacements = Column(UnicodeText, nullable=False, default="[]")
     regexes = Column(UnicodeText, nullable=False, default="[]")
     search_style = Column(
-        Enum("script", "paragraph", "either", name="user_search_style"),
+        SQLAlchemyEnum("script", "paragraph", "either", name="user_search_style"),
         nullable=False, default="script",
     )
-    search_levels = Column(ARRAY(Unicode(50)), nullable=False, default=["sfw"])
+    search_levels = Column(ARRAY(Unicode(50)),  nullable=False, default=["sfw"])
     search_filters = Column(ARRAY(Unicode(50)), nullable=False, default=[])
+    search_age_restriction = Column(Boolean,    nullable=False, default=False)
+
+    pm_age_restriction = Column(Boolean, nullable=False, default=False)
 
     # psycopg2 doesn't handle arrays of custom types by default, so we just use strings here.
     group_chat_styles = Column(ARRAY(Unicode(50)), nullable=False, default=["script"])
@@ -178,6 +196,26 @@ class User(Base):
 
     def check_password(self, password):
         return hashpw(password.encode("utf8"), self.password.encode()).decode("utf8") == self.password
+
+    @property
+    def age(self):
+        if self.date_of_birth is None:
+            return None
+        now = datetime.datetime.now()
+        age = now.year - self.date_of_birth.year
+        if self.date_of_birth.replace(year=now.year) > now:
+            age -= 1
+        return age
+
+    @property
+    def age_group(self):
+        if self.date_of_birth is None:
+            return AgeGroup.unknown
+        return AgeGroup.over_18 if self.age >= 18 else AgeGroup.under_18
+
+    @property
+    def level_options(self):
+        return allowed_level_options[self.age_group]
 
     @property
     def is_admin(self):
@@ -429,7 +467,7 @@ class Chat(Base):
     # `pm/<user id 1>/<user id 2>`, with the 2 user IDs in alphabetical
     # order.
     # Searched chats allow anyone to enter and have randomly generated URLs.
-    type = Column(Enum(
+    type = Column(SQLAlchemyEnum(
         "group",
         "pm",
         "roulette",
@@ -481,18 +519,18 @@ class GroupChat(Chat):
 
     autosilence = Column(Boolean, nullable=False, default=False)
 
-    style = Column(Enum(
+    style = Column(SQLAlchemyEnum(
         "script",
         "paragraph",
         "either",
         name="group_chats_style",
     ), nullable=False, default="script")
-    level = Column(Enum(
+    level = Column(SQLAlchemyEnum(
         *level_options.keys(),
         name="group_chats_level",
     ), nullable=False, default="sfw")
 
-    publicity = Column(Enum(
+    publicity = Column(SQLAlchemyEnum(
         "listed",
         "unlisted",
         "pinned",
@@ -559,7 +597,7 @@ AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RouletteChat, SearchedChat]
 class LogMarker(Base):
     __tablename__ = "log_markers"
     chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
-    type = Column(Enum(
+    type = Column(SQLAlchemyEnum(
         "page_with_system_messages",
         "page_without_system_messages",
         name="log_markers_type",
@@ -584,7 +622,7 @@ class ChatUser(Base):
     last_online = Column(DateTime(), nullable=False, default=now)
 
     # Ignored if the user is an admin or the chat's creator.
-    group = Column(Enum(
+    group = Column(SQLAlchemyEnum(
         "mod3",
         "mod2",
         "mod1",
@@ -805,7 +843,7 @@ class Message(Base):
     posted = Column(DateTime(), nullable=False, default=now)
 
     # XXX CONSIDER SPLITTING SYSTEM INTO USER_CHANGE, META_CHANGE ETC.
-    type = Column(Enum(
+    type = Column(SQLAlchemyEnum(
         "ic",
         "ooc",
         "me",
@@ -930,7 +968,7 @@ class Tag(Base):
     maturity_names = ["general", "teen", "mature", "explicit"]
     type_names = ["fluff", "plot-driven", "sexual", "shippy", "violent"]
 
-    type = Column(Enum(*type_options, name="tags_type"), nullable=False, default="misc")
+    type = Column(SQLAlchemyEnum(*type_options, name="tags_type"), nullable=False, default="misc")
     name = Column(Unicode(50), nullable=False)
 
     synonym_id = Column(Integer, ForeignKey("tags.id"))
@@ -1020,7 +1058,7 @@ class AdminTier(Base):
 class AdminTierPermission(Base):
     __tablename__ = "admin_tier_permissions"
     admin_tier_id = Column(Integer, ForeignKey("admin_tiers.id"), primary_key=True)
-    permission = Column(Enum(
+    permission = Column(SQLAlchemyEnum(
         "search_characters",
         "announcements",
         "broadcast",
@@ -1039,7 +1077,7 @@ class AdminTierPermission(Base):
         return "<AdminTierPermission: %s has %s>" % (self.admin_tier_id, self.permission)
 
 
-spamless_filter_types = Enum(
+spamless_filter_types = SQLAlchemyEnum(
     "banned_names",
     "blacklist",
     "warnlist",

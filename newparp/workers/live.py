@@ -25,6 +25,7 @@ from uuid import UUID, uuid4
 from newparp.helpers.chat import (
     UnauthorizedException,
     BannedException,
+    BadAgeException,
     TooManyPeopleException,
     KickedException,
     authorize_joining,
@@ -133,7 +134,7 @@ class ChatHandler(WebSocketHandler):
                 raise BannedException
 
             yield thread_pool.submit(authorize_joining, self.db, self)
-        except (UnauthorizedException, BannedException, TooManyPeopleException):
+        except (UnauthorizedException, BannedException, BadAgeException, TooManyPeopleException):
             self.send_error(403)
             return
 
@@ -307,7 +308,8 @@ class SearchHandler(WebSocketHandler):
 
     def on_message(self, message):
         result = refresh_searcher(redis, self.searcher_id)
-        if not all(result[:-2]): # -2 because filters and choices are optional
+        if not all(result[:-3]): # -3 because filters and choices are optional
+            # TODO make that a method
             self.close()
 
     async def redis_listen(self):

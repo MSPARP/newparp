@@ -1,3 +1,5 @@
+import datetime
+
 from flask import abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import and_, func, literal
 from sqlalchemy.orm import joinedload
@@ -6,7 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import log_in_required
 from newparp.helpers.email import send_email
-from newparp.model import Block, EmailBan, User
+from newparp.model import AgeGroup, Block, EmailBan, User
 from newparp.model.connections import use_db
 from newparp.model.validators import email_validator
 
@@ -18,6 +20,7 @@ def home_get():
         "settings/home.html",
         timezones=sorted(list(timezones)),
         themes=themes,
+        AgeGroup=AgeGroup,
     )
 
 
@@ -85,6 +88,45 @@ def theme():
 
 @use_db
 @log_in_required
+def pm_age_restriction():
+    if g.user.age_group != AgeGroup.under_18:
+        abort(404)
+
+    g.user.pm_age_restriction = "pm_age_restriction" in request.form
+
+    return redirect(url_for("settings"))
+
+
+@use_db
+@log_in_required
+def date_of_birth():
+    # Date of birth setting is permanent.
+    if g.user.date_of_birth is not None:
+        abort(404)
+
+    try:
+        # TODO use the right time zone
+        g.user.date_of_birth = datetime.datetime(
+            int(request.form["year"]),
+            int(request.form["month"]),
+            int(request.form["day"]),
+        )
+    except ValueError:
+        return render_template(
+            "settings/home.html",
+            timezones=sorted(list(timezones)),
+            themes=themes,
+            AgeGroup=AgeGroup,
+            error="invalid_date",
+        )
+
+    if "Referer" in request.headers:
+        return redirect(request.headers["referer"])
+    return redirect(url_for("settings"))
+
+
+@use_db
+@log_in_required
 def log_in_details():
     return render_template("settings/log_in_details.html")
 
@@ -140,7 +182,7 @@ def verify_email():
 
     g.redis.set("session:" + g.session_id, user.id, 2592000)
 
-    if user.email_address == "email_address":
+    if user.email_address == email_address:
         next_message = "email_verified"
 
     else:

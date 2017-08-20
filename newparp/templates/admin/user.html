@@ -94,6 +94,16 @@
                         <td>Time zone</td>
                         <td>{{user.timezone}}</td>
                     </tr>
+                    <tr>
+                        <td>Date of birth</td>
+                        <td>
+                            {% if user.date_of_birth %}
+                                {{ user.date_of_birth.strftime("%d %B %Y") }} ({{ user.age }})
+                            {% else %}
+                                Not set
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% if user.default_character %}
                     <tr>
                         <td>Default character</td>

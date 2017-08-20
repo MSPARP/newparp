@@ -12,8 +12,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from newparp.helpers import alt_formats, themes
 from newparp.helpers.auth import admin_required, activation_required
-from newparp.helpers.chat import UnauthorizedException, BannedException, TooManyPeopleException, authorize_joining, send_message
+from newparp.helpers.chat import (
+    UnauthorizedException,
+    BannedException,
+    BadAgeException,
+    TooManyPeopleException,
+    authorize_joining,
+    send_message,
+)
 from newparp.model import (
+    AgeGroup,
     case_options,
     level_options,
     AnyChat,
@@ -81,9 +89,20 @@ def get_chat(f):
                 # Only create a new PMChat on the main chat page.
                 if request.endpoint != "rp_chat":
                     abort(404)
+
+                # Reject if age-restricted.
+                if (
+                    not g.user.is_admin
+                    and pm_user.pm_age_restriction
+                    and pm_user.age_group == AgeGroup.under_18
+                    and g.user.age_group != AgeGroup.under_18
+                ):
+                    abort(404)
+
                 chat = PMChat(url=pm_url)
                 g.db.add(chat)
                 g.db.flush()
+
                 # Create ChatUser for the other user.
                 pm_chat_user = ChatUser.from_user(pm_user, chat_id=chat.id, number=1, subscribed=True)
                 g.db.add(pm_chat_user)
@@ -116,6 +135,13 @@ def get_chat(f):
         except UnauthorizedException:
             if request.endpoint != "rp_chat_unsubscribe":
                 return render_template("chat/private.html", chat=chat), 403
+        except BadAgeException:
+            if request.endpoint != "rp_chat_unsubscribe":
+                if g.user is None:
+                    return render_template("chat/log_in_required.html", chat=chat)
+                elif g.user.age_group == AgeGroup.under_18:
+                    return render_template("chat/age_under_18.html", chat=chat)
+                return render_template("chat/age_check.html", chat=chat), 403
         except TooManyPeopleException:
             if request.endpoint == "rp_chat":
                 return render_template("chat/too_many_people.html", chat=chat), 403

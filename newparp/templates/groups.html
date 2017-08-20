@@ -28,9 +28,14 @@
             </p>
             <p class="textlabel">Level:
                 {% for option, name in level_options.items(): %}
-                    <div class="input"><input type="checkbox" id="filter_chats_{{option}}" name="{{option}}"{% if option in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_{{option}}">{{name}}</label></div>
+                    {% if option in allowed_levels %}
+                        <div class="input"><input type="checkbox" id="filter_chats_{{option}}" name="{{option}}"{% if option in level_filter: %} checked="checked"{% endif %}><label for="filter_chats_{{option}}">{{name}}</label></div>
+                    {% endif %}
                 {% endfor %}
             </p>
+            {% if g.user.age_group == AgeGroup.unknown: %}
+                <p>Please enter your date of birth on <a href="{{url_for("settings")}}">the settings page</a> to access NSFW (sexual) and NSFW extreme chats.</span></p>
+            {% endif %}
             <p><button type="submit">Apply</button></p>
         </form>
             <ul id="group_chats">

@@ -11,7 +11,7 @@ from uuid import uuid4
 from newparp.helpers import tags_to_set
 from newparp.helpers.auth import activation_required
 from newparp.helpers.characters import validate_character_form
-from newparp.model import case_options, level_options, SearchCharacter, SearchCharacterChoice, User
+from newparp.model import AgeGroup, case_options, level_options, SearchCharacter, SearchCharacterChoice, User
 from newparp.model.connections import use_db, db_commit, db_disconnect
 from newparp.model.validators import color_validator
 
@@ -35,7 +35,7 @@ def search_save():
         g.user.search_style = request.form["style"]
 
     level_filter = set()
-    for level in level_options.keys():
+    for level in g.user.level_options:
         if level in request.form:
             level_filter.add(level)
     if not level_filter:
@@ -50,6 +50,8 @@ def search_save():
         if len(search_filters) == 200:
             break
     g.user.search_filters = sorted(list(search_filters))
+
+    g.user.search_age_restriction = "age_restriction" in request.form
 
     all_character_ids = set(_[0] for _ in g.db.query(SearchCharacter.id).all())
 
@@ -97,6 +99,10 @@ def _create_searcher():
 
     pipe.sadd("searcher:%s:levels" % searcher_id, *g.user.search_levels)
     pipe.expire("searcher:%s:levels" % searcher_id, 30)
+
+    if g.user.age_group != AgeGroup.unknown and g.user.search_age_restriction:
+        pipe.set("searcher:%s:age_group" % searcher_id, g.user.age_group.value)
+        pipe.expire("searcher:%s:age_group" % searcher_id, 30)
 
     if g.user.search_filters:
         pipe.rpush("searcher:%s:filters" % searcher_id, *g.user.search_filters) # XXX why is this a list and not a set?

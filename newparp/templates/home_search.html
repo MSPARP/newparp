@@ -153,10 +153,29 @@
                         <span class="textlabel">Content:</span>
                         <div class="content_boxes">
                             {% for option, name in level_options.items(): %}
-                                <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                                {% if option in g.user.level_options: %}
+                                    <div class="input"><input type="checkbox" id="content_{{option}}" name="{{option}}"{% if option in g.user.search_levels: %} checked="checked"{% endif %}> <label for="content_{{option}}">{{name}}</label></div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>
+                    {% if g.user.age_group == AgeGroup.unknown: %}
+                        <div><span class="textlabel">Please enter your date of birth on <a href="{{url_for("settings")}}">the settings page</a> to access NSFW (sexual) and NSFW extreme chats.</span></div>
+                    {% else: %}
+                        <div>
+                            <span class="textlabel">Age:</span>
+                            <div class="content_boxes">
+                                <div class="input">
+                                    <input type="checkbox" id="age_restriction" name="age_restriction"{% if g.user.search_age_restriction: %} checked="checked"{% endif %}>
+                                    {% if g.user.age_group == AgeGroup.under_18: %}
+                                        <label for="age_restriction">Only search for users under 18</label>
+                                    {% elif g.user.age_group == AgeGroup.over_18: %}
+                                        <label for="age_restriction">Only search for users over 18</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <h3>Filter out names containing...</h3>
                 <ul id="filter_list">
