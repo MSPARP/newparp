@@ -203,7 +203,10 @@ class User(Base):
             return None
         now = datetime.datetime.now()
         age = now.year - self.date_of_birth.year
-        if self.date_of_birth.replace(year=now.year) > now:
+        date_of_birth = self.date_of_birth
+        if date_of_birth.month == 2 and date_of_birth.day == 29:
+            date_of_birth = date_of_birth + datetime.timedelta(1)
+        if date_of_birth.replace(year=now.year) > now:
             age -= 1
         return age
 
