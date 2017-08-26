@@ -1,7 +1,6 @@
 import os
 
 from contextlib import contextmanager
-from datetime import datetime
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
