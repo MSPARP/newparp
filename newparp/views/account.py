@@ -97,37 +97,60 @@ def forgot_password_post():
     if not user.email_verified:
         return redirect(referer_or_home() + "?error=no_verify")
 
-
-    send_email(request, "reset_password", user, user.email_address)
+    g.user = user
+    send_email("reset", g.user.email_address)
     g.redis.setex("reset_password_limit:%s" % request.environ["REMOTE_ADDR"], 86400, 1)
     g.redis.setex("reset_password_limit:%s" % user.id, 86400, 1)
 
     return redirect(referer_or_home() + "?error=success")
 
+@not_logged_in_required
 def reset_password_get():
     user = _validate_reset_token(request)
     return render_template("account/reset_password.html")
 
+@use_db
 def reset_password_post():
     user = _validate_reset_token(request)
 
-    if not request.POST.get("password"):
-        return {"error": "no_password"}
+    if not request.form["password"]:
+        return redirect(referer_or_home() + "?error=no_password")
 
-    if request.POST["password"] != request.POST["password_again"]:
-        return {"error": "passwords_didnt_match"}
+    if request.form["password"] != request.form["password_again"]:
+        return redirect(referer_or_home() + "?error=passwords_didnt_match")
 
-    user.password = hashpw(request.POST["password"].encode(), gensalt()).decode()
+    user.password = hashpw(request.form["password"].encode(), gensalt()).decode()
 
-    request.login_store.delete("reset_password:%s:%s" % (user.id, request.GET["email_address"].strip()))
+    g.redis.delete("reset_password:%s:%s" % (user.id, request.args.get["email_address"].strip()))
 
     response = HTTPFound(request.route_path("home"))
 
     new_session_id = str(uuid4())
-    request.login_store.set("session:"+new_session_id, user.id)
+    g.redis.set("session:"+new_session_id, user.id)
     response.set_cookie("newparp", new_session_id, 31536000)
 
     return response
+
+@use_db
+def _validate_reset_token(request):
+    try:
+        user_id = int(request.args["user_id"].strip())
+        email_address = request.args["email_address"].strip()
+        token = request.args["token"].strip()
+    except (KeyError, ValueError):
+        return("1")
+    stored_token = g.redis.get("reset_password:%s:%s" % (user_id, email_address))
+    if not user_id or not email_address or not token or not stored_token:
+        return("2")
+    stored_token = stored_token.decode("utf-8")
+
+    if not stored_token == token:
+        return("3")
+
+    try:
+        return g.db.query(User).filter(User.id == user_id).one()
+    except NoResultFound:
+        return("4")
 
 
 @not_logged_in_required
