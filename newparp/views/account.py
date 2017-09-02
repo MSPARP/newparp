@@ -71,6 +71,64 @@ def log_out():
 def register_get():
     return render_template("account/register.html")
 
+@not_logged_in_required
+def forgot_password_get():
+    return render_template("account/forgot_password.html")
+
+@not_logged_in_required
+@use_db
+def forgot_password_post():
+
+    if g.redis.get("reset_password_limit:%s" % request.environ["REMOTE_ADDR"]):
+        return redirect(referer_or_home() + "?error=limit")
+
+    try:
+        user = g.db.query(User).filter(User.username == request.form["username"].lower()).one()
+       
+    except NoResultFound:
+        return redirect(referer_or_home() + "?error=no_user&username=" + request.form['username'])
+
+    if g.redis.get("reset_password_limit:%s" % user.id):
+        return redirect(referer_or_home() + "?error=limit")
+
+    if not user.email_address:
+        return redirect(referer_or_home() + "?error=no_email")
+
+    if not user.email_verified:
+        return redirect(referer_or_home() + "?error=no_verify")
+
+
+    send_email(request, "reset_password", user, user.email_address)
+    g.redis.setex("reset_password_limit:%s" % request.environ["REMOTE_ADDR"], 86400, 1)
+    g.redis.setex("reset_password_limit:%s" % user.id, 86400, 1)
+
+    return redirect(referer_or_home() + "?error=success")
+
+def reset_password_get():
+    user = _validate_reset_token(request)
+    return render_template("account/reset_password.html")
+
+def reset_password_post():
+    user = _validate_reset_token(request)
+
+    if not request.POST.get("password"):
+        return {"error": "no_password"}
+
+    if request.POST["password"] != request.POST["password_again"]:
+        return {"error": "passwords_didnt_match"}
+
+    user.password = hashpw(request.POST["password"].encode(), gensalt()).decode()
+
+    request.login_store.delete("reset_password:%s:%s" % (user.id, request.GET["email_address"].strip()))
+
+    response = HTTPFound(request.route_path("home"))
+
+    new_session_id = str(uuid4())
+    request.login_store.set("session:"+new_session_id, user.id)
+    response.set_cookie("newparp", new_session_id, 31536000)
+
+    return response
+
 
 @not_logged_in_required
 @use_db
