@@ -1,5 +1,5 @@
 from bcrypt import gensalt, hashpw
-from flask import abort, g, jsonify, render_template, redirect, request, url_for
+from flask import abort, g, jsonify, render_template, redirect, request, url_for, make_response
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
 try:
@@ -118,23 +118,23 @@ def reset_password_post():
     user = _validate_reset_token(request) 
 
     if not request.form["password"]:
-       return redirect(referer_or_home() + "?error=no_password")
+       return redirect(referer_or_home() + "?error=no_password" + "&token=" + request.args["token"].strip() + "&email_address=" + request.args["email_address"].strip() + "&user_id=" + request.args["user_id"].strip())
         
 
     if request.form["password"] != request.form["password_again"]:
-         return redirect(referer_or_home() + "?error=no_password")
+         return redirect(referer_or_home() + "?error=passwords_didnt_match" + "&token=" + request.args["token"].strip() + "&email_address=" + request.args["email_address"].strip() + "&user_id=" + request.args["user_id"].strip())
 
     user.set_password(request.form["password"])
 
     g.redis.delete("reset:%s:%s" % (user.id, user.email_address))
 
-    response = url_for("home")
+    response = make_response(redirect(url_for("home")))
 
     new_session_id = str(uuid4())
-    g.redis.set("session:"+new_session_id, user.id)
-    request.set_cookie("newparp", new_session_id, 31536000)
+    g.redis.set("session:" + new_session_id, user.id)
+    response.set_cookie("newparp", new_session_id, 31536000)
 
-    return redirect(response)
+    return response
 
 @use_db
 def _validate_reset_token(request):
@@ -142,15 +142,19 @@ def _validate_reset_token(request):
         user_id = int(request.args["user_id"].strip())
         email_address = request.args["email_address"].strip()
         token = request.args["token"].strip()
+
     except (KeyError, ValueError):
         abort(404)
+       #return("1")
+
     stored_token = g.redis.get("reset:%s:%s" % (user_id, email_address))
     if not user_id or not email_address or not token or not stored_token:
         abort(404)
+        #return("2")
+    
     stored_token = stored_token
-
     if not stored_token == token:
-       abort(404)
+        abort(404)
 
     try:
         info = g.db.query(User).filter(User.id == user_id).one()
