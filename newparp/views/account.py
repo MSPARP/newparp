@@ -13,6 +13,8 @@ from newparp.helpers.email import send_email
 from newparp.model import User
 from newparp.model.connections import use_db
 from newparp.model.validators import username_validator, email_validator, reserved_usernames
+from werkzeug.exceptions import HTTPException, NotFound
+from uuid import uuid4
 
 
 def referer_or_home():
@@ -107,29 +109,32 @@ def forgot_password_post():
 @not_logged_in_required
 def reset_password_get():
     user = _validate_reset_token(request)
+   
     return render_template("account/reset_password.html")
 
+@not_logged_in_required
 @use_db
 def reset_password_post():
-    user = _validate_reset_token(request)
+    user = _validate_reset_token(request) 
 
     if not request.form["password"]:
-        return redirect(referer_or_home() + "?error=no_password")
+       return redirect(referer_or_home() + "?error=no_password")
+        
 
     if request.form["password"] != request.form["password_again"]:
-        return redirect(referer_or_home() + "?error=passwords_didnt_match")
+         return redirect(referer_or_home() + "?error=no_password")
 
-    user.password = hashpw(request.form["password"].encode(), gensalt()).decode()
+    user.set_password(request.form["password"])
 
-    g.redis.delete("reset_password:%s:%s" % (user.id, request.args.get["email_address"].strip()))
+    g.redis.delete("reset:%s:%s" % (user.id, user.email_address))
 
-    response = HTTPFound(request.route_path("home"))
+    response = url_for("home")
 
     new_session_id = str(uuid4())
     g.redis.set("session:"+new_session_id, user.id)
-    response.set_cookie("newparp", new_session_id, 31536000)
+    request.set_cookie("newparp", new_session_id, 31536000)
 
-    return response
+    return redirect(response)
 
 @use_db
 def _validate_reset_token(request):
@@ -138,19 +143,20 @@ def _validate_reset_token(request):
         email_address = request.args["email_address"].strip()
         token = request.args["token"].strip()
     except (KeyError, ValueError):
-        return("1")
-    stored_token = g.redis.get("reset_password:%s:%s" % (user_id, email_address))
+        abort(404)
+    stored_token = g.redis.get("reset:%s:%s" % (user_id, email_address))
     if not user_id or not email_address or not token or not stored_token:
-        return("2")
-    stored_token = stored_token.decode("utf-8")
+        abort(404)
+    stored_token = stored_token
 
     if not stored_token == token:
-        return("3")
+       abort(404)
 
     try:
-        return g.db.query(User).filter(User.id == user_id).one()
+        info = g.db.query(User).filter(User.id == user_id).one()
+        return info
     except NoResultFound:
-        return("4")
+        raise NotFound
 
 
 @not_logged_in_required
