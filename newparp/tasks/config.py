@@ -1,5 +1,5 @@
+import datetime
 import os
-from datetime import timedelta
 
 from kombu import Exchange, Queue
 
@@ -49,26 +49,26 @@ CELERY_ROUTES = {"newparp.tasks.spamless.CheckSpamTask": {"queue": "spamless"}}
 CELERYBEAT_SCHEDULE = {
     "generate_counters": {
         "task": "newparp.tasks.background.generate_counters",
-        "schedule": timedelta(seconds=30),
+        "schedule": datetime.timedelta(seconds=30),
     },
     "unlist_chats": {
         "task": "newparp.tasks.background.unlist_chats",
-        "schedule": timedelta(hours=12),
+        "schedule": datetime.timedelta(hours=12),
     },
     "update_lastonline": {
         "task": "newparp.tasks.background.update_lastonline",
-        "schedule": timedelta(seconds=10),
+        "schedule": datetime.timedelta(seconds=10),
     },
     "update_user_meta": {
         "task": "newparp.tasks.background.update_user_meta",
-        "schedule": timedelta(seconds=10),
+        "schedule": datetime.timedelta(seconds=10),
     },
     "generate_searching_counter": {
         "task": "newparp.tasks.matchmaker.generate_searching_counter",
-        "schedule": timedelta(seconds=10),
+        "schedule": datetime.timedelta(seconds=10),
     },
     "reap": {
         "task": "newparp.tasks.reaper.reap",
-        "schedule": timedelta(seconds=60),
+        "schedule": datetime.timedelta(seconds=60),
     },
 }

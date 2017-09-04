@@ -1,7 +1,7 @@
+import datetime
 import paginate
 import time
 
-from datetime import datetime, timedelta
 from flask import Flask, abort, current_app, g, jsonify, redirect, render_template, request, url_for
 from functools import wraps
 from math import ceil
@@ -371,24 +371,24 @@ def _log_day(chat, pm_user, url, fmt, year=None, month=None, day=None):
 
     if year is not None and month is not None and day is not None:
         try:
-            day_start = datetime(int(year), int(month), int(day))
+            day_start = datetime.datetime(int(year), int(month), int(day))
         except ValueError:
             abort(404)
 
     else:
         last_day = (
             posted_query.order_by(Message.posted.desc()).limit(1).scalar()
-            or datetime.now()
+            or datetime.datetime.now()
         )
         if g.user and g.user.timezone:
             last_day = g.user.localize_time(last_day)
 
-        day_start = datetime(last_day.year, last_day.month, last_day.day)
+        day_start = datetime.datetime(last_day.year, last_day.month, last_day.day)
 
     if g.user and g.user.timezone:
         day_start = timezone(g.user.timezone).localize(day_start).astimezone(utc)
 
-    day_end = day_start + timedelta(1)
+    day_end = day_start + datetime.timedelta(1)
 
     messages = g.db.query(Message).filter(and_(
         Message.chat_id == chat.id,
@@ -651,7 +651,7 @@ def invite(chat, pm_user, url, fmt):
             invite_chat_user.typing_notifications = False
             g.db.add(invite_chat_user)
         invite_chat_user.subscribed = True
-        invite_chat_user.last_online = chat.last_message - timedelta(0, 1)
+        invite_chat_user.last_online = chat.last_message - datetime.timedelta(0, 1)
         send_message(g.db, g.redis, Message(
             chat_id=chat.id,
             user_id=invite_user.id,
