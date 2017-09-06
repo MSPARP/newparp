@@ -12,7 +12,7 @@ expiry_times = {
 }
 
 subjects = {
-    "welcome": "Welcome to MSPARP",
+    "welcome": "Welcome to MxRP",
     "verify": "Verify your e-mail address",
     "reset": "Reset your password",
 }

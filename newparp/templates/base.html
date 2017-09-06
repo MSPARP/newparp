@@ -8,7 +8,7 @@
 {% endmacro %}
 <html>
 <head>
-<title>{% block title: %}{% endblock %}MSPARP</title>
+<title>{% block title: %}{% endblock %}MxRP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 {% if g.user and g.user.theme == "felt": %}
 <meta name="theme-color" content="#0e4603">
@@ -50,7 +50,7 @@ document.body.className += ' no_forms';
                 <p>{{g.redis.get("connected_users") or 0}} connected</p>
                 <p>{{g.redis.get("searching_users") or 0}} searching</p>
             </div>
-            <h1><span id="logo"><a href="{{url_for("home")}}"><img src="/static/img/logo-spacer.png" alt="MSPARP"></a></span> <span id="prompt">CHAT TERMINAL <span id="prompt-cursor"></span></span></h1>
+            <h1><span id="logo"><a href="{{url_for("home")}}"><img src="/static/img/logo-spacer.png" alt="MxRP"></a></span> <span id="prompt">CHAT TERMINAL <span id="prompt-cursor"></span></span></h1>
         </header>
 
 
