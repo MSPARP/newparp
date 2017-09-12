@@ -25,7 +25,6 @@
             <ul>
                 <li><a href="{{url_for("home")}}" target="_blank"><span class="long">Character search</span><span class="short">Search</span></a></li>
                 <li><a href="{{url_for("rp_groups")}}" target="_blank"><span class="long">Group chats</span><span class="short">Groups</span></a></li>
-                <li><a href="http://forums.msparp.com/" target="_blank">Forums</a></li>
                 {% if g.user: %}
                 {% if g.user.is_admin: %}
                 <li><a href="{{url_for("admin_home")}}" target="_blank">Admin</a></li>
