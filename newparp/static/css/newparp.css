@@ -250,6 +250,7 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
     h1 img { margin: 0; }
 	#users_online { float: none; text-align: center; font-size:70%;padding-top:15px }
     #users_online p { display: inline; }
+    #users_online p:not(:last-child) { margin-right: 0.5em; padding-right: 1em; border-right: 2px solid #999; }
 	#global_navigation.in_chat_nav:before {content: "";display:none}
 	#global_navigation.in_chat_nav #unread_counter {padding:7px 12px}
 	#global_navigation.in_chat_nav #unread_counter:before {content: "";display:none !important}
