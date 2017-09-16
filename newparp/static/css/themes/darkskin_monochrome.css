@@ -59,11 +59,6 @@ a:hover, a:active {
 
 #logo {background: transparent url('/static/img/logo-dark.png') no-repeat scroll 0px bottom; background-size:contain; max-width:100%;}
 
-/* Style dynamic header prompt */
-#prompt {color: #798297;}
-
-#prompt-cursor {background: transparent url('/static/img/cursor-dark.png') no-repeat scroll 0px bottom; image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
-
 /* Wrapper */
 #wrapper { background: #1d1f2c;}
 
@@ -111,7 +106,6 @@ footer a:hover { color: #46496b; }
 
 
 @media (max-width: 650px) { 
-	#prompt-cursor {height:5.8vw; background-size:contain;}
 	body { margin: 0; min-height:100vh; background:#1d1f2c;} 
 	#wrapper {background:transparent }
 	footer, footer a, footer a:link, footer a:visited {color: #3a3c50}

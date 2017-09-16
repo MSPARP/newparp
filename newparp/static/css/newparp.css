@@ -53,12 +53,12 @@ button, a, select, input, .input * {touch-action: manipulation;}
 html, body {-webkit-overflow-scrolling: touch;}
 
 a:link {
-	color: #026CB1;
+	color: #249681;
 	text-decoration: none;
 }
 
 a:visited {
-	color: #026CB1;
+	color: #249681;
 	text-decoration: none;
 }
 
@@ -70,30 +70,13 @@ a:hover, a:active {
 p { word-wrap: break-word;}
 
 /* Header and main spacing. */
-header { margin: 0 auto; padding: 20px 20px 8px 20px; border-bottom: 0; }
+header { margin: 0 auto; padding: 0 20px; border-bottom: 0; }
 main { margin: 0 auto; padding: 20px; border-top: 0; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: normal; }
 
 #stem_column { max-width: 43rem; }
 #stem_column > input + h2 {margin:13px; height:33px}
 
 #logo {display:inline-block;background: transparent url('/static/img/logo-default.png') no-repeat scroll 0px bottom; background-size:contain; max-width:100%;image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
-
-/* Style dynamic header prompt */
-#prompt:before {content: '> ';}
-#prompt {display: inline;vertical-align:2px;color: #2d2d2d; font-family: 'VT323', monospace;font-weight:normal; margin-left:-17px; font-size:29px; -webkit-font-smoothing: none; -moz-osx-font-smoothing: unset;font-smooth:never}
-#prompt-cursor {display:inline-block;width:14px; height:24px;background: transparent url('/static/img/cursor-default.png') no-repeat scroll 0px bottom;-webkit-animation: cursor steps(1) 1.4s infinite; animation: cursor steps(1) 1.4s infinite; vertical-align:-5px; image-rendering: -moz-crisp-edges; -ms-interpolation-mode: nearest-neighbor; image-rendering: -webkit-optimize-contrast; image-rendering: pixelated;}
-
-@-webkit-keyframes cursor {  
-	0% { opacity: 1.0; }
-	50% { opacity: 0.0; }
-	100% { opacity: 1.0; }
-}
-
-@keyframes cursor {  
-	0% { opacity: 1.0; }
-	50% { opacity: 0.0; }
-	100% { opacity: 1.0; }
-}
 
 /* Wrapper fills at least window height, provides background, will likely break iOS7x (NEED TESTER) */
 #wrapper { position:relative;margin: 3vh 3vh 5vh 3vh; background-color: #ccc; min-height:92vh; box-sizing: padding-box; border-radius:10px}
@@ -123,12 +106,14 @@ body:not(.no_forms) *::-webkit-scrollbar-thumb { background-color: #b0b0b0; bord
 
 /* 1.1. Header */
 
-#users_online { float: right; padding-top:17px;text-align: right; }
+#users_online { float: right; padding-top:40px; text-align: right; }
 #users_online p { margin: 0; font-family: Ricty, Inconsolata, "Helvetica Neue", Helvetica, Arial, sans-serif; color:#555}
 
-/* Align baseline of logo text with bottom padding. */
-h1 { margin: 0 0 -4px 0; }
-h1 img { display: inline-block; max-width: 100%;  max-width:60vw; max-height:10vh;min-height:42px}
+h1 { margin: 0; }
+
+#logo_container { display: inline-block; vertical-align: middle; }
+
+h1 img { display: block; min-width: 300px; max-width: 400px; margin-left: -14%; }
 
 /* 1.2. Navigation */
 
@@ -246,9 +231,8 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 @media (min-width: 1900px) { header, #global_navigation, main, footer { padding-left: 6%; padding-right: 6%; } #wrapper {margin-left:12%;margin-right:12%} #global_navigation:before {right:6%} }
 @media (max-width: 1000px) {
 	header, #global_navigation, main, footer { width: 100%; padding-left: 10px; padding-right: 10px; border: none; }
-	header, main { padding-top: 10px; padding-bottom: 10px; }
+	main { padding-top: 10px; padding-bottom: 10px; }
 	#wrapper {margin:15px}
-	#prompt {display:block;margin-left:2px; white-space:normal;}
 	#global_navigation:before{right:10px}	
 }
 
@@ -262,10 +246,10 @@ header, #global_navigation, main, footer { box-sizing: border-box; width: 98%; }
 	footer li {line-height:150%}
 	footer, footer a, footer a:link, footer a:visited  {color: #555}
 	footer a:hover {color:#666}
-	#prompt {font-size:5.8vw;}
-	#prompt-cursor {height:5.8vw; background-size:contain;}
-	#users_online { font-size:70%;padding-top:15px }
-	header {padding-top:0px}
+    header { text-align: center }
+    h1 img { margin: 0; }
+	#users_online { float: none; text-align: center; font-size:70%;padding-top:15px }
+    #users_online p { display: inline; }
 	#global_navigation.in_chat_nav:before {content: "";display:none}
 	#global_navigation.in_chat_nav #unread_counter {padding:7px 12px}
 	#global_navigation.in_chat_nav #unread_counter:before {content: "";display:none !important}
@@ -317,7 +301,7 @@ td pre:only-child { margin: 0; }
 #subnav a, #subnav .tab_active {background:#e0e0e0;border:1px solid #d0d0d0; border-top: 2px solid #c6c6c6; border-bottom-color:#b6b6b6; padding:2px 10px 2px 5px; border-top-right-radius: 5px 20px;height:17px;display:inline-block;margin-bottom:-1px}
 #subnav a:hover {background:#e6e6e6;color:#888}
 #subnav .textlabel {display:inline !important}
-#subnav .tab_active {border-bottom-color:#eee; background:#eee;padding-top:4px;color:#626262; border-top: 2px solid #026CB1;}
+#subnav .tab_active {border-bottom-color:#eee; background:#eee;padding-top:4px;color:#626262; border-top: 2px solid #28b67a;}
 
 /* 2.1. Forms */
 
@@ -1921,8 +1905,8 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 #group_chats li a{color:#696969;}
 #group_chats li a:hover{color:#000}
 #group_chats li.unread {font-style:normal}
-#group_chats li.unread {border-bottom:2px solid #026CB1}
-#group_chats li.unread a {color:#026CB1}
+#group_chats li.unread {border-bottom:2px solid #28b67a}
+#group_chats li.unread a {color:#28b67a}
 #group_chats li.unread a:hover {color:#000}
 #group_chats li.unread h3:after {content: " *NEW*"; font-style:italic;font-size:80%;position:relative;top:-5px; color:#888}
 
@@ -2009,7 +1993,7 @@ body:not(.no_forms) .remove_sl_item:active {background: #626262; padding-right:4
 	.long_settings_names {display:none}
 }
 
-.explanation_link {color:#026CB1;cursor:pointer}
+.explanation_link {color:#28b67a;cursor:pointer}
 .explanation {color: #555;font-size:90%;display:block}
 
 @media (max-width: 400px) {
@@ -2203,8 +2187,8 @@ body:not(.no_forms) #my_chats .filter_button.input.select select option {color:#
 #pm_chat_list li.active a:before, #my_chats_list li.active a:before {content: ">\0000A0"}
 #my_chats_list.show_unread li.unread a:before {content: ""}
 #my_chats_list.show_unread li.unread a .chatlist_title {padding-left:0px}
-#pm_chat_list li.online, #pm_chat_list li.unread, #my_chats_list li.unread {border-left:2px solid #026CB1; border-right:2px solid #026CB1}
-#pm_chat_list li.unread a, #pm_chat_list li.online a, #my_chats_list li.unread a {color:#026CB1}
+#pm_chat_list li.online, #pm_chat_list li.unread, #my_chats_list li.unread {border-left:2px solid #28b67a; border-right:2px solid #28b67a}
+#pm_chat_list li.unread a, #pm_chat_list li.online a, #my_chats_list li.unread a {color:#28b67a}
 
 #my_chats_list .chatlist_topic {display:inline-block;max-height:2.2em;overflow:hidden;cursor:pointer;color:#000}
 #my_chats_list .chatlist_topic:focus {max-height:none;outline:0;}
@@ -2790,6 +2774,5 @@ body.no_moving *, body.no_moving *:before, body.no_moving *:after {animation:non
 	html {-webkit-text-size-adjust: none}
 	#text_preview_container, body {font-family: "Courier", "Courier New", monospace;}
 	#topbar h1, #global_navigation.in_chat_nav li, #global_navigation.in_chat_nav label, #global_navigation.in_chat_nav label:before, .sidebar, #topbar, #info_panel, #edit_info_panel, #sidebar_tabs, #sidebar_left_tabs, #button_wrap, .mobile_nav_wrap, .unum #action_list, .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear, #global_navigation li, #global_navigation label, #global_navigation label:before, #global_navigation .user, #users_online p, main { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-	#prompt-cursor{display:none}
 	#chat_line_input input {font-size:16px;line-height:19px} /*try and prevent zoom for these devices since they disregard anything else */
 }
