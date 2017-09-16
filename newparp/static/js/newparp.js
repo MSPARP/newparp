@@ -197,34 +197,6 @@ var msparp = (function() {
 		$("#smart_dialogue_delimiter").val(dev_user_smart_dialogue_delimiter).attr("value", dev_user_smart_dialogue_delimiter); 
 	});
 
-	var strength = {
-    0: "Worst ❌",
-    1: "Bad 👎",
-    2: "Weak 😕",
-    3: "Good 😃",
-    4: "Strong 💪"
-};
-
-var password = document.getElementById('reset_password_input');
-var meter = document.getElementById('password-strength-meter');
-var text = document.getElementById('password-strength-text');
-
-password.addEventListener('input', function()
-{
-    var val = password.value;
-    var result = zxcvbn(val);
-  
-    // Update the password strength meter
-    meter.value = result.score;
-   
-    // Update the text indicator
-    if(val !== "") {
-        text.innerHTML = "Strength: " + "<strong>" + strength[result.score] + "</strong>" + "<br><br><span class='feedback' style='color:black'>" + result.feedback.warning + " " + result.feedback.suggestions + "</span"; 
-    }
-    else {
-        text.innerHTML = "";
-    }
-});
 	
 	// Live update when switching in settings
 	$("#basic_forms").click(function() {
@@ -483,6 +455,37 @@ password.addEventListener('input', function()
 				$("#register_password_input, #register_password_again_input").attr("type", this.checked ? "text" : "password");
 			});
 		},
+		"check_password_strength": function() {
+			var strength = {
+    0: "Worst ❌",
+    1: "Bad 👎",
+    2: "Weak 😕",
+    3: "Good 😃",
+    4: "Strong 💪"
+};
+
+var password = document.getElementById('reset_password_input');
+var meter = document.getElementById('password-strength-meter');
+var text = document.getElementById('password-strength-text');
+
+password.addEventListener('input', function()
+{
+    var val = password.value;
+    var result = zxcvbn(val);
+  
+    // Update the password strength meter
+    meter.value = result.score;
+   
+    // Update the text indicator
+    if(val !== "") {
+        text.innerHTML = "Strength: " + "<strong>" + strength[result.score] + "</strong>" + "<br><br><span class='feedback' style='color:black'>" + result.feedback.warning + " " + result.feedback.suggestions + "</span"; 
+    }
+    else {
+        text.innerHTML = "";
+    }
+});
+},
+
 		// Logging in
 		"log_in": function() {
 			$("#log_in_show_password_input").change(function(e) {
