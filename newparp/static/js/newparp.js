@@ -198,7 +198,7 @@ var msparp = (function() {
 	});
 
 	var strength = {
-    0: "Worst ☠",
+    0: "Worst ❌",
     1: "Bad 👎",
     2: "Weak 😕",
     3: "Good 😃",
