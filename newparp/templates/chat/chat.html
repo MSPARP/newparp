@@ -4,8 +4,6 @@
 <div id="chat_wrapper">
     <div id="chat_content">
         
-        <a id="chat_logo" href="{{url_for("home")}}"></a>
-        
         <nav id="global_navigation" class="in_chat_nav">
             <span id="unread_update">
                 {% if g.user and g.unread_chats and g.unread_chats > 0: %}
