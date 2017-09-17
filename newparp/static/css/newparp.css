@@ -1869,7 +1869,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 .searching #spinner, .search_error #search_error { display: block; }
 #search_error { color: #f00; }
 
-#spinner_image {background:url('/static/img/spinner-big.gif'); background-size:140px 140px;width:140px;height:140px}
+#spinner_image {background:url('/static/img/spinner/FullTone_CCC_140px.gif'); background-size:140px 140px;width:140px;height:140px}
 
 /* 3.3. Group chats */
 
@@ -2751,18 +2751,6 @@ body.disable_left_bar .sidebar, body.disable_left_bar #topbar ~ .sidebar {top:92
 	#sidebar_tabs, #sidebar_left_tabs, .sidebar {display:none !important}
 	.chatting:not(.touch) #conversation:after {content: ":o)";color:#2b0057;position:fixed;right:80px;bottom:5%;font-size:80px}
 	.chatting:not(.touch) #conversation:before {content: "honk";color:#2b0057;position:fixed;right:60px;bottom:10px;}
-}
-
-
-/* 5. HDPI assets  */
-
-@media (-webkit-min-device-pixel-ratio: 1.1), (min-device-pixel-ratio: 1.1),  
-(min-resolution: 100dpi) {
-	#activity_spinner {background-image:url('/static/img/activity_spinner_off@2x.png');}
-	#send_form:not(.disable_activity_indicator) #activity_spinner.active_sb {background-image:url('/static/img/activity_spinner_bg@2x.gif');}
-	#send_form:not(.disable_activity_indicator) #activity_spinner.active_self {background-image:url('/static/img/activity_spinner@2x.gif');}
-
-	#spinner_image {background:url('/static/img/spinner-big@2x.gif'); background-size:140px 140px;}
 }
 
 
