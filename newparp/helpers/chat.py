@@ -141,7 +141,7 @@ def send_join_message(user_list, db, redis, context):
                 text="%s [%s] joined chat. %s" % (
                     context.chat_user.name,
                     context.chat_user.acronym,
-                    "~~MSPARP STAFF~~" if context.user.is_admin else ""
+                    "~~MxRP STAFF~~" if context.user.is_admin else ""
                 ),
             ), user_list)
 

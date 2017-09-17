@@ -868,7 +868,7 @@ var msparp = (function() {
 					if (next_chat_url) {
 						$.get("/" + next_chat_url + ".json", {}, function(data) {
 							chat = data.chat;
-							document.title = chat.title + " - MSPARP";
+							document.title = chat.title + " - MxRP";
 							history.replaceState({}, chat.url, "/" + chat.url);
 							user = data.chat_user;
 							latest_message_id = data.latest_message_id;
@@ -978,9 +978,9 @@ var msparp = (function() {
 						text_without_bbcode = bbremove(text_without_bbcode);
 						// make this optional so notifications don't error on mobile when they've been enabled on another device
 						try {
-							var notification = new Notification(chat.title || "MSPARP", {
+							var notification = new Notification(chat.title || "MxRP", {
 								"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
-								"icon": "/static/img/spinner-big.png"
+								"icon": "/static/img/spinner/Greyscale_EEEEEE_140.png"
 							});
 
 							notification.onclick = function() {
@@ -1020,7 +1020,7 @@ var msparp = (function() {
 				"nsfw-extreme": "NSFW extreme",
 			};
 			var group_descriptions = {
-				"admin": "God tier moderator - MSPARP staff.",
+				"admin": "God tier moderator - MxRP staff.",
 				"creator": "Chat creator - can silence, kick and ban other users.",
 				"mod3": "Professional Wet Blanket - can silence, kick and ban other users.",
 				"mod2": "Bum's Rusher - can silence and kick other users.",

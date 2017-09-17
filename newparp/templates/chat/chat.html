@@ -4,8 +4,6 @@
 <div id="chat_wrapper">
     <div id="chat_content">
         
-        <a id="chat_logo" href="{{url_for("home")}}"></a>
-        
         <nav id="global_navigation" class="in_chat_nav">
             <span id="unread_update">
                 {% if g.user and g.unread_chats and g.unread_chats > 0: %}
@@ -32,10 +30,9 @@
                 {% endif %}
                 <button type="button" class="mobile_nav_button" id="mobile_open_my_chats">My chats</button>
                 <hr>
-                <a href="{{url_for("home")}}" class="mobile_nav_link_button">MSPARP Home</a>
+                <a href="{{url_for("home")}}" class="mobile_nav_link_button">MxRP Home</a>
                 <a href="{{url_for("home")}}" class="mobile_nav_link_button">Character search</a>
                 <a href="{{url_for("rp_groups")}}" class="mobile_nav_link_button">Group chats</a>
-                <a href="http://forums.msparp.com/" target="_blank" class="mobile_nav_link_button">Forums</a>
                 {% if g.user: %}
                 {% if g.user.is_admin: %}
                 <a href="{{url_for("admin_home")}}" target="_blank" class="mobile_nav_link_button">Admin</a>
@@ -87,7 +84,7 @@
             <p class="description">{{chat.description}}</p>
             <h2>Rules</h2>
             <p class="rules">{{chat.rules}}</p>
-            <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=24">MSPARP site rules apply.</a></p>
+            <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=24">MxRP site rules apply.</a></p>
         </section>
         
         <section class="sidebar left" id="side_info">
@@ -97,7 +94,7 @@
                 <a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank" class="log_button">View log</a> <span class="info_panel_controls" style="display:none">| <a href="#" id="edit_info_link">Edit info</a></span>
                 <h2>Rules</h2>
                 <p class="rules">{{chat.rules}}</p>
-                <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=24">MSPARP site rules apply.</a></p>
+                <p class="site_rules"><a href="http://help.msparp.com/kb/faq.php?id=24">MxRP site rules apply.</a></p>
             </div>
         </section>
 
@@ -435,9 +432,9 @@
             <p>Did you enjoy this chat? If so, remember to subscribe to it to receive notifications and keep it in your chats list.</p>
             <ul>
         {% if chat.type in ("searched", "roulette"): %}
-                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=Check+out+this+chat+I+just+had+on+MSPARP!&content={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share the log on Tumblr</a></li>
+                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title=Check+out+this+chat+I+just+had+on+MxRP!&content={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=mxrp&canonicalUrl={{url_for("rp_log", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share the log on Tumblr</a></li>
         {% elif chat.type == "group": %}
-                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title={{chat.title}}&content={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=msparp&canonicalUrl={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share this chat on Tumblr</a></li>
+                <li><a href="https://www.tumblr.com/widgets/share/tool?posttype=link&title={{chat.title}}&content={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}&tags=mxrp&canonicalUrl={{url_for("rp_chat", url=chat.computed_url(pm_user=pm_user), _external=True)}}" target="_blank">Share this chat on Tumblr</a></li>
         {% endif %}
                 <li><a href="#" class="disconnect_subscribe">Subscribe to this chat</a><span class="disconnect_subscribed">You are subscribed to this chat.</span></li>
                 <li><a href="{{url_for("rp_log", url=chat.computed_url(pm_user=pm_user))}}" target="_blank">View this chat's log</a></li>

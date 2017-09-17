@@ -1,6 +1,6 @@
 /*
 
-New MSPARP CSS
+New MxRP CSS
 
 Contents:
 
@@ -48,11 +48,6 @@ main > :first-child { margin-top: 0; }
 main > :last-child { margin-bottom: 0; }
 
 #wrapper { position:relative;margin: auto; background-color: transparent; min-height:none; box-sizing: padding-box; border-radius:0}
-#prompt {vertical-align:7px}
-
-@media (max-width: 1000px) {
-	#prompt {display:none;}
-}
 
 
 /* 1.1. Header */
