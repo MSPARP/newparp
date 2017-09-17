@@ -980,7 +980,7 @@ var msparp = (function() {
 						try {
 							var notification = new Notification(chat.title || "MxRP", {
 								"body": text_without_bbcode.length <= 50 ? text_without_bbcode : text_without_bbcode.substr(0, 47) + "...",
-								"icon": "/static/img/spinner-big.png"
+								"icon": "/static/img/spinner/Greyscale_EEEEEE_140.png"
 							});
 
 							notification.onclick = function() {
