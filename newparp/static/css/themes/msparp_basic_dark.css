@@ -1,6 +1,6 @@
 /*
 
-New MSPARP CSS
+New MxRP CSS
 
 Contents:
 
@@ -48,11 +48,6 @@ main > :first-child { margin-top: 0; }
 main > :last-child { margin-bottom: 0; }
 
 #wrapper { position:relative;margin: auto; background-color: transparent; min-height:none; box-sizing: padding-box; border-radius:0}
-#prompt {vertical-align:7px}
-
-@media (max-width: 1000px) {
-	#prompt {display:none;}
-}
 
 
 /* 1.1. Header */
@@ -69,7 +64,7 @@ main > :last-child { margin-bottom: 0; }
 
 /* Align baseline of logo text with bottom padding. */
 h1 { margin: 0 0 -4px 0; }
-h1 img { display: block; max-width: 100%; }
+h1 img { display: block; max-width: 100%; margin-left: -11%; }
 
 /* 1.2. Navigation */
 
