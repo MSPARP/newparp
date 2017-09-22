@@ -82,22 +82,28 @@ def forgot_password_get():
 def forgot_password_post():
 
     if g.redis.get("reset_password_limit:%s" % request.environ["REMOTE_ADDR"]):
-        return redirect(referer_or_home() + "?error=limit")
+        #return redirect(referer_or_home() + "?error=limit")
+        return render_template("account/forgot_password.html", error="limit")
 
     try:
         user = g.db.query(User).filter(User.username == request.form["username"].lower()).one()
        
     except NoResultFound:
-        return redirect(referer_or_home() + "?error=no_user&username=" + request.form['username'])
+        #return redirect(referer_or_home() + "?error=no_user&username=" + request.form['username'])
+        return render_template("account/forgot_password.html", error="no_user", username=request.form['username'])
 
     if g.redis.get("reset_password_limit:%s" % user.id):
-        return redirect(referer_or_home() + "?error=limit")
+        #return redirect(referer_or_home() + "?error=limit")
+        return render_template("account/forgot_password.html", error="limit")
+
 
     if not user.email_address:
         return redirect(referer_or_home() + "?error=no_email")
+        return render_template("account/forgot_password.html", error="no_email")
 
     if not user.email_verified:
-        return redirect(referer_or_home() + "?error=no_verify")
+        #return redirect(referer_or_home() + "?error=no_verify") 
+        return render_template("account/forgot_password.html", error="no_verify", email=user.email_address)
 
     g.user = user
     send_email("reset", g.user.email_address)
@@ -109,17 +115,18 @@ def forgot_password_post():
 @not_logged_in_required
 def reset_password_get():
     user = _validate_reset_token(request)
-   
+
     return render_template("account/reset_password.html")
+
 
 @not_logged_in_required
 @use_db
 def reset_password_post():
-    user = _validate_reset_token(request) 
+    user = _validate_reset_token(request)
 
     if not request.form["password"]:
-       return redirect(referer_or_home() + "?error=no_password" + "&token=" + request.args["token"].strip() + "&email_address=" + request.args["email_address"].strip() + "&user_id=" + request.args["user_id"].strip())
-        
+       return redirect(referer_or_home() + "?error=no_password" + "&token=" + request.args["token"].strip() +  "&email_address=" + request.args["email_address"].strip() + "&user_id=" + request.args["user_id"].strip())
+
 
     if request.form["password"] != request.form["password_again"]:
          return redirect(referer_or_home() + "?error=passwords_didnt_match" + "&token=" + request.args["token"].strip() + "&email_address=" + request.args["email_address"].strip() + "&user_id=" + request.args["user_id"].strip())
@@ -135,6 +142,7 @@ def reset_password_post():
     response.set_cookie("newparp", new_session_id, 31536000)
 
     return response
+
 
 @use_db
 def _validate_reset_token(request):
@@ -227,4 +235,4 @@ def register_post():
     if redirect_url == url_for("register", _external=True):
         return redirect(url_for("home"))
     return redirect(redirect_url)
-
+    
