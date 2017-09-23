@@ -64,7 +64,7 @@ main > :last-child { margin-bottom: 0; }
 
 /* Align baseline of logo text with bottom padding. */
 h1 { margin: 0 0 -4px 0; }
-h1 img { display: block; max-width: 100%; }
+h1 img { display: block; max-width: 100%; margin-left: -11%; }
 
 /* 1.2. Navigation */
 
