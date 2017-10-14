@@ -4,7 +4,7 @@
   <div style="box-sizing: border-box; max-width: 650px; margin: 20px auto; padding: 20px 25px; background-color: #eee;">
     <p style="margin-top: 0;">If you've forgotten your password, please visit the following URL to reset it: <a href="{{url_for("reset_password", _external=True, _scheme="https", user_id=user.id, email_address=email_address, token=email_token)|safe}}">Reset Password.</a></p>
     <p style="margin-bottom: 0;">This link will expire in 1 hour.</p>
-    <p>MSPARP Administration</p>
+    <p>MxRP Administration</p>
   </div>
 {% endblock %}
 
