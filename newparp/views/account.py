@@ -73,37 +73,30 @@ def log_out():
 def register_get():
     return render_template("account/register.html")
 
+
 @not_logged_in_required
 def forgot_password_get():
-    return render_template("account/forgot_password.html")
+    return render_template("account/forgot_password.html", error=request.args.get("error"))
+
 
 @not_logged_in_required
 @use_db
 def forgot_password_post():
 
     if g.redis.get("reset_password_limit:%s" % request.environ["REMOTE_ADDR"]):
-        #return redirect(referer_or_home() + "?error=limit")
         return render_template("account/forgot_password.html", error="limit")
 
     try:
         user = g.db.query(User).filter(User.username == request.form["username"].lower()).one()
        
     except NoResultFound:
-        #return redirect(referer_or_home() + "?error=no_user&username=" + request.form['username'])
         return render_template("account/forgot_password.html", error="no_user", username=request.form['username'])
 
     if g.redis.get("reset_password_limit:%s" % user.id):
-        #return redirect(referer_or_home() + "?error=limit")
         return render_template("account/forgot_password.html", error="limit")
 
-
-    if not user.email_address:
-        return redirect(referer_or_home() + "?error=no_email")
+    if not user.email_address or not user.email_verified:
         return render_template("account/forgot_password.html", error="no_email")
-
-    if not user.email_verified:
-        #return redirect(referer_or_home() + "?error=no_verify") 
-        return render_template("account/forgot_password.html", error="no_verify", email=user.email_address)
 
     g.user = user
     send_email("reset", g.user.email_address)
@@ -111,6 +104,7 @@ def forgot_password_post():
     g.redis.setex("reset_password_limit:%s" % user.id, 86400, 1)
 
     return redirect(referer_or_home() + "?error=success")
+
 
 @not_logged_in_required
 def reset_password_get():
@@ -153,12 +147,10 @@ def _validate_reset_token(request):
 
     except (KeyError, ValueError):
         abort(404)
-       #return("1")
 
     stored_token = g.redis.get("reset:%s:%s" % (user_id, email_address))
     if not user_id or not email_address or not token or not stored_token:
         abort(404)
-        #return("2")
     
     stored_token = stored_token
     if not stored_token == token:
