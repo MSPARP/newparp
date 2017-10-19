@@ -157,6 +157,7 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
     cache_key = "chat:%s" % message.chat_id
     redis.zadd(cache_key, message.id, json.dumps(message_dict))
     redis.zremrangebyrank(cache_key, 0, -51)
+    redis.expire(cache_key, 604800)
 
     # Prepare pubsub message
     redis_message = {
