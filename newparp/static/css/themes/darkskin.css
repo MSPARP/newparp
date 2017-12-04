@@ -572,7 +572,7 @@ body.no_forms .robo_q {margin-top:10px;clear:both;display:block}
 
 #search_error { color: #f00; }
 
-#spinner_image {background:url('/static/img/spinner/FullTone_1d1f2c_140.gif'); background-size:140px 140px;width:140px;height:140px}
+#spinner_image {background:url('/static/img/spinner/spinner_big_dark.gif'); background-size:140px 140px;width:140px;height:140px}
 
 /* 3.3. Group chats */
 
@@ -752,9 +752,9 @@ p:hover > .timestamp {color:#3a3d59; }
 
 #send_form {background: #161823; }
 
-#activity_spinner {width:35px;height:40px;float:left;background-image:url('/static/img/spinner/Greyscale_161723_30.png'); background-repeat:no-repeat; background-position:0px 5px; background-size:30px 30px;position:absolute;bottom:7px}
-#send_form:not(.disable_activity_indicator) #activity_spinner.active_sb {background-image:url('/static/img/spinner/Greyscale_161723_30.gif');}
-#send_form:not(.disable_activity_indicator) #activity_spinner.active_self {background-image:url('/static/img/spinner/FullTone_161723_30.gif');} 
+#activity_spinner {width:35px;height:40px;float:left;background-image:url('/static/img/spinner/activity_spinner_dark_off.png'); background-repeat:no-repeat; background-position:0px 5px; background-size:30px 30px;position:absolute;bottom:7px}
+#send_form:not(.disable_activity_indicator) #activity_spinner.active_sb {background-image:url('/static/img/spinner/activity_spinner_dark_bg.gif');}
+#send_form:not(.disable_activity_indicator) #activity_spinner.active_self {background-image:url('/static/img/spinner/activity_spinner_dark.gif');} 
 
 /* adjust preview zone for black text box */
 
