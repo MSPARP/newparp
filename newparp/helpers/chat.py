@@ -153,10 +153,17 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
 
     message_dict = message.to_dict()
 
+    if user_list is None:
+        redis_chat = NewparpRedis(connection_pool=redis_chat_pool)
+        user_list  = UserListStore(redis_chat, message.chat_id)
+    else:
+        redis_chat = user_list.redis
+
     # Cache before sending.
     cache_key = "chat:%s" % message.chat_id
-    redis.zadd(cache_key, message.id, json.dumps(message_dict))
-    redis.zremrangebyrank(cache_key, 0, -51)
+    redis_chat.zadd(cache_key, message.id, json.dumps(message_dict))
+    redis_chat.zremrangebyrank(cache_key, 0, -51)
+    redis_chat.expire(cache_key, 604800)
 
     # Prepare pubsub message
     redis_message = {
@@ -172,8 +179,6 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
         "user_group",
         "user_action",
     ) or force_userlist:
-        if user_list is None:
-            user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), message.chat_id)
         redis_message["users"] = get_userlist(user_list, db)
 
     # Reload chat metadata if necessary.
@@ -189,8 +194,6 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
         # TODO move the PM stuff here too
         redis.hset("queue:lastonline", message.chat.id, time.mktime(message.posted.timetuple()) + float(message.posted.microsecond) / 1000000)
 
-        if user_list is None:
-            user_list = UserListStore(NewparpRedis(connection_pool=redis_chat_pool), message.chat_id)
         online_user_ids = user_list.user_ids_online()
         if message.chat.type == "pm":
             offline_chat_users = db.query(ChatUser).filter(and_(
