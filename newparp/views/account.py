@@ -83,7 +83,7 @@ def forgot_password_get():
 @use_db
 def forgot_password_post():
 
-    if g.redis.get("reset_password_limit:%s" % request.environ["REMOTE_ADDR"]):
+    if g.redis.get("reset_password_limit:%s" % request.headers.get("X-Forwarded-For", request.remote_addr)):
         return render_template("account/forgot_password.html", error="limit")
 
     try:
@@ -100,7 +100,7 @@ def forgot_password_post():
 
     g.user = user
     send_email("reset", g.user.email_address)
-    g.redis.setex("reset_password_limit:%s" % request.environ["REMOTE_ADDR"], 86400, 1)
+    g.redis.setex("reset_password_limit:%s" % request.headers.get("X-Forwarded-For", request.remote_addr), 86400, 1)
     g.redis.setex("reset_password_limit:%s" % user.id, 86400, 1)
 
     return redirect(referer_or_home() + "?error=success")
