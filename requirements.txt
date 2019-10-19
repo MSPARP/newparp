@@ -35,6 +35,6 @@ speaklater==1.3
 SQLAlchemy==1.0.13
 tornado==4.3
 https://github.com/jonathanslenders/asyncio-redis/archive/master.zip
-Werkzeug==0.11.10
+Werkzeug==0.15.3
 pytest==3.0.6
 pytest-flask==0.10.0
