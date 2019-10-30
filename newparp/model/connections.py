@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from flask import abort, g, redirect, request
 from functools import wraps
 from redis import ConnectionPool, StrictRedis
-from redis.client import BasePipeline
+from redis.client import Pipeline
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound
 from uuid import uuid4
@@ -57,15 +57,15 @@ class NewparpRedis(StrictRedis):
 
     def increx(self, key, expire=60, incr=1):
         """Increment a key and set its TTL. Like SETEX but for INCR."""
-        pipe = self if isinstance(self, BasePipeline) else self.pipeline()
+        pipe = self if isinstance(self, Pipeline) else self.pipeline()
         pipe.incr(key, incr)
         pipe.expire(key, expire)
-        if not isinstance(self, BasePipeline):
+        if not isinstance(self, Pipeline):
             result, _ = pipe.execute()
             return result
 
 
-class NewparpPipeline(BasePipeline, NewparpRedis):
+class NewparpPipeline(Pipeline, NewparpRedis):
     pass
 
 
