@@ -161,7 +161,7 @@ def send_message(db, redis, message, user_list=None, force_userlist=False):
 
     # Cache before sending.
     cache_key = "chat:%s" % message.chat_id
-    redis_chat.zadd(cache_key, message.id, json.dumps(message_dict))
+    redis_chat.zadd(cache_key, {json.dumps(message_dict): message.id})
     redis_chat.zremrangebyrank(cache_key, 0, -51)
     redis_chat.expire(cache_key, 604800)
 

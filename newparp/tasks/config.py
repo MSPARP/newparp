@@ -5,31 +5,30 @@ from kombu import Exchange, Queue
 
 # Debug
 if "DEBUG" in os.environ:
-    CELERY_REDIRECT_STDOUTS_LEVEL = "DEBUG"
+    worker_redirect_stdouts_level = "DEBUG"
 
 # Broker and Result backends
-BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost/1")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT", "redis://localhost/1")
+broker_url = os.environ.get("CELERY_BROKER", "redis://localhost/1")
+result_backend = os.environ.get("CELERY_RESULT", "redis://localhost/1")
 
 # Time
-CELERY_TIMEZONE = "UTC"
-CELERY_ENABLE_UTC = True
-CELERY_TASK_RESULT_EXPIRES = 3600  # 3600 seconds = 1 hour
+timezone = "UTC"
+result_expires = 3600  # 3600 seconds = 1 hour
 
 # Logging
-CELERY_STORE_ERRORS_EVEN_IF_IGNORED = True
+task_store_errors_even_if_ignored = True
 
 # Serialization
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_ACCEPT_CONTENT = ["json"]
+task_serializer = "json"
+result_serializer = "json"
+accept_content = ["json"]
 
 # Performance
-CELERY_DISABLE_RATE_LIMITS = True
+worker_disable_rate_limits = True
 
 # Queue config
-CELERY_DEFAULT_QUEUE = "default"
-CELERY_QUEUES = (
+task_default_queue = "default"
+task_queues = (
     # Default queue
     Queue("default", Exchange("default"), routing_key="default"),
 
@@ -43,10 +42,10 @@ CELERY_QUEUES = (
     Queue("spamless", Exchange("spamless"), routing_key="spamless", delivery_mode=1),
 )
 
-CELERY_ROUTES = {"newparp.tasks.spamless.CheckSpamTask": {"queue": "spamless"}}
+task_routes = {"newparp.tasks.spamless.CheckSpamTask": {"queue": "spamless"}}
 
 # Beats config
-CELERYBEAT_SCHEDULE = {
+beat_schedule = {
     "generate_counters": {
         "task": "newparp.tasks.background.generate_counters",
         "schedule": datetime.timedelta(seconds=30),

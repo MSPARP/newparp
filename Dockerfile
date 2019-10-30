@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Create limited user for Celery
 RUN groupadd user && useradd --create-home --home-dir /home/user -g user user

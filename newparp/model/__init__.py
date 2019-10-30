@@ -4,7 +4,7 @@ import os
 import sys
 import time
 
-from bcrypt import gensalt, hashpw
+from bcrypt import gensalt, hashpw, checkpw
 from collections import OrderedDict
 from enum import Enum
 from pytz import timezone, utc
@@ -195,7 +195,7 @@ class User(Base):
         self.password = hashpw(password.encode("utf8"), gensalt()).decode("utf8")
 
     def check_password(self, password):
-        return hashpw(password.encode("utf8"), self.password.encode()).decode("utf8") == self.password
+        return checkpw(password.encode("utf8"), self.password.encode())
 
     @property
     def age(self):

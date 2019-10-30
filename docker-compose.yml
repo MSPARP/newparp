@@ -1,7 +1,7 @@
 version: '2'
 services:
   redis:
-    image: redis:3.2.1-alpine
+    image: redis:5.0.6-alpine
     restart: always
 
   postgres:
@@ -22,7 +22,7 @@ services:
       - "80"
   
   rabbitmq:
-    image: rabbitmq:3.6.3-management
+    image: rabbitmq:3.8.0-management
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: msparp
@@ -47,6 +47,7 @@ services:
       POSTGRES_URL: postgres://msparp:development@postgres:5432/msparp
       CELERY_BROKER: amqp://msparp:development@rabbitmq:5672/msparp
       CELERY_RESULT: redis://redis:6379/1
+      NOMAIL: 1
 
   live:
     build: .
