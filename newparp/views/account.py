@@ -1,4 +1,3 @@
-from bcrypt import gensalt, hashpw
 from flask import abort, g, jsonify, render_template, redirect, request, url_for, make_response
 from sqlalchemy import func
 from sqlalchemy.orm.exc import NoResultFound
