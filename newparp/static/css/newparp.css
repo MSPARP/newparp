@@ -1966,7 +1966,6 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 	-webkit-transform: rotate(360deg);
 }
 
-/* overflow:hidden prevents column breaks in Firefox. */
 /* prevent this from parsing in Chrome for now as Chrome 45+ does not fully render secondary columns with it applied */
 @-moz-document url-prefix() { 
 	#group_chats li {overflow:hidden;}
@@ -1976,7 +1975,7 @@ body:not(.no_forms) .content_boxes .input {margin-left:4px;margin-top:3px}
 @media (min-width: 1165px) {
 	#filter_chats {max-width:100%}
 	/* disable this for smaller and mobile layouts, as it breaks old devices */
-	#group_chats { -moz-column-width: 500px; -moz-column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
+	#group_chats { column-width: 500px; column-gap: 20px; -webkit-column-width: 500px; -webkit-column-gap: 20px; }
 }
 
 /* 3.4. Your chats */
