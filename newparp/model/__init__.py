@@ -293,7 +293,7 @@ class Block(Base):
     __tablename__ = "blocks"
     blocking_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     blocked_user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"))
+    chat_id = Column(Integer, ForeignKey("chats.id"), ondelete="SET NULL")
     created = Column(DateTime(), nullable=False, default=now)
     reason = Column(UnicodeText)
 
@@ -508,7 +508,7 @@ class GroupChat(Chat):
 
     __tablename__ = "group_chats"
 
-    id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), primary_key=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "group",
@@ -543,7 +543,7 @@ class GroupChat(Chat):
     ), nullable=False, default="unlisted")
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    parent_id = Column(Integer, ForeignKey("chats.id"))
+    parent_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"))
 
     def __repr__(self):
         return "<GroupChat #%s: %s>" % (self.id, self.url)
@@ -599,7 +599,7 @@ AnyChat = with_polymorphic(Chat, [GroupChat, PMChat, RouletteChat, SearchedChat]
 
 class LogMarker(Base):
     __tablename__ = "log_markers"
-    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), primary_key=True)
     type = Column(SQLAlchemyEnum(
         "page_with_system_messages",
         "page_without_system_messages",
@@ -613,7 +613,7 @@ class ChatUser(Base):
 
     __tablename__ = "chat_users"
 
-    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     number = Column(Integer, nullable=False)
     search_character_id = Column(Integer, ForeignKey("search_characters.id"), nullable=False, default=1)
@@ -838,7 +838,7 @@ class Message(Base):
 
     id = Column(Integer, primary_key=True)
 
-    chat_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), nullable=False)
 
     # Can be null because system messages aren't associated with a user.
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -906,7 +906,7 @@ class Invite(Base):
     __tablename__ = "invites"
 
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), primary_key=True)
 
     creator_id = Column(Integer, ForeignKey("users.id"))
     created = Column(DateTime(), nullable=False, default=now)
@@ -926,7 +926,7 @@ class Ban(Base):
     __tablename__ = "bans"
 
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
-    chat_id = Column(Integer, ForeignKey("chats.id"), primary_key=True)
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"), primary_key=True)
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created = Column(DateTime(), nullable=False, default=now)
@@ -987,7 +987,7 @@ class AdminLogEntry(Base):
     type = Column(Unicode(50), nullable=False)
     description = Column(UnicodeText)
     affected_user_id = Column(Integer, ForeignKey("users.id"))
-    chat_id = Column(Integer, ForeignKey("chats.id"))
+    chat_id = Column(Integer, ForeignKey("chats.id", ondelete="CASCADE"))
 
     def to_dict(self):
         return {
