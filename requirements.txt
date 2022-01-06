@@ -2,7 +2,7 @@ alembic==1.2.1
 bcrypt==3.1.7
 billiard==3.6.1.0
 blinker>=1.1
-celery==4.3.0
+celery==5.2.2
 certifi==2019.9.11
 cffi==1.13.1
 classtools==0.1
